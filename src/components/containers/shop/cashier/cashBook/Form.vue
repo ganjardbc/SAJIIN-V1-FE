@@ -36,11 +36,15 @@
                     </div>
                     <div class="field-group">
                         <div class="field-label">Modal</div>
-                        <currency-input
-                            class="field field-sekunder"
+                        <input-number
+                            class="width width-100"
                             v-model="form.cash_modal"
-                            :precision="0"
-                        />
+                            thousand-separated
+                            :min="0"
+                            placeholder="0"
+                            >
+                            <template>Rp</template>
+                        </input-number>
                         <div 
                             v-if="errorMessage.cash_modal" 
                             class="field-error">
@@ -83,6 +87,7 @@
 <script>
 import { mapState } from 'vuex'
 import AppCardPopup from '../../../../modules/AppCardPopup'
+import InputNumber from '../../../../modules/InputNumber'
 
 export default {
     name: 'CashierCashBookForm',
@@ -97,7 +102,8 @@ export default {
     },
     mounted () {},
     components: {
-        AppCardPopup
+        AppCardPopup,
+        InputNumber
     },
     computed: {
         ...mapState({

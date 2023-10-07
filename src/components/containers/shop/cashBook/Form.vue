@@ -38,12 +38,16 @@
                 </div>
                 <div class="field-group">
                     <div class="field-label">Modal</div>
-                    <currency-input
-                        class="field field-sekunder"
+                    <input-number
+                        class="width width-100"
                         v-model="form.cash_modal"
-                        :precision="0"
+                        thousand-separated
+                        :min="0"
+                        placeholder="0"
                         :disabled="isDetailForm"
-                    />
+                        >
+                        <template>Rp</template>
+                    </input-number>
                     <div 
                         v-if="errorMessage.cash_modal" 
                         class="field-error">
@@ -52,12 +56,16 @@
                 </div>
                 <div v-if="isCreateForm" class="field-group">
                     <div class="field-label">Kas Masuk</div>
-                    <currency-input
-                        class="field field-sekunder"
+                    <input-number
+                        class="width width-100"
                         v-model="form.cash_in"
-                        :precision="0"
+                        thousand-separated
+                        :min="0"
+                        placeholder="0"
                         :disabled="true"
-                    />
+                        >
+                        <template>Rp</template>
+                    </input-number>
                     <div 
                         v-if="errorMessage.cash_in" 
                         class="field-error">
@@ -66,12 +74,16 @@
                 </div>
                 <div v-if="isCreateForm" class="field-group">
                     <div class="field-label">Kas Keluar</div>
-                    <currency-input
-                        class="field field-sekunder"
+                    <input-number
+                        class="width width-100"
                         v-model="form.cash_out"
-                        :precision="0"
+                        thousand-separated
+                        :min="0"
+                        placeholder="0"
                         :disabled="true"
-                    />
+                        >
+                        <template>Rp</template>
+                    </input-number>
                     <div 
                         v-if="errorMessage.cash_out" 
                         class="field-error">
@@ -80,12 +92,16 @@
                 </div>
                 <div v-if="isCreateForm" class="field-group">
                     <div class="field-label">Kas Summary</div>
-                    <currency-input
-                        class="field field-sekunder"
+                    <input-number
+                        class="width width-100"
                         v-model="form.cash_summary"
-                        :precision="0"
+                        thousand-separated
+                        :min="0"
+                        placeholder="0"
                         :disabled="true"
-                    />
+                        >
+                        <template>Rp</template>
+                    </input-number>
                     <div 
                         v-if="errorMessage.cash_summary" 
                         class="field-error">
@@ -117,12 +133,16 @@
                 </div>
                 <div v-if="form.cash_status === 'closed'" class="field-group">
                     <div class="field-label">Kas Aktual</div>
-                    <currency-input
-                        class="field field-sekunder"
+                    <input-number
+                        class="width width-100"
                         v-model="form.cash_actual"
-                        :precision="0"
+                        thousand-separated
+                        :min="0"
+                        placeholder="0"
                         :disabled="isDetailForm"
-                    />
+                        >
+                        <template>Rp</template>
+                    </input-number>
                     <div 
                         v-if="errorMessage.cash_actual" 
                         class="field-error">
@@ -167,6 +187,7 @@
 import { mapState } from 'vuex'
 import AppSideForm from '../../../modules/AppSideForm'
 import AppImage from '../../../modules/AppImage'
+import InputNumber from '../../../modules/InputNumber'
 
 export default {
     name: 'App',
@@ -233,6 +254,7 @@ export default {
     components: {
         AppSideForm,
         AppImage,
+        InputNumber,
     },
     methods: {
         uploadImage (data) {

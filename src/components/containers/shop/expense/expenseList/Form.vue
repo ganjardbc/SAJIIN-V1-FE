@@ -94,12 +94,16 @@
                 </div>
                 <div class="field-group">
                     <div class="field-label">Biaya</div>
-                    <currency-input
-                        class="field field-sekunder"
+                    <input-number
+                        class="width width-100"
                         v-model="form.expense_price"
-                        :precision="0"
+                        thousand-separated
+                        :min="0"
+                        placeholder="0"
                         :disabled="isDetailForm"
-                    />
+                        >
+                        <template>Rp</template>
+                    </input-number>
                     <div 
                         v-if="errorMessage.expense_price" 
                         class="field-error">
@@ -150,6 +154,7 @@
 import { mapState } from 'vuex'
 import AppSideForm from '../../../../modules/AppSideForm'
 import AppImage from '../../../../modules/AppImage'
+import InputNumber from '../../../../modules/InputNumber'
 
 export default {
     name: 'App',
@@ -207,6 +212,7 @@ export default {
     components: {
         AppSideForm,
         AppImage,
+        InputNumber,
     },
     methods: {
         uploadImage (data) {

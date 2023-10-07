@@ -77,12 +77,16 @@
             </div>
             <div class="field-group">
                 <div class="field-label">Harga</div>
-                <currency-input
-                    class="field field-sekunder"
+                <input-number
+                    class="width width-100"
                     v-model="form.price"
-                    :precision="0"
+                    thousand-separated
+                    :min="0"
+                    placeholder="0"
                     :disabled="isDetailForm"
-                />
+                    >
+                    <template>Rp</template>
+                </input-number>
                 <div 
                     v-if="errorMessage.price" 
                     class="field-error">
@@ -130,6 +134,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import InputNumber from '../../../../modules/InputNumber'
 
 export default {
     name: 'App',
@@ -162,7 +167,9 @@ export default {
             return this.form.image ? this.productImageThumbnailUrl + this.form.image : ''
         }
     },
-    components: {},
+    components: {
+        InputNumber,
+    },
     props: {},
     methods: {},
 }

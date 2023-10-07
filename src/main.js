@@ -81,6 +81,7 @@ Vue.prototype.$workbox = wb
 Vue.prototype.format = (data) => { return formatCurrency(data) }
 Vue.prototype.currency = (data) => { return fieldCurrency(data) }
 Vue.prototype.cashBookList = (data) => { return getCashbookList(data) }
+Vue.prototype.appVersion = 'App Version 1.0.0'
 Vue.prototype.apiUrl = api
 Vue.prototype.initUrl = initUrl
 Vue.prototype.socketUrl = socket

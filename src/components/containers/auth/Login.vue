@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="display-flex center padding padding-top-30px">
-                    <div class="fonts fonts-10 grey align-center">App Version 1.0.0</div>
+                    <div class="fonts fonts-10 grey align-center">{{ appVersion  }}</div>
                 </div>
             </form>
         </div>

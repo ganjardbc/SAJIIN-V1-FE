@@ -21,7 +21,7 @@
                             :disabled="visibleLoader"
                             @change="previewFiles">
                         <label for="image">
-                            <div class="border-dashed-full border-radius" style="width: calc(100% - 8px);">
+                            <div class="border-dashed-full border-radius">
                                 <div 
                                     class="image image-padding bg-white-grey" 
                                     :style="`

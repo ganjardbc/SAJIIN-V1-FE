@@ -42,12 +42,16 @@
                     </div>
                     <div class="field-group">
                         <div class="field-label">Bayar</div>
-                        <currency-input
-                            class="field field-sekunder"
+                        <input-number
+                            class="width width-100"
                             v-model="form.bills_price"
-                            :precision="0"
-                            @change="onChangeBills"
-                        />
+                            thousand-separated
+                            :min="0"
+                            placeholder="0"
+                            @input="onChangeBills"
+                            >
+                            <template>Rp</template>
+                        </input-number>
                         <div 
                             v-if="errorMessage.bills_price" 
                             class="field-error">
@@ -83,6 +87,7 @@ import AppEmpty from '../../../../modules/AppEmpty'
 import AppSideForm from '../../../../modules/AppSideForm'
 import AppCardCapsule from '../../../../modules/AppCardCapsule'
 import AppCardPriceSuggestion from '../../../../modules/AppCardPriceSuggestion'
+import InputNumber from '../../../../modules/InputNumber'
 import FieldPayment from '../payment/Index'
 import Table from '../table/Index'
 
@@ -93,6 +98,7 @@ export default {
         AppSideForm,
         AppCardCapsule,
         AppCardPriceSuggestion,
+        InputNumber,
         FieldPayment,
         Table
     },
