@@ -51,7 +51,7 @@
                     <router-view />
                 </div>
                 <div class="display-flex center padding padding-20px">
-                    <div class="fonts fonts-10 grey align-center">App Version 1.0.0</div>
+                    <div class="fonts fonts-10 grey align-center">{{ appVersion  }}</div>
                 </div>
             </div>
         </div>
@@ -95,30 +95,13 @@ const defaultSidebar = [
         icon: 'fa fa-lg fa-database', label: 'TOKO', value: 0, disableMenu: false, menu: [
             {icon: 'fa fa-lg fa-laptop', label: 'Kasir', value: 0, link: 'shop-cashier', permission: 'cashier'},
             {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: 0, link: 'shop-order', permission: 'orders'},
-            // {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: 0, permission: 'orders', menu: [
-            //     {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: 0, link: 'shop-orders', permission: 'orders'},
-            //     {icon: 'fa fa-lg fa-list-alt', label: 'Task Lists', value: 0, link: 'shop-task-lists', permission: 'tasklists'},
-
-            // ]},
             {icon: 'fa fa-lg fa-list-ul', label: 'Pengeluaran', value: 0, link: 'shop-expense', permission: 'expense-list'},
-            // {icon: 'fa fa-lg fa-list-ul', label: 'Pengeluaran', value: 0, permission: 'expense-list', menu: [
-            //     {icon: 'fa fa-lg fa-list-ol', label: 'Tipe', value: 0, link: 'shop-expense-type', permission: 'expense-type'},
-            //     {icon: 'fa fa-lg fa-list-ul', label: 'Pengeluaran', value: 0, link: 'shop-expense-list', permission: 'expense-list'}
-            // ]},
             {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: 0, link: 'shop-cash-book', permission: 'cashbooks'},
             {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'shop-product', permission: 'products'},
-            // {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'shop-products', permission: 'products', menu: [
-            //     {icon: 'fa fa-lg fa-list-ol', label: 'Kategori', value: 0, link: 'shop-categories', permission: 'categories'},
-            //     {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'shop-products', permission: 'products'},
-            // ]},
             {icon: 'fa fa-lg fa-th-large', label: 'Meja', value: 0, link: 'shop-tables', permission: 'tables'},
             {icon: 'fa fa-lg fa-flag', label: 'Platform', value: 0, link: 'shop-platforms', permission: 'tables'},
             {icon: 'fa fa-lg fa-percent', label: 'Promosi', value: 0, link: 'shop-promotions', permission: 'promotions'},
             {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'shop-employee', permission: 'employees'},
-            // {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, permission: 'employees', menu: [
-            //     {icon: 'fa fa-lg fa-clock', label: 'Shift', value: 0, link: 'shop-shifts', permission: 'shifts'},
-            //     {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'shop-employees', permission: 'employees'},
-            // ]},
         ]
     },
     {

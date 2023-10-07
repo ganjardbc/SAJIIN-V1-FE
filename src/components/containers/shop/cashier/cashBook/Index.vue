@@ -13,7 +13,7 @@
                 style="margin-bottom: 15px;">
             </el-alert>
 
-            <div class="display-flex space-between align-center">
+            <div class="display-flex space-between align-center margin margin-bottom-15px">
                 <div class="width width-50 display-flex align-center">
                     <div class="fonts small black semibold margin margin-right-10px">Buku Kas</div>
                     <AppCardCapsule v-if="currentCashBook" :data="currentCashBook.cash_status" />

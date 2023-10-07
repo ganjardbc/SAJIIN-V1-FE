@@ -39,12 +39,16 @@
                         <div class="field-caption">
                             Atur kas aktual untuk buku kas ini agar dapat dibandingkan dengan kas yang ada di sistem.
                         </div>
-                        <currency-input
-                            class="field field-sekunder"
+                        <input-number
+                            class="width width-100"
                             v-model="form.cash_actual"
-                            :precision="0"
+                            thousand-separated
+                            :min="0"
+                            placeholder="0"
                             :disabled="!isOrderDone"
-                        />
+                            >
+                            <template>Rp</template>
+                        </input-number>
                         <div 
                             v-if="errorMessage.cash_actual" 
                             class="field-error">
@@ -104,6 +108,7 @@
 <script>
 import { mapState } from 'vuex'
 import AppCardPopup from '../../../modules/AppCardPopup'
+import InputNumber from '../../../modules/InputNumber'
 import OrderStatus from './OrderStatus'
 
 export default {
@@ -122,6 +127,7 @@ export default {
     },
     components: {
         AppCardPopup,
+        InputNumber,
         OrderStatus,
     },
     computed: {

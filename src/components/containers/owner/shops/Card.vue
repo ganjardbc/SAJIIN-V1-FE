@@ -101,6 +101,7 @@
                     @change="onChangeStatus(dt.shop)"></el-switch>
                 <div v-if="dt.shop.status === 'active'" class="display-flex flex-end">
                     <button 
+                        v-if="dt.shop.is_digital_menu_active"
                         class="btn btn-main-reverse btn-icon with-hover" 
                         @click="onQrCode(dt.shop)">
                         <i class="icn fa fa-lw fa-qrcode"></i>

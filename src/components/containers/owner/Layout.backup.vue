@@ -1,52 +1,31 @@
 <template>
-    <div id="admin">
-        <div :class="`sidebar ${visibleSidebar && 'show'}`">
-            <div class="header">
-                <div class="header-content display-flex space-between align-center">
-                    <div class="title">Owner</div>
-                    <button 
-                        class="close-button btn btn-icon btn-white btn-circle"
-                        @click="onCloseSidebar">
-                        <i class="fa fa-lg fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="content">
-                <AppListMenu 
-                    :data.sync="sidebar"
-                    :isSidebarSmall="true"
-                    @onClick="onCloseSidebar" />
-            </div>
-        </div>
-        <div class="main">
-            <div class="header">
-                <div class="header-content-fixed">
-                    <div class="header-content-main">
-                        <div class="header-content-main-left">
-                            <button 
-                                class="btn btn-white btn-icon btn-circle margin margin-right-5px"
-                                @click="onOpenSidebar">
-                                <i class="icn fa fa-lw fa-bars"></i>
-                            </button>
-                        </div>
-                        <div class="header-content-main-center">
-                            <router-link :to="{name: 'owner-home'}" class="width width-90px display-flex align-center">
-                                <img :src="logo" alt="" style="width: 100%;">
+    <div id="app">
+        <div id="header">
+            <div id="header-container">
+                <div class="display-flex space-between align-center" style="height: 60px;">
+                    <div id="logo" class="width width-90px">
+                        <router-link :to="{name: 'owner-home'}" class="width width-90px display-flex align-center">
+                            <img :src="logo" alt="" style="width: 100%;">
+                        </router-link>
+                    </div>
+                    <div class="display-flex flex-end align-center">
+                        <div v-for="(dt, i) in sidebar" :key="i">
+                            <router-link 
+                                :to="{name: dt.link}" 
+                                class="btn btn-button-link">
+                                <i :class="`icn icn-left ${dt.icon}`"></i> {{ dt.label }}
                             </router-link>
-                        </div>
-                        <div class="header-content-main-right">
-                            <AppCardProfile :data.sync="dataUser" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="main-content">
-                <div class="main-content-smalls">
-                    <router-view />
-                </div>
-                <div class="display-flex center padding padding-20px">
-                    <div class="fonts fonts-10 grey align-center">{{ appVersion  }}</div>
-                </div>
+        </div>
+        <div id="body">
+            <div id="body-container">
+                <router-view />
+            </div>
+            <div class="display-flex center padding padding-20px">
+                <div class="fonts fonts-10 grey align-center">{{ appVersion  }}</div>
             </div>
         </div>
 
@@ -63,20 +42,10 @@ import logo from '@/assets/img/logo.png'
 import icon from '@/assets/img/icon.png'
 import AppToast from '../../modules/AppToast'
 import AppToastMessage from '../../modules/AppToastMessage'
-import AppCardProfile from '../../modules/AppCardProfile'
-import AppListMenu from '../../modules/AppListMenu'
 
 const defaultSidebar = [
-    {
-        icon: 'fa fa-lg fa-database', 
-        label: 'OWNER', 
-        value: 0, 
-        disableMenu: true, 
-        menu: [
-            {icon: 'fa fa-lg fa-store', label: 'TOKO', value: 0, link: 'owner-home', permission: 'shops'},
-            {icon: 'fa fa-lg fa-user', label: 'PROFIL', value: 0, link: 'owner-profile', permission: 'profile'},
-        ]
-    },
+    {icon: 'fa fa-lg fa-store', label: 'TOKO', value: 0, link: 'owner-home', permission: 'shops'},
+    {icon: 'fa fa-lg fa-user', label: 'PROFIL', value: 0, link: 'owner-profile', permission: 'profile'},
 ]
 
 export default {
@@ -105,8 +74,6 @@ export default {
         VueLoadImage,
         AppToastMessage,
         AppToast,
-        AppCardProfile,
-        AppListMenu,
     },
     methods: {
         ...mapActions({
