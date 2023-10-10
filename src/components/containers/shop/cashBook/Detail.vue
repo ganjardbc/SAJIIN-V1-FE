@@ -330,7 +330,7 @@ export default {
         isCanClosing (data) {
             let status = true 
             if (data.status === 'active') {
-                if (!data.order_total || (data.order_done < data.order_total)) {
+                if (data.order_done < data.order_total) {
                     status = true 
                 } else {
                     status = false 
