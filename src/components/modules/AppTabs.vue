@@ -8,46 +8,12 @@
             <el-radio-button 
                 v-for="(item, i) in datas"
                 :key="i"
-                :label="i">{{ item.label }}</el-radio-button>
+                :label="i">
+                {{ item.label }} {{ item.value ? `(${item.value})` : '' }}
+            </el-radio-button>
             <!-- :style="`width: calc(100% / ${datas.length})`" -->
         </el-radio-group>
     </div>
-    <!-- UNUSED -->
-    <!-- <div id="AppTabs" class="tabs theme-1">
-        <button 
-            v-if="isScrollable" 
-            class="tabs-button" 
-            @click="toLeft(path ? path : 'nav-topic')">
-            <i class="fa fa-lg fa-angle-left" />
-        </button>
-        <ul 
-            :class="`
-                tabs-content 
-                ${isFull ? 'full' : ''}
-            `" 
-            :style="`
-                width: ${isScrollable ? 'calc(100% - 70px)' : '100%'}; 
-                overflow-x: auto;
-            `"
-            :id="path ? path : 'nav-topic'">
-            <li 
-                v-for="(dt, index) in datas" 
-                :key="index" 
-                :class="selectedIndex === index ? 'active' : ''"
-                @click="onClick(index)">
-                <div class="display-flex align-center center">
-                    <div class="tabs-label">{{ dt.label }}</div>
-                    <div v-if="dt.val" class="tabs-val">{{ dt.val }}</div>
-                </div>
-            </li>
-        </ul>
-        <button 
-            v-if="isScrollable" 
-            class="tabs-button" 
-            @click="toRight(path ? path : 'nav-topic')">
-            <i class="fa fa-lg fa-angle-right" />
-        </button>
-    </div> -->
 </template>
 
 <script>

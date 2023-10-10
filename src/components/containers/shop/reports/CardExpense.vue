@@ -2,31 +2,22 @@
 	<div id="AppCardExpense">
         <div class="card bg-white-grey no-padding margin margin-bottom-15px">
             <div class="width width-100 display-flex space-between align-center wrap">
-                <div class="width width-row-3 width-mobile-row-2 padding padding-top-10px padding-bottom-10px">
+                <div class="width width-50 padding padding-top-10px padding-bottom-10px">
                     <div class="padding padding-5px content-center">
                         <div class="display-flex center align-center">
                             <i class="fonts fonts-8 main-color fa fa-lg fa-info-circle margin margin-right-5px"></i>
-                            <span class="fonts fonts-9 normal grey overflow-ellipsis align-center">Total Pengeluaran</span>
+                            <span class="fonts fonts-9 normal grey overflow-ellipsis align-center">Jumlah Pengeluaran</span>
                         </div>
-                        <div class="fonts fonts-11 semibold black overflow-ellipsis align-center">{{ format(grandTotal) }}</div>
+                        <div class="fonts fonts-11 semibold black overflow-ellipsis align-center">{{ data.length }} pengeluaran</div>
                     </div>
                 </div>
-                <div class="width width-row-3 width-mobile-row-2 padding padding-top-10px padding-bottom-10px">
-                    <div class="padding padding-5px border-left content-center">
-                        <div class="display-flex center align-center">
-                            <i class="fonts fonts-8 main-color fa fa-lg fa-info-circle margin margin-right-5px"></i>
-                            <span class="fonts fonts-9 normal grey overflow-ellipsis align-center">Total Kembalian</span>
-                        </div>
-                        <div class="fonts fonts-11 semibold black overflow-ellipsis align-center">{{ format(grandChange) }}</div>
-                    </div>
-                </div>
-                <div class="width width-row-3 width-mobile-row-2 padding padding-top-10px padding-bottom-10px">
+                <div class="width width-50 padding padding-top-10px padding-bottom-10px">
                     <div class="padding padding-5px border-left border-mobile-none  content-center">
                         <div class="display-flex center align-center">
                             <i class="fonts fonts-8 main-color fa fa-lg fa-info-circle margin margin-right-5px"></i>
                             <span class="fonts fonts-9 normal grey overflow-ellipsis align-center">Total Keseluruhan</span>
                         </div>
-                        <div class="fonts fonts-11 semibold black overflow-ellipsis align-center">{{ format(cashOut) }}</div>
+                        <div class="fonts fonts-11 semibold black overflow-ellipsis align-center">{{ format(grandTotal) }}</div>
                     </div>
                 </div>
             </div>

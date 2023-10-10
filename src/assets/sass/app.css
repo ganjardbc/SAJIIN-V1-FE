@@ -938,14 +938,13 @@ a.btn {
   text-align: center;
 }
 .menu-list.with-icon .ml-list .ml-link .ml-value {
-  width: 18px;
-  height: 17px;
-  border-radius: 30px;
-  background-color: #ff6437;
-  color: #fff;
-  text-align: center;
   font-size: 11px;
-  overflow: hidden;
+  width: 18px;
+  height: 18px;
+  line-height: 20px;
+  border-radius: 100%;
+  background-color: #e3342f;
+  color: #fff;
 }
 .menu-list.with-icon .ml-list .router-link-active {
   border-radius: 30px;
@@ -957,6 +956,10 @@ a.btn {
 }
 .menu-list.with-icon .ml-list .router-link-active .ml-label {
   color: #fff;
+}
+.menu-list.with-icon .ml-list .router-link-active .ml-value {
+  background-color: #fff;
+  color: #e3342f;
 }
 .menu-list.with-icon .ml-list .router-link-active:hover {
   background-color: #FB3640;
@@ -112318,6 +112321,10 @@ a {
 
 .el-select {
   width: 100%;
+}
+
+.el-popover {
+  word-break: unset;
 }
 
 .el-input-number {

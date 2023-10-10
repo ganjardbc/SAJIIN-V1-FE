@@ -9,16 +9,44 @@
                 v-if="form.cash_status === 'open'"
                 slot="toolbar" 
                 class="margin margin-right-10px">
-                <button class="btn btn-sekunder btn-full" @click="onClosingCashBook(form)">
+                <button 
+                    class="btn btn-sekunder btn-full" 
+                    :disabled="isCanClosing(form)"
+                    @click="onClosingCashBook(form)">
+                    <el-popover 
+                        v-if="isCanClosing(form)"
+                        placement="left"
+                        width="210"
+                        trigger="hover"
+                        style="word-break: break-word;">
+                        <i slot="reference" class="icn icn-left fa fa-lg fa-info-circle"></i>
+                        <div class="fonts fonts-10 normal red">Untuk menutup buku kas, semua pesanan harus diselesaikan terlebih dahulu.</div>
+                    </el-popover>
                     Tutup
                 </button>
             </div>
             <div class="width width-100">
+                <el-alert
+                    v-if="form.cash_status === 'open'"
+                    title="Penutupan Buku Kas !"
+                    description="Untuk menutup buku kas, semua pesanan harus diselesaikan terlebih dahulu."
+                    type="info"
+                    :closable="true"
+                    :show-icon="true"
+                    style="margin: 15px 0;">
+                </el-alert>
                 <div class="width width-100 padding padding-top-5px">
                     <div class="display-flex space-between margin margin-bottom-15px">
-                        <div class="display-flex flex-start display-mobile">
-                            <div class="fonts fonts-10 semibold margin margin-right-5px">{{ form.cash_date | moment("DD MMMM YYYY") }}</div>
-                            <!-- <div class="fonts fonts-10 grey">{{ form.shop.open_time }} - {{ form.shop.close_time }}</div> -->
+                        <div>
+                            <div class="fonts fonts-9 normal grey">Periode</div>
+                            <div class="margin margin-right-5px">
+                                <span v-if="form.cash_date !== form.cash_end_date" class="fonts fonts-10 semibold">
+                                    {{ form.cash_date | moment("DD MMMM YYYY") }} - {{ form.cash_end_date | moment("DD MMMM YYYY") }}
+                                </span>
+                                <span v-else class="fonts fonts-10 semibold">
+                                    {{ form.cash_date | moment("DD MMMM YYYY") }}
+                                </span>
+                            </div>
                         </div>
                         <AppCardCapsule :data="form.cash_status" class="margin margin-left-10px" />
                     </div>
@@ -207,19 +235,11 @@
                 </div>
                 <div v-if="selectedIndex === 1" class="margin margin-bottom-15px">
                     <div class="display-flex space-between">
-                        <div class="fonts fonts-10 normal black">Pengeluaran</div>
+                        <div class="fonts fonts-10 semibold black">Total Pengeluaran</div>
                         <div class="display-flex column align-right">
                             <div class="fonts fonts-10 semibold black align-right">{{ format(grandTotalExpense) }}</div>
                             <div v-if="grandItemExpense" class="fonts fonts-9 normal black">{{ grandItemExpense }} item</div>
                         </div>
-                    </div>
-                    <div class="display-flex space-between align-center">
-                        <div class="fonts fonts-10 normal black">Kembalian</div>
-                        <div class="fonts fonts-10 semibold black align-right">{{ format(grandChange) }}</div>
-                    </div>
-                    <div class="display-flex space-between align-center padding padding-top-10px margin margin-top-10px border-top">
-                        <div class="fonts fonts-10 semibold black">Total Pengeluaran</div>
-                        <div class="fonts fonts-10 semibold main-color align-right">{{ format(cashOut) }}</div>
                     </div>
                 </div>
                 <button 
@@ -229,8 +249,9 @@
                     <el-popover 
                         v-if="form.cash_status === 'open'"
                         placement="left"
-                        width="230"
-                        trigger="hover">
+                        width="210"
+                        trigger="hover"
+                        style="word-break: break-word;">
                         <i slot="reference" class="icn icn-left fa fa-lg fa-info-circle"></i>
                         <div class="fonts fonts-10 normal red">Kamu bisa download laporan setelah menutup buku kas ini.</div>
                     </el-popover>
@@ -306,6 +327,17 @@ export default {
             download: 'storeReports/download',
             getReportsData: 'storeReports/getData',
         }),
+        isCanClosing (data) {
+            let status = true 
+            if (data.status === 'active') {
+                if (!data.order_total || (data.order_done < data.order_total)) {
+                    status = true 
+                } else {
+                    status = false 
+                }
+            }
+            return status 
+        },
         onRoute (data) {
             let path = 'shop-orders'
             const roleName = this.$cookies.get('user') 

@@ -1066,6 +1066,10 @@ a {
     width: 100%;
 }
 
+.el-popover {
+    word-break: unset;
+}
+
 .el-input-number {
     display: flex;
     border: 1px solid #DCDFE6;

@@ -1,5 +1,5 @@
 <template>
-    <div id="App">
+    <div id="AppShopDashboard">
         <div class="card-dashboard-container">
             <div style="padding-bottom: 15px;">
                 <h1 class="fonts big black bold">Dashboard</h1>
@@ -65,7 +65,7 @@ import { mapState, mapActions } from 'vuex'
 import AppCardDashboard from '../../../modules/AppCardDashboard'
 
 export default {
-    name: 'App',
+    name: 'AppShopDashboard',
     metaInfo: {
         title: 'Shop',
         titleTemplate: '%s | Dashboard',

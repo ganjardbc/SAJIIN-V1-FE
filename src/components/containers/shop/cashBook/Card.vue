@@ -12,18 +12,18 @@
                     </div>
                 </div>
                 <div class="display-flex flex-end align-center">
-                    <el-popover
+                    <!-- <el-popover
                         placement="bottom-end"
                         width="180"
                         trigger="click">
                         <div class="width width-100">
-                            <!-- HIDDEN TEMPORARY -->
-                            <!-- <button 
+                            HIDDEN TEMPORARY
+                            <button 
                                 v-if="dt.cashbook.cash_status === 'closed'"
                                 class="btn btn-white btn-full btn-align-left"
                                 @click="onReOpen(dt.cashbook)">
                                 <i class="icn icn-left fa fa-lw fa-cog"></i> Re-Open
-                            </button> -->
+                            </button>
                             <button 
                                 class="btn btn-white btn-full btn-align-left"
                                 style="border: 0;"
@@ -37,16 +37,30 @@
                             class="btn btn-icon btn-circle btn-white">
                             <i class="fa fa-lw fa-ellipsis-v"></i>
                         </button>
-                    </el-popover>
+                    </el-popover> -->
+                    <button 
+                        class="btn btn-icon btn-circle btn-white"
+                        style="border: 0;"
+                        :disabled="isCanDelete(dt.cashbook)"
+                        @click="onDelete(dt.cashbook)">
+                        <i class="fa fa-lw fa-trash-alt"></i>
+                    </button>
                 </div>
             </div>
 
             <div class="width width-100">
                 <div class="width width-100">
                     <div class="display-flex space-between margin margin-bottom-15px">
-                        <div class="display-flex flex-start display-mobile">
-                            <div class="fonts fonts-10 semibold margin margin-right-5px">{{ dt.cashbook.cash_date | moment("DD MMMM YYYY") }}</div>
-                            <!-- <div class="fonts fonts-10 grey">{{ dt.shop.open_time }} - {{ dt.shop.close_time }}</div> -->
+                        <div>
+                            <div class="fonts fonts-9 normal grey">Periode</div>
+                            <div class="margin margin-right-5px">
+                                <span v-if="dt.cashbook.cash_date !== dt.cashbook.cash_end_date" class="fonts fonts-10 semibold">
+                                    {{ dt.cashbook.cash_date | moment("DD MMMM YYYY") }} - {{ dt.cashbook.cash_end_date | moment("DD MMMM YYYY") }}
+                                </span>
+                                <span v-else class="fonts fonts-10 semibold">
+                                    {{ dt.cashbook.cash_date | moment("DD MMMM YYYY") }}
+                                </span>
+                            </div>
                         </div>
                         <AppCardCapsule :data="dt.cashbook.cash_status" class="margin margin-left-10px" />
                     </div>
@@ -133,6 +147,15 @@
                             class="btn btn-sekunder margin margin-left-5px"
                             :disabled="isCanClosing(dt.cashbook)"
                             @click="onOpenCashBook(dt.cashbook)">
+                            <el-popover 
+                                v-if="isCanClosing(dt.cashbook)"
+                                placement="left"
+                                width="210"
+                                trigger="hover"
+                                style="word-break: break-word;">
+                                <i slot="reference" class="icn icn-left fa fa-lg fa-info-circle"></i>
+                                <div class="fonts fonts-10 normal red">Untuk menutup buku kas, semua pesanan harus diselesaikan terlebih dahulu.</div>
+                            </el-popover>
                             Tutup
                         </button>
                         <button 
@@ -198,6 +221,13 @@ export default {
                 status = false 
             }
             return status 
+        },
+        isFullPeriode (data) {
+            let status = false
+            if (data && data.cash_date && data.cash_end_date) {
+                status = true 
+            }
+            return status
         },
 
         // COVER

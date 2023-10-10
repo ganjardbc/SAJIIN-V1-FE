@@ -196,6 +196,7 @@ export default {
             updateDataCashBook: 'storeCashBook/updateData',
             download: 'storeReports/download',
             reports: 'storeReports/getData',
+            getMatrix: 'storeDashboard/getMatrix',
         }),
         onOpenCart () {
             this.visibleCart = true
@@ -211,6 +212,14 @@ export default {
         },
         onCreateOrder () {
             this.visibleConfirmed = true 
+        },
+        getDashboardMatrix () {
+            const shop_id = this.shopId
+            const payload = {
+                token: this.$cookies.get('tokenBearer'),
+                shop_id: shop_id,
+            }
+            this.getMatrix(payload)
         },
 
         // RECEIPT 
@@ -273,6 +282,7 @@ export default {
                     this.onCloseCheckOut()
                     this.resetOrder()
                     this.getDataCashBook()
+                    this.getDashboardMatrix()
                     this.onOpenReceipt(res.data.data)
                     this.$message(`Pesanan berhasil dibuat.`)
                 } else {

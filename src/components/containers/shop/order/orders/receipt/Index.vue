@@ -61,7 +61,7 @@ import PrintReceipt from './PrintReceipt'
 import VueQrcode from 'vue-qrcode'
 import printStyles from './styles'
 import CMD from './markdown'
-import { replaceString, formatCurrency } from '../../../../../../services/utils'
+import { replaceString, formatCurrency } from '@/services/utils'
 
 const thermalSizing = [
     // {id: 1, sizeThermal: {x: '100%', y: 'auto'}, sizeReceipt: {x: '100%', y: 'auto'}},

@@ -107,7 +107,7 @@
                         <span v-else>Tanggal Kosong</span>
                     </div>
                 </div>
-                <div class="width width-100 display-flex align-center margin margin-bottom-15px">
+                <!-- <div class="width width-100 display-flex align-center margin margin-bottom-15px">
                     <div style="width: calc(50% - 20px);">
                         <div class="fonts fonts-9 normal grey">Kas Summary</div>
                         <div class="fonts fonts-14 semibold main-color overflow-ellipsis">{{ format(cashSummary) }}</div>
@@ -119,7 +119,7 @@
                         <div class="fonts fonts-9 normal grey align-right">Kas Aktual</div>
                         <div class="fonts fonts-14 semibold black overflow-ellipsis align-right">{{ format(cashActual) }}</div>
                     </div>
-                </div>
+                </div> -->
                 <div class="card bg-white-grey no-padding margin margin-bottom-15px">
                     <div class="width width-100 display-flex space-between align-center wrap">
                         <div class="width width-row-4 width-mobile-row-2 padding padding-top-10px padding-bottom-10px">

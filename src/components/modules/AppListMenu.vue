@@ -18,7 +18,7 @@
                     </div>
                     <div class="val-container">
                         <div v-if="parent.value > 0" class="ml-value">
-                            <div class="post-center">{{ parent.value }}</div>
+                            {{ parent.value }}
                         </div>
                     </div>
                 </router-link>
@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="val-container">
                                         <div v-if="child.value > 0" class="ml-value">
-                                            <div class="post-center">{{ child.value }}</div>
+                                            {{ child.value }}
                                         </div>
                                     </div>
                                 </router-link>

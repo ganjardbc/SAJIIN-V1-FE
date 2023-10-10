@@ -21,8 +21,9 @@
                         @click="onButtonUpload">
                         Update Cover
                     </button>
-                    <div class="border border-bottom margin margin-top-20-px"></div>
+                    <div v-if="form.is_digital_menu_active" class="border border-bottom margin margin-top-20-px"></div>
                     <button 
+                        v-if="form.is_digital_menu_active"
                         class="btn btn-main-reverse with-hover btn-full margin margin-top-20px"
                         @click="onOpenQrCode">
                         QR-Code Toko

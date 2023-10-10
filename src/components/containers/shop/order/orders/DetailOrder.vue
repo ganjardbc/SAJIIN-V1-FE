@@ -7,7 +7,7 @@
             :onClose="onClose">
             <div v-if="isActiveOrder(form)" slot="toolbar">
                 <button 
-                    class="btn btn-grey with-border with-hover margin margin-right-10px"
+                    class="btn btn-sekunder margin margin-right-10px"
                     @click="onChangeStatus(form, 'canceled')">
                     Cancel
                 </button>

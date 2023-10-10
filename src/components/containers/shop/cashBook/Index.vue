@@ -311,11 +311,11 @@ export default {
                         if (
                             data && 
                             data.current_cashbook && 
-                            data.current_cashbook.cash_status === "closed"
+                            data.current_cashbook.cash_status === "open"
                         ) {
-                            this.visibleCreateButton = true 
+                            this.visibleCreateButton = false 
                         } else {
-                            this.visibleCreateButton = false  
+                            this.visibleCreateButton = true  
                         }
                     })
             }

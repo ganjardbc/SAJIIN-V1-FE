@@ -14,19 +14,28 @@
             </el-alert>
 
             <div class="display-flex space-between align-center margin margin-bottom-15px">
-                <div class="width width-50 display-flex align-center">
-                    <div class="fonts small black semibold margin margin-right-10px">Buku Kas</div>
-                    <AppCardCapsule v-if="currentCashBook" :data="currentCashBook.cash_status" />
+                <div class="width width-50">
+                    <div class="display-flex align-center margin margin-bottom-2px">
+                        <div class="fonts small black semibold margin margin-right-10px">Buku Kas</div>
+                        <AppCardCapsule v-if="currentCashBook" :data="currentCashBook.cash_status" />
+                    </div>
+                    <div v-if="currentCashBook" class="fonts fonts-9 semibold">
+                        {{ currentCashBook.cash_date | moment("DD MMMM YYYY") }}
+                    </div>
+                    <div v-else class="fonts fonts-9 normal">No Date</div>
                 </div>
                 <div class="width width-50 display-flex flex-end">
-                    <div v-if="currentCashBook" class="display-flex flex-end align-center">
-                        <button 
-                            class="btn btn-icon btn-white" 
-                            @click="onRefresh">
-                            <i class="fa fa-lw fa-retweet"></i>
-                        </button>
-                        <div class="fonts medium semibold main-color overflow-ellipsis align-right">
-                            {{ format(currentCashBook && currentCashBook.cash_summary || 0) }}
+                    <div v-if="currentCashBook" class="display-flex column align-right">
+                        <div class="fonts fonts-9 normal">Kas Summary</div>
+                        <div class="display-flex flex-end align-center">
+                            <button 
+                                class="btn btn-small-icon btn-white margin margin-right-5px" 
+                                @click="onRefresh">
+                                <i class="fa fa-lw fa-retweet"></i>
+                            </button>
+                            <div class="fonts fonts-14 semibold main-color overflow-ellipsis align-right">
+                                {{ format(currentCashBook && currentCashBook.cash_summary || 0) }}
+                            </div>
                         </div>
                     </div>
                     <button 
@@ -36,14 +45,6 @@
                         <i class="icn icn-left fa fa-lg fa-plus"></i> Buka Kasir
                     </button>
                 </div>
-            </div>
-
-            <div v-if="currentCashBook" class="width width-100 margin margin-bottom-15px">
-                <div v-if="currentCashBook">
-                    <span class="fonts fonts-9 semibold">{{ currentCashBook.cash_date | moment("DD MMMM YYYY") }}</span>
-                    <span class="fonts fonts-9 normal">{{ shopCashBook.open_time || '' }} - {{ shopCashBook.close_time || '' }}</span>
-                </div>
-                <div v-else class="fonts fonts-9 normal">No Date</div>
             </div>
 
             <div class="card bg-white-grey no-padding margin margin-bottom-15px">

@@ -44,13 +44,14 @@
                 slot="reference"
                 class="btn btn-white btn-icon btn-circle">
                 <i class="fa fa-lg fa-bell"></i>
-                <span v-if="totalUnread" class="notif">{{ totalUnread }}</span>
+                <span v-if="totalUnread" class="notif">{{ getTotalUnread }}</span>
             </button>
         </el-popover>
     </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import { replaceToMoreValue } from '@/services/utils'
 import AppEmpty from './AppEmpty'
 import icon from '@/assets/img/icon.png'
 
@@ -98,6 +99,9 @@ export default {
         paramShopId () {
             return this.$route.params.shopId
         },
+        getTotalUnread () {
+            return replaceToMoreValue(this.totalUnread)
+        }
     },
     methods: {
         ...mapActions({
@@ -105,6 +109,7 @@ export default {
             resetFilter: 'storeNotification/resetFilter',
             setFormData: 'storeNotification/setFormData',
             updateData: 'storeNotification/updateData',
+            getMatrix: 'storeDashboard/getMatrix',
         }),
         onLoadMore () {
             this.offset = this.offset + this.limit
@@ -182,6 +187,14 @@ export default {
                 this.getNotification({ token, shop_id })
             }
         },
+        getDashboardMatrix () {
+            const shop_id = this.shopId
+            const payload = {
+                token: this.$cookies.get('tokenBearer'),
+                shop_id: shop_id,
+            }
+            this.getMatrix(payload)
+        },
 
         // OTHERS 
         buildPushNotification (data) {
@@ -208,17 +221,20 @@ export default {
         shopId (prevProps, nextProps) {
             if (prevProps !== nextProps) {
                 this.onReload()
+                this.getDashboardMatrix()
             }
         }
     },
     mounted() {
         this.onReload()
+        this.getDashboardMatrix()
     },
     sockets: {
         notification: function (data) {
             this.buildNotification(data)
             this.buildPushNotification(data)
             this.onReload()
+            this.getDashboardMatrix()
         },
     }
 }

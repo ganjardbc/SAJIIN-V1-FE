@@ -81,11 +81,14 @@
                 </div>
                 <div class="field-group">
                     <div class="field-label">Tanggal</div>
-                    <el-input 
-                        placeholder=""
+                    <el-date-picker 
+                        placeholder="Pilih tanggal"
                         type="date"
+                        format="dd MMMM yyyy"
                         v-model="form.expense_date"
-                        :disabled="isDetailForm"></el-input>
+                        :disabled="isDetailForm"
+                        :picker-options="pickerOptions"
+                        style="width: 100% !important;"></el-date-picker>
                     <div 
                         v-if="errorMessage.expense_date" 
                         class="field-error">
@@ -159,7 +162,13 @@ import InputNumber from '../../../../modules/InputNumber'
 export default {
     name: 'App',
     data () {
-        return {}
+        return {
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now();
+                },
+            }
+        }
     },
     mounted () {},
     computed: {

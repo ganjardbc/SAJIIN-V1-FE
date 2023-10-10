@@ -245,7 +245,7 @@ export default {
         },
         isCanSave () {
             let status = false 
-            if (!this.isDetailForm && this.form.cash_modal > 0) {
+            if (!this.isDetailForm) {
                 status = true 
             }
             return status

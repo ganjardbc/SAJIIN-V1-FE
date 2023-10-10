@@ -4,16 +4,30 @@
             <div class="header">
                 <div class="header-content display-flex space-between align-center">
                     <div class="title">Shop</div>
-                    <button 
-                        class="close-button btn btn-icon btn-white btn-circle"
-                        @click="onCloseSidebar">
-                        <i class="fa fa-lg fa-times"></i>
-                    </button>
+                    <div class="display-flex flex-end">
+                        <!-- <button 
+                            class="btn btn-white btn-icon btn-circle" 
+                            @click="$router.push({name: 'owner-home'})">
+                            <i class="fa fa-lw fa-store"></i>
+                        </button> -->
+                        <button 
+                            class="close-button btn btn-icon btn-white btn-circle"
+                            @click="onCloseSidebar">
+                            <i class="fa fa-lg fa-times"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="content">
-                <div class="padding padding-10px">
+                <div class="padding padding-10px border-bottom">
                     <SelectShopField />
+                </div>
+                <div class="padding padding-10px">
+                    <button 
+                        class="btn btn-sekunder btn-full btn-circle" 
+                        @click="$router.push({name: 'owner-home'})">
+                        <i class="icn icn-left fa fa-lw fa-store"></i> Back to Home
+                    </button>
                 </div>
                 <AppListMenu 
                     :data.sync="sidebar"
@@ -25,11 +39,12 @@
             <div class="header">
                 <div class="header-content-fixed">
                     <div class="header-content-main">
-                        <div class="header-content-main-left">
+                        <div class="header-content-main-left display-flex">
                             <button 
                                 class="btn btn-white btn-icon btn-circle margin margin-right-5px"
                                 @click="onOpenSidebar">
-                                <i class="icn fa fa-lw fa-bars"></i>
+                                <i class="fa fa-lg fa-bars"></i>
+                                <span v-if="getAllTotalSidebar" class="notif">{{ getAllTotalSidebar }}</span>
                             </button>
                         </div>
                         <div class="header-content-main-center">
@@ -69,6 +84,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
+import { replaceToMoreValue } from '@/services/utils'
 import VueLoadImage from 'vue-load-image'
 import logo from '@/assets/img/logo.png'
 import icon from '@/assets/img/icon.png'
@@ -80,43 +96,6 @@ import AppCardProfile from '../../modules/AppCardProfile'
 import AppPopupLoader from '../../modules/AppPopupLoader'
 import SelectShopField from '../../modules/SelectShopField'
 
-const defaultSidebar = [
-    {
-        icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: true, menu: [
-            {icon: 'fa fa-lg fa-store', label: 'Kembali ke Toko', value: 0, link: 'owner-home', permission: 'settings'},
-        ]
-    },
-    {
-        icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'shop-dashboard', permission: 'dashboard'},
-        ]
-    },
-    {
-        icon: 'fa fa-lg fa-database', label: 'TOKO', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-laptop', label: 'Kasir', value: 0, link: 'shop-cashier', permission: 'cashier'},
-            {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: 0, link: 'shop-order', permission: 'orders'},
-            {icon: 'fa fa-lg fa-list-ul', label: 'Pengeluaran', value: 0, link: 'shop-expense', permission: 'expense-list'},
-            {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: 0, link: 'shop-cash-book', permission: 'cashbooks'},
-            {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'shop-product', permission: 'products'},
-            {icon: 'fa fa-lg fa-th-large', label: 'Meja', value: 0, link: 'shop-tables', permission: 'tables'},
-            {icon: 'fa fa-lg fa-flag', label: 'Platform', value: 0, link: 'shop-platforms', permission: 'tables'},
-            {icon: 'fa fa-lg fa-percent', label: 'Promosi', value: 0, link: 'shop-promotions', permission: 'promotions'},
-            {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'shop-employee', permission: 'employees'},
-        ]
-    },
-    {
-        icon: 'fa fa-lg fa-database', label: 'LAPORAN', value: 0, disableMenu: false, menu: [
-            
-            {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'shop-reports', permission: 'reports'},
-        ]
-    },
-    {
-        icon: 'fa fa-lg fa-database', label: 'LAINNYA', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-cogs', label: 'Pengaturan', value: 0, link: 'shop-settings', permission: 'settings'},
-        ]
-    }
-]
-
 export default {
     name: 'admin',
     data () {
@@ -124,7 +103,6 @@ export default {
             logo: logo,
             icon: icon,
             visibleSidebar: false,
-            sidebar: defaultSidebar
         }
     },
     components: {
@@ -264,6 +242,8 @@ export default {
             data: (state) => state.storeAuth.data,
             loadingShop: (state) => state.storeSelectedShop.loading,
             dataShop: (state) => state.storeSelectedShop.data,
+            matrixDashboard: (state) => state.storeDashboard.matrix,
+            dataCurrent: (state) => state.storeCashBook.dataCurrent,
         }),
         ...mapGetters({
             getSelectedData: 'storeSelectedShop/getSelectedData'
@@ -276,6 +256,60 @@ export default {
         },
         storeLogo () {
             return this.getSelectedData ? this.shopImageThumbnailUrl + this.getSelectedData.image : ''
+        },
+        getTotalOrder () {
+            let total = 0
+            if (this.matrixDashboard.newOrder > 0 || this.matrixDashboard.onProgress > 0) {
+                total = this.matrixDashboard.newOrder + this.matrixDashboard.onProgress
+            }
+            return total
+        },
+        getTotalOpenedCashbook () {
+            return this.dataCurrent && 
+                this.dataCurrent.opened_cashbook && 
+                this.dataCurrent.opened_cashbook.length
+        },
+        getAllTotalSidebar () {
+            const total = this.getTotalOrder + this.getTotalOpenedCashbook
+            return replaceToMoreValue(total)
+        },
+        sidebar () {
+            return [
+                // {
+                //     icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: true, menu: [
+                //         {icon: 'fa fa-lg fa-store', label: 'Kembali ke Toko', value: 0, link: 'owner-home', permission: 'settings'},
+                //     ]
+                // },
+                {
+                    icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: false, menu: [
+                        {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'shop-dashboard', permission: 'dashboard'},
+                    ]
+                },
+                {
+                    icon: 'fa fa-lg fa-database', label: 'TOKO', value: 0, disableMenu: false, menu: [
+                        {icon: 'fa fa-lg fa-laptop', label: 'Kasir', value: 0, link: 'shop-cashier', permission: 'cashier'},
+                        {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: replaceToMoreValue(this.getTotalOrder), link: 'shop-order', permission: 'orders'},
+                        {icon: 'fa fa-lg fa-list-ul', label: 'Pengeluaran', value: 0, link: 'shop-expense', permission: 'expense-list'},
+                        {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: replaceToMoreValue(this.getTotalOpenedCashbook), link: 'shop-cash-book', permission: 'cashbooks'},
+                        {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'shop-product', permission: 'products'},
+                        {icon: 'fa fa-lg fa-th-large', label: 'Meja', value: 0, link: 'shop-tables', permission: 'tables'},
+                        {icon: 'fa fa-lg fa-flag', label: 'Platform', value: 0, link: 'shop-platforms', permission: 'tables'},
+                        {icon: 'fa fa-lg fa-percent', label: 'Promosi', value: 0, link: 'shop-promotions', permission: 'promotions'},
+                        {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'shop-employee', permission: 'employees'},
+                    ]
+                },
+                {
+                    icon: 'fa fa-lg fa-database', label: 'LAPORAN', value: 0, disableMenu: false, menu: [
+                        
+                        {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'shop-reports', permission: 'reports'},
+                    ]
+                },
+                {
+                    icon: 'fa fa-lg fa-database', label: 'LAINNYA', value: 0, disableMenu: false, menu: [
+                        {icon: 'fa fa-lg fa-cogs', label: 'Pengaturan', value: 0, link: 'shop-settings', permission: 'settings'},
+                    ]
+                }
+            ]
         }
     },
     beforeMount (){

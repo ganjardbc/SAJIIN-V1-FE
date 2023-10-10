@@ -101,14 +101,13 @@
                     text-align: center;
                 }
                 .ml-value {
-                    width: 18px;
-                    height: 17px;
-                    border-radius: 30px;
-                    background-color: $tertiary-color;
-                    color: #fff;
-                    text-align: center;
                     font-size: 11px;
-                    overflow: hidden;
+                    width: 18px;
+                    height: 18px;
+                    line-height: 20px;
+                    border-radius: 100%;
+                    background-color: $red;
+                    color: $white;
                 }
             }
             .router-link-active {
@@ -116,18 +115,22 @@
                 background-color: $main-color;
                 box-shadow: $shadow;
                 .ml-icon {
-                    color: #fff;
+                    color: $white;
                 }
                 .ml-label {
-                    color: #fff;
+                    color: $white;
+                }
+                .ml-value {
+                    background-color: $white;
+                    color: $red;
                 }
                 &:hover {
                     background-color: $main-color;
                     .ml-icon {
-                        color: #fff;
+                        color: $white;
                     }
                     .ml-label {
-                        color: #fff;
+                        color: $white;
                     }
                 }
             }
@@ -173,14 +176,14 @@
                     height: 17px;
                     border-radius: 2px;
                     background-color: $teal;
-                    color: #fff;
+                    color: $white;
                     text-align: center;
                     font-size: 11px;
                     overflow: hidden;
                 }
             }
             .router-link-active {
-                background-color: #fff;
+                background-color: $white;
                 // box-shadow: $shadow;
                 .ml-icon {
                     color: $main-color;
@@ -351,7 +354,7 @@
         top: 0;
         border-radius: 2px;
         padding: 3px 6px 2px 6px;
-        color: #fff;
+        color: $white;
         background-color: $tertiary-color;
         font-size: 11px;
     }
@@ -380,7 +383,7 @@
             display: inline-block;
             height: 30px;
             padding: 8px 20px 0 20px;
-            background-color: #fff;
+            background-color: $white;
             cursor: pointer;
             .tabs-label {
                 font-weight: bold;
@@ -461,7 +464,7 @@
     li {
         display: inline-block;
         padding: 5px 10px;
-        background-color: #fff;
+        background-color: $white;
         border: 1px $light-grey solid;
         border-radius: 4px;
         margin-right: 10px;
@@ -478,7 +481,7 @@
             background-color: #f5f5f5;
             border: 1px $white-grey solid;
             cursor: not-allowed;
-            box-shadow: 0 0 0 0 #fff;
+            box-shadow: 0 0 0 0 $white;
             .icn {
                 color: $light-grey;
             }
@@ -604,7 +607,7 @@
             line-height: 20px;
             border-radius: 100%;
             background-color: $red;
-            color: #fff;
+            color: $white;
         }
     }
 }

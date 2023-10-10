@@ -1,4 +1,5 @@
 import axios from 'axios'
+import moment from 'moment'
 
 const defaultMessage = () => {
     return {
@@ -191,7 +192,8 @@ export default {
             commit('SET_LOADING_FORM', true)
             
             const params = {
-                ...data
+                ...data,
+                expense_date: moment(data.expense_date).format('YYYY-MM-DD hh:mm:ss')
             }
 
             return axios.post('/api/expense-list/post', params, { 
@@ -217,7 +219,8 @@ export default {
             commit('SET_LOADING_FORM', true)
             
             const params = {
-                ...data
+                ...data,
+                expense_date: moment(data.expense_date).format('YYYY-MM-DD hh:mm:ss')
             }
 
             return axios.post('/api/expense-list/update', params, { 

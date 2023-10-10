@@ -17,7 +17,7 @@
                         <div style="width: calc(100% - 85px)">
                             <div class="fonts fonts-11 semibold margin margin-bottom-5px">{{ item.name }}</div>
                             <div class="fonts fonts-10 grey">{{ format(item.price) }}</div>
-                            <div v-if="item.details" class="fonts fonts-10 grey">{{ item.details.length }} Varian</div>
+                            <div v-if="item.details && item.details.length > 0" class="fonts fonts-10 grey">{{ item.details.length }} Varian</div>
                         </div>
                     </div>
 

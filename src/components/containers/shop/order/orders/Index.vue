@@ -193,6 +193,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import { replaceToMoreValue } from '@/services/utils'
 import AppEmpty from '../../../../modules/AppEmpty'
 import AppPopupLoader from '../../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
@@ -205,14 +206,6 @@ import FormCheckout from './checkOut/Index'
 import FormReceipt from './receipt/Index'
 import FormProduct from './product/Index'
 import FormCustomer from './customer/Index'
-
-const tabs = [
-    {id: 1, label: 'Semua', status: 'active'},
-    {id: 2, label: 'Baru', status: ''},
-    {id: 3, label: 'Diproses', status: ''},
-    {id: 4, label: 'Selesai', status: ''},
-    {id: 5, label: 'Dibatalkan', status: ''},
-]
 
 export default {
     name: 'App',
@@ -245,7 +238,6 @@ export default {
             currentPage: 1,
             selectedIndex: 0,
             selectedData: null,
-            tabs: tabs,
         }
     },
     mounted () {
@@ -282,6 +274,7 @@ export default {
             formVarian: (state) => state.storeOrdersDetail.form,
             loadingCashbook: (state) => state.storeCashBook.loading,
             dataCurrent: (state) => state.storeCashBook.dataCurrent,
+            matrixDashboard: (state) => state.storeDashboard.matrix,
         }),
         stateCashbookList () {
             return this.dataCurrent && this.dataCurrent.all_cashbook
@@ -299,6 +292,15 @@ export default {
         },
         paramOrderId () {
             return this.$route.query.search || ''
+        },
+        tabs () {
+            return [
+                {id: 1, label: 'Semua', status: 'active'},
+                {id: 2, label: `Baru`, value: replaceToMoreValue(this.matrixDashboard.newOrder), status: ''},
+                {id: 3, label: `Diproses`, value: replaceToMoreValue(this.matrixDashboard.onProgress), status: ''},
+                {id: 4, label: `Selesai`, status: ''},
+                {id: 5, label: `Dibatalkan`, status: ''},
+            ]
         }
     },
     watch: {
@@ -324,6 +326,7 @@ export default {
             deleteData: 'storeOrders/deleteData',
             updateDataProduct: 'storeOrders/updateDataProduct',
             setLoadingForm: 'storeOrders/setLoadingForm',
+            getMatrix: 'storeDashboard/getMatrix',
         }),
         onSearch (data) {
             this.filter.search = data 
@@ -357,6 +360,14 @@ export default {
             }
             this.handleFilterSearch()
         },
+        getDashboardMatrix () {
+            const shop_id = this.shopId
+            const payload = {
+                token: this.$cookies.get('tokenBearer'),
+                shop_id: shop_id,
+            }
+            this.getMatrix(payload)
+        },
 
         // LIST DATA 
         getData () {
@@ -364,6 +375,7 @@ export default {
             const shop_id = this.shopId
             if (shop_id) {
                 this.getOrder({ token, shop_id })
+                this.getDashboardMatrix()
             }
         },
         handleCurrentChange (value) {

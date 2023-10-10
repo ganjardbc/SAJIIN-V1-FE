@@ -43,9 +43,21 @@ const replaceString = (value) => {
     }
 }
 
+const replaceToMoreValue = (value) => {
+    let text = ''
+    if (parseInt(value) > 0) {
+        text = value
+    }
+    if (parseInt(value) >= 10) {
+        text =  '9+'
+    }
+    return text
+}
+
 export {
     formatCurrency,
     fieldCurrency,
     getCashbookList,
-    replaceString
+    replaceString,
+    replaceToMoreValue
 }
