@@ -5,11 +5,6 @@
                 <div class="header-content display-flex space-between align-center">
                     <div class="title">Shop</div>
                     <div class="display-flex flex-end">
-                        <!-- <button 
-                            class="btn btn-white btn-icon btn-circle" 
-                            @click="$router.push({name: 'owner-home'})">
-                            <i class="fa fa-lw fa-store"></i>
-                        </button> -->
                         <button 
                             class="close-button btn btn-icon btn-white btn-circle"
                             @click="onCloseSidebar">
@@ -275,11 +270,6 @@ export default {
         },
         sidebar () {
             return [
-                // {
-                //     icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: true, menu: [
-                //         {icon: 'fa fa-lg fa-store', label: 'Kembali ke Toko', value: 0, link: 'owner-home', permission: 'settings'},
-                //     ]
-                // },
                 {
                     icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: false, menu: [
                         {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'shop-dashboard', permission: 'dashboard'},

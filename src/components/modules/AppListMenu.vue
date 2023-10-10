@@ -17,7 +17,7 @@
                         {{ parent.label }}
                     </div>
                     <div class="val-container">
-                        <div v-if="parent.value > 0" class="ml-value">
+                        <div v-if="parent.value" class="ml-value">
                             {{ parent.value }}
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                                         {{ child.label }}
                                     </div>
                                     <div class="val-container">
-                                        <div v-if="child.value > 0" class="ml-value">
+                                        <div v-if="child.value" class="ml-value">
                                             {{ child.value }}
                                         </div>
                                     </div>
