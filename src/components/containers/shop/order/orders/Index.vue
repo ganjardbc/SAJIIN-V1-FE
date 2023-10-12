@@ -294,10 +294,13 @@ export default {
             return this.$route.query.search || ''
         },
         tabs () {
+            const newOrder = this.matrixDashboard.newOrder
+            const onProgress = this.matrixDashboard.onProgress
+            const all = newOrder + onProgress
             return [
-                {id: 1, label: 'Semua', status: 'active'},
-                {id: 2, label: `Baru`, value: replaceToMoreValue(this.matrixDashboard.newOrder), status: ''},
-                {id: 3, label: `Diproses`, value: replaceToMoreValue(this.matrixDashboard.onProgress), status: ''},
+                {id: 1, label: 'Semua', value: replaceToMoreValue(all), status: 'active'},
+                {id: 2, label: `Baru`, value: replaceToMoreValue(newOrder), status: ''},
+                {id: 3, label: `Diproses`, value: replaceToMoreValue(onProgress), status: ''},
                 {id: 4, label: `Selesai`, status: ''},
                 {id: 5, label: `Dibatalkan`, status: ''},
             ]

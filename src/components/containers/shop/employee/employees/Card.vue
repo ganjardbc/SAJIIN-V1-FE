@@ -53,12 +53,17 @@
                             alt="" 
                             class="post-center">
                         <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-                        <button 
-                            class="btn btn-sekunder btn-small-icon btn-circle" 
-                            style="position: absolute; bottom: 5px; right: 5px;" 
-                            @click="onChangeCover(dt)">
-                            <i class="post-middle-absolute fonts fonts-11 grey fa fa-lg fa-camera" />
-                        </button>
+                        <div 
+                            class="image image-35px image-circle border-full bg-white"
+                            style="position: absolute; bottom: 2px; right: 2px;"
+                            >
+                            <img 
+                                v-if="dt.user.image" 
+                                :src="adminImageThumbnailUrl + dt.user.image" 
+                                alt="" 
+                                class="post-center">
+                            <i v-else class="post-middle-absolute icn fa fa-lw fa-image"></i>
+                        </div>
                     </div>
                 </div>
                 <div style="width: calc(100% - 95px);">
@@ -122,14 +127,6 @@ export default {
         },
     },
     methods: {
-        // COVER
-        onChangeCover (data) {
-            this.$emit('onChangeCover', {
-                ...data.employee,
-                user: data.user,
-            })
-        },
-
         // DETAIL
         onDetail (data) {
             this.$emit('onDetail', {

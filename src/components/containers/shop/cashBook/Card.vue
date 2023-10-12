@@ -12,12 +12,12 @@
                     </div>
                 </div>
                 <div class="display-flex flex-end align-center">
+                    <AppCardCapsule :data="dt.cashbook.status" class="margin margin-left-10px" />
                     <!-- <el-popover
                         placement="bottom-end"
                         width="180"
                         trigger="click">
                         <div class="width width-100">
-                            HIDDEN TEMPORARY
                             <button 
                                 v-if="dt.cashbook.cash_status === 'closed'"
                                 class="btn btn-white btn-full btn-align-left"
@@ -27,7 +27,6 @@
                             <button 
                                 class="btn btn-white btn-full btn-align-left"
                                 style="border: 0;"
-                                :disabled="isCanDelete(dt.cashbook)"
                                 @click="onDelete(dt.cashbook)">
                                 <i class="icn icn-left fa fa-lw fa-trash-alt"></i> Hapus
                             </button>
@@ -38,19 +37,12 @@
                             <i class="fa fa-lw fa-ellipsis-v"></i>
                         </button>
                     </el-popover> -->
-                    <button 
-                        class="btn btn-icon btn-circle btn-white"
-                        style="border: 0;"
-                        :disabled="isCanDelete(dt.cashbook)"
-                        @click="onDelete(dt.cashbook)">
-                        <i class="fa fa-lw fa-trash-alt"></i>
-                    </button>
                 </div>
             </div>
 
             <div class="width width-100">
                 <div class="width width-100">
-                    <div class="display-flex space-between margin margin-bottom-15px">
+                    <div class="display-flex space-between align-center margin margin-bottom-15px">
                         <div>
                             <div class="fonts fonts-9 normal grey">Periode</div>
                             <div class="margin margin-right-5px">
@@ -62,7 +54,10 @@
                                 </span>
                             </div>
                         </div>
-                        <AppCardCapsule :data="dt.cashbook.cash_status" class="margin margin-left-10px" />
+                        <div class="display-flex">
+                            <div class="fonts fonts-9 normal grey">Toko</div>
+                            <AppCardCapsule :data="dt.cashbook.cash_status" class="margin margin-left-5px" />
+                        </div>
                     </div>
                     <div class="width width-100 display-flex align-center margin margin-bottom-15px">
                         <div style="width: calc(50% - 20px);">
@@ -83,7 +78,7 @@
                             title="Kas Aktual Tidak Sama dengan Kas Summary !"
                             description="Sepertinya Kas Summary dan kas aktual tidak sama, mohon cek kembali kas yang ada."
                             type="error"
-                            :closable="false"
+                            :closable="true"
                             show-icon >
                         </el-alert>
                     </div>
@@ -140,6 +135,7 @@
                         inactive-text="Non-Aktif"
                         :active-value="'active'"
                         :inactive-value="'inactive'"
+                        :disabled="dt.cashbook.cash_status === 'open'"
                         @change="onChangeStatus(dt.cashbook)"></el-switch>
                     <div class="display-flex flex-end align-center">
                         <button 

@@ -12,7 +12,7 @@
                 :onChange="(data) => onChangeTabs(data)"
                 class="margin margin-bottom-20px" />
             <div v-if="selectedIndex === 0">
-                <div class="margin margin-bottom-20px">
+                <div class="margin margin-bottom-0">
                     <div class="fonts fonts-13 black semibold">Informasi</div>
                     <div class="field-group">
                         <div class="field-label">Cover</div>
@@ -111,26 +111,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="margin margin-bottom-0px">
-                    <div class="fonts fonts-13 black semibold">Konfigurasi</div>
-                    <div class="field-group">
-                        <div class="display-flex space-between">
-                            <div class="field-label">Status</div>
-                            <el-switch 
-                                v-model="form.status"
-                                :disabled="isDetailForm"
-                                :active-value="'active'"
-                                :inactive-value="'inactive'"
-                                active-text="Aktif"
-                                inactive-text="Non-Aktif"></el-switch>
-                        </div>
-                        <div 
-                            v-if="errorMessage.status" 
-                            class="field-error">
-                            {{ errorMessage.status && errorMessage.status[0] }}
-                        </div>
-                    </div>
-                </div>
             </div>
             <div v-if="selectedIndex === 1">
                 <div class="margin margin-bottom-20px">
@@ -207,8 +187,21 @@
                 </div>
             </div>
             <div v-if="selectedIndex === 2">
-                <div class="margin margin-bottom-20px">
-                    <div class="fonts fonts-13 black semibold">User</div>
+                <div class="margin margin-bottom-0">
+                    <div class="fonts fonts-13 black semibold">Pengguna</div>
+                    <div class="field-group">
+                        <div class="field-label">Cover</div>
+                        <div class="width width-80px">
+                            <div class="image image-padding image-circle border border-full">
+                                <img 
+                                    v-if="form.user_image" 
+                                    :src="getUserCover" 
+                                    alt="" 
+                                    class="post-center">
+                                <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
+                            </div>
+                        </div>
+                    </div>
                     <div class="field-group">
                         <div class="field-label">Username</div>
                         <div class="field-caption">Tambahkan username baru atau ganti username sekarang.</div>
@@ -242,6 +235,28 @@
                     </div>
                 </div>
             </div>
+            <div v-if="selectedIndex === 3">
+                <div class="margin margin-bottom-0">
+                    <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+                    <div class="field-group">
+                        <div class="display-flex space-between">
+                            <div class="field-label">Status</div>
+                            <el-switch 
+                                v-model="form.status"
+                                :disabled="isDetailForm"
+                                :active-value="'active'"
+                                :inactive-value="'inactive'"
+                                active-text="Aktif"
+                                inactive-text="Non-Aktif"></el-switch>
+                        </div>
+                        <div 
+                            v-if="errorMessage.status" 
+                            class="field-error">
+                            {{ errorMessage.status && errorMessage.status[0] }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </AppSideForm>
     </div>
 </template>
@@ -253,9 +268,10 @@ import AppImage from '../../../../modules/AppImage'
 import AppTabs from '../../../../modules/AppTabs'
 
 const tabs = [
-    {id: 1, label: 'Data', status: 'active'},
+    {id: 1, label: 'Karyawan', status: 'active'},
     {id: 2, label: 'Posisi', status: ''},
-    {id: 3, label: 'User', status: ''},
+    {id: 3, label: 'Pengguna', status: ''},
+    {id: 4, label: 'Konfigurasi', status: ''},
 ]
 
 export default {
@@ -318,6 +334,9 @@ export default {
         },
         getCover () {
             return this.form.image ? this.employeeImageThumbnailUrl + this.form.image : ''
+        },
+        getUserCover () {
+            return this.form.user_image ? this.adminImageThumbnailUrl + this.form.user_image : ''
         }
     },
     components: {

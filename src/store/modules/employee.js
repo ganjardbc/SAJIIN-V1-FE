@@ -145,7 +145,8 @@ export default {
                     email: value.user && value.user.email,
                     email_old: value.user && value.user.email,
                     username: value.user && value.user.username,
-                    username_old: value.user && value.user.username
+                    username_old: value.user && value.user.username,
+                    user_image: value.user && value.user.image,
                 }
             } else {
                 const time = new Date().getTime()
@@ -406,6 +407,26 @@ export default {
             params.append('image', data.image)
     
             return axios.post('/api/employee/uploadImage', params, { 
+                    headers: { Authorization: data.token } 
+                })
+                .then((res) => {
+                    return res
+                })
+                .catch((e) => {
+                    console.log('error', e)
+                })
+                .finally(() => {
+                    commit('SET_LOADING_FORM', false)
+                })
+        },
+        uploadUserCover ({ commit, state }, data) {
+            commit('SET_LOADING_FORM', true)
+    
+            let params = new FormData()
+            params.append('id', data.user_id)
+            params.append('image', data.image)
+    
+            return axios.post('/api/user/uploadImage', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {

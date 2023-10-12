@@ -12,7 +12,7 @@
                 :onChange="(data) => onChangeTabs(data)"
                 class="margin margin-bottom-20px" />
             <div v-if="selectedIndex === 0">
-                <div class="margin margin-bottom-20px">
+                <div class="margin margin-bottom-0">
                     <div class="fonts fonts-13 black semibold">Informasi</div>
                     <div class="field-group">
                         <div class="field-label">Cover</div>
@@ -94,26 +94,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="margin margin-bottom-0px">
-                    <div class="fonts fonts-13 black semibold">Konfigurasi</div>
-                    <div class="field-group">
-                        <div class="display-flex space-between">
-                            <div class="field-label">Status</div>
-                            <el-switch 
-                                v-model="form.status"
-                                :disabled="isDetailForm"
-                                active-text="Aktif"
-                                inactive-text="Non-Aktif"
-                                :active-value="'active'"
-                                :inactive-value="'inactive'"></el-switch>
-                        </div>
-                        <div 
-                            v-if="errorMessage.status" 
-                            class="field-error">
-                            {{ errorMessage.status && errorMessage.status[0] }}
-                        </div>
-                    </div>
-                </div>
             </div>
             <div v-if="selectedIndex === 1">
                 <div class="margin margin-bottom-20px">
@@ -190,8 +170,8 @@
                 </div>
             </div>
             <div v-if="selectedIndex === 2">
-                <div class="margin margin-bottom-20px">
-                    <div class="fonts fonts-13 black semibold">User</div>
+                <div class="margin margin-bottom-0">
+                    <div class="fonts fonts-13 black semibold">Pengguna</div>
                     <div class="field-group">
                         <div class="field-label">Username</div>
                         <div class="field-caption">Tambahkan username baru atau ubah username sekarang.</div>
@@ -225,6 +205,28 @@
                     </div>
                 </div>
             </div>
+            <div v-if="selectedIndex === 3">
+                <div class="margin margin-bottom-0">
+                    <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+                    <div class="field-group">
+                        <div class="display-flex space-between">
+                            <div class="field-label">Status</div>
+                            <el-switch 
+                                v-model="form.status"
+                                :disabled="isDetailForm"
+                                active-text="Aktif"
+                                inactive-text="Non-Aktif"
+                                :active-value="'active'"
+                                :inactive-value="'inactive'"></el-switch>
+                        </div>
+                        <div 
+                            v-if="errorMessage.status" 
+                            class="field-error">
+                            {{ errorMessage.status && errorMessage.status[0] }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </AppSideForm>
     </div>
 </template>
@@ -236,9 +238,10 @@ import AppImage from '../../../modules/AppImage'
 import AppTabs from '../../../modules/AppTabs'
 
 const tabs = [
-    {id: 1, label: 'Data', status: 'active'},
+    {id: 1, label: 'Karyawan', status: 'active'},
     {id: 2, label: 'Posisi', status: ''},
-    {id: 3, label: 'User', status: ''},
+    {id: 3, label: 'Pengguna', status: ''},
+    {id: 4, label: 'Konfigurasi', status: ''},
 ]
 
 export default {

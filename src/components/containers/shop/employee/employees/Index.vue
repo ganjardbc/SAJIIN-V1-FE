@@ -54,7 +54,6 @@
                     <AppEmpty v-if="data.length === 0" />
                     <Card 
                         :data.sync="data"
-                        @onChangeCover="uploadImage"
                         @onDetail="onDetail"
                         @onEdit="onEdit"
                         @onDelete="onDelete"

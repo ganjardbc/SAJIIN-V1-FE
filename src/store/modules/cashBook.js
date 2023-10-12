@@ -223,9 +223,10 @@ export default {
         createData ({ commit, state }, data) {
             commit('SET_LOADING_FORM', true)
             
+            const cashDate = data.cash_date ? moment(data.cash_date).format('YYYY-MM-DD hh:mm:ss') : ''
             const params = {
                 ...data,
-                cash_date: moment(data.cash_date).format('YYYY-MM-DD hh:mm:ss')
+                cash_date: cashDate
             }
 
             return axios.post('/api/cashbook/post', params, { 
@@ -250,10 +251,12 @@ export default {
         updateData ({ commit, state }, data) {
             commit('SET_LOADING_FORM', true)
             
+            const cashDate = data.cash_date ? moment(data.cash_date).format('YYYY-MM-DD hh:mm:ss') : ''
+            const cashEndDate = data.cash_end_date ? moment(data.cash_end_date).format('YYYY-MM-DD hh:mm:ss') : ''
             const params = {
                 ...data,
-                cash_date: moment(data.cash_date).format('YYYY-MM-DD hh:mm:ss'),
-                cash_end_date: moment(data.cash_end_date).format('YYYY-MM-DD hh:mm:ss')
+                cash_date: cashDate,
+                cash_end_date: cashEndDate
             }
 
             return axios.post('/api/cashbook/update', params, { 

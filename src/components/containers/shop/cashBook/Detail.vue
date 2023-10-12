@@ -36,7 +36,7 @@
                     style="margin: 15px 0;">
                 </el-alert>
                 <div class="width width-100 padding padding-top-5px">
-                    <div class="display-flex space-between margin margin-bottom-15px">
+                    <div class="display-flex space-between align-center margin margin-bottom-15px">
                         <div>
                             <div class="fonts fonts-9 normal grey">Periode</div>
                             <div class="margin margin-right-5px">
@@ -48,7 +48,10 @@
                                 </span>
                             </div>
                         </div>
-                        <AppCardCapsule :data="form.cash_status" class="margin margin-left-10px" />
+                        <div class="display-flex">
+                            <div class="fonts fonts-9 normal grey">Toko</div>
+                            <AppCardCapsule :data="form.cash_status" class="margin margin-left-5px" />
+                        </div>
                     </div>
                     <div class="width width-100 display-flex align-center margin margin-bottom-15px">
                         <div style="width: calc(50% - 20px);">
@@ -66,10 +69,10 @@
                     <div v-if="form.cash_status === 'closed'" class="width width-100 margin margin-bottom-15px">
                         <el-alert
                             v-if="form.cash_summary > form.cash_actual"
-                            title="Cash Actual is Not The Same !"
-                            description="It's look like cash summary and actual is not the same, please check your cash again."
+                            title="Kas Aktual Tidak Sama dengan Kas Summary !"
+                            description="Sepertinya Kas Summary dan kas aktual tidak sama, mohon cek kembali kas yang ada."
                             type="error"
-                            :closable="false"
+                            :closable="true"
                             show-icon >
                         </el-alert>
                     </div>

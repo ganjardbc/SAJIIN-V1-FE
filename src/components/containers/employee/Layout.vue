@@ -70,6 +70,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import { replaceToMoreValue } from '@/services/utils'
 import VueLoadImage from 'vue-load-image'
 import logo from '@/assets/img/logo.png'
 import icon from '@/assets/img/icon.png'
@@ -80,33 +81,6 @@ import AppCardNotification from '../../modules/AppCardNotification'
 import AppCardProfile from '../../modules/AppCardProfile'
 import AppPopupLoader from '../../modules/AppPopupLoader'
 
-const defaultSidebar = [
-    { 
-        icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'employee-dashboard', permission: 'dashboard'},
-        ]
-    },
-    {
-        icon: 'fa fa-lg fa-database', label: 'TOKO', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-laptop', label: 'Kasir', value: 0, link: 'employee-cashier', permission: 'cashier'},
-            {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: 0, link: 'employee-orders', permission: 'orders'},
-            {icon: 'fa fa-lg fa-list-alt', label: 'Task Lists', value: 0, link: 'employee-task-lists', permission: 'tasklists'},
-            {icon: 'fa fa-lg fa-list-ol', label: 'Pengeluaran', value: 0, link: 'employee-expense', permission: 'expense-list'},
-            {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: 0, link: 'employee-cash-book', permission: 'cashbooks'},
-            {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'employee-products', permission: 'products'},
-            {icon: 'fa fa-lg fa-th-large', label: 'Meja', value: 0, link: 'employee-tables', permission: 'tables'},
-            {icon: 'fa fa-lg fa-clock', label: 'Shift', value: 0, link: 'employee-shifts', permission: 'shifts'},
-            {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'employee-employees', permission: 'employees'},
-            {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'employee-reports', permission: 'reports'},
-        ]
-    },
-    {
-        icon: 'fa fa-lg fa-database', label: 'KARYAWAN', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-user', label: 'Profil', value: 0, link: 'employee-profile', permission: 'profile'},
-        ]
-    },
-]
-
 export default {
     name: 'admin',
     data () {
@@ -114,7 +88,6 @@ export default {
             logo: logo,
             icon: icon,
             visibleSidebar: false,
-            sidebar: defaultSidebar,
             countNotif: 0,
         }
     },
@@ -246,6 +219,8 @@ export default {
         ...mapState({
             data: (state) => state.storeAuth.data,
             loadingShop: (state) => state.storeSelectedShop.loading,
+            matrixDashboard: (state) => state.storeDashboard.matrix,
+            dataCurrent: (state) => state.storeCashBook.dataCurrent,
         }),
         shopId () {
             return this.$store.state.storeSelectedShop.selectedData
@@ -261,6 +236,50 @@ export default {
         },
         storeLogo () {
             return this.dataShop ? this.shopImageThumbnailUrl + this.dataShop.image : ''
+        },
+        getTotalOrder () {
+            let total = 0
+            if (this.matrixDashboard.newOrder > 0 || this.matrixDashboard.onProgress > 0) {
+                total = this.matrixDashboard.newOrder + this.matrixDashboard.onProgress
+            }
+            return total
+        },
+        getTotalOpenedCashbook () {
+            return this.dataCurrent && 
+                this.dataCurrent.opened_cashbook && 
+                this.dataCurrent.opened_cashbook.length
+        },
+        getAllTotalSidebar () {
+            const total = this.getTotalOrder + this.getTotalOpenedCashbook
+            return replaceToMoreValue(total)
+        },
+        sidebar () {
+            return [
+                { 
+                    icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: false, menu: [
+                        {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'employee-dashboard', permission: 'dashboard'},
+                    ]
+                },
+                {
+                    icon: 'fa fa-lg fa-database', label: 'TOKO', value: 0, disableMenu: false, menu: [
+                        {icon: 'fa fa-lg fa-laptop', label: 'Kasir', value: 0, link: 'employee-cashier', permission: 'cashier'},
+                        {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: replaceToMoreValue(this.getTotalOrder), link: 'employee-orders', permission: 'orders'},
+                        {icon: 'fa fa-lg fa-list-alt', label: 'Task Lists', value: 0, link: 'employee-task-lists', permission: 'tasklists'},
+                        {icon: 'fa fa-lg fa-list-ol', label: 'Pengeluaran', value: 0, link: 'employee-expense', permission: 'expense-list'},
+                        {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: replaceToMoreValue(this.getTotalOpenedCashbook), link: 'employee-cash-book', permission: 'cashbooks'},
+                        {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'employee-products', permission: 'products'},
+                        {icon: 'fa fa-lg fa-th-large', label: 'Meja', value: 0, link: 'employee-tables', permission: 'tables'},
+                        {icon: 'fa fa-lg fa-clock', label: 'Shift', value: 0, link: 'employee-shifts', permission: 'shifts'},
+                        {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'employee-employees', permission: 'employees'},
+                        {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'employee-reports', permission: 'reports'},
+                    ]
+                },
+                {
+                    icon: 'fa fa-lg fa-database', label: 'KARYAWAN', value: 0, disableMenu: false, menu: [
+                        {icon: 'fa fa-lg fa-user', label: 'Profil', value: 0, link: 'employee-profile', permission: 'profile'},
+                    ]
+                },
+            ]
         }
     },
     watch: {
