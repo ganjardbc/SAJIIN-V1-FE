@@ -114,7 +114,7 @@ export default {
     props: {
         value: null
     },
-    mounted () {
+    created () {
         this.getDataField()
     },
     components: {
