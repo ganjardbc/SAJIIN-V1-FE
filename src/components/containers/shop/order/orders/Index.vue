@@ -25,7 +25,7 @@
 
             <div class="display-flex row-reverse space-between align-center display-mobile">
                 <div 
-                    class="width width-380px width-mobile display-flex space-between" 
+                    class="width width-370px width-mobile display-flex space-between" 
                     style="padding-bottom: 10px;">
                     <el-select 
                         v-model="filter.payment_status" 
@@ -58,7 +58,7 @@
                     </el-select>
                 </div>
                 <div 
-                    class="width width-500px width-mobile"
+                    class="width width-600px width-mobile"
                     style="padding-bottom: 10px;">
                     <AppTabs 
                         :selectedIndex.sync="selectedIndex" 

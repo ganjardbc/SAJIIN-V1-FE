@@ -271,9 +271,13 @@ export default {
                 }
             })
             state.form.details = payload
+            if (payload.length === 0) {
+                state.form.order = defaultOrder()
+            }
         },
         DELETE_ALL_PRODUCT (state, data) {
             state.form.details = []
+            state.form.order = defaultOrder()
         },
         SET_ORDER (state, data) {
             const time = new Date().getTime()

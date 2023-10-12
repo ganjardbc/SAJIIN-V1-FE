@@ -69,7 +69,9 @@
                                 </div>
                                 <div class="width width-40px">
                                     <button 
+                                        v-if="dt.status === 'active'"
                                         :class="`btn btn-icon ${selectedID === dt.id ? 'btn-main' : 'btn-sekunder'}`" 
+                                        :disabled="dt.status === 'inactive'"
                                         @click="onChange(dt)">
                                         <i class="fa fa-lw fa-check"></i>
                                     </button>
@@ -183,6 +185,7 @@ export default {
         getDataField () {
             const token = this.$cookies.get('tokenBearer')
             const shop_id = this.shopId
+            this.filter.status = ''
             this.getFieldData({ token, shop_id })
         },
     }
