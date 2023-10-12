@@ -1,7 +1,7 @@
 <template>
     <div id="AppListSubMenu">
         <el-popover 
-            placement="bottom"
+            placement="right-end"
             width="230"
             trigger="click"
             v-model="visibleSubMenu">
@@ -12,7 +12,7 @@
                 <div class="ml-label">
                     {{ data.label }}
                 </div>
-                <div class="val-container">
+                <div class="ml-chevron val-container">
                     <div class="ml-value bg-transparent">
                         <div :class="`post-center fonts grey fonts-11px fa fa-lw ${visibleSubMenu ? 'fa-chevron-up' : 'fa-chevron-down'}`"></div>
                     </div>

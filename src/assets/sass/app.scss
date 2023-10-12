@@ -617,6 +617,9 @@ a {
             position: relative;
             width: 900px;
             margin: auto;
+            @media (max-width: $max-width) {
+                width: 100%;
+            }
         }
         .main-content-footer {
             position: relative;
@@ -702,7 +705,7 @@ a {
         &.single-container {
             .header {
                 .header-content {
-                    width: calc(100%);
+                    width: 100%;
                     top: 0;
                     right: 0;
                     border-radius: 0;
@@ -761,6 +764,79 @@ a {
         position: relative;
         width: calc(100% - 30px);
         padding: 10px 15px;
+    }
+    &.mobile-admin {
+        .mobile-sidebar {
+            width: 120px;
+            z-index: 100;
+            transition: none;
+            @media (max-width: $min-width) {
+                width: 100%;
+                height: 60px;
+                left: 0;
+                bottom: 0;
+                border-top: $border;
+            }
+            .content {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                overflow-y: hidden;
+                @media (max-width: $min-width) {
+                    flex-direction: row;
+                    justify-content: space-between;
+                    #AppListMenu {
+                        width: 100%;
+                    }
+                }
+            }
+            &.show {
+                @media (max-width: $min-width) {
+                    @include animate_none();
+                }
+            }
+        }
+        .mobile-main {
+            .header {
+                .header-content-fixed {
+                    width: calc(100% - 210px);
+                    @media (max-width: $min-width) {
+                        top: 0;
+                        right: 0;
+                        width: 100%;
+                        border-radius: 0;
+                    }
+                }
+            }
+            .main-content {
+                width: calc(100% - 210px);
+                padding-left: 170px;
+                @media (max-width: $min-width) {
+                    padding: 15px;
+                    padding-top: 70px;
+                    padding-bottom: 60px;
+                    width: calc(100% - 30px);
+                }
+                .card-check-out-fixed {
+                    @media (max-width: $min-width) {
+                        bottom: 75px;
+                    }
+                }
+                .cashier-container {
+                    @media (max-width: $min-width) {
+                        padding-bottom: 40px;
+                    }
+                }
+            }
+            .main-content-footer-container {
+                width: calc(100% - 240px);
+                @media (max-width: $min-width) {
+                    width: calc(100% - 60px);
+                    bottom: 75px;
+                }
+            }
+        }
     }
 }
 

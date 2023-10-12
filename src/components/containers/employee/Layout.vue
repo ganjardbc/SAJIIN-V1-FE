@@ -1,39 +1,19 @@
 <template>
-    <div id="admin">
-        <div :class="`sidebar ${visibleSidebar && 'show'}`">
-            <div class="header">
-                <div class="header-content display-flex space-between align-center">
-                    <div class="width width-90px" style="margin-left: -5px;">
-                        <div class="title" style="text-transform: capitalize;">
-                            {{ dataRole ? dataRole.role_name : 'Employee' }}
-                        </div>
-                    </div>
-                    <button 
-                        class="close-button btn btn-icon btn-white btn-circle"
-                        @click="onCloseSidebar">
-                        <i class="fa fa-lg fa-times"></i>
-                    </button>
-                </div>
-            </div>
+    <div id="admin" class="mobile-admin">
+        <div :class="`sidebar mobile-sidebar`">
             <div class="content">
                 <AppListMenu 
                     :data.sync="sidebar"
-                    :isSidebarSmall="true"
+                    :isSidebarSmall="false"
+                    :enableResponsive="true"
                     @onClick="onCloseSidebar" />
             </div>
         </div>
-        <div class="main">
+        <div class="main mobile-main">
             <div class="header">
                 <div class="header-content-fixed">
                     <div class="header-content-main">
-                        <div class="header-content-main-left">
-                            <button 
-                                class="btn btn-white btn-icon btn-circle margin margin-right-5px"
-                                @click="onOpenSidebar">
-                                <i class="icn fa fa-lw fa-bars"></i>
-                            </button>
-                        </div>
-                        <div class="header-content-main-center">
+                        <div class="width width-auto">
                             <router-link :to="{name: 'employee-home'}" class="header-content-main-link">
                                 <img :src="storeLogo ? storeLogo : logo" alt="" class="header-content-main-logo">
                             </router-link>
@@ -255,28 +235,22 @@ export default {
         },
         sidebar () {
             return [
-                { 
-                    icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: false, menu: [
-                        {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'employee-dashboard', permission: 'dashboard'},
-                    ]
-                },
                 {
                     icon: 'fa fa-lg fa-database', label: 'TOKO', value: 0, disableMenu: false, menu: [
                         {icon: 'fa fa-lg fa-laptop', label: 'Kasir', value: 0, link: 'employee-cashier', permission: 'cashier'},
                         {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: replaceToMoreValue(this.getTotalOrder), link: 'employee-orders', permission: 'orders'},
-                        {icon: 'fa fa-lg fa-list-alt', label: 'Task Lists', value: 0, link: 'employee-task-lists', permission: 'tasklists'},
-                        {icon: 'fa fa-lg fa-list-ol', label: 'Pengeluaran', value: 0, link: 'employee-expense', permission: 'expense-list'},
                         {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: replaceToMoreValue(this.getTotalOpenedCashbook), link: 'employee-cash-book', permission: 'cashbooks'},
                         {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'employee-products', permission: 'products'},
-                        {icon: 'fa fa-lg fa-th-large', label: 'Meja', value: 0, link: 'employee-tables', permission: 'tables'},
-                        {icon: 'fa fa-lg fa-clock', label: 'Shift', value: 0, link: 'employee-shifts', permission: 'shifts'},
-                        {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'employee-employees', permission: 'employees'},
-                        {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'employee-reports', permission: 'reports'},
-                    ]
-                },
-                {
-                    icon: 'fa fa-lg fa-database', label: 'KARYAWAN', value: 0, disableMenu: false, menu: [
-                        {icon: 'fa fa-lg fa-user', label: 'Profil', value: 0, link: 'employee-profile', permission: 'profile'},
+                        {icon: 'fa fa-lg fa-bars', label: 'Lainnya', value: 0, permission: 'more', menu: [
+                            {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'employee-dashboard', permission: 'dashboard'},
+                            {icon: 'fa fa-lg fa-list-alt', label: 'Task Lists', value: 0, link: 'employee-task-lists', permission: 'tasklists'},
+                            {icon: 'fa fa-lg fa-list-ol', label: 'Pengeluaran', value: 0, link: 'employee-expense', permission: 'expense-list'},
+                            {icon: 'fa fa-lg fa-th-large', label: 'Meja', value: 0, link: 'employee-tables', permission: 'tables'},
+                            {icon: 'fa fa-lg fa-clock', label: 'Shift', value: 0, link: 'employee-shifts', permission: 'shifts'},
+                            {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'employee-employees', permission: 'employees'},
+                            {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'employee-reports', permission: 'reports'},
+                            {icon: 'fa fa-lg fa-user', label: 'Profil', value: 0, link: 'employee-profile', permission: 'profile'},
+                        ]},
                     ]
                 },
             ]

@@ -1,6 +1,6 @@
 <template>
     <div id="AppFieldPlatforms">
-        <div class="card no-padding bg-white border-full">
+        <div v-loading="loading" class="card no-padding bg-white border-full">
             <div class="display-flex space-between align-center" style="padding: 10px 15px;">
                 <div v-if="selectedData" class="display-flex align-center" style="width: calc(100% - 40px);">
                     <div style="width: 45px; margin-right: 15px">
@@ -112,7 +112,8 @@ export default {
     props: {
         value: null
     },
-    mounted () {
+    created () {
+        this.selectedID = this.value
         this.getDataField()
     },
     components: {

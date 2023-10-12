@@ -141,28 +141,30 @@
             .ml-link {
                 position: relative;
                 width: calc(100% - 26px);
-                margin: 0 13px;
-                display: block;
+                height: 80px;
+                margin: 10px 13px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
                 text-align: center;
-                border-radius: 8px;
+                border-radius: 12px;
                 .ml-icon {
-                    margin: auto;
-                    width: 40px;
-                    height: 50px;
-                    line-height: 50px;
-                    text-align: center;
                     font-size: 16px;
                     color: $grey;
+                    margin-top: 15px;
                 }
                 .ml-label {
                     width: 100%;
-                    font-size: 11px;
+                    font-size: 13px;
                     color: $grey;
-                    margin-bottom: 5px;
-                    display: none;
+                    margin-bottom: 10px;
                     .label {
                         @include post_top(relative);
                     }
+                }
+                .ml-chevron {
+                    display: none;
                 }
                 .val-container {
                     position: absolute;
@@ -172,32 +174,38 @@
                     text-align: center;
                 }
                 .ml-value {
-                    width: 18px;
-                    height: 17px;
-                    border-radius: 2px;
-                    background-color: $teal;
-                    color: $white;
-                    text-align: center;
                     font-size: 11px;
-                    overflow: hidden;
+                    width: 18px;
+                    height: 18px;
+                    line-height: 20px;
+                    border-radius: 100%;
+                    background-color: $red;
+                    color: $white;
+                }
+                &:hover {
+                    border-radius: 12px;
                 }
             }
             .router-link-active {
-                background-color: $white;
-                // box-shadow: $shadow;
+                background-color: $main-color;
+                box-shadow: $shadow;
                 .ml-icon {
-                    color: $main-color;
+                    color: $white;
                 }
                 .ml-label {
-                    color: $main-color;
+                    color: $white;
+                }
+                .ml-value {
+                    background-color: $white;
+                    color: $red;
                 }
                 &:hover {
-                    background-color: #f9f9f9;
+                    background-color: $main-color;
                     .ml-icon {
-                        color: $main-color;
+                        color: $white;
                     }
                     .ml-label {
-                        color: $main-color;
+                        color: $white;
                     }
                 }
             }
@@ -310,6 +318,51 @@
             .ml-list {
                 display: inline-block;
             }
+        }
+    }
+    &.mobile-menu-list {
+        @media (max-width: $min-width) {
+            .ml-list {
+                width: 100%;
+                .ml-link {
+                    width: 100%;
+                    height: 60px;
+                    margin: 0 0;
+                    padding: 0 0;
+                    border-radius: 0;
+                    justify-content: space-between;
+                    .ml-icon {
+                        font-size: 13px;
+                        margin-top: 12px;
+                        margin-bottom: 0;
+                    }
+                    .ml-label {
+                        font-size: 11px;
+                        margin-bottom: 5px;
+                    }
+                    .ml-chevron {
+                        display: none;
+                    }
+                    &:hover {
+                        border-radius: 0;
+                    }
+                }
+                .router-link-active {
+                    box-shadow: 0;
+                }
+            }
+            .submenu {
+                width: 100%;
+                padding: 0 0;
+                .subcontent {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+            }
+        }
+        @media (max-width: $min-width) {
+            overflow-y: hidden;
         }
     }
     .submenu {

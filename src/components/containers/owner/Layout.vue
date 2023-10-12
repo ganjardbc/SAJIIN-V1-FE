@@ -1,35 +1,19 @@
 <template>
-    <div id="admin">
-        <div :class="`sidebar ${visibleSidebar && 'show'}`">
-            <div class="header">
-                <div class="header-content display-flex space-between align-center">
-                    <div class="title">Owner</div>
-                    <button 
-                        class="close-button btn btn-icon btn-white btn-circle"
-                        @click="onCloseSidebar">
-                        <i class="fa fa-lg fa-times"></i>
-                    </button>
-                </div>
-            </div>
+    <div id="admin" class="mobile-admin">
+        <div :class="`sidebar mobile-sidebar`">
             <div class="content">
                 <AppListMenu 
                     :data.sync="sidebar"
-                    :isSidebarSmall="true"
+                    :isSidebarSmall="false"
+                    :enableResponsive="true"
                     @onClick="onCloseSidebar" />
             </div>
         </div>
-        <div class="main">
+        <div class="main mobile-main">
             <div class="header">
                 <div class="header-content-fixed">
                     <div class="header-content-main">
-                        <div class="header-content-main-left">
-                            <button 
-                                class="btn btn-white btn-icon btn-circle margin margin-right-5px"
-                                @click="onOpenSidebar">
-                                <i class="icn fa fa-lw fa-bars"></i>
-                            </button>
-                        </div>
-                        <div class="header-content-main-center">
+                        <div class="width width-auto">
                             <router-link :to="{name: 'owner-home'}" class="width width-90px display-flex align-center">
                                 <img :src="logo" alt="" style="width: 100%;">
                             </router-link>

@@ -45,8 +45,8 @@ export default {
             case 'cashier':
                 this.cards = [
                     {title: 'Kasir', icon: 'fa fa-2x fa-laptop', link: 'employee-cashier'},
-                    {title: 'Buku Kas', icon: 'fa fa-2x fa-book-open', link: 'employee-cash-book'},
                     {title: 'Pesanan', icon: 'fa fa-2x fa-list-ul', link: 'employee-orders'},
+                    {title: 'Buku Kas', icon: 'fa fa-2x fa-book-open', link: 'employee-cash-book'},
                     {title: 'Produk', icon: 'fa fa-2x fa-box', link: 'employee-products'},
                 ]
                 break

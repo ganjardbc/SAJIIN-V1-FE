@@ -2,12 +2,13 @@
     <div id="AppListMenu">
         <ul :class="(isSidebarSmall 
                 ? 'content-scroll menu-list hover with-icon' 
-                : 'content-scroll menu-list hover with-big-icon ' + (enableGridView ? 'display-flex wrap' : '')
+                : 'content-scroll menu-list hover with-big-icon'
+                + ` ${enableResponsive ? 'mobile-menu-list' : ''}`
             )">
             <li 
                 v-for="(parent, index) in dataSideBar" 
                 :key="index" 
-                :class="'ml-list ' + (enableGridView ? 'fixed-column-3' : '')"
+                :class="'ml-list'"
             >
                 <router-link v-if="!parent.menu" :to="{name: parent.link}" class="ml-link" :title="parent.label" exact>
                     <div class="ml-icon">
@@ -126,11 +127,7 @@ export default {
         }
     },
     props: {
-        enableGridView: {
-            type: Boolean,
-            required: false
-        },
-        disableResponsive: {
+        enableResponsive: {
             type: Boolean,
             required: false
         },
