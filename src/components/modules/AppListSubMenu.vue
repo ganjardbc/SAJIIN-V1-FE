@@ -1,7 +1,7 @@
 <template>
     <div id="AppListSubMenu">
         <el-popover 
-            placement="right-end"
+            placement="top"
             width="230"
             trigger="click"
             v-model="visibleSubMenu">
