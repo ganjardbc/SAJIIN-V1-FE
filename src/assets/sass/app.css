@@ -112105,7 +112105,7 @@ a {
 @media (max-width: 768px) {
   #admin.mobile-admin .mobile-main .main-content {
     padding: 15px;
-    padding-top: 80px;
+    padding-top: 60px;
     padding-bottom: 60px;
     width: calc(100% - 30px);
   }

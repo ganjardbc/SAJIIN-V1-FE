@@ -59,6 +59,7 @@
                 background 
 				:current-page="page"
                 :page-size="pageSize"
+				:pager-count="3"
                 layout="prev, pager, next"
                 :total="data.length"
 				@current-change="handleCurrentChange">
