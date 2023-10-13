@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div>
-                <div v-for="(item, index) in data.menu" :key="index" @click="onClick">
+                <div v-for="(item, index) in dataSideBar" :key="index" @click="onClick">
                     <router-link 
                         :to="{name: item.link}" 
                         :title="item.label"
@@ -47,6 +47,38 @@ export default {
         onClick () {
             this.visibleSubMenu = false 
             this.$emit('onClick')
+        },
+        onCheckSubmenus (data) {
+            let menu = []
+            data && data.map((dt) => {
+                const stt = this.onCheckPermission(dt.permission)
+                if (stt) {
+                    menu.push({
+                        ...dt
+                    })
+                }
+            })
+            return menu
+        },
+        onCheckPermission (value) {
+            let stt = false
+            const data = this.permissions
+            if (data && data.length > 0) {
+                const isTherePermission = data.find((item) => item.permission_name === value)
+                if (isTherePermission) {
+                    stt = true
+                }
+            }
+            return stt
+        },
+    },
+    computed: {
+        permissions() {
+            return this.$cookies.get('permissions')
+        },
+        dataSideBar() {
+            let menu = this.data && this.data.menu 
+            return this.onCheckSubmenus(menu)
         }
     }
 }

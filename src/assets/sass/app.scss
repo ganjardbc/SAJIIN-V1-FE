@@ -772,10 +772,9 @@ a {
             transition: none;
             @media (max-width: $min-width) {
                 width: 100%;
-                height: 60px;
+                height: 70px;
                 left: 0;
                 bottom: 0;
-                border-top: $border;
             }
             .content {
                 height: 100%;
@@ -814,18 +813,18 @@ a {
                 padding-left: 170px;
                 @media (max-width: $min-width) {
                     padding: 15px;
-                    padding-top: 70px;
+                    padding-top: 80px;
                     padding-bottom: 60px;
                     width: calc(100% - 30px);
                 }
                 .card-check-out-fixed {
                     @media (max-width: $min-width) {
-                        bottom: 75px;
+                        bottom: 85px;
                     }
                 }
                 .cashier-container {
                     @media (max-width: $min-width) {
-                        padding-bottom: 40px;
+                        padding-bottom: 50px;
                     }
                 }
             }
@@ -833,7 +832,7 @@ a {
                 width: calc(100% - 240px);
                 @media (max-width: $min-width) {
                     width: calc(100% - 60px);
-                    bottom: 75px;
+                    bottom: 85px;
                 }
             }
         }
