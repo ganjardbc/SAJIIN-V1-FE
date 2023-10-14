@@ -25,7 +25,7 @@ export default {
     state: {
         form: defaultForm(),
         errorMessage: defaultForm(),
-        limit: 10,
+        limit: 1000,
         offset: 0,
         totalRecord: 0,
         loading: false,
