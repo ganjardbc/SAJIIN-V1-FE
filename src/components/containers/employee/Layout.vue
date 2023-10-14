@@ -242,8 +242,6 @@ export default {
                         {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: replaceToMoreValue(this.getTotalOpenedCashbook), link: 'employee-cash-book', permission: 'cashbooks'},
                         {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'employee-products', permission: 'products'},
                         {icon: 'fa fa-lg fa-bars', label: 'Lainnya', value: 0, permission: 'more', menu: [
-                            // {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'employee-dashboard', permission: 'dashboard'},
-                            {icon: 'fa fa-lg fa-list-alt', label: 'Task Lists', value: 0, link: 'employee-task-lists', permission: 'tasklists'},
                             {icon: 'fa fa-lg fa-list-ol', label: 'Pengeluaran', value: 0, link: 'employee-expense', permission: 'expense-list'},
                             {icon: 'fa fa-lg fa-th-large', label: 'Meja', value: 0, link: 'employee-tables', permission: 'tables'},
                             {icon: 'fa fa-lg fa-clock', label: 'Shift', value: 0, link: 'employee-shifts', permission: 'shifts'},
