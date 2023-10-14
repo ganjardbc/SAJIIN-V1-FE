@@ -54,7 +54,7 @@
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
                         :page-size="limit"
-                        :pager-count="3"
+                        :pager-count="5"
                         layout="prev, pager, next"
                         :total="totalRecord">
                     </el-pagination>

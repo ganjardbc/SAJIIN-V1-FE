@@ -24,7 +24,8 @@ export default {
     mounted () {},
     computed: {
         ...mapState({
-            data: (state) => state.storeSelectedShop.data
+            data: (state) => state.storeSelectedShop.data,
+            dataUser: (state) => state.storeAuth.data.user,
         }),
         selectedData: {
             get () {
@@ -51,7 +52,8 @@ export default {
         }),
         getData () {
             const token = this.$cookies.get('tokenBearer')
-            this.getShop({ token })
+            const role = this.dataUser.role_name
+            this.getShop({ token, role })
         },
         getDataCashBook (shop_id) {
             const token = this.$cookies.get('tokenBearer')

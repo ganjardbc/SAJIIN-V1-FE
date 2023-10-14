@@ -20,7 +20,7 @@
                 <div class="padding padding-10px">
                     <button 
                         class="btn btn-sekunder btn-full btn-circle" 
-                        @click="$router.push({name: 'owner-home'})">
+                        @click="$router.push({name: dataUser.role_name === 'admin' ? 'admin-shops' : 'owner-home'})">
                         <i class="icn icn-left fa fa-lw fa-store"></i> Back to Home
                     </button>
                 </div>
@@ -134,7 +134,8 @@ export default {
         },
         getShopData () {
             const token = this.$cookies.get('tokenBearer')
-            this.getShop({ token })
+            const role = this.dataUser.role_name
+            this.getShop({ token, role })
                 .then((res) => {
                     const status = res.data.status 
                     if (status === 'ok') {

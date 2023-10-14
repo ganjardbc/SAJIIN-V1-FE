@@ -36,6 +36,15 @@
 
                     <div v-if="data.order.status !== 'canceled'">
                         <div class="bottom-dividing padding padding-15px">
+                            <el-alert
+                                v-if="!data.order.payment_status"
+                                title="Pesanan Belum Dibayar !"
+                                description="Untuk melakukan pembayaran bisa langsung menuju Kasir."
+                                type="info"
+                                :closable="true"
+                                :show-icon="true"
+                                style="margin-bottom: 15px;">
+                            </el-alert>
                             <div class="fonts fonts-13 semibold black margin margin-bottom-10px">Detail Pesanan</div>
                             <div class="fonts fonts-11 semibold black">Pesanan</div>
                             <div class="display-flex space-between margin margin-bottom-5px">
@@ -93,7 +102,7 @@
                             <div class="width width-100 margin margin-top-15px">
                                 <div v-for="(dt, i) in orderStatus" :key="i" class="display-flex" style="padding: 7.5px 0;">
                                     <div style="width: 70px;">
-                                        <div :class="`image image-circle ${dt.isActive ? 'image-52px' : 'image-45px'}`" :style="`background-color: ${dt.isActive ? dt.color : '#f5f5f5'};`">
+                                        <div :class="`image image-circle ${i === orderIndex ? 'image-52px' : 'image-45px'}`" :style="`background-color: ${dt.isActive ? dt.color : '#f5f5f5'};`">
                                             <i :class="`post-middle-absolute ${dt.icon}`" :style="`font-size: ${dt.isActive ? '22px' : '16px'}; color: ${dt.isActive ? dt.iconColor : '#999'};`"></i>
                                         </div>
                                     </div>
@@ -209,7 +218,19 @@
                             </div>
                         </div>
                         <div class="padding padding-15px">
-                            <button class="btn btn-main btn-full" @click="onDownloadReceipt">
+                            <button 
+                                class="btn btn-main btn-full" 
+                                :disabled="!isCanDownloadNota(data.order)"
+                                @click="onDownloadReceipt">
+                                <el-popover 
+                                    v-if="!isCanDownloadNota(data.order)"
+                                    placement="left"
+                                    width="210"
+                                    trigger="hover"
+                                    style="word-break: break-word;">
+                                    <i slot="reference" class="icn icn-left fa fa-lg fa-info-circle"></i>
+                                    <div class="fonts fonts-10 normal red">Kamu bisa download nota setelah melakukan pembayaran.</div>
+                                </el-popover>
                                 Download Nota 
                             </button>
                         </div>
@@ -312,6 +333,13 @@ export default {
             getById: 'storeVisitorOrder/getById',
             download: 'storeVisitorOrder/download',
         }),
+        isCanDownloadNota (value) {
+            let status = true 
+            if (!value.payment_status || value.order_status !== 'done') {
+                status = false
+            }
+            return status 
+        },
         getData () {
             const order_id = this.$route.params.orderId
             this.getById({ order_id }).then((res) => {
@@ -322,10 +350,10 @@ export default {
             const status = this.data && this.data.order && this.data.order.status 
             this.orderIndex = status ? status === 'new-order' ? 0 : status === 'on-progress' ? 1 : status === 'done' ? 2 : null : null
             let newPayload = defaultPayloadOrderStatus && defaultPayloadOrderStatus.map((dt, i) => {
-                const stt = (i === this.orderIndex) ? true : false 
+                const status = (i <= this.orderIndex) ? true : false 
                 return {
                     ...dt, 
-                    isActive: stt 
+                    isActive: status 
                 }
             })
             this.orderStatus = newPayload

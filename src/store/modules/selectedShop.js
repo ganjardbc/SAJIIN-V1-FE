@@ -113,11 +113,15 @@ export default {
 
             let dataPrev = []
 
-            const params = {
+            let params = {
                 limit: state.limit,
                 offset: state.offset,
                 search: state.filter.search,
                 status: state.filter.status,
+            }
+
+            if (data.role === 'admin') {
+                params.role = 'admin'
             }
 
             return axios.post('/api/shop/getAll', params, { 

@@ -62,7 +62,7 @@
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
                         :page-size="limit"
-                        :pager-count="3"
+                        :pager-count="5"
                         layout="prev, pager, next"
                         :total="totalRecord">
                     </el-pagination>
@@ -395,7 +395,6 @@ export default {
         onManage (data) {
             this.$store.state.storeSelectedShop.selectedData = data.id
             this.$router.push({ name: 'shop-home', params: { shopId: data.shop_id } })
-            // window.location = `/shop/${data.shop_id}/home`
         },
 
         // STATUS

@@ -19,9 +19,7 @@
                             </router-link>
                         </div>
                         <div class="header-content-main-right">
-                            <div class="display-flex align-center padding padding-right-10px margin margin-right-10px border-right">
-                                <AppCardNotification />
-                            </div>
+                            <AppCardNotification class="margin margin-right-10px" />
                             <AppCardProfile :data.sync="dataUser" />
                         </div>
                     </div>
