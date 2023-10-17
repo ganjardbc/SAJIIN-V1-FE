@@ -1,5 +1,7 @@
 <template>
     <div id="App">
+        <AppHeaderMobile title="Laporan" />
+
         <div class="width width-100">
             <div class="display-flex space-between align-center">
                 <h1 class="fonts big black bold">Laporan</h1>
@@ -229,6 +231,7 @@ import CardOrder from './CardOrder'
 import CardExpense from './CardExpense'
 import AppTabs from '../../../modules/AppTabs'
 import AppPopupLoader from '../../../modules/AppPopupLoader'
+import AppHeaderMobile from '../../../modules/AppHeaderMobile'
 
 const tabs = [
     {id: 1, label: 'Pesanan', status: 'active'},
@@ -313,7 +316,8 @@ export default {
         CardOrder,
         CardExpense,
         AppTabs,
-        AppPopupLoader
+        AppPopupLoader,
+        AppHeaderMobile,
     },
     methods: {
         ...mapActions({

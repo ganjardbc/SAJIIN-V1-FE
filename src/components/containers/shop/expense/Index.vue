@@ -1,5 +1,6 @@
 <template>
     <div id="EmployeeHome">
+        <AppHeaderMobile title="Pengeluaran" />
         <AppTabLinks :data="tabs" @onChange="onChange" />
         <ExpenseList v-if="selectedIndex === 'expense'" />
         <ExpenseType v-if="selectedIndex === 'type'" />
@@ -7,6 +8,7 @@
 </template>
 <script>
 import AppTabLinks from '../../../modules/AppTabLinks'
+import AppHeaderMobile from '../../../modules/AppHeaderMobile'
 import ExpenseList from './expenseList/Index'
 import ExpenseType from './expenseType/Index'
 
@@ -23,6 +25,7 @@ export default {
     },
     components: {
         AppTabLinks,
+        AppHeaderMobile,
         ExpenseList,
         ExpenseType,
     },

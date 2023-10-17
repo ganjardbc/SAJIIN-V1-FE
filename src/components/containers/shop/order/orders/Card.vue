@@ -14,7 +14,6 @@
                 <div style="width: 150px;" class="display-flex flex-end align-center">
                     <AppCardCapsule :data="dt.order.status" class="margin margin-left-10px" />
                     <el-popover
-                        v-if="isCancelEnable(dt)"
                         placement="bottom-end"
                         width="180"
                         trigger="click">
@@ -159,7 +158,7 @@
                             <i class="fa fa-lw fa-print"></i>
                         </button>
                     </div>
-                    <div v-if="dt.order.status === 'on-progress' && !dt.order.payment_status">
+                    <div v-if="dt.order.status !== 'canceled' && !dt.order.payment_status">
                         <button 
                             class="btn btn-main-reverse with-hover margin margin-left-5px"
                             @click="onCheckout(dt)">
@@ -175,10 +174,18 @@
                     </div>
                     <div v-if="dt.order.status === 'on-progress'">
                         <button 
+                            :disabled="isButtonOnProgressDisabled(dt)"
+                            class="btn btn-sekunder margin margin-left-5px"
+                            @click="onChangeStatus(dt.order, 'ready')">
+                            Pesanan Siap
+                        </button>
+                    </div>
+                    <div v-if="dt.order.status === 'ready'">
+                        <button 
                             :disabled="isButtonDoneDisabled(dt)"
                             class="btn btn-green margin margin-left-5px"
                             @click="onChangeStatus(dt.order, 'done')">
-                            <i class="fa fa-lw fa-check"></i>
+                            Pesanan Selesai
                         </button>
                     </div>
                     <button class="btn btn-sekunder margin margin-left-5px" @click="onDetail(dt)">
@@ -213,11 +220,11 @@ export default {
         }),
 
         // OTHERS 
-        isButtonDoneDisabled (data) {
-            return data.order.payment_status && data.order.status !== 'on-progress'
+        isButtonOnProgressDisabled (data) {
+            return data.order.status !== 'on-progress'
         },
-        isCancelEnable (data) {
-            return data && data.cashbook && data.cashbook.cash_status !== 'closed'
+        isButtonDoneDisabled (data) {
+            return data.order.payment_status && data.order.status !== 'ready'
         },
         
         // COVER

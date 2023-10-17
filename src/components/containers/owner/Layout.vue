@@ -1,7 +1,12 @@
 <template>
     <div id="admin" class="mobile-admin">
-        <div :class="`sidebar mobile-sidebar`">
-            <div class="content">
+        <div class="sidebar mobile-sidebar">
+            <div class="header mobile-hidden">
+                <div class="header-content display-flex center align-center">
+                    <div class="fonts medium bold black">Owner</div>
+                </div>
+            </div>
+            <div class="content with-header">
                 <AppListMenu 
                     :data.sync="sidebar"
                     :isSidebarSmall="false"
@@ -19,7 +24,9 @@
                             </router-link>
                         </div>
                         <div class="header-content-main-right">
-                            <AppCardProfile :data.sync="dataUser" />
+                            <AppCardProfile 
+                                :data.sync="dataUser" 
+                                class="margin margin-left-10px" />
                         </div>
                     </div>
                 </div>

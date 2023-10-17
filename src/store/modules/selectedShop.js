@@ -152,5 +152,31 @@ export default {
                     commit('SET_LOADING', false)
                 })
         },
+        getByID ({ commit, state }, data) {
+            commit('SET_LOADING', true)
+            commit('SET_LOAD_MORE', false)
+
+            let params = {
+                shop_id: data.shop_id,
+            }
+
+            return axios.post('/api/shop/getByID', params, { 
+                    headers: { Authorization: data.token } 
+                })
+                .then((res) => {
+                    const payload = res.data.data 
+                    const form = payload.shop
+
+                    commit('SET_FORM_DATA', form)
+
+                    return res
+                })
+                .catch((e) => {
+                    console.log('error', e)
+                })
+                .finally(() => {
+                    commit('SET_LOADING', false)
+                })
+        }
     }
 }

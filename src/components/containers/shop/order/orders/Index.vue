@@ -2,7 +2,7 @@
     <div id="App">
         <div class="width width-100">
             <div class="display-flex space-between display-mobile margin margin-bottom-15px">
-                <div class="width width-75 width-mobile display-flex space-between">
+                <div class="width width-40 width-mobile display-flex space-between">
                     <h1 class="fonts big black bold">Pesanan</h1>
                     <div class="display-flex">
                         <button 
@@ -12,62 +12,65 @@
                         </button>
                     </div>
                 </div>
-                <div class="width width-25 width-mobile">
-                    <el-input
-                        placeholder="Cari pesanan .."
-                        suffix-icon="el-icon-search"
-                        clearable
-                        v-model="filter.search"
-                        @change="onSearch">
-                    </el-input>
+                <div class="width width-60 width-mobile display-flex space-between display-mobile">
+                    <div 
+                        class="width width-40 width-mobile display-flex space-between" 
+                        style="padding-bottom: 10px;">
+                        <el-input
+                            class="margin margin-right-14px margin-mobile-right-none"
+                            placeholder="Cari pesanan .."
+                            suffix-icon="el-icon-search"
+                            clearable
+                            v-model="filter.search"
+                            @change="onSearch">
+                        </el-input>
+                    </div>
+                    <div 
+                        class="width width-60 width-mobile display-flex space-between" 
+                        style="padding-bottom: 10px;">
+                        <el-select 
+                            v-model="filter.payment_status" 
+                            @change="handleFilterSearch"
+                            clearable
+                            placeholder="Select payment"
+                            no-data-text="Data Tidak Ditemukan"
+                            class="margin margin-right-7px">
+                            <el-option
+                                v-for="(item, i) in orderPaymentStatus"
+                                :key="i"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                        <el-select 
+                            v-model="filter.cashbook_id" 
+                            @change="handleFilterSearch"
+                            :loading="loadingCashbook"
+                            clearable
+                            placeholder="Select cash book"
+                            no-data-text="Data Tidak Ditemukan"
+                            class="margin margin-left-7px">
+                            <el-option
+                                v-for="(item, i) in cashBookList(stateCashbookList)"
+                                :key="i"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
                 </div>
             </div>
 
-            <div class="display-flex row-reverse space-between align-center display-mobile">
-                <div 
-                    class="width width-370px width-mobile display-flex space-between" 
-                    style="padding-bottom: 10px;">
-                    <el-select 
-                        v-model="filter.payment_status" 
-                        @change="handleFilterSearch"
-                        clearable
-                        placeholder="Select payment"
-                        no-data-text="Data Tidak Ditemukan"
-                        style="width: calc(50% - 7.5px);">
-                        <el-option
-                            v-for="(item, i) in orderPaymentStatus"
-                            :key="i"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                    <el-select 
-                        v-model="filter.cashbook_id" 
-                        @change="handleFilterSearch"
-                        :loading="loadingCashbook"
-                        clearable
-                        placeholder="Select cash book"
-                        no-data-text="Data Tidak Ditemukan"
-                        style="width: calc(50% - 7.5px);">
-                        <el-option
-                            v-for="(item, i) in cashBookList(stateCashbookList)"
-                            :key="i"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div 
-                    class="width width-600px width-mobile"
-                    style="padding-bottom: 10px;">
-                    <AppTabs 
-                        :selectedIndex.sync="selectedIndex" 
-                        :isFull="true"
-                        :isScrollable="false"
-                        :data="tabs" 
-                        :onChange="(data) => onChangeTabs(data)"
-                    />
-                </div>
+            <div 
+                class="width width-100"
+                style="padding-bottom: 10px;">
+                <AppTabs 
+                    :selectedIndex.sync="selectedIndex" 
+                    :isFull="true"
+                    :isScrollable="false"
+                    :data="tabs" 
+                    :onChange="(data) => onChangeTabs(data)"
+                />
             </div>
 
             <div class="width width-100">
@@ -296,13 +299,15 @@ export default {
         tabs () {
             const newOrder = this.matrixDashboard.newOrder
             const onProgress = this.matrixDashboard.onProgress
-            const all = newOrder + onProgress
+            const ready = this.matrixDashboard.ready
+            const all = newOrder + onProgress + ready
             return [
                 {id: 1, label: 'Semua', value: replaceToMoreValue(all), status: 'active'},
                 {id: 2, label: `Baru`, value: replaceToMoreValue(newOrder), status: ''},
                 {id: 3, label: `Diproses`, value: replaceToMoreValue(onProgress), status: ''},
-                {id: 4, label: `Selesai`, status: ''},
-                {id: 5, label: `Dibatalkan`, status: ''},
+                {id: 5, label: `Siap`, value: replaceToMoreValue(ready), status: ''},
+                {id: 6, label: `Selesai`, status: ''},
+                {id: 7, label: `Dibatalkan`, status: ''},
             ]
         }
     },
@@ -355,9 +360,12 @@ export default {
                     this.filter.status = 'on-progress'
                     break
                 case 3:
-                    this.filter.status = 'done'
+                    this.filter.status = 'ready'
                     break
                 case 4:
+                    this.filter.status = 'done'
+                    break
+                case 5:
                     this.filter.status = 'canceled'
                     break
             }
@@ -509,6 +517,9 @@ export default {
             }
             if (data.status === 'on-progress') {
                this.titleConfirmedStatus = 'Ambil pesanan?'
+            }
+            if (data.status === 'ready') {
+               this.titleConfirmedStatus = 'Pesanan sudah siap?'
             }
             if (data.status === 'done') {
                this.titleConfirmedStatus = 'Tandai "Selesai" untuk pesanan?'

@@ -28,7 +28,7 @@
                 <AppEmpty v-if="dataProduct.length === 0" />
                 <CardProduct :data.sync="dataProduct" />
             </div>
-            <div class="width width-100 display-flex flex-end align-center padding padding-top-15px">
+            <div class="width width-100 display-flex flex-end align-center padding padding-top-5px">
                 <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
                 <el-pagination
                     background

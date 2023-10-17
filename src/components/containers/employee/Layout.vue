@@ -1,7 +1,14 @@
 <template>
     <div id="admin" class="mobile-admin">
-        <div :class="`sidebar mobile-sidebar`">
-            <div class="content">
+        <div class="sidebar mobile-sidebar">
+            <div class="header mobile-hidden">
+                <div class="header-content display-flex center align-center">
+                    <router-link :to="{name: 'employee-home'}" class="width width-90px display-flex align-center">
+                        <img :src="logo" alt="" style="width: 100%;">
+                    </router-link>
+                </div>
+            </div>
+            <div class="content with-header">
                 <AppListMenu 
                     :data.sync="sidebar"
                     :isSidebarSmall="false"
@@ -15,12 +22,21 @@
                     <div class="header-content-main">
                         <div class="width width-auto">
                             <router-link :to="{name: 'employee-home'}" class="header-content-main-link">
-                                <img :src="storeLogo ? storeLogo : logo" alt="" class="header-content-main-logo">
+                                <img v-if="storeLogo" :src="storeLogo" alt="" class="header-content-main-logo">
+                                <div v-else class="fonts fonts-12 bold">{{ dataShop && dataShop.name }}</div>
                             </router-link>
                         </div>
                         <div class="header-content-main-right">
-                            <AppCardNotification class="margin margin-right-10px" />
-                            <AppCardProfile :data.sync="dataUser" />
+                            <AppCardNotification />
+                            <AppCardProfile :data.sync="dataUser" class="margin margin-left-10px">
+                                <div slot="customMenu" class="padding margin margin-bottom-15px padding padding-bottom-15px border-bottom">
+                                    <button class="btn btn-white btn-align-left btn-full" @click="toProfile">
+                                        <i class="icn icn-left fa fa-user"></i>
+                                        Profil
+                                        <i class="icn icn-float-right fonts grey fa fa-lg fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </AppCardProfile>
                         </div>
                     </div>
                 </div>
@@ -91,6 +107,9 @@ export default {
             setToast: 'toast/setToast',
             setMultipleToast: 'toastmessage/setMultipleToast',
         }),
+        toProfile () {
+            this.$router.push({name: 'employee-profile'})
+        },
         onOpenSidebar () {
             this.visibleSidebar = true 
         },
@@ -217,8 +236,8 @@ export default {
         },
         getTotalOrder () {
             let total = 0
-            if (this.matrixDashboard.newOrder > 0 || this.matrixDashboard.onProgress > 0) {
-                total = this.matrixDashboard.newOrder + this.matrixDashboard.onProgress
+            if (this.matrixDashboard.newOrder > 0 || this.matrixDashboard.onProgress > 0 || this.matrixDashboard.ready > 0) {
+                total = this.matrixDashboard.newOrder + this.matrixDashboard.onProgress + this.matrixDashboard.ready
             }
             return total
         },
@@ -235,22 +254,16 @@ export default {
             return [
                 {
                     icon: 'fa fa-lg fa-database', label: 'TOKO', value: 0, disableMenu: false, menu: [
+                        {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'shop-dashboard', permission: 'dashboard'},
                         {icon: 'fa fa-lg fa-laptop', label: 'Kasir', value: 0, link: 'employee-cashier', permission: 'cashier'},
                         {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: replaceToMoreValue(this.getTotalOrder), link: 'employee-orders', permission: 'orders'},
                         {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: replaceToMoreValue(this.getTotalOpenedCashbook), link: 'employee-cash-book', permission: 'cashbooks'},
                         {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'employee-products', permission: 'products'},
-                        {icon: 'fa fa-lg fa-bars', label: 'Lainnya', value: 0, permission: 'more', menu: [
-                            {icon: 'fa fa-lg fa-list-ol', label: 'Pengeluaran', value: 0, link: 'employee-expense', permission: 'expense-list'},
-                            {icon: 'fa fa-lg fa-th-large', label: 'Meja', value: 0, link: 'employee-tables', permission: 'tables'},
-                            {icon: 'fa fa-lg fa-clock', label: 'Shift', value: 0, link: 'employee-shifts', permission: 'shifts'},
-                            {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'employee-employees', permission: 'employees'},
-                            {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'employee-reports', permission: 'reports'},
-                            {icon: 'fa fa-lg fa-user', label: 'Profil', value: 0, link: 'employee-profile', permission: 'profile'},
-                        ]},
+                        {icon: 'fa fa-lg fa-bars', label: 'Lainnya', value: 0, link: 'employee-more', permission: 'more'},
                     ]
                 },
             ]
-        }
+        },
     },
     watch: {
         shopId (prevProps, nextProps) {

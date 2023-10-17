@@ -36,7 +36,7 @@
                         :selectedIndex.sync="selectedIndex" 
                         :data="tabs" 
                         :onChange="(data) => onChangeTabs(data)"
-                        class="width width-300px width-mobile margin margin-bottom-20px" />
+                        class="margin margin-bottom-20px" />
                     
                     <div v-if="selectedIndex === 0">
                         <div class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px">

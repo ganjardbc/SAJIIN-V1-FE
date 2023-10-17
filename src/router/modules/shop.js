@@ -21,6 +21,7 @@ import Notifications from '@/components/containers/shop/notifications/Index'
 import Tables from '@/components/containers/shop/tables/Index'
 import Reports from '@/components/containers/shop/reports/Index'
 import Platforms from '@/components/containers/shop/platforms/Index'
+import More from '@/components/containers/shop/more/Index'
 
 const routes = {
     path: '/shop/:shopId',
@@ -135,6 +136,11 @@ const routes = {
             name: 'shop-platforms',
             path: 'platforms',
             component: Platforms
+        },
+        {
+            name: 'shop-more',
+            path: 'more',
+            component: More
         }
     ]
 }

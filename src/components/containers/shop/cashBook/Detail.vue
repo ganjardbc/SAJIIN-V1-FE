@@ -240,7 +240,7 @@
                     <div class="display-flex space-between">
                         <div class="fonts fonts-10 semibold black">Total Pengeluaran</div>
                         <div class="display-flex column align-right">
-                            <div class="fonts fonts-10 semibold black align-right">{{ format(grandTotalExpense) }}</div>
+                            <div class="fonts fonts-10 semibold main-color align-right">{{ format(grandTotalExpense) }}</div>
                             <div v-if="grandItemExpense" class="fonts fonts-9 normal black">{{ grandItemExpense }} item</div>
                         </div>
                     </div>

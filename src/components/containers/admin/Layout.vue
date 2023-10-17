@@ -24,7 +24,7 @@
             <div class="header">
                 <div class="header-content-fixed">
                     <div class="header-content-main">
-                        <div class="header-content-main-left">
+                        <div class="header-content-main-left mobile-visible">
                             <button 
                                 class="btn btn-white btn-icon btn-circle margin margin-right-5px"
                                 @click="onOpenSidebar">

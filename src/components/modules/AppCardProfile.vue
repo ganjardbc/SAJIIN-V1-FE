@@ -19,8 +19,9 @@
                             style="color: #999;" />
                     </div>
                     <div class="fonts fonts-11 align-center semibold black">{{ data && data.name }}</div>
-                    <div class="fonts fonts-9 align-center grey" style="text-transform: uppercase;">{{ data && data.role_name }}</div>
+                    <div class="fonts fonts-9 align-center grey uppercase">{{ data && data.role_name }}</div>
                 </div>
+                <slot name="customMenu" />
                 <button class="btn btn-full btn-sekunder" @click="onLogout">
                     <i class="icn icn-left fa fa-lw fa-power-off"></i> Logout
                 </button>

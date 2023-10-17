@@ -2,16 +2,17 @@ import Layout from '@/components/containers/employee/Layout'
 import Home from '@/components/containers/employee/Index'
 import Profile from '@/components/containers/employee/profile/Index'
 import Dashboard from '@/components/containers/employee/dashboard/Index'
+import More from '@/components/containers/employee/more/Index'
 import Cashier from '@/components/containers/shop/cashier/Index'
 import CashBook from '@/components/containers/shop/cashBook/Index'
 import Reports from '@/components/containers/shop/reports/Index'
 import Orders from '@/components/containers/shop/order/Index'
 import TaskLists from '@/components/containers/shop/order/taskLists/Index'
-import Expenses from '@/components/containers/shop/expense/expenseList/Index'
+import Expenses from '@/components/containers/shop/expense/Index'
 import Products from '@/components/containers/shop/product/products/Index'
 import Tables from '@/components/containers/shop/tables/Index'
 import Shifts from '@/components/containers/shop/employee/shifts/Index'
-import Employees from '@/components/containers/shop/employee/employees/Index'
+import Employees from '@/components/containers/shop/employee/Index'
 
 const routes = {
     path: '/employee',
@@ -82,6 +83,11 @@ const routes = {
             path: 'employees',
             component: Employees
         },
+        {
+            name: 'employee-more',
+            path: 'more',
+            component: More
+        }
     ],
 }
 

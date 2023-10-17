@@ -84,20 +84,30 @@
                                 <button 
                                     v-if="detail.status === 'to-do'" 
                                     class="btn btn-sekunder btn-full"
-                                    @click="onChangeStatatus(detail, 'on-progress')">Kerjakan Item</button>
+                                    @click="onChangeStatus(detail, 'on-progress')">Kerjakan Item</button>
                                 <button 
                                     v-if="detail.status === 'on-progress'" 
                                     class="btn btn-green btn-full"
                                     :disabled="detail && detail.employee && detail.employee.id !== dataUser.owner_id"
-                                    @click="onChangeStatatus(detail, 'done')">Tandai Selesai</button>
+                                    @click="onChangeStatus(detail, 'done')">Tandai Selesai</button>
                                 <button 
                                     v-if="detail.status === 'done'" 
                                     class="btn btn-main-reverse with-border with-hover btn-full"
                                     :disabled="detail && detail.employee && detail.employee.id !== dataUser.owner_id"
-                                    @click="onChangeStatatus(detail, 'to-do')">Re-Open</button>
+                                    @click="onChangeStatus(detail, 'to-do')">Re-Open</button>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div slot="footer">
+                <div class="right-form-footer display-flex space-between">
+                    <button 
+                        class="btn btn-sekunder btn-full" 
+                        @click="onChangeOrderStatus(selected.order, 'ready')">
+                        Pesanan Siap
+                    </button>
                 </div>
             </div>
         </AppSideForm>
@@ -149,15 +159,22 @@ export default {
         onChangeTabs (data) {
             this.selectedIndex = data 
         },
-        onChangeStatatus (data, status) {
+        onChangeStatus (data, status) {
             const user_id = this.dataUser.id 
             let payload = {
                 ...data, 
                 status: status,
-                assigned_id: user_id
+                assigned_id: user_id,
             }
-            this.$emit('onChangeStatatus', payload)
+            this.$emit('onChangeStatus', payload)
         },
+        onChangeOrderStatus (data, status) {
+            let payload = {
+                ...data, 
+                status: status,
+            }
+            this.$emit('onChangeOrderStatus', payload)
+        }
     }
 }
 </script>

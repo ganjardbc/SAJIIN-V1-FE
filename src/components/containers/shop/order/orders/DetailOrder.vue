@@ -266,7 +266,7 @@
                     </div>
                 </div>
 
-                <div v-if="form.status === 'on-progress' && !form.payment_status">
+                <div v-if="form.status !== 'canceled' && !form.payment_status">
                     <div class="padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed"></div>
 
                     <div class="fonts fonts-9 grey normal margin margin-bottom-10px">
@@ -295,28 +295,37 @@
 
             <div slot="footer">
                 <div class="right-form-footer display-flex space-between">
-                    <div v-if="form.status !== 'canceled' && form.payment_status" style="width: calc(50% - 7.5px);">
+                    <!-- <div v-if="form.status !== 'canceled' && form.payment_status" style="width: calc(50% - 7.5px);">
                         <button 
                             class="btn btn-full btn-sekunder"
                             @click="onReceipt(form)">
                             Nota Pesanan
                         </button>
-                    </div>
+                    </div> -->
 
-                    <div v-if="form.status === 'on-progress' && !form.payment_status" style="width: calc(50% - 7.5px);">
+                    <!-- <div v-if="form.status === 'on-progress' && !form.payment_status" class="width width-100">
                         <button 
                             class="btn btn-full btn-sekunder"
                             @click="onCheckout(form)">
                             Lakukan Pembayaran
                         </button>
+                    </div> -->
+
+                    <div v-if="form.status === 'on-progress'" class="width width-100">
+                        <button 
+                            :disabled="isButtonOnProgressDisabled(form)"
+                            class="btn btn-full btn-sekunder"
+                            @click="onChangeStatus(form, 'ready')">
+                            Pesanan Siap
+                        </button>
                     </div>
 
-                    <div v-if="form.status === 'on-progress' || form.status === 'done'" style="width: calc(50% - 7.5px);">
+                    <div v-if="form.status === 'ready'" class="width width-100">
                         <button 
                             :disabled="isButtonDoneDisabled(form)"
                             class="btn btn-full btn-green"
                             @click="onChangeStatus(form, 'done')">
-                            Tandai Selesai
+                            Pesanan Selesai
                         </button>
                     </div>
 
@@ -328,7 +337,7 @@
                         </button>
                     </div>
 
-                    <div v-if="form.status === 'canceled'" class="width width-100">
+                    <div v-if="form.status === 'done' || form.status === 'canceled'" class="width width-100">
                         <button 
                             class="btn btn-full btn-sekunder btn-full" 
                             @click="onChangeStatus(form, 'new-order')">
@@ -398,8 +407,11 @@ export default {
         isButtonCustomerDisabled (data) {
             return data.status === 'new-order' || data.status === 'on-progress'
         },
+        isButtonOnProgressDisabled (data) {
+            return data.status !== 'on-progress'
+        },
         isButtonDoneDisabled (data) {
-            return data.payment_status && data.status !== 'on-progress'
+            return data.payment_status && data.status !== 'ready'
         },
         isOrderStatusDC (data) {
             return data.status === 'done' || data.status === 'canceled'

@@ -36,11 +36,16 @@
                     </div>
                 </div>
 
-                <div class="width width-100">
+                <div class="display-flex flex-end width width-100">
                     <button 
-                        class="btn btn-sekunder btn-full" 
+                        class="btn btn-sekunder"
+                        @click="onChangeOrderStatus(dt.order, 'ready')">
+                        Pesanan Siap
+                    </button>
+                    <button 
+                        class="btn btn-sekunder margin margin-left-10px" 
                         @click="onViewProduct(dt)">
-                        Detail Produk
+                        Detail
                     </button>
                 </div>
             </div>
@@ -66,6 +71,13 @@ export default {
         onViewProduct (data) {
             this.$emit('onViewProduct', data)
         },
+        onChangeOrderStatus (data, status) {
+            let payload = {
+                ...data, 
+                status: status,
+            }
+            this.$emit('onChangeOrderStatus', payload)
+        }
     }
 }
 </script>

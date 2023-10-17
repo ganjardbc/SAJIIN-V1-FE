@@ -45,7 +45,8 @@
                     <AppEmpty v-if="data.length === 0" />
                     <Card 
                         :data.sync="data"
-                        @onViewProduct="onViewProduct" />
+                        @onViewProduct="onViewProduct"
+                        @onChangeOrderStatus="onChangeOrderStatus" />
                 </div>
                 <div class="width width-100 display-flex flex-end align-center padding padding-top-15px">
                     <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
@@ -66,9 +67,21 @@
             <div class="right">
                 <Form 
                     @onClose="onCloseProduct"
-                    @onChangeStatatus="onChangeStatatus"></Form>
+                    @onChangeStatus="onChangeStatus"
+                    @onChangeOrderStatus="onChangeOrderStatus"></Form>
             </div>
         </div>
+
+        <AppPopupConfirmed 
+            v-if="visibleConfirmedStatus"
+            :title="titleConfirmedStatus"
+            @onClickNo="onClickNoStatus"
+            @onClickYes="onClickYesStatus"
+        />
+
+        <AppPopupLoader 
+            v-if="loadingForm"
+        />
     </div>
 </template>
 <script>
@@ -76,6 +89,8 @@ import { mapState, mapActions } from 'vuex'
 import SearchField from '../../../../modules/SearchField'
 import AppTabs from '../../../../modules/AppTabs'
 import AppEmpty from '../../../../modules/AppEmpty'
+import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
+import AppPopupLoader from '../../../../modules/AppPopupLoader'
 import Card from './Card'
 import Form from './Form'
 
@@ -91,8 +106,11 @@ export default {
     },
     data () {
         return {
+            selectedOrderData: null,
             currentPage: 0,
             visibleFormTaskList: false,
+            visibleConfirmedStatus: false,
+            titleConfirmedStatus: 'Update status pesanan ?',
         }
     },
     mounted () {
@@ -102,6 +120,8 @@ export default {
         SearchField,
         AppTabs,
         AppEmpty,
+        AppPopupConfirmed,
+        AppPopupLoader,
         Card,
         Form
     },
@@ -112,6 +132,7 @@ export default {
             totalRecord: (state) => state.storeTaskLists.totalRecord,
             limit: (state) => state.storeTaskLists.limit,
             loading: (state) => state.storeTaskLists.loading,
+            loadingForm: (state) => state.storeTaskLists.loadingForm,
             filter: (state) => state.storeTaskLists.filter,
             loadingCashbook: (state) => state.storeCashBook.loading,
             dataCurrent: (state) => state.storeCashBook.dataCurrent,
@@ -137,6 +158,7 @@ export default {
             setSelected: 'storeTaskLists/setSelected',
             updateData: 'storeTaskLists/updateData',
             resetFilter: 'storeTaskLists/resetFilter',
+            updateOrderData: 'storeOrders/updateData',
         }),
         onChangeTabs (data) {
             this.selectedIndex = data 
@@ -177,7 +199,7 @@ export default {
         },
 
         // STATUS 
-        onChangeStatatus (data) {
+        onChangeStatus (data) {
             const token = this.$cookies.get('tokenBearer')
             const payload = { ...data }
             this.updateData({ payload, token })
@@ -195,7 +217,36 @@ export default {
                         this.$message(`Failed to chang status for product ${data.product_name}.`)
                     }
                 })
-        }
+        },
+
+        // ORDER STATUS
+        onClickNoStatus () {
+            this.visibleConfirmedStatus = false 
+        },
+        onClickYesStatus () {
+            this.visibleFormOrder = false
+            this.visibleConfirmedStatus = false 
+
+            const token = this.$cookies.get('tokenBearer')
+            this.updateOrderData({
+                ...this.selectedOrderData,
+                token: token
+            }).then((res) => {
+                const status = res.data.status 
+                if (status === 'ok') {
+                    this.onRefresh()
+                    this.onCloseProduct()
+                    this.$message(`Berhasil merubah status pesanan ${this.selectedOrderData.order_id}.`)
+                } else {
+                    this.$message(`Gagal merubah status pesanan ${this.selectedOrderData.order_id}.`)
+                }
+            })
+        },
+        onChangeOrderStatus (data) {
+            this.titleConfirmedStatus = 'Pesanan sudah siap?'
+            this.visibleConfirmedStatus = true 
+            this.selectedOrderData = data 
+        },
     }
 }
 </script>

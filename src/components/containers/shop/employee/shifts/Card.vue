@@ -29,6 +29,7 @@
                                 <i class="icn icn-left fa fa-lw fa-align-left"></i> Detail 
                             </button>
                             <button 
+                                v-if="isRoleOwner"
                                 class="btn btn-white btn-full btn-align-left"
                                 @click="onDelete(dt.shift)">
                                 <i class="icn icn-left fa fa-lw fa-trash-alt"></i> Hapus
@@ -88,6 +89,16 @@ export default {
     components: {
         AppCardCapsule,
         AppCardCaption,
+    },
+    computed: {
+        isRoleOwner () {
+            let status = false 
+            const user = this.$cookies.get('user')
+            if (user.role_name === 'owner') {
+                status = true
+            }
+            return status
+        },
     },
     methods: {
         // COVER

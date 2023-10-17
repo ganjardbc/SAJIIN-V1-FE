@@ -48,6 +48,9 @@ export default {
                 case 'wip':
                     color = 'wip'
                     break
+                case 'ready':
+                    color = 'wip'
+                    break
                 case 'done':
                     color = 'active'
                     break
@@ -64,7 +67,7 @@ export default {
                     color = 'active'
                     break
                 case 'unpaid':
-                    color = 'inactive'
+                    color = 'todo'
                     break
                 case 'open':
                     color = 'active'
@@ -92,6 +95,9 @@ export default {
                     break
                 case 'on-progress':
                     label = 'Diproses'
+                    break
+                case 'ready':
+                    label = 'Siap'
                     break
                 case 'todo':
                     label = 'Todo'

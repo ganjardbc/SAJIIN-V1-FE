@@ -1,133 +1,136 @@
 <template>
-    <div 
-        id="App" 
-        :class="formClass ? 'content-form' : 'content-form hide'">
-        <div class="left">
-            <div class="display-flex space-between display-mobile margin margin-bottom-15px">
-                <div class="width width-75 width-mobile display-flex space-between">
-                    <h1 class="fonts big black bold">Meja</h1>
-                    <div class="display-flex">
-                        <button 
-                            class="btn btn-icon btn-white" 
-                            @click="onRefresh">
-                            <i class="fa fa-lw fa-retweet"></i>
-                        </button>
-                        <button 
-                            v-if="isRoleOwner"
-                            class="btn btn-icon btn-white" 
-                            @click="onCreate">
-                            <i class="fa fa-lw fa-plus" />
-                        </button>
+    <div id="App">
+        <AppHeaderMobile title="Daftar Meja" />
+
+        <div :class="formClass ? 'content-form' : 'content-form hide'">
+            <div class="left">
+                <div class="display-flex space-between display-mobile margin margin-bottom-15px">
+                    <div class="width width-75 width-mobile display-flex space-between">
+                        <h1 class="fonts big black bold">Daftar Meja</h1>
+                        <div class="display-flex">
+                            <button 
+                                class="btn btn-icon btn-white" 
+                                @click="onRefresh">
+                                <i class="fa fa-lw fa-retweet"></i>
+                            </button>
+                            <button 
+                                v-if="isRoleOwner"
+                                class="btn btn-icon btn-white" 
+                                @click="onCreate">
+                                <i class="fa fa-lw fa-plus" />
+                            </button>
+                        </div>
+                    </div>
+                    <div class="width width-25 width-mobile">
+                        <SearchField 
+                            :placeholder="'Cari meja ..'" 
+                            :enableResponsive="true" 
+                            :onChange="(data) => onSearch(data)" />
                     </div>
                 </div>
-                <div class="width width-25 width-mobile">
-                    <SearchField 
-                        :placeholder="'Cari meja ..'" 
-                        :enableResponsive="true" 
-                        :onChange="(data) => onSearch(data)" />
+
+                <el-alert 
+                    v-if="!isRoleOwner"
+                    title="Tambah Meja Baru ?"
+                    description="Untuk menambahkan meja baru mohon hubungi Owner dari Toko ini."
+                    type="warning"
+                    :closable="true"
+                    show-icon
+                    style="margin: 10px 0 20px 0;">
+                </el-alert>
+
+                <div class="display-flex space-between align-center display-mobile margin margin-bottom-15px">
+                    <AppTabs 
+                        class="width width-300px width-mobile"
+                        :selectedIndex.sync="selectedIndex" 
+                        :isFull="true"
+                        :isScrollable="false"
+                        :data="tabs" 
+                        :onChange="(data) => onChangeTabs(data)"
+                    />
                 </div>
+
+                <div class="width width-100">
+                    <div v-loading="loading">
+                        <AppEmpty v-if="data.length === 0" />
+                        <Card 
+                            :data.sync="data"
+                            @onChangeCover="uploadImage"
+                            @onDetail="onDetail"
+                            @onEdit="onEdit"
+                            @onDelete="onDelete"
+                            @onChangeStatus="onChangeStatus"
+                            @onQrCode="onOpenQrCode" />
+                    </div>
+                    <div class="width width-100 display-flex flex-end align-center padding padding-top-15px">
+                        <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
+                        <el-pagination
+                            background
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-size="limit"
+                            :pager-count="5"
+                            layout="prev, pager, next"
+                            :total="totalRecord">
+                        </el-pagination>
+                    </div>
+                </div>
+
             </div>
 
-            <el-alert 
-                v-if="!isRoleOwner"
-                title="Tambah Meja Baru ?"
-                description="Untuk menambahkan meja baru mohon hubungi Owner dari Toko ini."
-                type="warning"
-                :closable="true"
-                show-icon
-                style="margin: 10px 0 20px 0;">
-            </el-alert>
-
-            <div class="display-flex space-between align-center display-mobile margin margin-bottom-15px">
-                <AppTabs 
-                    class="width width-300px width-mobile"
-                    :selectedIndex.sync="selectedIndex" 
-                    :isFull="true"
-                    :isScrollable="false"
-                    :data="tabs" 
-                    :onChange="(data) => onChangeTabs(data)"
-                />
+            <div class="right">
+                <Form 
+                    @uploadImage="uploadImage"
+                    @removeImage="removeImage"
+                    @onSave="onOpenVisibleConfirmed"
+                    @onClose="onClose">
+                </Form>
             </div>
-
-            <div class="width width-100">
-                <div v-loading="loading">
-                    <AppEmpty v-if="data.length === 0" />
-                    <Card 
-                        :data.sync="data"
-                        @onChangeCover="uploadImage"
-                        @onDetail="onDetail"
-                        @onEdit="onEdit"
-                        @onDelete="onDelete"
-                        @onChangeStatus="onChangeStatus"
-                        @onQrCode="onOpenQrCode" />
-                </div>
-                <div class="width width-100 display-flex flex-end align-center padding padding-top-15px">
-                    <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
-                    <el-pagination
-                        background
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-size="limit"
-                        :pager-count="5"
-                        layout="prev, pager, next"
-                        :total="totalRecord">
-                    </el-pagination>
-                </div>
-            </div>
-
         </div>
 
-        <div class="right">
-            <Form 
-                @uploadImage="uploadImage"
-                @removeImage="removeImage"
-                @onSave="onOpenVisibleConfirmed"
-                @onClose="onClose">
-            </Form>
+        <AppFileUpload 
+            v-if="visibleUpdateCover"
+            @onClose="onCloseCover"
+            @onUpload="onUpdateCover"
+        />
 
-            <AppFileUpload 
-                v-if="visibleUpdateCover"
-                @onClose="onCloseCover"
-                @onUpload="onUpdateCover"
-            />
+        <AppPopupConfirmed 
+            v-if="visibleConfirmed"
+            :title="titleConfirmed"
+            @onClickNo="onClickNo"
+            @onClickYes="onClickYes"
+        />
 
-            <AppPopupConfirmed 
-                v-if="visibleConfirmed"
-                :title="titleConfirmed"
-                @onClickNo="onClickNo"
-                @onClickYes="onClickYes"
-            />
+        <AppPopupConfirmed 
+            v-if="visibleConfirmedDelete"
+            :title="'Hapus data meja ?'"
+            @onClickNo="onClickNoDelete"
+            @onClickYes="onClickYesDelete"
+        />
 
-            <AppPopupConfirmed 
-                v-if="visibleConfirmedDelete"
-                :title="'Hapus data meja ?'"
-                @onClickNo="onClickNoDelete"
-                @onClickYes="onClickYesDelete"
-            />
+        <AppPopupAlert 
+            v-if="visibleAlert"
+            :title="titleAlert"
+            :icon="iconAlert"
+            @onClickOk="onClickOk"
+        />
 
-            <AppPopupAlert 
-                v-if="visibleAlert"
-                :title="titleAlert"
-                :icon="iconAlert"
-                @onClickOk="onClickOk"
-            />
+        <AppPopupQrCode 
+            v-if="visibleQrCode"
+            :code="`${initUrl}visitor/${paramShopId}/${form.table_id}`"
+            @onClose="onCloseQrCode"
+        />
 
-            <AppPopupQrCode 
-                v-if="visibleQrCode"
-                :code="`${initUrl}visitor/${paramShopId}/${form.table_id}`"
-                @onClose="onCloseQrCode"
-            />
-
-            <AppPopupLoader 
-                v-if="loadingForm"
-            />
-        </div>
+        <AppPopupLoader 
+            v-if="loadingForm"
+        />
     </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
 import AppEmpty from '../../../modules/AppEmpty'
+import AppHeaderMobile from '../../../modules/AppHeaderMobile'
 import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
@@ -174,6 +177,7 @@ export default {
     },
     components: {
         AppEmpty,
+        AppHeaderMobile,
         AppPopupLoader,
         AppPopupConfirmed,
         AppPopupAlert,

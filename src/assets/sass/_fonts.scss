@@ -94,6 +94,12 @@
     &.text-line {
         text-decoration: line-through;
     }
+    &.capitalize {
+        text-transform: capitalize;
+    }
+    &.uppercase {
+        text-transform: uppercase;
+    }
     &.overflow-ellipsis {
         white-space: nowrap;
         overflow: hidden;

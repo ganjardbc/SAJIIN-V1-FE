@@ -1,49 +1,57 @@
 <template>
-    <div id="admin" class="mobile-admin">
-        <div class="sidebar mobile-sidebar">
-            <div class="header mobile-hidden">
-                <div class="header-content display-flex center align-center">
-                    <router-link :to="{name: 'shop-home'}" class="width width-90px display-flex align-center">
-                        <img :src="logo" alt="" style="width: 100%;">
-                    </router-link>
+    <div id="admin">
+        <div :class="`sidebar ${visibleSidebar && 'show'}`">
+            <div class="header">
+                <div class="header-content display-flex space-between align-center">
+                    <div class="title">Shop</div>
+                    <div class="display-flex flex-end">
+                        <button 
+                            class="close-button btn btn-icon btn-white btn-circle"
+                            @click="onCloseSidebar">
+                            <i class="fa fa-lg fa-times"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="content with-header">
+            <div class="content">
+                <div class="padding padding-10px border-bottom">
+                    <SelectShopField />
+                </div>
+                <div class="padding padding-10px">
+                    <button 
+                        class="btn btn-sekunder btn-full btn-circle" 
+                        @click="$router.push({name: dataUser.role_name === 'admin' ? 'admin-shops' : 'owner-home'})">
+                        <i class="icn icn-left fa fa-lw fa-store"></i> Back to Home
+                    </button>
+                </div>
                 <AppListMenu 
                     :data.sync="sidebar"
-                    :isSidebarSmall="false"
-                    :enableResponsive="true"
+                    :isSidebarSmall="true"
                     @onClick="onCloseSidebar" />
             </div>
         </div>
-        <div class="main mobile-main">
+        <div class="main">
             <div class="header">
                 <div class="header-content-fixed">
                     <div class="header-content-main">
-                        <div class="width width-auto">
+                        <div class="header-content-main-left mobile-visible">
+                            <button 
+                                class="btn btn-white btn-icon btn-circle margin margin-right-5px"
+                                @click="onOpenSidebar">
+                                <i class="fa fa-lg fa-bars"></i>
+                                <span v-if="getAllTotalSidebar" class="notif">{{ getAllTotalSidebar }}</span>
+                            </button>
+                        </div>
+                        <div class="header-content-main-center">
                             <router-link :to="{name: 'shop-home'}" class="header-content-main-link">
-                                <img v-if="storeLogo" :src="storeLogo" alt="" class="header-content-main-logo">
-                                <div v-else class="fonts fonts-12 bold">{{ dataShop && dataShop.name }}</div>
+                                <img :src="storeLogo ? storeLogo : logo" alt="" class="header-content-main-logo">
                             </router-link>
                         </div>
                         <div class="header-content-main-right">
-                            <AppCardNotification />
-                            <AppCardProfile 
-                                :data.sync="dataUser" 
-                                class="margin margin-left-10px">
-                                <div slot="customMenu" class="padding margin margin-bottom-15px padding padding-bottom-15px border-bottom">
-                                    <button class="btn btn-white btn-align-left btn-full margin margin-bottom-5px" @click="goBack">
-                                        <i class="icn icn-left fa fa-store"></i> 
-                                        Kembali ke Toko
-                                        <i class="icn icn-float-right fonts grey fa fa-lg fa-chevron-right"></i>
-                                    </button>
-                                    <button class="btn btn-white btn-align-left btn-full" @click="goProfile">
-                                        <i class="icn icn-left fa fa-user"></i> 
-                                        Edit Profil
-                                        <i class="icn icn-float-right fonts grey fa fa-lg fa-chevron-right"></i>
-                                    </button>
-                                </div>
-                            </AppCardProfile>
+                            <div class="display-flex align-center padding padding-right-10px margin margin-right-10px border-right">
+                                <AppCardNotification />
+                            </div>
+                            <AppCardProfile :data.sync="dataUser" />
                         </div>
                     </div>
                 </div>
@@ -81,6 +89,7 @@ import AppToastMessage from '../../modules/AppToastMessage'
 import AppCardNotification from '../../modules/AppCardNotification'
 import AppCardProfile from '../../modules/AppCardProfile'
 import AppPopupLoader from '../../modules/AppPopupLoader'
+import SelectShopField from '../../modules/SelectShopField'
 
 export default {
     name: 'admin',
@@ -99,13 +108,14 @@ export default {
         AppToastMessage,
         AppToast,
         AppListMenu,
+        SelectShopField
     },
     methods: {
         ...mapActions({
             // new store
             getUserData: 'storeAuth/getUserData',
             setShop: 'storeSelectedShop/setSelectedData',
-            getShop: 'storeSelectedShop/getByID',
+            getShop: 'storeSelectedShop/getData',
             getCashBook: 'storeCashBook/getCurrent',
             resetCashBook: 'storeCashBook/restDataCurrent',
 
@@ -113,27 +123,24 @@ export default {
             setToast: 'toast/setToast',
             setMultipleToast: 'toastmessage/setMultipleToast',
         }),
-        goProfile () {
-            this.$router.push({name: 'shop-profile'})
-        },
         goBack () {
-            const role = this.dataUser.role_name
-            this.$router.push({name: role === 'admin' ? 'admin-shops' : 'owner-home'})
+            this.$router.push({name: 'owner-home'})
         },
         setShopData () {
-            const shop = this.dataShop
+            const shop_id = this.$route.params.shopId
+            const shop = this.dataShop.find((item) => item.shop_id === shop_id)
             this.$cookies.set('shop', shop)
             this.setShop(shop && shop.id)
         },
         getShopData () {
             const token = this.$cookies.get('tokenBearer')
-            const shop_id = this.$route.params.shopId
-            this.getShop({ token, shop_id })
+            const role = this.dataUser.role_name
+            this.getShop({ token, role })
                 .then((res) => {
                     const status = res.data.status 
                     if (status === 'ok') {
                         this.setShopData()
-                        this.getDataCashBook()
+                        this.getDataCashBook(this.shopId)
                         this.addShopSocket()
                     } else {
                         this.$message({
@@ -143,9 +150,8 @@ export default {
                     }
                 })
         },
-        getDataCashBook () {
+        getDataCashBook (shop_id) {
             const token = this.$cookies.get('tokenBearer')
-            const shop_id = this.dataShop.id
             const today = new Date()
             if (shop_id) {
                 this.resetCashBook()
@@ -215,21 +221,23 @@ export default {
             })
         },
         addShopSocket () {
-            const data = this.dataShop
-            const payload = {
-                id: data.id,
-                shopId: data.shop_id,
-                name: data.name,
-                image: data.image
+            for (let i = 0; i < this.dataShop.length; i++) {
+                const data = this.dataShop[i]
+                const payload = {
+                    id: data.id,
+                    shopId: data.shop_id,
+                    name: data.name,
+                    image: data.image
+                }
+                this.$socket.emit('addShop', payload)
             }
-            this.$socket.emit('addShop', payload)
         }
     },
     computed: {
         ...mapState({
             data: (state) => state.storeAuth.data,
             loadingShop: (state) => state.storeSelectedShop.loading,
-            dataShop: (state) => state.storeSelectedShop.form,
+            dataShop: (state) => state.storeSelectedShop.data,
             matrixDashboard: (state) => state.storeDashboard.matrix,
             dataCurrent: (state) => state.storeCashBook.dataCurrent,
         }),
@@ -247,8 +255,8 @@ export default {
         },
         getTotalOrder () {
             let total = 0
-            if (this.matrixDashboard.newOrder > 0 || this.matrixDashboard.onProgress > 0 || this.matrixDashboard.ready > 0) {
-                total = this.matrixDashboard.newOrder + this.matrixDashboard.onProgress + this.matrixDashboard.ready
+            if (this.matrixDashboard.newOrder > 0 || this.matrixDashboard.onProgress > 0) {
+                total = this.matrixDashboard.newOrder + this.matrixDashboard.onProgress
             }
             return total
         },
@@ -264,25 +272,38 @@ export default {
         sidebar () {
             return [
                 {
+                    icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: false, menu: [
+                        {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'shop-dashboard', permission: 'dashboard'},
+                    ]
+                },
+                {
                     icon: 'fa fa-lg fa-database', label: 'TOKO', value: 0, disableMenu: false, menu: [
                         {icon: 'fa fa-lg fa-laptop', label: 'Kasir', value: 0, link: 'shop-cashier', permission: 'cashier'},
                         {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: replaceToMoreValue(this.getTotalOrder), link: 'shop-order', permission: 'orders'},
+                        {icon: 'fa fa-lg fa-list-ul', label: 'Pengeluaran', value: 0, link: 'shop-expense', permission: 'expense-list'},
                         {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: replaceToMoreValue(this.getTotalOpenedCashbook), link: 'shop-cash-book', permission: 'cashbooks'},
                         {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'shop-product', permission: 'products'},
-                        {icon: 'fa fa-lg fa-bars', label: 'Lainnya', value: 0, link: 'shop-more', permission: 'more'},
+                        {icon: 'fa fa-lg fa-th-large', label: 'Meja', value: 0, link: 'shop-tables', permission: 'tables'},
+                        {icon: 'fa fa-lg fa-flag', label: 'Platform', value: 0, link: 'shop-platforms', permission: 'tables'},
+                        {icon: 'fa fa-lg fa-percent', label: 'Promosi', value: 0, link: 'shop-promotions', permission: 'promotions'},
+                        {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'shop-employee', permission: 'employees'},
                     ]
                 },
+                {
+                    icon: 'fa fa-lg fa-database', label: 'LAPORAN', value: 0, disableMenu: false, menu: [
+                        
+                        {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'shop-reports', permission: 'reports'},
+                    ]
+                },
+                {
+                    icon: 'fa fa-lg fa-database', label: 'LAINNYA', value: 0, disableMenu: false, menu: [
+                        {icon: 'fa fa-lg fa-cogs', label: 'Pengaturan', value: 0, link: 'shop-settings', permission: 'settings'},
+                    ]
+                }
             ]
         }
     },
-    // watch: {
-    //     shopId (prevProps, nextProps) {
-    //         if (prevProps !== nextProps) {
-    //             this.getShopData()
-    //         }
-    //     }
-    // },
-    beforeMount () {
+    beforeMount (){
         if (!this.$cookies.get('token')) {
             this.$router.push({ name: 'login' })
         }

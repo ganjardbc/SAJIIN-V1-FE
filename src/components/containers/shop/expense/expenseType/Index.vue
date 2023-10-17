@@ -13,6 +13,7 @@
                             <i class="fa fa-lw fa-retweet"></i>
                         </button>
                         <button 
+                            v-if="isRoleOwner"
                             class="btn btn-icon btn-white" 
                             @click="onCreate">
                             <i class="fa fa-lw fa-plus" />
@@ -26,6 +27,16 @@
                         :onChange="(data) => onSearch(data)" />
                 </div>
             </div>
+
+            <el-alert 
+                v-if="!isRoleOwner"
+                title="Tambah tipe pengeluaran baru ?"
+                description="Untuk menambah tipe pengeluaran baru mohon hubungi Owner dari Toko ini."
+                type="warning"
+                :closable="true"
+                show-icon
+                style="margin: 10px 0 20px 0;">
+            </el-alert>
 
             <div class="display-flex space-between align-center display-mobile margin margin-bottom-15px">
                 <AppTabs 
@@ -197,6 +208,14 @@ export default {
         },
         paramShopId () {
             return this.$route.params.shopId
+        },
+        isRoleOwner () {
+            let status = false 
+            const user = this.$cookies.get('user')
+            if (user.role_name === 'owner') {
+                status = true
+            }
+            return status
         },
     },
     watch: {
