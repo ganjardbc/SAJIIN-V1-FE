@@ -27,6 +27,7 @@ export default {
             newOrder: 0,
             onProgress: 0,
             ready: 0,
+            delivered: 0
         },
         loading: false,
     },
@@ -106,6 +107,7 @@ export default {
                         newOrder: data.new_order,
                         onProgress: data.on_progress,
                         ready: data.ready,
+                        delivered: data.delivered,
                     }
 
                     commit('SET_MATRIX', matrix)

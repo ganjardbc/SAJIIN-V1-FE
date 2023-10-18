@@ -1,63 +1,56 @@
 <template>
     <div id="App">
         <div class="width width-100">
-            <div class="display-flex space-between display-mobile margin margin-bottom-15px">
-                <div class="width width-40 width-mobile display-flex space-between">
-                    <h1 class="fonts big black bold">Pesanan</h1>
-                    <div class="display-flex">
-                        <button 
-                            class="btn btn-icon btn-white" 
-                            @click="onRefresh">
-                            <i class="fa fa-lw fa-retweet"></i>
-                        </button>
-                    </div>
+            <div class="display-flex space-between align-center" style="padding-bottom: 10px;">
+                <h1 class="fonts big black bold">Pesanan</h1>
+                <button 
+                    class="btn btn-icon btn-white" 
+                    @click="onRefresh">
+                    <i class="fa fa-lw fa-retweet"></i>
+                </button>
+            </div>
+
+            <div class="width width-100 display-flex space-between display-mobile">
+                <div class="width width-300px width-mobile display-flex space-between" style="padding-bottom: 15px;">
+                    <el-input
+                        class="margin margin-right-14px margin-mobile-right-none"
+                        placeholder="Cari pesanan .."
+                        suffix-icon="el-icon-search"
+                        clearable
+                        v-model="filter.search"
+                        @change="onSearch">
+                    </el-input>
                 </div>
-                <div class="width width-60 width-mobile display-flex space-between display-mobile">
-                    <div 
-                        class="width width-40 width-mobile display-flex space-between" 
-                        style="padding-bottom: 10px;">
-                        <el-input
-                            class="margin margin-right-14px margin-mobile-right-none"
-                            placeholder="Cari pesanan .."
-                            suffix-icon="el-icon-search"
-                            clearable
-                            v-model="filter.search"
-                            @change="onSearch">
-                        </el-input>
-                    </div>
-                    <div 
-                        class="width width-60 width-mobile display-flex space-between" 
-                        style="padding-bottom: 10px;">
-                        <el-select 
-                            v-model="filter.payment_status" 
-                            @change="handleFilterSearch"
-                            clearable
-                            placeholder="Select payment"
-                            no-data-text="Data Tidak Ditemukan"
-                            class="margin margin-right-7px">
-                            <el-option
-                                v-for="(item, i) in orderPaymentStatus"
-                                :key="i"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-select 
-                            v-model="filter.cashbook_id" 
-                            @change="handleFilterSearch"
-                            :loading="loadingCashbook"
-                            clearable
-                            placeholder="Select cash book"
-                            no-data-text="Data Tidak Ditemukan"
-                            class="margin margin-left-7px">
-                            <el-option
-                                v-for="(item, i) in cashBookList(stateCashbookList)"
-                                :key="i"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
+                <div class="width width-400px width-mobile display-flex space-between" style="padding-bottom: 15px;">
+                    <el-select 
+                        v-model="filter.payment_status" 
+                        @change="handleFilterSearch"
+                        clearable
+                        placeholder="Select payment"
+                        no-data-text="Data Tidak Ditemukan"
+                        class="margin margin-right-7px">
+                        <el-option
+                            v-for="(item, i) in orderPaymentStatus"
+                            :key="i"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-select 
+                        v-model="filter.cashbook_id" 
+                        @change="handleFilterSearch"
+                        :loading="loadingCashbook"
+                        clearable
+                        placeholder="Select cash book"
+                        no-data-text="Data Tidak Ditemukan"
+                        class="margin margin-left-7px">
+                        <el-option
+                            v-for="(item, i) in cashBookList(stateCashbookList)"
+                            :key="i"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
 
@@ -300,14 +293,16 @@ export default {
             const newOrder = this.matrixDashboard.newOrder
             const onProgress = this.matrixDashboard.onProgress
             const ready = this.matrixDashboard.ready
-            const all = newOrder + onProgress + ready
+            const delivered = this.matrixDashboard.delivered
+            const all = newOrder + onProgress + ready + delivered
             return [
                 {id: 1, label: 'Semua', value: replaceToMoreValue(all), status: 'active'},
                 {id: 2, label: `Baru`, value: replaceToMoreValue(newOrder), status: ''},
-                {id: 3, label: `Diproses`, value: replaceToMoreValue(onProgress), status: ''},
-                {id: 5, label: `Siap`, value: replaceToMoreValue(ready), status: ''},
-                {id: 6, label: `Selesai`, status: ''},
-                {id: 7, label: `Dibatalkan`, status: ''},
+                {id: 3, label: `Disiapkan`, value: replaceToMoreValue(onProgress), status: ''},
+                {id: 5, label: `Diantarkan`, value: replaceToMoreValue(ready), status: ''},
+                {id: 6, label: `Diterima`, value: replaceToMoreValue(delivered), status: ''},
+                {id: 7, label: `Selesai`, status: ''},
+                {id: 8, label: `Dibatalkan`, status: ''},
             ]
         }
     },
@@ -363,9 +358,12 @@ export default {
                     this.filter.status = 'ready'
                     break
                 case 4:
-                    this.filter.status = 'done'
+                    this.filter.status = 'delivered'
                     break
                 case 5:
+                    this.filter.status = 'done'
+                    break
+                case 6:
                     this.filter.status = 'canceled'
                     break
             }
@@ -513,19 +511,22 @@ export default {
         },
         onChangeStatus (data) {
             if (data.status === 'new-order') {
-               this.titleConfirmedStatus = 'Re-Open pesanan?'
+               this.titleConfirmedStatus = 'Re-Open pesanan ?'
             }
             if (data.status === 'on-progress') {
-               this.titleConfirmedStatus = 'Ambil pesanan?'
+               this.titleConfirmedStatus = 'Terima pesanan ?'
             }
             if (data.status === 'ready') {
-               this.titleConfirmedStatus = 'Pesanan sudah siap?'
+               this.titleConfirmedStatus = 'Pesanan siap diantarkan ?'
+            }
+            if (data.status === 'delivered') {
+               this.titleConfirmedStatus = 'Pesanan sudah diterima ?'
             }
             if (data.status === 'done') {
-               this.titleConfirmedStatus = 'Tandai "Selesai" untuk pesanan?'
+               this.titleConfirmedStatus = 'Tandai "Selesai" untuk pesanan ?'
             }
             if (data.status === 'canceled') {
-               this.titleConfirmedStatus = 'Batalkan pesanan?'
+               this.titleConfirmedStatus = 'Batalkan pesanan ?'
             }
             this.visibleConfirmedStatus = true 
             this.selectedData = data 

@@ -295,45 +295,37 @@
 
             <div slot="footer">
                 <div class="right-form-footer display-flex space-between">
-                    <!-- <div v-if="form.status !== 'canceled' && form.payment_status" style="width: calc(50% - 7.5px);">
+                    <div v-if="form.status === 'new-order'" class="width width-100">
                         <button 
                             class="btn btn-full btn-sekunder"
-                            @click="onReceipt(form)">
-                            Nota Pesanan
+                            @click="onChangeStatus(form, 'on-progress')">
+                            Terima Pesanan
                         </button>
-                    </div> -->
-
-                    <!-- <div v-if="form.status === 'on-progress' && !form.payment_status" class="width width-100">
-                        <button 
-                            class="btn btn-full btn-sekunder"
-                            @click="onCheckout(form)">
-                            Lakukan Pembayaran
-                        </button>
-                    </div> -->
+                    </div>
 
                     <div v-if="form.status === 'on-progress'" class="width width-100">
                         <button 
                             :disabled="isButtonOnProgressDisabled(form)"
                             class="btn btn-full btn-sekunder"
                             @click="onChangeStatus(form, 'ready')">
-                            Pesanan Siap
+                            Siap Diantarkan
                         </button>
                     </div>
 
                     <div v-if="form.status === 'ready'" class="width width-100">
                         <button 
-                            :disabled="isButtonDoneDisabled(form)"
-                            class="btn btn-full btn-green"
-                            @click="onChangeStatus(form, 'done')">
-                            Pesanan Selesai
+                            class="btn btn-full btn-sekunder"
+                            @click="onChangeStatus(form, 'delivered')">
+                            Pesanan Diterima
                         </button>
                     </div>
 
-                    <div v-if="form.status === 'new-order'" class="width width-100">
+                    <div v-if="form.status === 'delivered'" class="width width-100">
                         <button 
-                            class="btn btn-full btn-sekunder"
-                            @click="onChangeStatus(form, 'on-progress')">
-                            Ambil Pesanan
+                            :disabled="!isButtonDoneDisabled(form)"
+                            class="btn btn-full btn-green"
+                            @click="onChangeStatus(form, 'done')">
+                            Pesanan Selesai
                         </button>
                     </div>
 
@@ -411,7 +403,7 @@ export default {
             return data.status !== 'on-progress'
         },
         isButtonDoneDisabled (data) {
-            return data.payment_status && data.status !== 'ready'
+            return data.payment_status && data.status === 'delivered'
         },
         isOrderStatusDC (data) {
             return data.status === 'done' || data.status === 'canceled'

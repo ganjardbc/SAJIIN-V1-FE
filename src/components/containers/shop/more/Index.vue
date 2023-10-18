@@ -107,6 +107,7 @@ export default {
                 {icon: 'fa fa-lg fa-percent', label: 'Promosi', value: 0, link: 'shop-promotions', permission: 'promotions'},
                 {icon: 'fa fa-lg fa-th-large', label: 'Daftar Meja', value: 0, link: 'shop-tables', permission: 'tables'},
                 {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'shop-reports', permission: 'reports'},
+                {icon: 'fa fa-lg fa-cogs', label: 'Pengaturan', value: 0, link: 'shop-settings', permission: 'settings'},
             ]
         }
     },

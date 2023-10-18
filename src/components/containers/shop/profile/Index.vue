@@ -1,15 +1,17 @@
 <template>
     <div id="App">
+        <AppHeaderMobile title="Profil" />
         <Profile />
     </div>
 </template>
 <script>
+import AppHeaderMobile from '../../../modules/AppHeaderMobile'
 import Profile from '../../user/profile/Index'
 
 export default {
     name: 'App',
     metaInfo: {
-        title: 'Owner',
+        title: 'Shop',
         titleTemplate: '%s | Profile',
         htmlAttrs: {
             lang: 'en',
@@ -17,7 +19,8 @@ export default {
         }
     },
     components: {
-        Profile
+        AppHeaderMobile,
+        Profile,
     },
 }
 </script>

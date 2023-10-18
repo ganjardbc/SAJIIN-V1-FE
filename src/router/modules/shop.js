@@ -1,6 +1,6 @@
 import Layout from '@/components/containers/shop/Layout'
 import Home from '@/components/containers/shop/Index'
-import Profile from '@/components/containers/user/profile/Index'
+import Profile from '@/components/containers/shop/profile/Index'
 import Settings from '@/components/containers/shop/settings/Index'
 import Dashboard from '@/components/containers/shop/dashboard/Index'
 import Cashier from '@/components/containers/shop/cashier/Index'

@@ -243,7 +243,7 @@ export default {
             })
         },
         onChangeOrderStatus (data) {
-            this.titleConfirmedStatus = 'Pesanan sudah siap?'
+            this.titleConfirmedStatus = 'Pesanan siap diantarkan ?'
             this.visibleConfirmedStatus = true 
             this.selectedOrderData = data 
         },

@@ -91,13 +91,13 @@ export default {
                     label = 'Memasak'
                     break
                 case 'delivered':
-                    label = 'Diantarkan'
+                    label = 'Diterima'
                     break
                 case 'on-progress':
-                    label = 'Diproses'
+                    label = 'Disiapkan'
                     break
                 case 'ready':
-                    label = 'Siap'
+                    label = 'Diantarkan'
                     break
                 case 'todo':
                     label = 'Todo'

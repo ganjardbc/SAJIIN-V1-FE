@@ -40,7 +40,7 @@
                     <button 
                         class="btn btn-sekunder"
                         @click="onChangeOrderStatus(dt.order, 'ready')">
-                        Pesanan Siap
+                        Siap Diantarkan
                     </button>
                     <button 
                         class="btn btn-sekunder margin margin-left-10px" 

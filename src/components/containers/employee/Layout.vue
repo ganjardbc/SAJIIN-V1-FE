@@ -236,8 +236,16 @@ export default {
         },
         getTotalOrder () {
             let total = 0
-            if (this.matrixDashboard.newOrder > 0 || this.matrixDashboard.onProgress > 0 || this.matrixDashboard.ready > 0) {
-                total = this.matrixDashboard.newOrder + this.matrixDashboard.onProgress + this.matrixDashboard.ready
+            if (
+                this.matrixDashboard.newOrder > 0 || 
+                this.matrixDashboard.onProgress > 0 || 
+                this.matrixDashboard.ready > 0 || 
+                this.matrixDashboard.delivered > 0
+            ) {
+                total = this.matrixDashboard.newOrder + 
+                    this.matrixDashboard.onProgress + 
+                    this.matrixDashboard.ready + 
+                    this.matrixDashboard.delivered
             }
             return total
         },
@@ -254,7 +262,7 @@ export default {
             return [
                 {
                     icon: 'fa fa-lg fa-database', label: 'TOKO', value: 0, disableMenu: false, menu: [
-                        {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'shop-dashboard', permission: 'dashboard'},
+                        // {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'employee-dashboard', permission: 'dashboard'},
                         {icon: 'fa fa-lg fa-laptop', label: 'Kasir', value: 0, link: 'employee-cashier', permission: 'cashier'},
                         {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: replaceToMoreValue(this.getTotalOrder), link: 'employee-orders', permission: 'orders'},
                         {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: replaceToMoreValue(this.getTotalOpenedCashbook), link: 'employee-cash-book', permission: 'cashbooks'},

@@ -26,7 +26,7 @@
 
                 <div v-else class="width width-100">
                     <div v-if="data.order.status === 'canceled'">
-                        <AppEmpty title="This Order is Canceled" icon="fa fa-3x fa-times-circle" />
+                        <AppEmpty title="Pesanan ini dibatalkan oleh Toko." icon="fa fa-3x fa-times-circle" />
                         <div class="display-flex center">
                             <button class="btn btn-sekunder" @click="onClickExit">
                                 Buat Pesanan Baru ?
@@ -45,7 +45,12 @@
                                 :show-icon="true"
                                 style="margin-bottom: 15px;">
                             </el-alert>
-                            <div class="fonts fonts-13 semibold black margin margin-bottom-10px">Detail Pesanan</div>
+                            <div class="display-flex space-between align-center margin margin-bottom-10px">
+                                <div class="fonts fonts-13 semibold black">Detail Pesanan</div>
+                                <button class="btn btn-small-icon btn-circle btn-sekunder" @click="getData">
+                                    <i class="fa fa-lw fa-retweet"></i>
+                                </button>
+                            </div>
                             <div class="fonts fonts-11 semibold black">Pesanan</div>
                             <div class="display-flex space-between margin margin-bottom-5px">
                                 <div class="fonts fonts-10 grey">
@@ -98,8 +103,15 @@
                         </div>
 
                         <div class="bottom-dividing padding padding-15px">
-                            <div class="fonts fonts-11 semibold black">Status</div>
-                            <div class="width width-100 margin margin-top-15px">
+                            <div class="display-flex space-between align-center">
+                                <div class="fonts fonts-11 semibold black">Status</div>
+                                <AppCardCapsule 
+                                    v-if="!isCanViewStatus(data.order)"
+                                    :data="data.order.status" />
+                            </div>
+                            <div 
+                                v-if="isCanViewStatus(data.order)" 
+                                class="width width-100 margin margin-top-15px">
                                 <div v-for="(dt, i) in orderStatus" :key="i" class="display-flex" style="padding: 7.5px 0;">
                                     <div style="width: 70px;">
                                         <div :class="`image image-circle ${i === orderIndex ? 'image-52px' : 'image-45px'}`" :style="`background-color: ${dt.isActive ? dt.color : '#f5f5f5'};`">
@@ -257,8 +269,8 @@ import AppPopupLoader from '../../../modules/AppPopupLoader'
 
 const defaultPayloadOrderStatus = [
     {
-        title: 'Diterima', 
-        subtitle: 'Pesananmu sudah diterima Toko.', 
+        title: 'Antrian', 
+        subtitle: 'Pesananmu sudah masuk dalam antrian.', 
         icon: 'fa fa-lg fa-info', 
         color: '#38c172', 
         iconColor: '#fff', 
@@ -273,9 +285,9 @@ const defaultPayloadOrderStatus = [
         isActive: false
     },
     {
-        title: 'Selesai', 
-        subtitle: 'Pesanan kamu selesai.', 
-        icon: 'fa fa-lg fa-check', 
+        title: 'Diantarkan', 
+        subtitle: 'Yee! Pesananmu sedang diantarkan.', 
+        icon: 'fa fa-lg fa-truck', 
         color: '#e3342f', 
         iconColor: '#fff', 
         isActive: true
@@ -333,10 +345,21 @@ export default {
             getById: 'storeVisitorOrder/getById',
             download: 'storeVisitorOrder/download',
         }),
+        isCanViewStatus (value) {
+            let status = false 
+            if (
+                value.status === 'new-order' ||
+                value.status === 'on-progress' ||
+                value.status === 'ready' 
+            ) {
+                status = true
+            }
+            return status 
+        },
         isCanDownloadNota (value) {
-            let status = true 
-            if (!value.payment_status || value.order_status !== 'done') {
-                status = false
+            let status = false 
+            if (value.payment_status && value.status === 'done') {
+                status = true
             }
             return status 
         },
@@ -348,7 +371,7 @@ export default {
         },
         setOrderStatus () {
             const status = this.data && this.data.order && this.data.order.status 
-            this.orderIndex = status ? status === 'new-order' ? 0 : status === 'on-progress' ? 1 : status === 'done' ? 2 : null : null
+            this.orderIndex = status ? status === 'new-order' ? 0 : status === 'on-progress' ? 1 : status === 'ready' ? 2 : null : null
             let newPayload = defaultPayloadOrderStatus && defaultPayloadOrderStatus.map((dt, i) => {
                 const status = (i <= this.orderIndex) ? true : false 
                 return {

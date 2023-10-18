@@ -25,7 +25,7 @@
                                 <i class="icn icn-left fa fa-lw fa-times"></i> Cancel
                             </button>
                             <button 
-                                v-if="dt.order.status === 'canceled'"
+                                v-if="dt.order.status === 'done' || dt.order.status === 'canceled'"
                                 class="btn btn-white btn-full btn-align-left"
                                 @click="onChangeStatus(dt.order, 'new-order')">
                                 <i class="icn icn-left fa fa-lw fa-history"></i> Re-Open
@@ -169,7 +169,7 @@
                         <button 
                             class="btn btn-sekunder margin margin-left-5px"
                             @click="onChangeStatus(dt.order, 'on-progress')">
-                            Ambil
+                            Terima Pesanan
                         </button>
                     </div>
                     <div v-if="dt.order.status === 'on-progress'">
@@ -177,12 +177,19 @@
                             :disabled="isButtonOnProgressDisabled(dt)"
                             class="btn btn-sekunder margin margin-left-5px"
                             @click="onChangeStatus(dt.order, 'ready')">
-                            Pesanan Siap
+                            Siap Diantarkan
                         </button>
                     </div>
                     <div v-if="dt.order.status === 'ready'">
                         <button 
-                            :disabled="isButtonDoneDisabled(dt)"
+                            class="btn btn-sekunder margin margin-left-5px"
+                            @click="onChangeStatus(dt.order, 'delivered')">
+                            Pesanan Diterima
+                        </button>
+                    </div>
+                    <div v-if="dt.order.status === 'delivered'">
+                        <button 
+                            :disabled="!isButtonDoneDisabled(dt)"
                             class="btn btn-green margin margin-left-5px"
                             @click="onChangeStatus(dt.order, 'done')">
                             Pesanan Selesai
@@ -224,7 +231,7 @@ export default {
             return data.order.status !== 'on-progress'
         },
         isButtonDoneDisabled (data) {
-            return data.order.payment_status && data.order.status !== 'ready'
+            return data.order.payment_status && data.order.status === 'delivered'
         },
         
         // COVER

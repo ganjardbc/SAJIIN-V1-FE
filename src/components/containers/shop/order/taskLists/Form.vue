@@ -106,7 +106,7 @@
                     <button 
                         class="btn btn-sekunder btn-full" 
                         @click="onChangeOrderStatus(selected.order, 'ready')">
-                        Pesanan Siap
+                        Siap Diantarkan
                     </button>
                 </div>
             </div>

@@ -65,7 +65,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px">
+                            <div class="card no-padding-mobile box-shadow bg-white">
                                 <div class="fonts fonts-13 black semibold">Karyawan</div>
                                 <div class="field-group">
                                     <div class="field-label">ID Karyawan</div>
@@ -173,39 +173,37 @@
                     </div>
                     <div class="width width-70 width-mobile">
                         <div class="padding padding-left-30px no-margin-padding">
-                            <div class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px">
-                                <div class="margin margin-bottom-20px">
-                                    <div class="fonts fonts-13 black semibold">Pengguna</div>
-                                    <div class="field-group">
-                                        <div class="field-label">Username</div>
-                                        <div class="field-caption">Tambahkan username baru atau ubah username sekarang.</div>
-                                        <div v-if="form.user_username_old" class="field-caption">Username sekarang adalah "{{ form.user_username_old }}".</div>
-                                        <el-input 
-                                            placeholder=""
-                                            type="text"
-                                            v-model="form.username"
-                                            :disabled="false"
-                                            @input="onChageUsername"></el-input>
-                                        <div 
-                                            v-if="errorMessage.username" 
-                                            class="field-error">
-                                            {{ errorMessage.username && errorMessage.username[0] }}
-                                        </div>
+                            <div class="card no-padding-mobile box-shadow bg-white">
+                                <div class="fonts fonts-13 black semibold">Pengguna</div>
+                                <div class="field-group">
+                                    <div class="field-label">Username</div>
+                                    <div class="field-caption">Tambahkan username baru atau ubah username sekarang.</div>
+                                    <div v-if="form.user_username_old" class="field-caption">Username sekarang adalah "{{ form.user_username_old }}".</div>
+                                    <el-input 
+                                        placeholder=""
+                                        type="text"
+                                        v-model="form.username"
+                                        :disabled="false"
+                                        @input="onChageUsername"></el-input>
+                                    <div 
+                                        v-if="errorMessage.username" 
+                                        class="field-error">
+                                        {{ errorMessage.username && errorMessage.username[0] }}
                                     </div>
-                                    <div class="field-group">
-                                        <div class="field-label">Password</div>
-                                        <div class="field-caption">Tambahkan password baru atau ubah password sekarang.</div>
-                                        <el-input 
-                                            placeholder=""
-                                            type="password"
-                                            v-model="form.password"
-                                            :disabled="false"
-                                            show-password></el-input>
-                                        <div 
-                                            v-if="errorMessage.password" 
-                                            class="field-error">
-                                            {{ errorMessage.password && errorMessage.password[0] }}
-                                        </div>
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Password</div>
+                                    <div class="field-caption">Tambahkan password baru atau ubah password sekarang.</div>
+                                    <el-input 
+                                        placeholder=""
+                                        type="password"
+                                        v-model="form.password"
+                                        :disabled="false"
+                                        show-password></el-input>
+                                    <div 
+                                        v-if="errorMessage.password" 
+                                        class="field-error">
+                                        {{ errorMessage.password && errorMessage.password[0] }}
                                     </div>
                                 </div>
                             </div>
@@ -214,7 +212,7 @@
                 </div>
 
                 <div v-if="selectedIndex === 2" class="width width-100 padding padding-top-10px padding-bottom-10px">
-                    <div class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px">
+                    <div class="card no-padding-mobile box-shadow bg-white">
                         <div class="fonts fonts-13 black semibold">Konfigurasi</div>
                         <div class="field-group">
                             <div class="display-flex space-between">
@@ -235,12 +233,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="display-flex flex-end">
-                    <button class="btn btn-main btn-full" @click="onSaveSubmit">
-                        Update Data
-                    </button>
-                </div>
+        <div class="main-content-footer">
+            <div class="main-content-footer-container">
+                <button class="btn btn-main btn-full" @click="onSaveSubmit">
+                    Update Data
+                </button>
             </div>
         </div>
 
