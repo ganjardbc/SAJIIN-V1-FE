@@ -19,8 +19,11 @@
             </div>
         </div>
         <div class="width width-100">
-            <CardCategory 
-                :data="dataCategory"
+            <AppButtonCapsuleSlider
+                :index.sync="selectedIndex"
+                customAllLabel="Semua Produk" 
+                customIcon="fa fa-lw fa-box"
+                :data="filteredCateogry"
                 @onChange="onCategory" />
         </div>
         <div class="width width-100">
@@ -47,13 +50,14 @@
 import { mapActions, mapState } from 'vuex'
 import SearchField from '../../../../modules/SearchField'
 import AppEmpty from '../../../../modules/AppEmpty'
+import AppButtonCapsuleSlider from '../../../../modules/AppButtonCapsuleSlider'
 import CardProduct from './CardProduct'
-import CardCategory from './CardCategory'
 
 export default {
     name: 'App',
     data () {
         return {
+            // selectedIndex: 'all',
             currentPage: 1,
         }
     },
@@ -64,9 +68,9 @@ export default {
     },
     components: {
         AppEmpty,
+        AppButtonCapsuleSlider,
         SearchField,
         CardProduct,
-        CardCategory
     },
     computed: {
         ...mapState({
@@ -78,9 +82,26 @@ export default {
             dataCategory: (state) => state.storeCashierCategory.data,
             loadingCategory: (state) => state.storeCashierCategory.loading,
         }),
+        selectedIndex: {
+            get () {
+                return this.$store.state.storeCashierCategory.selectedIndex
+            },
+            set (value) {
+                this.$store.state.storeCashierCategory.selectedIndex = value
+            }
+        },
         shopId () {
             return this.$store.state.storeSelectedShop.selectedData
         },
+        filteredCateogry () {
+            return this.dataCategory.map((item) => {
+                return {
+                    id: item.id,
+                    label: item.name,
+                    image: this.categoryImageThumbnailUrl + item.image
+                }
+            })
+        }
     },
     watch: {
         shopId (prevProps, nextProps) {
@@ -107,7 +128,14 @@ export default {
             this.getDataProduct()
         },
         onCategory (data) {
-            this.filter.category = data 
+            if (data === 'all') {
+                this.filter.category = ''
+            } else {
+                this.filter.category = data 
+            }
+            if (data !== this.selectedIndex) {
+                this.selectedIndex = data
+            }
             this.resetProductFilter()
             this.getDataProduct()
         },
@@ -116,7 +144,11 @@ export default {
             this.getDataProduct()
         },
         resetFilterCategory () {
-            this.filter.category = ''
+            if (this.selectedIndex === 'all') {
+                this.filter.category = ''
+            } else {
+                this.filter.category = this.selectedIndex 
+            }
         },
 
         // LIST DATA

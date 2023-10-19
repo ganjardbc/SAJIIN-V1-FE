@@ -57,13 +57,22 @@
             <div 
                 class="width width-100"
                 style="padding-bottom: 10px;">
-                <AppTabs 
+                <!-- START HIDDEN TEMPORARY -->
+                <!-- <AppTabs 
                     :selectedIndex.sync="selectedIndex" 
                     :isFull="true"
                     :isScrollable="false"
                     :data="tabs" 
                     :onChange="(data) => onChangeTabs(data)"
-                />
+                /> -->
+                <!-- END HIDDEN TEMPORARY -->
+                <AppButtonCapsuleSlider
+                    :index.sync="selectedIndex" 
+                    :disableAll="true"
+                    :returnIndex="true"
+                    customIcon="fa fa-lw fa-list-ul"
+                    :data="tabs"
+                    @onChange="onChangeTabs" />
             </div>
 
             <div class="width width-100">
@@ -196,6 +205,7 @@ import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../../modules/AppPopupAlert'
 import SearchField from '../../../../modules/SearchField'
 import AppTabs from '../../../../modules/AppTabs'
+import AppButtonCapsuleSlider from '../../../../modules/AppButtonCapsuleSlider'
 import DetailOrder from './DetailOrder'
 import Card from './Card'
 import FormCheckout from './checkOut/Index'
@@ -232,12 +242,12 @@ export default {
             titleConfirmedStatus: 'Update status pesanan ?',
             titleConfirmedProduct: 'Update produk di pesanan ini ?',
             currentPage: 1,
-            selectedIndex: 0,
             selectedData: null,
         }
     },
     mounted () {
-        this.onChangeTabs(0)
+        this.onChangeTabs(this.selectedIndex)
+        this.getDashboardMatrix()
     },
     created () {
         this.filter.search = this.paramOrderId
@@ -248,6 +258,7 @@ export default {
         AppPopupConfirmed,
         AppPopupAlert,
         AppTabs,
+        AppButtonCapsuleSlider,
         SearchField,
         DetailOrder,
         Card,
@@ -266,7 +277,6 @@ export default {
             limit: (state) => state.storeOrders.limit,
             loading: (state) => state.storeOrders.loading,
             loadingForm: (state) => state.storeOrders.loadingForm,
-            typeForm: (state) => state.storeOrders.typeForm,
             formVarian: (state) => state.storeOrdersDetail.form,
             loadingCashbook: (state) => state.storeCashBook.loading,
             dataCurrent: (state) => state.storeCashBook.dataCurrent,
@@ -283,6 +293,14 @@ export default {
                 this.$store.state.storeOrders.typeForm = value
             }
         },
+        selectedIndex: {
+            get () {
+                return this.$store.state.storeOrders.selectedIndex
+            },
+            set (value) {
+                this.$store.state.storeOrders.selectedIndex = value
+            }
+        },
         shopId () {
             return this.$store.state.storeSelectedShop.selectedData
         },
@@ -296,13 +314,13 @@ export default {
             const delivered = this.matrixDashboard.delivered
             const all = newOrder + onProgress + ready + delivered
             return [
-                {id: 1, label: 'Semua', value: replaceToMoreValue(all), status: 'active'},
-                {id: 2, label: `Baru`, value: replaceToMoreValue(newOrder), status: ''},
-                {id: 3, label: `Disiapkan`, value: replaceToMoreValue(onProgress), status: ''},
-                {id: 5, label: `Diantarkan`, value: replaceToMoreValue(ready), status: ''},
-                {id: 6, label: `Diterima`, value: replaceToMoreValue(delivered), status: ''},
-                {id: 7, label: `Selesai`, status: ''},
-                {id: 8, label: `Dibatalkan`, status: ''},
+                {id: 1, icon: 'fa fa-lw fa-list-ul', label: 'Semua Pesanan', value: replaceToMoreValue(all), status: 'active'},
+                {id: 2, icon: 'far fa-lw fa-clock', label: `Baru Masuk`, value: replaceToMoreValue(newOrder), status: ''},
+                {id: 3, icon: 'fa fa-lw fa-stopwatch', label: `Disiapkan`, value: replaceToMoreValue(onProgress), status: ''},
+                {id: 5, icon: 'fa fa-lw fa-truck', label: `Diantarkan`, value: replaceToMoreValue(ready), status: ''},
+                {id: 6, icon: 'far fa-lw fa-thumbs-up', label: `Diterima`, value: replaceToMoreValue(delivered), status: ''},
+                {id: 7, icon: 'far fa-lw fa-check-circle', label: `Selesai`, status: ''},
+                {id: 8, icon: 'far fa-lw fa-times-circle', label: `Dibatalkan`, status: ''},
             ]
         }
     },
@@ -341,9 +359,12 @@ export default {
         },
         onRefresh () {
             this.getData()
+            this.getDashboardMatrix()
         },
         onChangeTabs (data) {
-            this.selectedIndex = data
+            if (data !== this.selectedIndex) {
+                this.selectedIndex = data
+            }
             switch (this.selectedIndex) {
                 case 0:
                     this.filter.status = ''
@@ -384,7 +405,6 @@ export default {
             const shop_id = this.shopId
             if (shop_id) {
                 this.getOrder({ token, shop_id })
-                this.getDashboardMatrix()
             }
         },
         handleCurrentChange (value) {
@@ -503,6 +523,7 @@ export default {
                 const status = res.data.status 
                 if (status === 'ok') {
                     this.getData()
+                    this.getDashboardMatrix()
                     this.$message(`Berhasil merubah status pesanan ${this.selectedData.order_id}.`)
                 } else {
                     this.$message(`Gagal merubah status pesanan ${this.selectedData.order_id}.`)

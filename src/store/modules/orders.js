@@ -139,6 +139,7 @@ export default {
         loadingForm: false,
         loadingReceipt: false,
         typeForm: 'create',
+        selectedIndex: 0,
         data: [],
         selectedData: null,
         filter: {

@@ -1,18 +1,26 @@
 <template>
     <div id="App" class="padding padding-15px">
         <div class="fonts fonts-11 semibold">Kategori</div>
-        <CardCategory 
-            :data="data"
+        <AppButtonCapsuleSlider
+            :index.sync="selectedIndex"
+            customAllLabel="Semua Produk" 
+            customIcon="fa fa-lw fa-box"
+            :data="filteredCateogry"
             @onChange="onCategory" />
     </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import CardCategory from './Card'
+import AppButtonCapsuleSlider from '../../../../modules/AppButtonCapsuleSlider'
 
 export default {
+    data () {
+        return {
+            selectedIndex: 'all'
+        }
+    },
     components: {
-        CardCategory
+        AppButtonCapsuleSlider,
     },
     mounted () {
         this.getDataCategory()
@@ -25,6 +33,15 @@ export default {
         }),
         selectedShop () {
             return this.dataShop.shop
+        },
+        filteredCateogry () {
+            return this.data.map((item) => {
+                return {
+                    id: item.id,
+                    label: item.name,
+                    image: this.categoryImageThumbnailUrl + item.image
+                }
+            })
         }
     },
     methods: {
@@ -34,7 +51,12 @@ export default {
             resetFilterProduct: 'storeVisitorProductList/resetFilter',
         }),
         onCategory (data) {
-            this.filterProduct.category = data
+            if (data === 'all') {
+                this.filterProduct.category = ''
+            } else {
+                this.filterProduct.category = data 
+            }
+            this.selectedIndex = data
             this.resetFilterProduct()
             this.getDataProduct()
         },
