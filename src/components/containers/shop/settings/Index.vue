@@ -300,7 +300,7 @@
         />
 
         <AppPopupQrCode 
-            v-if="visibleQrCode"
+            :visibility.sync="visibleQrCode"
             :data="form"
             @onClose="onCloseQrCode"
         />
