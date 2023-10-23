@@ -386,8 +386,8 @@ export default {
         },
         onDownloadReceipt () {
             const order_id = this.$route.params.orderId
-            const size_x = '302.36px'
-            const size_y = '755.90px'
+            const size_x = 80
+            const size_y = 200
             this.download({ order_id, size_x, size_y }).then((res) => {
                 if (res.status === 200) {
                     this.$message('Order receipt downloaded')
