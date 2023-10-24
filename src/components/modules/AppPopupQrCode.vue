@@ -67,7 +67,7 @@
                 <button 
                     class="btn btn-main-reverse with-hover with-border btn-full" 
                     @click="onDownloadCanvas('component-to-place')">
-                    Download QR Toko
+                    Save As Image
                 </button>
             </div>
         </AppCardPopup>
@@ -150,12 +150,13 @@ export default {
             })
         },
         onDownloadCanvas (toPlace) {
+            const fileName = `qr-toko-${this.data.shop_id}.png`
             const canvasElement = document.getElementById(toPlace).children[0]
             const canvasUrl = canvasElement.toDataURL("image/png").replace("image/png", "image/octet-stream")
 
             const downloadLink = document.createElement('a')
             downloadLink.href = canvasUrl
-            downloadLink.download = `qr-toko.png`
+            downloadLink.download = fileName
 
             document.body.appendChild(downloadLink)
             downloadLink.click()

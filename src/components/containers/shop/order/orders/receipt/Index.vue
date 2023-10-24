@@ -4,6 +4,14 @@
             :title="title" 
             :enableCustomFooter="true"
             :onClose="onClose">
+            <div slot="toolbar">
+                <button 
+                    class="btn btn-icon btn-white btn-circle"
+                    @click="onDownloadReceipt">
+                    <i class="fa fa-lw fa-download"></i>
+                </button>
+            </div>
+
             <div class="display-flex align-center">
                 <button 
                     v-for="(dt, i) in thermalSizing"
@@ -17,18 +25,182 @@
             <div v-if="loadingReceipt">
                 <AppLoader />
             </div>
-            <div v-else id="component-to-print">
+            <!-- <div v-else id="component-to-print">
                 <ViewPdf v-if="fileUrl !== ''" :src="fileUrl" />
                 <AppEmpty v-else title="NOTA TIDAK DITEMUKAN" />
+            </div> -->
+
+            <div 
+                class="width width-100"
+                style="
+                    position: absolute; 
+                    width: auto; 
+                    margin: auto;
+                    top: 0; 
+                    height: 1px;
+                    overflow: hidden;
+                ">
+                <div 
+                    id="component-to-print" 
+                    :style="`width: ${selectedData.sizeReceipt.x}; margin: auto;`">
+                    <div class="padding padding-10px">
+                        <div class="width width-100 margin margin-bottom-5px">
+                            <!-- <div class="width width-60px width-center">
+                                <div class="image image-padding bg-white">
+                                    <img 
+                                        v-if="form.shop_image" 
+                                        :src="`${shopImageThumbnailUrl}${form.shop_image}?not-from-cache-please`" 
+                                        :alt="form.shop && form.shop.name">
+                                    <i v-else class="post-middle-absolute fa fa-lg fa-store" />
+                                </div>
+                            </div> -->
+                            <div class="fonts fonts-11 semibold align-center margin margin-top-7px margin-bottom-2px">{{ form.shop && form.shop.name }}</div>
+                            <div class="fonts fonts-9 normal align-center">{{ form.shop && form.shop.location }}</div>
+                            <div v-if="form.shop && form.shop.phone" class="fonts fonts-9 normal align-center">{{ form.shop && form.shop.phone }}</div>
+                        </div>
+                        <div class="margin margin-top-7px margin-bottom-7px">
+                            <div class="display-flex space-between">
+                                <div style="width: 75px;">
+                                    <div class="fonts fonts-9">ID Pesanan</div>
+                                </div>
+                                <div style="width: calc(100% - 75px);">
+                                    <div class="fonts fonts-9">: {{ form.order_id }}</div>
+                                </div>
+                            </div>
+                            <div class="display-flex space-between">
+                                <div style="width: 75px;">
+                                    <div class="fonts fonts-9">Tanggal</div>
+                                </div>
+                                <div style="width: calc(100% - 75px);">
+                                    <div class="fonts fonts-9">: {{ form.created_at | moment("DD/MM/YYYY") }}</div>
+                                </div>
+                            </div>
+                            <div v-if="form.cashier_name" class="display-flex space-between">
+                                <div style="width: 75px;">
+                                    <div class="fonts fonts-9">Kasir</div>
+                                </div>
+                                <div style="width: calc(100% - 75px);">
+                                    <div class="fonts fonts-9">: {{ form.cashier_name || '-' }}</div>
+                                </div>
+                            </div>
+                            <div v-if="form.customer_name" class="display-flex space-between">
+                                <div style="width: 75px;">
+                                    <div class="fonts fonts-9">Pelanggan</div>
+                                </div>
+                                <div style="width: calc(100% - 75px);">
+                                    <div class="fonts fonts-9">: {{ form.customer_name || '-' }}</div>
+                                </div>
+                            </div>
+                            <div v-if="form.table_name" class="display-flex space-between">
+                                <div style="width: 75px;">
+                                    <div class="fonts fonts-9">Meja</div>
+                                </div>
+                                <div style="width: calc(100% - 75px);">
+                                    <div class="fonts fonts-9">: {{ form.table_name || '-' }}</div>
+                                </div>
+                            </div>
+                            <div v-if="form.platform_name" class="display-flex space-between">
+                                <div style="width: 75px;">
+                                    <div class="fonts fonts-9">Platform</div>
+                                </div>
+                                <div style="width: calc(100% - 75px);">
+                                    <div class="fonts fonts-9">: {{ form.platform_name || '-' }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="width width-100 border-bottom"></div>     
+                        <div class="margin margin-top-7px margin-bottom-7px">
+                            <div class="display-flex space-between">
+                                <div style="width: calc(100% - 110px);">
+                                    <span class="fonts fonts-9 black semibold">Produk</span>
+                                </div>
+                                <div style="width: 30px;">
+                                    <span class="fonts fonts-9 black semibold">Qty</span>
+                                </div>
+                                <div style="width: 80px;">
+                                    <span class="fonts fonts-9 black semibold">Total</span>
+                                </div>
+                            </div>
+
+                            <div 
+                                v-for="(dt, index) in form.details" 
+                                :key="index"
+                                class="width width-100">
+                                <div :class="`display-flex space-between`">
+                                    <div style="width: calc(100% - 110px);">
+                                        <span class="fonts fonts-9 black">{{ dt.product_name }}</span>
+                                        <span v-if="dt.product_detail" class="fonts fonts-9 black"> - {{ dt.product_detail }}</span>
+                                    </div>
+                                    <div style="width: 30px;">
+                                        <span class="fonts fonts-9 black">{{ dt.quantity }}</span>
+                                    </div>
+                                    <div style="width: 80px;">
+                                        <span class="fonts fonts-9 black">{{ format(dt.subtotal) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="width width-100 border-bottom"></div>                            
+                        <div class="margin margin-top-7px margin-bottom-7px">
+                            <div class="display-flex flex-end">
+                                <div style="width: calc(100% - 80px);">
+                                    <div class="fonts fonts-9 black">Total</div>
+                                </div>
+                                <div style="width: 80px;">
+                                    <div class="fonts fonts-9 black">{{ format(form.total_price) }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="form.is_discount" class="width width-100 border-bottom"></div>
+                        <div v-if="form.is_discount" class="padding padding-top-5px padding-bottom-5px">
+                            <div v-if="form.is_discount" class="display-flex flex-end">
+                                <div style="width: calc(100% - 80px);">
+                                    <div class="fonts fonts-9 black">Diskon</div>
+                                </div>
+                                <div style="width: 80px;">
+                                    <div class="fonts fonts-9 black">{{ format(form.total_discount) }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="width width-100 border-bottom"></div>                            
+                        <div class="margin margin-top-7px margin-bottom-7px">
+                            <div class="display-flex flex-end">
+                                <div style="width: calc(100% - 80px);">
+                                    <div class="fonts fonts-9 black">Bayar</div>
+                                </div>
+                                <div style="width: 80px;">
+                                    <div class="fonts fonts-9 black">{{ format(form.bills_price) }}</div>
+                                </div>
+                            </div>
+                            <div class="display-flex flex-end">
+                                <div style="width: calc(100% - 80px);">
+                                    <div class="fonts fonts-9 black">Kembali</div>
+                                </div>
+                                <div style="width: 80px;">
+                                    <div class="fonts fonts-9 black">{{ format(form.change_price) }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="margin margin-top-10px">
+                            <div class="fonts fonts-8 normal align-center">Scan Untuk Cek Pesanan</div>
+                            <div class="width width-150px width-center">
+                                <VueQrcode :value="`${initUrl}visitor/${form.shop && form.shop.shop_id}/order/${form.order_id}`" errorCorrectionLevel="L" :width="150" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <div class="width width-100 content-center" id="component-to-place"></div>
 
             <div slot="footer">
                 <div class="right-form-footer">
                     <button 
                         class="btn btn-main btn-full"
-                        :disabled="!fileUrl"
-                        @click="onDownloadReceipt">
-                        Download Nota
+                        :disabled="loadingReceipt"
+                        @click="onDownloadCanvas('component-to-place')">
+                        Save As Image
                     </button>
                     <button 
                         v-if="isBluetoothSupported"
@@ -52,19 +224,19 @@ import m from 'moment'
 import ViewPdf from 'vue-pdf'
 import { Printd } from 'printd'
 import { mapState, mapActions } from 'vuex'
+import html2canvas from 'html2canvas'
+import VueQrcode from 'vue-qrcode'
 import AppSideForm from '../../../../../modules/AppSideForm'
 import AppCardCapsule from '../../../../../modules/AppCardCapsule'
 import AppCardPriceSuggestion from '../../../../../modules/AppCardPriceSuggestion'
 import AppLoader from '../../../../../modules/AppLoader'
 import AppEmpty from '../../../../../modules/AppEmpty'
 import PrintReceipt from './PrintReceipt'
-import VueQrcode from 'vue-qrcode'
 import printStyles from './styles'
 import CMD from './markdown'
 import { replaceString, formatCurrency } from '@/services/utils'
 
 const thermalSizing = [
-    // {id: 1, sizeThermal: {x: '100%', y: 'auto'}, sizeReceipt: {x: '100%', y: 'auto'}},
     {id: 1, sizeThermal: {x: '80', y: '200'}, sizeReceipt: {x: '302.36px', y: '755.90px'}},
     {id: 2, sizeThermal: {x: '72', y: '200'}, sizeReceipt: {x: '272.13px', y: '755.90px'}},
     {id: 3, sizeThermal: {x: '51', y: '200'}, sizeReceipt: {x: '192.755px', y: '755.90px'}},
@@ -256,6 +428,45 @@ export default {
                     }
                 })
         },
+        onSetCanvas () {
+            this.loadingReceipt = true
+            this.onClearCanvas('#component-to-place')
+            setTimeout(() => {
+                this.onOpenCanvas(
+                    '#component-to-print', 
+                    '#component-to-place')
+            }, 500)
+        },
+        onClearCanvas (toPlace) {
+            document.querySelector(toPlace).innerHTML = ''
+        },
+        onOpenCanvas (toPrint, toPlace) {
+            html2canvas(
+                document.querySelector(toPrint), {
+                    allowTaint: true,
+                    tainttest: true,
+                    logging: false,
+                    useCORS: true,
+                }
+            ).then((canvas) => {
+                document.querySelector(toPlace).appendChild(canvas)
+            }).finally(() => {
+                this.loadingReceipt = false
+            })
+        },
+        onDownloadCanvas (toPlace) {
+            const fileName = `order-receipt-${this.form.order_id}.png`
+            const canvasElement = document.getElementById(toPlace).children[0]
+            const canvasUrl = canvasElement.toDataURL("image/png").replace("image/png", "image/octet-stream")
+
+            const downloadLink = document.createElement('a')
+            downloadLink.href = canvasUrl
+            downloadLink.download = fileName
+
+            document.body.appendChild(downloadLink)
+            downloadLink.click()
+            document.body.removeChild(downloadLink)
+        },
         onDownloadReceipt () {
             const token = this.$cookies.get('tokenBearer')
             const order_id = this.form.order_id
@@ -272,52 +483,67 @@ export default {
                 }
             })
         },
-        onViewDownloadReceipt () {
-            this.fileUrl = ''
-            const token = this.$cookies.get('tokenBearer')
-            const order_id = this.form.order_id
-            const size_x = this.selectedData.sizeThermal.x
-            const size_y = this.selectedData.sizeThermal.y
-            this.downloadOnly({ token, order_id, size_x, size_y }).then((res) => {
-                if (res.status === 200) {
-                    var file = new Blob([res.data], {
-                        type: 'application/pdf'
-                    })
-                    var fileUrl = URL.createObjectURL(file)
-                    this.fileUrl = fileUrl
-                } else {
-                    this.$message({
-                        message: 'Failed to download order receipt',
-                        type: 'error'
-                    })
-                }
-            })
-        },
+        // HIDDEN TEMPORARY
+        // onViewDownloadReceipt () {
+        //     this.fileUrl = ''
+        //     const token = this.$cookies.get('tokenBearer')
+        //     const order_id = this.form.order_id
+        //     const size_x = this.selectedData.sizeThermal.x
+        //     const size_y = this.selectedData.sizeThermal.y
+        //     this.downloadOnly({ token, order_id, size_x, size_y }).then((res) => {
+        //         if (res.status === 200) {
+        //             var file = new Blob([res.data], {
+        //                 type: 'application/pdf'
+        //             })
+        //             var fileUrl = URL.createObjectURL(file)
+        //             this.fileUrl = fileUrl
+        //         } else {
+        //             this.$message({
+        //                 message: 'Failed to download order receipt',
+        //                 type: 'error'
+        //             })
+        //         }
+        //     })
+        // },
         onClose () {
             this.$emit('onClose')
         },
         onChangeSize (value) {
             this.selectedIndex = value.id 
             this.selectedData = value 
-            this.onViewDownloadReceipt()
+            // HIDDEN TEMPORARY
+            // this.onViewDownloadReceipt()
+            this.onSetCanvas()
         },
     },
     computed: {
         ...mapState({
             form: (state) => state.storeOrders.form,
             errorMessage: (state) => state.storeOrders.errorMessage,
-            loadingReceipt: (state) => state.storeOrders.loadingReceipt,
             details: (state) => state.storeOrders.form.details,
             isBluetoothSupported: (state) => state.application.isBluetoothSupported
         }),
+        loadingReceipt: {
+            set (value) {
+                this.$store.state.storeOrders.loadingReceipt = value
+            },
+            get () {
+                return this.$store.state.storeOrders.loadingReceipt
+            },
+        },
         orderId () {
             return this.form.order_id
         }
     },
     watch: {
         orderId () {
-            this.onViewDownloadReceipt()
+            // HIDDEN TEMPORARY
+            // this.onViewDownloadReceipt()
+            this.onSetCanvas()
         }
     },
+    mounted () {
+        this.onSetCanvas()
+    }
 }
 </script>
