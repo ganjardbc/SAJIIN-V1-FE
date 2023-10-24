@@ -98,7 +98,8 @@ export default {
                 return {
                     id: item.id,
                     label: item.name,
-                    image: this.categoryImageThumbnailUrl + item.image
+                    image: item.image ? this.categoryImageThumbnailUrl + item.image : '',
+                    icon: 'fa fa-lw fa-box',
                 }
             })
         }
