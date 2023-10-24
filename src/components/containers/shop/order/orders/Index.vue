@@ -438,6 +438,7 @@ export default {
                     this.visibleFormCheckout = false 
                     this.visibleFormCustomer = false 
                     this.getData()
+                    this.getDashboardMatrix()
                     this.$message('Pesanan berhasil di-edit')
 
                     if (this.typeForm === 'checkout') {
