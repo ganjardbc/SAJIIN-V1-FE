@@ -38,8 +38,8 @@
             <button 
                 slot="reference"
                 :disabled="openedCashBook && openedCashBook.length === 0"
-                class="btn btn-icon btn-small-radius btn-sekunder margin margin-left-10px">
-                <i class="fa fa-lg fa-info fonts orange"></i>
+                class="btn btn-icon btn-small-radius btn-white margin margin-left-5px">
+                <i class="fa fa-lg fa-bell fonts orange"></i>
                 <span v-if="openedCashBook && openedCashBook.length > 0" class="notif">{{ openedCashBook && openedCashBook.length }}</span>
             </button>
         </el-popover>

@@ -1,8 +1,8 @@
 <template>
     <div id="EmployeeHome">
         <AppTabLinks :data="tabs" @onChange="onChange" />
-        <Products v-if="selectedIndex === 'products'" />
         <Categories v-if="selectedIndex === 'categories'" />
+        <Products v-if="selectedIndex === 'products'" />
     </div>
 </template>
 <script>
@@ -14,10 +14,10 @@ export default {
     name: 'EmployeeHome',
     data () {
         return {
-            selectedIndex: 'products',
+            selectedIndex: 'categories',
             tabs: [
-                {id: 1, title: 'Produk', path: 'products'},
-                {id: 2, title: 'Kategori', path: 'categories'},
+                {id: 1, title: 'Kategori', path: 'categories'},
+                {id: 2, title: 'Produk', path: 'products'},
             ]
         }
     },

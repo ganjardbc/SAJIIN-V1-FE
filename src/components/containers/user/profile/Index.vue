@@ -21,12 +21,6 @@
                         @click="onButtonUpload">
                         Ubah Cover
                     </button>
-                    <!-- <div class="border border-bottom margin margin-top-20-px"></div>
-                    <button 
-                        class="btn btn-primary btn-full margin margin-top-20px" 
-                        @click="onLogout">
-                        Logout
-                    </button> -->
                 </div>
             </div>
             <div class="width width-70 width-mobile">
@@ -87,7 +81,8 @@
                                     placeholder=""
                                     type="text"
                                     v-model="form.username"
-                                    :disabled="false"></el-input>
+                                    :disabled="false"
+                                    @input="onChangeUsername"></el-input>
                                 <div 
                                     v-if="errorMessage.username" 
                                     class="field-error">
@@ -166,13 +161,6 @@
             @onClickNo="onClickNoUpdate"
             @onClickYes="onClickYesUpdate"
         />
-        
-        <!-- <AppPopupConfirmed 
-            v-if="visibleConfirmedLogout"
-            :title="'Logout dari akun Kamu ?'"
-            @onClickNo="onClickNoLogout"
-            @onClickYes="onClickYesLogout"
-        /> -->
 
         <AppPopupAlert 
             v-if="visibleAlert"
@@ -251,6 +239,9 @@ export default {
             uploadCover: 'storeProfile/uploadCover',
             setDataAuth: 'storeAuth/setData',
         }),
+        onChangeUsername (value) {
+            this.form.username = value.replace(/[ ]/g,'_')
+        },
         onChangeTabs (data) {
             this.selectedIndex = data 
         },
@@ -295,36 +286,6 @@ export default {
                 }
             })
         },
-
-        // LOGOUT
-        // onLogout () {
-        //     this.visibleConfirmedLogout = true
-        // },
-        // onClickNoLogout () {
-        //     this.visibleConfirmedLogout = false
-        // },
-        // onClickYesLogout () {
-        //     this.loadingForm = true
-        //     this.visibleConfirmedLogout = false
-        //     const token = this.$cookies.get('tokenBearer')
-        //     this.logout(token)
-        //         .then((res) => {
-        //             if (res.data.status === 'ok') {
-        //                 this.$cookies.remove('token')
-        //                 this.$cookies.remove('tokenBearer')
-        //                 this.$cookies.remove('user')
-        //                 this.$cookies.remove('role')
-        //                 this.$cookies.remove('shop')
-        //                 this.$cookies.remove('employee')
-        //                 this.$cookies.remove('permissions')
-
-        //                 this.$router.push({ name: 'login' })
-        //             }
-        //         })
-        //         .finally(() => {
-        //             this.loadingForm = false 
-        //         })
-        // },
 
         // IMAGE
         onButtonUpload () {

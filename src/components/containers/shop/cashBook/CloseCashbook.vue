@@ -27,10 +27,41 @@
                     </div>
                     <div class="field-group">
                         <div class="field-label">Kas Summary</div>
-                        <div class="fonts medium semibold main-color overflow-ellipsis">
-                            {{ format(form && form.cash_summary || 0) }}
+                        <div class="display-flex align-center">
+                            <div class="fonts medium semibold main-color overflow-ellipsis margin margin-right-10px">
+                                {{ format(form && form.cash_summary || 0) }}
+                            </div>
+                            <el-popover
+                                placement="right-start"
+                                width="220"
+                                trigger="click">
+                                <div class="width width-100">
+                                    <div class="fonts fonts-11 semibold black">Summary Detail</div>
+                                    <div v-for="(item, i) in form.cash_detail" :key="i" class="display-flex margin margin-top-15px">
+                                        <div class="image image-20px border-full">
+                                            <img :src="item.image ? paymentImageThumbnailUrl + item.image : ''" alt="">
+                                        </div>
+                                        <div style="width: calc(100% - 30px); margin-left: 10px;">
+                                            <div class="fonts fonts-8 black">{{ item.name }}</div>
+                                            <div class="fonts fonts-10 black semibold">{{ format(item.cash_in) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <i slot="reference" class="fonts fonts-12 grey fa fa-lg fa-info-circle"></i>
+                            </el-popover>
                         </div>
                     </div>
+                    <!-- <div v-if="form && form.cash_detail" class="display-flex">
+                        <div v-for="(item, i) in form.cash_detail" :key="i" class="display-flex margin margin-15px">
+                            <div class="image image-20px border-full">
+                                <img :src="item.image ? paymentImageThumbnailUrl + item.image : ''" alt="">
+                            </div>
+                            <div style="width: calc(100% - 30px); margin-left: 10px;">
+                                <div class="fonts fonts-8 black">{{ item.name }}</div>
+                                <div class="fonts fonts-10 black semibold">{{ format(item.cash_in) }}</div>
+                            </div>
+                        </div>
+                    </div> -->
                     <div class="field-group">
                         <div class="field-label">Kas Aktual</div>
                         <div class="field-caption">

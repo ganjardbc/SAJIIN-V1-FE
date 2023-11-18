@@ -114,7 +114,8 @@
                         placeholder=""
                         type="text"
                         v-model="form.username"
-                        :disabled="isDetailForm"></el-input>
+                        :disabled="isDetailForm"
+                        @input="onChangeUsername"></el-input>
                     <div 
                         v-if="errorMessage.username" 
                         class="field-error">
@@ -239,6 +240,9 @@ export default {
         AppImage,
     },
     methods: {
+        onChangeUsername (value) {
+            this.form.username = value.replace(/[ ]/g,'_')
+        },
         uploadImage (data) {
             this.$emit('uploadImage', data)
         },

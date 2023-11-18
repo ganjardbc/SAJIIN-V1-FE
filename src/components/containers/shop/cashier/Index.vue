@@ -1,12 +1,43 @@
 <template>
     <div id="App">
-        <div class="cashier-container">
-            <div class="display-flex space-between margin margin-bottom-5px">
+        <!-- <div class="left-form">
+            <div class="display-flex space-between align-center margin margin-bottom-5px">
                 <h1 class="fonts big black bold">Kasir</h1>
-                <CashBookNotification />
+                <div class="display-flex flex-end align-center">
+                    <button 
+                        class="btn btn-icon btn-small-radius btn-white"
+                        @click="getDataCashBook">
+                        <i class="fa fa-lw fa-retweet"></i>
+                    </button>
+                    <CashBookNotification class="margin marign-left-5px" />
+                </div>
             </div>
             <CashBook @onOpenOrderList="onOpenOrderList" />
-            <Product v-if="isThereOpenedCashbook" />
+            <Product v-if="isThereOpenedCashbook" :column="'column-3 mobile-column'" />
+        </div>
+        <div class="right-form">
+            <div class="right-form-container">
+                <CartForm 
+                    @onCreateOrder="onCreateOrder"
+                    @onCheckOut="onOpenCheckOut"
+                    @onClose="onCloseCart" />
+            </div>
+        </div> -->
+
+        <div class="cashier-container">
+            <div class="display-flex space-between align-center margin margin-bottom-5px">
+                <h1 class="fonts big black bold">Kasir</h1>
+                <div class="display-flex flex-end align-center">
+                    <button 
+                        class="btn btn-icon btn-small-radius btn-white"
+                        @click="getDataCashBook">
+                        <i class="fa fa-lw fa-retweet"></i>
+                    </button>
+                    <CashBookNotification class="margin marign-left-5px" />
+                </div>
+            </div>
+            <CashBook @onOpenOrderList="onOpenOrderList" />
+            <Product v-if="isThereOpenedCashbook" :column="'column-3 mobile-column'" />
         </div>
 
         <div :class="`content-form ${!visibleCart && 'hide'}`">
@@ -98,6 +129,7 @@ import CashBookNotification from './cashBook/Notification'
 import Product from './product/Index'
 import Cart from './cart/Index'
 import CartPopup from './cart/CartPopup'
+import CartForm from './cart/Form'
 import CheckOut from './checkOut/Index'
 import CashBookDetail from '../cashBook/Detail'
 import CloseCashbook from '../cashBook/CloseCashbook'
@@ -148,6 +180,7 @@ export default {
         Product,
         Cart,
         CartPopup,
+        CartForm,
         CheckOut,
         CashBookDetail,
         CloseCashbook,

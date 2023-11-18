@@ -28,11 +28,33 @@
                     <div v-if="currentCashBook" class="display-flex column align-right">
                         <div class="fonts fonts-9 normal">Kas Summary</div>
                         <div class="display-flex flex-end align-center">
-                            <button 
-                                class="btn btn-small-icon btn-white margin margin-right-5px" 
-                                @click="onRefresh">
-                                <i class="fa fa-lw fa-retweet"></i>
-                            </button>
+                            <el-popover
+                                placement="left-start"
+                                width="180"
+                                trigger="click">
+                                <div class="width width-100">
+                                    <div class="fonts fonts-11 semibold black">Detail Summary</div>
+                                    <div class="display-flex margin margin-top-15px">
+                                        <div class="image image-20px">
+                                            <i class="fonts fonts-12 green fa fa-lg fa-info-circle"></i>
+                                        </div>
+                                        <div style="width: calc(100% - 30px); margin-left: 10px;">
+                                            <div class="fonts fonts-8 black">Modal</div>
+                                            <div class="fonts fonts-10 black semibold">{{ format(currentCashBook && currentCashBook.cash_modal || 0) }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="display-flex margin margin-top-15px">
+                                        <div class="image image-20px">
+                                            <i class="fonts fonts-12 green fa fa-lg fa-check-circle"></i>
+                                        </div>
+                                        <div style="width: calc(100% - 30px); margin-left: 10px;">
+                                            <div class="fonts fonts-8 black">Keuntungan</div>
+                                            <div class="fonts fonts-10 black semibold">{{ format(currentCashBook && currentCashBook.cash_profit || 0) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <i slot="reference" class="cursor-pointer fonts fonts-12 grey fa fa-lg fa-info-circle margin margin-right-10px"></i>
+                            </el-popover>
                             <div class="fonts fonts-14 semibold main-color overflow-ellipsis align-right">
                                 {{ format(currentCashBook && currentCashBook.cash_summary || 0) }}
                             </div>
@@ -47,42 +69,70 @@
                 </div>
             </div>
 
-            <div class="card bg-white-grey no-padding margin margin-bottom-15px">
+            <div class="card bg-white border-full no-padding margin margin-bottom-15px">
                 <div class="width width-100 display-flex space-between align-center wrap">
-                    <div class="width width-row-4 width-mobile-row-2 padding padding-top-10px padding-bottom-10px">
+                    <div class="width width-50 padding padding-top-10px padding-bottom-10px">
                         <div class="padding padding-5px content-center">
-                            <div class="display-flex center align-center">
-                                <i class="fonts fonts-8 main-color fa fa-lg fa-info-circle margin margin-right-5px"></i>
-                                <span class="fonts fonts-9 normal grey overflow-ellipsis align-center">Modal</span>
-                            </div>
-                            <div class="fonts fonts-10 semibold black overflow-ellipsis align-center">{{ format(currentCashBook && currentCashBook.cash_modal || 0) }}</div>
-                        </div>
-                    </div>
-                    <div class="width width-row-4 width-mobile-row-2 padding padding-top-10px padding-bottom-10px">
-                        <div class="padding padding-5px border-left content-center">
-                            <div class="display-flex center align-center">
-                                <i class="fonts fonts-8 main-color fa fa-lg fa-check-circle margin margin-right-5px"></i>
-                                <span class="fonts fonts-9 normal grey overflow-ellipsis align-center">Keuntungan</span>
-                            </div>
-                            <div class="fonts fonts-10 semibold black overflow-ellipsis align-center">{{ format(currentCashBook && currentCashBook.cash_profit || 0) }}</div>
-                        </div>
-                    </div>
-                    <div class="width width-row-4 width-mobile-row-2 padding padding-top-10px padding-bottom-10px">
-                        <div class="padding padding-5px border-left border-mobile-none content-center">
                             <div class="display-flex center align-center">
                                 <i class="fonts fonts-8 green fa fa-lg fa-arrow-up margin margin-right-5px"></i>
                                 <span class="fonts fonts-9 normal grey overflow-ellipsis align-center">Kas Masuk</span>
                             </div>
-                            <div class="fonts fonts-10 semibold black overflow-ellipsis align-center">{{ format(currentCashBook && currentCashBook.cash_in || 0) }}</div>
+                            <div class="display-flex center align-center">
+                                <div class="fonts fonts-10 semibold black overflow-ellipsis">
+                                    {{ format(currentCashBook && currentCashBook.cash_in || 0) }}
+                                </div>
+                                <el-popover 
+                                    v-if="currentCashBook"
+                                    placement="bottom"
+                                    width="180"
+                                    trigger="click">
+                                    <div class="width width-100">
+                                        <div class="fonts fonts-11 semibold black">Kas Masuk</div>
+                                        <div v-for="(item, i) in currentCashBook.cash_detail" :key="i" class="display-flex margin margin-top-15px">
+                                            <div class="image image-20px border-full">
+                                                <img :src="item.image ? paymentImageThumbnailUrl + item.image : ''" alt="">
+                                            </div>
+                                            <div style="width: calc(100% - 30px); margin-left: 10px;">
+                                                <div class="fonts fonts-8 black">{{ item.name }}</div>
+                                                <div class="fonts fonts-10 black semibold">{{ format(item.cash_in) }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <i slot="reference" class="cursor-pointer fonts fonts-12 grey fa fa-lg fa-info-circle margin margin-left-10px"></i>
+                                </el-popover>
+                            </div>
                         </div>
                     </div>
-                    <div class="width width-row-4 width-mobile-row-2 padding padding-top-10px padding-bottom-10px">
+                    <div class="width width-50 padding padding-top-10px padding-bottom-10px">
                         <div class="padding padding-5px border-left content-center">
                             <div class="display-flex center align-center">
                                 <i class="fonts fonts-8 orange fa fa-lg fa-arrow-down margin margin-right-5px"></i>
                                 <span class="fonts fonts-9 normal grey overflow-ellipsis align-center">Kas Keluar</span>
                             </div>
-                            <div class="fonts fonts-10 semibold black overflow-ellipsis align-center">{{ format(currentCashBook && currentCashBook.cash_out || 0) }}</div>
+                            <div class="display-flex center align-center">
+                                <div class="fonts fonts-10 semibold black overflow-ellipsis margin margin-right-10px">
+                                    {{ format(currentCashBook && currentCashBook.cash_out || 0) }}
+                                </div>
+                                <el-popover 
+                                    v-if="currentCashBook"
+                                    placement="bottom"
+                                    width="180"
+                                    trigger="click">
+                                    <div class="width width-100">
+                                        <div class="fonts fonts-11 semibold black">Kas Keluar</div>
+                                        <div v-for="(item, i) in currentCashBook.cash_detail" :key="i" class="display-flex margin margin-top-15px">
+                                            <div class="image image-20px border-full">
+                                                <img :src="item.image ? paymentImageThumbnailUrl + item.image : ''" alt="">
+                                            </div>
+                                            <div style="width: calc(100% - 30px); margin-left: 10px;">
+                                                <div class="fonts fonts-8 black">{{ item.name }}</div>
+                                                <div class="fonts fonts-10 black semibold">{{ format(item.cash_out) }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <i slot="reference" class="cursor-pointer fonts fonts-12 grey fa fa-lg fa-info-circle"></i>
+                                </el-popover>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -196,9 +246,6 @@ export default {
                         }
                     })
             }
-        },
-        onRefresh () {
-            this.getData()
         },
         onClickNo () {
             this.visibleConfirmed = false 

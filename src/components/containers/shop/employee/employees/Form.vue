@@ -211,7 +211,7 @@
                             type="text"
                             v-model="form.username"
                             :disabled="isDetailForm"
-                            @input="onChageUsername"></el-input>
+                            @input="onChangeUsername"></el-input>
                         <div 
                             v-if="errorMessage.username" 
                             class="field-error">
@@ -348,7 +348,7 @@ export default {
         ...mapActions({
             getDataShift: 'storeEmployee/getDataShift',
         }),
-        onChageUsername (value) {
+        onChangeUsername (value) {
             this.form.username = value.replace(/[ ]/g,'_')
         },
         onChangeEmail (data) {

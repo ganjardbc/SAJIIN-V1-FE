@@ -1,7 +1,7 @@
 <template>
     <div id="OrderStatus">
         <div v-if="data" class="display-flex space-between align-center">
-            <div class="fonts fonts-10 normal black">Proses Pesanan</div>
+            <div class="fonts fonts-10 normal black">Status Pesanan</div>
             <div class="display-flex flex-start align-center">
                 <div v-if="!data.order_total" class="display-flex flex-start align-center">
                     <span class="fonts fonts-10 semibold black">Tidak Ada Pesanan</span>

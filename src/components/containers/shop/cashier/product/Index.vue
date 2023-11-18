@@ -29,7 +29,7 @@
         <div class="width width-100">
             <div v-loading="loadingProduct">
                 <AppEmpty v-if="dataProduct.length === 0" />
-                <CardProduct :data.sync="dataProduct" />
+                <CardProduct :data.sync="dataProduct" :column="column" />
             </div>
             <div class="width width-100 display-flex flex-end align-center padding padding-top-5px">
                 <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
@@ -57,7 +57,6 @@ export default {
     name: 'App',
     data () {
         return {
-            // selectedIndex: 'all',
             currentPage: 1,
         }
     },
@@ -71,6 +70,12 @@ export default {
         AppButtonCapsuleSlider,
         SearchField,
         CardProduct,
+    },
+    props: {
+        column: {
+            default: 'column-3',
+            required: false,
+        }
     },
     computed: {
         ...mapState({

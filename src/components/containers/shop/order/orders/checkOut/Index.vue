@@ -98,7 +98,7 @@ import AppSideForm from '../../../../../modules/AppSideForm'
 import AppCardCapsule from '../../../../../modules/AppCardCapsule'
 import AppCardPriceSuggestion from '../../../../../modules/AppCardPriceSuggestion'
 import InputNumber from '../../../../../modules/InputNumber'
-import FieldPayment from '../../../cashier/payment/Index'
+import FieldPayment from '../../../payments/Field'
 
 export default {
     name: 'App',

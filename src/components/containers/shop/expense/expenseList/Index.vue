@@ -196,6 +196,7 @@ export default {
         }
     },
     mounted () {
+        this.getPaymentData()
         this.getExpenseTypeData()
         this.onChangeTabs(0)
     },
@@ -247,6 +248,7 @@ export default {
     watch: {
         shopId (prevProps, nextProps) {
             if (prevProps !== nextProps) {
+                this.getPaymentData()
                 this.getExpenseTypeData()
                 this.getData()
             }
@@ -256,6 +258,7 @@ export default {
         ...mapActions({
             getDataExpenseList: 'storeExpenseList/getData',
             getDataExpenseType: 'storeExpenseList/getDataExpenseType',
+            getDataPayment: 'storeExpenseList/getDataPayment',
             setPagination: 'storeExpenseList/setPagination',
             resetFormData: 'storeExpenseList/resetFormData',
             resetFilter: 'storeExpenseList/resetFilter',
@@ -290,6 +293,16 @@ export default {
         },
 
         // LIST DATA 
+        getPaymentData () {
+            const token = this.$cookies.get('tokenBearer')
+            const shop_id = this.shopId 
+            if (shop_id) {
+                this.getDataPayment({
+                    token, 
+                    shop_id: shop_id
+                })
+            }
+        },
         getExpenseTypeData () {
             const token = this.$cookies.get('tokenBearer')
             const shop_id = this.shopId 

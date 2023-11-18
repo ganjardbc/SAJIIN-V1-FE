@@ -91,24 +91,29 @@
         &.margin-bottom-#{$var}px {
             margin-bottom: #{$var} + 'px';
         }
+        &.margin-mobile-#{$var}px {
+            @media (max-width: $min-width) {
+                margin: #{$var} + 'px' !important;
+            }
+        }
         &.margin-mobile-left-#{$var}px {
             @media (max-width: $min-width) {
-                margin-left: #{$var} + 'px';
+                margin-left: #{$var} + 'px' !important;
             }
         }
         &.margin-mobile-right-#{$var}px {
             @media (max-width: $min-width) {
-                margin-right: #{$var} + 'px';
+                margin-right: #{$var} + 'px' !important;
             }
         }
         &.margin-mobile-top-#{$var}px {
             @media (max-width: $min-width) {
-                margin-top: #{$var} + 'px';
+                margin-top: #{$var} + 'px' !important;
             }
         }
         &.margin-mobile-bottom-#{$var}px {
             @media (max-width: $min-width) {
-                margin-bottom: #{$var} + 'px';
+                margin-bottom: #{$var} + 'px' !important;
             }
         }
     }

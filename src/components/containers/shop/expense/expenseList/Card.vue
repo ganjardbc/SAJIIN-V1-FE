@@ -65,7 +65,7 @@
                     <div class="width width-100">
                         <div class="fonts fonts-11 semibold">{{ dt.expense_date | moment("DD MMMM YYYY") }}</div>
                         <AppCardCaption 
-                            icon="fa fa-lg fa-calculator" 
+                            icon="fa fa-lg fa-coins" 
                             :caption="format(dt.expense_price)" />
                         <AppCardCaption 
                             icon="fa fa-lg fa-list-ol" 
@@ -74,6 +74,10 @@
                             v-if="dt.cashbook && dt.cashbook.cash_date"
                             icon="fa fa-lg fa-book-open" 
                             :caption="dateConvert(dt.cashbook.cash_date)" />
+                        <AppCardCaption 
+                            v-if="dt.payment && dt.payment.name"
+                            icon="fa fa-lg fa-calculator" 
+                            :caption="dt.payment.name" />
                         <AppCardCaption 
                             v-if="dt.description"
                             icon="fa fa-lg fa-info-circle" 

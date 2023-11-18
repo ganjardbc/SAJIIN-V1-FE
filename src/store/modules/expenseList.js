@@ -12,6 +12,7 @@ const defaultMessage = () => {
         description: '',
         shop_id: '',
         cashbook_id: '',
+        payment_id: '',
         expense_type_id: '',
     }
 }
@@ -27,6 +28,7 @@ const defaultForm = () => {
         description: '',
         shop_id: '',
         cashbook_id: '',
+        payment_id: '',
         expense_type_id: '',
     }
 }
@@ -47,12 +49,24 @@ export default {
         data: [],
         filter: {
             cashbook_id: '',
+            payment_id: '',
             expense_type_id: '',
             search: '',
             status: 'active',
         },
         expenseType: {
-            limit: 10,
+            limit: 1000,
+            offset: 0,
+            totalRecord: 0,
+            loading: false,
+            data: [],
+            filter: {
+                search: '',
+                status: 'active',
+            },
+        },
+        payment: {
+            limit: 1000,
             offset: 0,
             totalRecord: 0,
             loading: false,
@@ -133,6 +147,25 @@ export default {
         },
         SET_EXPENSE_TYPE_TOTAL_RECORD (state, value) {
             state.expenseType.totalRecord = value
+        },
+
+        // PAYMENT 
+        SET_PAYMENT_LOADING (state, value) {
+            state.payment.loading = value
+        },
+        SET_PAYMENT_OFFSET (state, value) {
+            state.payment.offset += value
+        },
+        SET_PAYMENT_DATA (state, value) {
+            state.payment.data = value && value.map((item) => {
+                return {
+                    value: item.id,
+                    label: item.name,
+                }
+            })
+        },
+        SET_PAYMENT_TOTAL_RECORD (state, value) {
+            state.payment.totalRecord = value
         },
     },
 
@@ -317,6 +350,43 @@ export default {
                 })
                 .finally(() => {
                     commit('SET_EXPENSE_TYPE_LOADING', false)
+                })
+        },
+
+        // PAYMENT 
+        getDataPayment ({ commit, state }, data) {
+            commit('SET_PAYMENT_LOADING', true)
+
+            let dataPrev = []
+
+            let params = {
+                limit: state.limit,
+                offset: state.offset,
+                search: state.filter.search,
+                status: state.filter.status,
+                shop_id: data.shop_id
+            }
+
+            return axios.post('/api/payment/getAll', params, { 
+                    headers: { Authorization: data.token } 
+                })
+                .then((res) => {
+                    const payload = res.data.data 
+
+                    payload && payload.map((dt) => {
+                        dataPrev.push({ ...dt })
+                    })
+
+                    commit('SET_PAYMENT_DATA', dataPrev)
+                    commit('SET_PAYMENT_TOTAL_RECORD', res.data.total_record)
+
+                    return res
+                })
+                .catch((e) => {
+                    console.log('error', e)
+                })
+                .finally(() => {
+                    commit('SET_PAYMENT_LOADING', false)
                 })
         },
     }

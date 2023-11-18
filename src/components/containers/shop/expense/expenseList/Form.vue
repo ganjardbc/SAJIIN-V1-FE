@@ -80,6 +80,29 @@
                     </div>
                 </div>
                 <div class="field-group">
+                    <div class="field-label">Pembayaran</div>
+                    <el-select 
+                        v-model="form.payment_id" 
+                        :loading="loadingPayment"
+                        clearable
+                        placeholder="Pilih pembayaran"
+                        no-data-text="Data Tidak Ditemukan"
+                        :disabled="isDetailForm"
+                        style="width: 100%;">
+                        <el-option
+                            v-for="(item, i) in dataPayment"
+                            :key="i"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <div 
+                        v-if="errorMessage.payment_id" 
+                        class="field-error">
+                        {{ errorMessage.payment_id && errorMessage.payment_id[0] }}
+                    </div>
+                </div>
+                <div class="field-group">
                     <div class="field-label">Tanggal</div>
                     <el-date-picker 
                         placeholder="Pilih tanggal"
@@ -179,6 +202,8 @@ export default {
             typeForm: (state) => state.storeExpenseList.typeForm,
             dataExpenseType: (state) => state.storeExpenseList.expenseType.data,
             loadingExpenseType: (state) => state.storeExpenseList.expenseType.loading,
+            dataPayment: (state) => state.storeExpenseList.payment.data,
+            loadingPayment: (state) => state.storeExpenseList.payment.loading,
             loadingCashbook: (state) => state.storeCashBook.loading,
             dataCurrent: (state) => state.storeCashBook.dataCurrent,
         }),

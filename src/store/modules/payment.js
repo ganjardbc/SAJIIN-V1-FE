@@ -44,6 +44,17 @@ export default {
         filter: {
             search: '',
             status: '',
+        },
+        field: {
+            limit: 10,
+            offset: 0,
+            totalRecord: 0,
+            loading: false,
+            data: [],
+            filter: {
+                search: '',
+                status: 'active',
+            }
         }
     },
 
@@ -90,6 +101,20 @@ export default {
         },
         SET_TOTAL_RECORD (state, value) {
             state.totalRecord = value
+        },
+
+        // FIELD
+        SET_FIELD_LOADING (state, value) {
+            state.field.loading = value
+        },
+        SET_FIELD_OFFSET (state, value) {
+            state.field.offset += value
+        },
+        SET_FIELD_DATA (state, value) {
+            state.field.data = value
+        },
+        SET_FIELD_TOTAL_RECORD (state, value) {
+            state.field.totalRecord = value
         },
     },
 
@@ -242,5 +267,48 @@ export default {
                 })
         },
 
+        // FIELD 
+        setFieldPagination ({ commit, state }, data) {
+            state.field.offset = (data - 1) * state.field.limit
+        },
+        resetFieldFilter ({ commit, state }) {
+            state.field.limit = 10
+            state.field.offset = 0
+        },
+        getFieldData ({ commit, state }, data) {
+            commit('SET_FIELD_LOADING', true)
+
+            let dataPrev = []
+
+            const params = {
+                limit: state.field.limit,
+                offset: state.field.offset,
+                search: state.field.filter.search,
+                status: state.field.filter.status,
+                shop_id: data.shop_id
+            }
+
+            return axios.post('/api/payment/getAll', params, { 
+                    headers: { Authorization: data.token } 
+                })
+                .then((res) => {
+                    const payload = res.data.data 
+
+                    payload && payload.map((dt) => {
+                        dataPrev.push({ ...dt })
+                    })
+
+                    commit('SET_FIELD_DATA', dataPrev)
+                    commit('SET_FIELD_TOTAL_RECORD', res.data.total_record)
+
+                    return res
+                })
+                .catch((e) => {
+                    console.log('error', e)
+                })
+                .finally(() => {
+                    commit('SET_FIELD_LOADING', false)
+                })
+        },
     }
 }
