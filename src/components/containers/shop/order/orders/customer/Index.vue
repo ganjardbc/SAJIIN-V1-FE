@@ -16,19 +16,11 @@
                 </div>
                 <div class="field-group">
                     <div class="field-label">Buku Kas</div>
-                    <el-select 
-                        v-model="form.cashbook_id" 
-                        :loading="loadingCashbook"
-                        clearable
-                        placeholder="Pilih Buku Kas"
-                        no-data-text="Data Kosong">
-                        <el-option
-                            v-for="(item, i) in stateCashbookList"
-                            :key="i"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                    <cashbook-filter 
+                        :value.sync="form.cashbook_id"
+                        :disabledAllLabel="true"
+                        placeholder="Pilih buku kas"
+                        @onChange="handleFilterCashbook"></cashbook-filter>
                 </div>
             </div>
 
@@ -68,6 +60,7 @@ import AppSideForm from '../../../../../modules/AppSideForm'
 import AppCardCapsule from '../../../../../modules/AppCardCapsule'
 import AppEmpty from '../../../../../modules/AppEmpty'
 import FieldTable from '../../../tables/Field'
+import CashbookFilter from '../../../cashBook/Filter'
 
 export default {
     name: 'App',
@@ -90,14 +83,7 @@ export default {
             errorMessage: (state) => state.storeOrders.errorMessage,
             typeForm: (state) => state.storeOrders.typeForm,
             category: (state) => state.storeCategory.data,
-            loadingCashbook: (state) => state.storeCashBook.loading,
-            dataCurrent: (state) => state.storeCashBook.dataCurrent,
         }),
-        stateCashbookList () {
-            const data = this.dataCurrent && this.dataCurrent.all_cashbook
-            const filtered = this.cashBookList(data)
-            return filtered.filter((item) => item.value !== '')
-        },
         formId: {
             get () {
                 return this.$store.state.storeOrders.form.id
@@ -112,6 +98,7 @@ export default {
         AppSideForm,
         AppEmpty,
         FieldTable,
+        CashbookFilter,
     },
     methods: {
         isActiveOrder (data) {
@@ -125,6 +112,9 @@ export default {
         },
         onClose () {
             this.$emit('onClose')
+        },
+        handleFilterCashbook (value) {
+            this.form.cashbook_id = value
         },
 
         // TABLE 

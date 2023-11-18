@@ -73,6 +73,17 @@ export default {
                 status: 'active',
             },
         },
+        customFilter: {
+            limit: 10,
+            offset: 0,
+            totalRecord: 0,
+            loading: false,
+            data: [],
+            filter: {
+                search: '',
+                status: 'active',
+            }
+        }
     },
 
     getters: {},
@@ -139,6 +150,20 @@ export default {
         },
         SET_SHOP_TOTAL_RECORD (state, value) {
             state.shop.totalRecord = value
+        },
+
+        // CUSTOM FILTER
+        SET_CUSTOM_FILTER_LOADING (state, value) {
+            state.customFilter.loading = value
+        },
+        SET_CUSTOM_FILTER_OFFSET (state, value) {
+            state.customFilter.offset += value
+        },
+        SET_CUSTOM_FILTER_DATA (state, value) {
+            state.customFilter.data = value
+        },
+        SET_CUSTOM_FILTER_TOTAL_RECORD (state, value) {
+            state.customFilter.totalRecord = value
         },
     },
 
@@ -332,6 +357,50 @@ export default {
                 })
                 .finally(() => {
                     commit('SET_SHOP_LOADING', false)
+                })
+        },
+
+        // CUSTOM FILTER 
+        setCustomFilterPagination ({ commit, state }, data) {
+            state.customFilter.offset = (data - 1) * state.customFilter.limit
+        },
+        resetCustomFilterFilter ({ commit, state }) {
+            state.customFilter.limit = 10
+            state.customFilter.offset = 0
+        },
+        getDataCustomFilter ({ commit, state }, data) {
+            commit('SET_CUSTOM_FILTER_LOADING', true)
+
+            let dataPrev = []
+
+            const params = {
+                limit: state.customFilter.limit,
+                offset: state.customFilter.offset,
+                search: state.customFilter.filter.search,
+                status: state.customFilter.filter.status,
+                shop_id: data.shop_id
+            }
+
+            return axios.post('/api/cashbook/getAll', params, { 
+                    headers: { Authorization: data.token } 
+                })
+                .then((res) => {
+                    const payload = res.data.data 
+
+                    payload && payload.map((dt) => {
+                        dataPrev.push({ ...dt.cashbook })
+                    })
+
+                    commit('SET_CUSTOM_FILTER_DATA', dataPrev)
+                    commit('SET_CUSTOM_FILTER_TOTAL_RECORD', res.data.total_record)
+
+                    return res
+                })
+                .catch((e) => {
+                    console.log('error', e)
+                })
+                .finally(() => {
+                    commit('SET_CUSTOM_FILTER_LOADING', false)
                 })
         },
     }

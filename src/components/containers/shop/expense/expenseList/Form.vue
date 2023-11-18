@@ -58,21 +58,11 @@
                 </div>
                 <div class="field-group">
                     <div class="field-label">Buku Kas</div>
-                    <el-select 
-                        v-model="form.cashbook_id" 
-                        :loading="loadingCashbook"
-                        clearable
+                    <cashbook-filter 
+                        :value.sync="form.cashbook_id"
+                        :disabledAllLabel="true"
                         placeholder="Pilih buku kas"
-                        no-data-text="Data Tidak Ditemukan"
-                        :disabled="isDetailForm"
-                        style="width: 100%;">
-                        <el-option
-                            v-for="(item, i) in cashBook"
-                            :key="i"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                        @onChange="handleFilterCashbook"></cashbook-filter>
                     <div 
                         v-if="errorMessage.cashbook_id" 
                         class="field-error">
@@ -181,6 +171,7 @@ import { mapState } from 'vuex'
 import AppSideForm from '../../../../modules/AppSideForm'
 import AppImage from '../../../../modules/AppImage'
 import InputNumber from '../../../../modules/InputNumber'
+import CashbookFilter from '../../cashBook/Filter'
 
 export default {
     name: 'App',
@@ -204,16 +195,7 @@ export default {
             loadingExpenseType: (state) => state.storeExpenseList.expenseType.loading,
             dataPayment: (state) => state.storeExpenseList.payment.data,
             loadingPayment: (state) => state.storeExpenseList.payment.loading,
-            loadingCashbook: (state) => state.storeCashBook.loading,
-            dataCurrent: (state) => state.storeCashBook.dataCurrent,
         }),
-        stateCashbookList () {
-            return this.dataCurrent && this.dataCurrent.all_cashbook
-        },
-        cashBook () {
-            const data = this.cashBookList(this.stateCashbookList)
-            return data.filter((item) => item.value !== '')
-        },
         isDetailForm () {
             let status = false 
             if (this.typeForm === 'detail') {
@@ -247,8 +229,12 @@ export default {
         AppSideForm,
         AppImage,
         InputNumber,
+        CashbookFilter,
     },
     methods: {
+        handleFilterCashbook (value) {
+            this.form.cashbook_id = value
+        },
         uploadImage (data) {
             this.$emit('uploadImage', data)
         },

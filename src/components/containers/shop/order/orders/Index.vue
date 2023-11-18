@@ -36,21 +36,10 @@
                             :value="item.value">
                         </el-option>
                     </el-select>
-                    <el-select 
-                        v-model="filter.cashbook_id" 
-                        @change="handleFilterSearch"
-                        :loading="loadingCashbook"
-                        clearable
-                        placeholder="Select cash book"
-                        no-data-text="Data Tidak Ditemukan"
-                        class="margin margin-left-7px">
-                        <el-option
-                            v-for="(item, i) in cashBookList(stateCashbookList)"
-                            :key="i"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                    <cashbook-filter 
+                        :value.sync="filter.cashbook_id"
+                        @onChange="handleFilterCashbook"
+                        class="margin margin-left-7px"></cashbook-filter>
                 </div>
             </div>
 
@@ -206,6 +195,7 @@ import AppPopupAlert from '../../../../modules/AppPopupAlert'
 import SearchField from '../../../../modules/SearchField'
 import AppTabs from '../../../../modules/AppTabs'
 import AppButtonCapsuleSlider from '../../../../modules/AppButtonCapsuleSlider'
+import CashbookFilter from '../../cashBook/Filter'
 import DetailOrder from './DetailOrder'
 import Card from './Card'
 import FormCheckout from './checkOut/Index'
@@ -259,6 +249,7 @@ export default {
         AppPopupAlert,
         AppTabs,
         AppButtonCapsuleSlider,
+        CashbookFilter,
         SearchField,
         DetailOrder,
         Card,
@@ -278,13 +269,8 @@ export default {
             loading: (state) => state.storeOrders.loading,
             loadingForm: (state) => state.storeOrders.loadingForm,
             formVarian: (state) => state.storeOrdersDetail.form,
-            loadingCashbook: (state) => state.storeCashBook.loading,
-            dataCurrent: (state) => state.storeCashBook.dataCurrent,
             matrixDashboard: (state) => state.storeDashboard.matrix,
         }),
-        stateCashbookList () {
-            return this.dataCurrent && this.dataCurrent.all_cashbook
-        },
         typeForm: {
             get () {
                 return this.$store.state.storeOrders.typeForm
@@ -414,6 +400,10 @@ export default {
         handleFilterSearch () {
             this.currentPage = 1
             this.handleCurrentChange(1)
+        },
+        handleFilterCashbook (value) {
+            this.filter.cashbook_id = value 
+            this.getData()
         },
 
         // ALERT
