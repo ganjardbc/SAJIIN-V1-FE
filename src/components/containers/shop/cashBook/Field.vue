@@ -1,5 +1,5 @@
 <template>
-    <div id="CashbookFilter" class="width width-100">
+    <div id="CashbookField" class="width width-100">
         <el-select 
             v-model="selectedLabel" 
             :placeholder="placeholder"
@@ -39,12 +39,12 @@
                                 </div>
                                 <div style="width: calc(100% - 100px);">
                                     <div v-if="item.cash_date !== item.cash_end_date">
-                                        <span class="fonts fonts-10 semibold">
+                                        <div class="fonts fonts-10 semibold">
                                             {{ item.cash_date | moment("DD MMMM YYYY") }}
-                                        </span>
-                                        <span v-if="item.cash_end_date" class="fonts fonts-10 semibold">
-                                            - {{ item.cash_end_date | moment("DD MMMM YYYY") }}
-                                        </span>
+                                        </div>
+                                        <div v-if="item.cash_end_date" class="fonts grey fonts-8">
+                                            Tutup pada {{ item.cash_end_date | moment("DD MMMM YYYY") }}
+                                        </div>
                                     </div>
                                     <div v-else class="fonts fonts-10 semibold">
                                         {{ item.cash_date | moment("DD MMMM YYYY") }}
@@ -85,7 +85,7 @@ import AppEmpty from '../../../modules/AppEmpty'
 import moment from 'moment'
 
 export default {
-    name: 'CashbookFilter',
+    name: 'CashbookField',
     data () {
         return {
             visiblePopup: false,
@@ -181,14 +181,7 @@ export default {
             let label = !this.disabledAllLabel ? 'Semua Buku Kas' : ''
             let find = this.data && this.data.find((item) => item.id === value)
             if (find !== undefined) {
-                if (find.cash_date !== find.cash_end_date) {
-                    label = moment(find.cash_date).format("DD MMMM YYYY")
-                    if (find.cash_end_date) {
-                        label = `${moment(find.cash_date).format("DD MMMM YYYY")} - ${moment(find.cash_end_date).format("DD MMMM YYYY")}`
-                    }
-                } else {
-                    label = moment(find.cash_date).format("DD MMMM YYYY")
-                }
+                label = moment(find.cash_date).format("DD MMMM YYYY")
             }
             return label
         },

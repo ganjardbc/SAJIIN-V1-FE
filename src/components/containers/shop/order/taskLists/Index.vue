@@ -21,10 +21,10 @@
                      />
                 </div>
                 <div class="width width-18 width-mobile display-flex space-between">
-                    <cashbook-filter 
+                    <cashbook-field 
                         :value.sync="filter.cashbook_id"
                         @onChange="handleFilterCashbook"
-                        class="width width-100 margin margin-left-10px margin-mobile-left-none"></cashbook-filter>
+                        class="width width-100 margin margin-left-10px margin-mobile-left-none"></cashbook-field>
                 </div>
             </div>
             
@@ -79,7 +79,7 @@ import AppTabs from '../../../../modules/AppTabs'
 import AppEmpty from '../../../../modules/AppEmpty'
 import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
 import AppPopupLoader from '../../../../modules/AppPopupLoader'
-import CashbookFilter from '../../cashBook/Filter'
+import CashbookField from '../../cashBook/Field'
 import Card from './Card'
 import Form from './Form'
 
@@ -111,7 +111,7 @@ export default {
         AppEmpty,
         AppPopupConfirmed,
         AppPopupLoader,
-        CashbookFilter,
+        CashbookField,
         Card,
         Form
     },

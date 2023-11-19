@@ -36,10 +36,10 @@
                             :value="item.value">
                         </el-option>
                     </el-select>
-                    <cashbook-filter 
+                    <cashbook-field 
                         :value.sync="filter.cashbook_id"
                         @onChange="handleFilterCashbook"
-                        class="margin margin-left-7px"></cashbook-filter>
+                        class="margin margin-left-7px"></cashbook-field>
                 </div>
             </div>
 
@@ -195,7 +195,7 @@ import AppPopupAlert from '../../../../modules/AppPopupAlert'
 import SearchField from '../../../../modules/SearchField'
 import AppTabs from '../../../../modules/AppTabs'
 import AppButtonCapsuleSlider from '../../../../modules/AppButtonCapsuleSlider'
-import CashbookFilter from '../../cashBook/Filter'
+import CashbookField from '../../cashBook/Field'
 import DetailOrder from './DetailOrder'
 import Card from './Card'
 import FormCheckout from './checkOut/Index'
@@ -249,7 +249,7 @@ export default {
         AppPopupAlert,
         AppTabs,
         AppButtonCapsuleSlider,
-        CashbookFilter,
+        CashbookField,
         SearchField,
         DetailOrder,
         Card,

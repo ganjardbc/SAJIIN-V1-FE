@@ -46,10 +46,10 @@
                             :value="item.value">
                         </el-option>
                     </el-select>
-                    <cashbook-filter 
+                    <cashbook-field 
                         :value.sync="filter.cashbook_id"
                         @onChange="handleFilterCashbook"
-                        style="width: calc(50% - 7.5px);"></cashbook-filter>
+                        style="width: calc(50% - 7.5px);"></cashbook-field>
                 </div>
                 <div 
                     class="width width-300px width-mobile" 
@@ -150,7 +150,7 @@ import AppFileUpload from '../../../../modules/AppFileUpload'
 import AppPopupQrCode from '../../../../modules/AppPopupQrCode'
 import AppTabs from '../../../../modules/AppTabs'
 import SearchField from '../../../../modules/SearchField'
-import CashbookFilter from '../../cashBook/Filter'
+import CashbookField from '../../cashBook/Field'
 import Form from './Form'
 import Card from './Card'
 
@@ -199,7 +199,7 @@ export default {
         AppPopupQrCode,
         AppTabs,
         SearchField,
-        CashbookFilter,
+        CashbookField,
         Form,
         Card,
     },

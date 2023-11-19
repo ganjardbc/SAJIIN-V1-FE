@@ -58,11 +58,11 @@
                 </div>
                 <div class="field-group">
                     <div class="field-label">Buku Kas</div>
-                    <cashbook-filter 
+                    <cashbook-field 
                         :value.sync="form.cashbook_id"
                         :disabledAllLabel="true"
                         placeholder="Pilih buku kas"
-                        @onChange="handleFilterCashbook"></cashbook-filter>
+                        @onChange="handleFilterCashbook"></cashbook-field>
                     <div 
                         v-if="errorMessage.cashbook_id" 
                         class="field-error">
@@ -171,7 +171,7 @@ import { mapState } from 'vuex'
 import AppSideForm from '../../../../modules/AppSideForm'
 import AppImage from '../../../../modules/AppImage'
 import InputNumber from '../../../../modules/InputNumber'
-import CashbookFilter from '../../cashBook/Filter'
+import CashbookField from '../../cashBook/Field'
 
 export default {
     name: 'App',
@@ -229,7 +229,7 @@ export default {
         AppSideForm,
         AppImage,
         InputNumber,
-        CashbookFilter,
+        CashbookField,
     },
     methods: {
         handleFilterCashbook (value) {

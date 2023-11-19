@@ -16,11 +16,11 @@
                 </div>
                 <div class="field-group">
                     <div class="field-label">Buku Kas</div>
-                    <cashbook-filter 
+                    <cashbook-field 
                         :value.sync="form.cashbook_id"
                         :disabledAllLabel="true"
                         placeholder="Pilih buku kas"
-                        @onChange="handleFilterCashbook"></cashbook-filter>
+                        @onChange="handleFilterCashbook"></cashbook-field>
                 </div>
             </div>
 
@@ -60,7 +60,7 @@ import AppSideForm from '../../../../../modules/AppSideForm'
 import AppCardCapsule from '../../../../../modules/AppCardCapsule'
 import AppEmpty from '../../../../../modules/AppEmpty'
 import FieldTable from '../../../tables/Field'
-import CashbookFilter from '../../../cashBook/Filter'
+import CashbookField from '../../../cashBook/Field'
 
 export default {
     name: 'App',
@@ -98,7 +98,7 @@ export default {
         AppSideForm,
         AppEmpty,
         FieldTable,
-        CashbookFilter,
+        CashbookField,
     },
     methods: {
         isActiveOrder (data) {
