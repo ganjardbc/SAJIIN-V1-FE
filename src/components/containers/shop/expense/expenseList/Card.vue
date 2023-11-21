@@ -64,24 +64,24 @@
                 <div style="width: calc(100% - 95px);">
                     <div class="width width-100">
                         <div class="fonts fonts-11 semibold">{{ dt.expense_date | moment("DD MMMM YYYY") }}</div>
-                        <AppCardCaption 
-                            icon="fa fa-lg fa-coins" 
-                            :caption="format(dt.expense_price)" />
-                        <AppCardCaption 
-                            icon="fa fa-lg fa-list-ol" 
-                            :caption="dt.expense_type.name" />
-                        <AppCardCaption 
+                        <AppCardLabelValue 
+                            label="Biaya"
+                            :value="format(dt.expense_price)" />
+                        <AppCardLabelValue 
+                            label="Tipe"
+                            :value="dt.expense_type.name" />
+                        <AppCardLabelValue 
                             v-if="dt.cashbook && dt.cashbook.cash_date"
-                            icon="fa fa-lg fa-book-open" 
-                            :caption="dateConvert(dt.cashbook.cash_date)" />
-                        <AppCardCaption 
+                            label="Buku Kas"
+                            :value="dateConvert(dt.cashbook.cash_date)" />
+                        <AppCardLabelValue 
                             v-if="dt.payment && dt.payment.name"
-                            icon="fa fa-lg fa-calculator" 
-                            :caption="dt.payment.name" />
-                        <AppCardCaption 
+                            label="Pembayaran"
+                            :value="dt.payment.name" />
+                        <AppCardLabelValue 
                             v-if="dt.description"
-                            icon="fa fa-lg fa-info-circle" 
-                            :caption="dt.description" />
+                            label="Keterangan"
+                            :value="dt.description" />
                     </div>
                     <div class="display-flex space-between padding padding-top-15px">
                         <div class="fonts micro black semibold">
@@ -103,7 +103,7 @@
 <script>
 import m from 'moment'
 import AppCardCapsule from '../../../../modules/AppCardCapsule'
-import AppCardCaption from '../../../../modules/AppCardCaption'
+import AppCardLabelValue from '../../../../modules/AppCardLabelValue'
 
 export default {
     name: 'App',
@@ -112,7 +112,7 @@ export default {
     },
     components: {
         AppCardCapsule,
-        AppCardCaption,
+        AppCardLabelValue,
     },
     computed: {
         isRoleOwner () {

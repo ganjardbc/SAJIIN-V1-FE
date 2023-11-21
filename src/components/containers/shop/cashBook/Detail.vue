@@ -61,11 +61,11 @@
                                     {{ format(form.cash_summary) }}
                                 </div>
                                 <el-popover
-                                    placement="right-start"
+                                    placement="bottom"
                                     width="180"
                                     trigger="click">
                                     <div class="width width-100">
-                                        <div class="fonts fonts-11 semibold black">Detail Summary</div>
+                                        <div class="fonts fonts-11 semibold black">Kas Summary</div>
                                         <div class="display-flex margin margin-top-15px">
                                             <div class="image image-20px">
                                                 <i class="fonts fonts-12 green fa fa-lg fa-info-circle"></i>
@@ -217,6 +217,10 @@
                                 <div class="fonts fonts-10 normal black">Platform</div>
                                 <div class="fonts fonts-10 semibold black align-right">{{ dt.order.platform_name }}</div>
                             </div>
+                            <div v-if="dt.order.payment_id" class="display-flex space-between align-center">
+                                <div class="fonts fonts-10 normal black">Pembayaran</div>
+                                <div class="fonts fonts-10 semibold black align-right">{{ dt.payment.name }}</div>
+                            </div>
                             <div class="display-flex space-between">
                                 <div class="display-flex">
                                     <div class="fonts fonts-10 normal black">Total</div>
@@ -271,6 +275,10 @@
                             <div v-if="dt.type" class="display-flex space-between align-center">
                                 <div class="fonts fonts-10 normal black">Tipe</div>
                                 <div class="fonts fonts-10 semibold black align-right">{{ dt.type.name }}</div>
+                            </div>
+                            <div v-if="dt.payment" class="display-flex space-between align-center">
+                                <div class="fonts fonts-10 normal black">Pembayaran</div>
+                                <div class="fonts fonts-10 semibold black align-right">{{ dt.payment.name }}</div>
                             </div>
                             <div v-if="dt.expense.description" class="display-flex space-between align-center">
                                 <div class="fonts fonts-10 normal black">Keterangan</div>

@@ -4,8 +4,10 @@ import moment from 'moment'
 const defaultOrderStatus = () => {
     return [
         {value: 'all', label: 'Semua'},
-        {value: 'new-order', label: 'Baru'},
-        {value: 'on-progress', label: 'Diproses'},
+        {value: 'new-order', label: 'Baru Masuk'},
+        {value: 'on-progress', label: 'Disiapkan'},
+        {value: 'ready', label: 'Diantarkan'},
+        {value: 'delivered', label: 'Diterima'},
         {value: 'done', label: 'Selesai'},
         {value: 'canceled', label: 'Dibatalkan'},
     ]

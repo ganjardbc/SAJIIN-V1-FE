@@ -63,15 +63,15 @@
                         <div style="width: calc(50% - 20px);">
                             <div class="fonts fonts-9 normal grey">Kas Summary</div>
                             <div class="display-flex align-center">
-                                <div class="fonts medium semibold main-color overflow-ellipsis margin margin-right-10px">
+                                <div class="fonts fonts-11 semibold main-color overflow-ellipsis margin margin-right-10px">
                                     {{ format(dt.cashbook.cash_summary) }}
                                 </div>
                                 <el-popover
-                                    placement="right-start"
+                                    placement="bottom"
                                     width="180"
                                     trigger="click">
                                     <div class="width width-100">
-                                        <div class="fonts fonts-11 semibold black">Detail Summary</div>
+                                        <div class="fonts fonts-11 semibold black">Kas Summary</div>
                                         <div class="display-flex margin margin-top-15px">
                                             <div class="image image-20px">
                                                 <i class="fonts fonts-12 green fa fa-lg fa-info-circle"></i>

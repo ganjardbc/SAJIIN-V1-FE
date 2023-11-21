@@ -5,6 +5,7 @@
             :placeholder="placeholder"
             popper-class="cashbook-custom-filter"
             :clearable="true"
+            :disabled="disabled"
             @clear="onClear"
             @focus="onOpenPopup">
         </el-select>
@@ -125,6 +126,10 @@ export default {
             required: false,
         },
         disabledAllLabel: {
+            default: false,
+            required: false,
+        },
+        disabled: {
             default: false,
             required: false,
         },

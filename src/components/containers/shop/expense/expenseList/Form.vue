@@ -61,6 +61,7 @@
                     <cashbook-field 
                         :value.sync="form.cashbook_id"
                         :disabledAllLabel="true"
+                        :disabled="isDetailForm"
                         placeholder="Pilih buku kas"
                         @onChange="handleFilterCashbook"></cashbook-field>
                     <div 
