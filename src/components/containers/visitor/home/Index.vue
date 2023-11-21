@@ -108,7 +108,7 @@
                     </el-alert>
                 </div>
 
-                <div v-if="isDigitalMenuActive && isDigitalOrderActive">
+                <div v-if="isDigitalMenuActive">
                     <ProductList :style="`padding-bottom: ${isDigitalOrderActive ? '55px' : '0'};`" />
                     <BottomCart v-if="isDigitalOrderActive && isThereOpenedCashbook" />
                 </div>
