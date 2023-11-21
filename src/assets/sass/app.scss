@@ -1196,6 +1196,25 @@ a {
     }
 }
 
+.slider {
+    position: relative;
+    .slider-create {
+        position: absolute; 
+        top: 0; 
+        right: -15px; 
+        width: 45px; 
+        height: 100%;
+        background-color: $white;
+    }
+    .slider-edit {
+        position: absolute; 
+        top: 0; 
+        right: -8px; 
+        width: 30px; 
+        height: 100%;
+    }
+}
+
 .border-dashed {
     border-style: dashed;
 }

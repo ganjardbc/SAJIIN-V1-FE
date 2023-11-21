@@ -1653,7 +1653,13 @@ a.btn {
 .card.card-status.todo {
   background-color: rgba(249, 249, 249, 0.5);
   color: #555;
-  border: 0.1px #f9f9f9 solid;
+  border: 0.1px #DCDFE6 solid;
+}
+.card.card-status.disabled {
+  background-color: rgba(249, 249, 249, 0.8);
+  color: #555;
+  border: 0.1px #DCDFE6 solid;
+  cursor: not-allowed;
 }
 
 .card-container-popup {
@@ -117527,6 +117533,25 @@ a {
   .border-mobile-none {
     border: 0;
   }
+}
+
+.slider {
+  position: relative;
+}
+.slider .slider-create {
+  position: absolute;
+  top: 0;
+  right: -15px;
+  width: 45px;
+  height: 100%;
+  background-color: #fff;
+}
+.slider .slider-edit {
+  position: absolute;
+  top: 0;
+  right: -8px;
+  width: 30px;
+  height: 100%;
 }
 
 .border-dashed {

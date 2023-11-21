@@ -277,7 +277,7 @@ export default {
                         {icon: 'fa fa-lg fa-laptop', label: 'Kasir', value: 0, link: 'shop-cashier', permission: 'cashier'},
                         {icon: 'fa fa-lg fa-list-ul', label: 'Pesanan', value: replaceToMoreValue(this.getTotalOrder), link: 'shop-order', permission: 'orders'},
                         {icon: 'fa fa-lg fa-book-open', label: 'Buku Kas', value: replaceToMoreValue(this.getTotalOpenedCashbook), link: 'shop-cash-book', permission: 'cashbooks'},
-                        {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'shop-product', permission: 'products'},
+                        {icon: 'fa fa-lg fa-box', label: 'Produk', value: 0, link: 'shop-products', permission: 'products'},
                         {icon: 'fa fa-lg fa-bars', label: 'Lainnya', value: 0, link: 'shop-more', permission: 'more'},
                     ]
                 },

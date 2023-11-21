@@ -37,6 +37,7 @@ export default {
         loadMore: false,
         loadingForm: false,
         typeForm: 'create',
+        selectedIndex: '',
         data: [],
         filter: {
             search: '',
@@ -112,8 +113,8 @@ export default {
             let dataPrev = []
 
             let params = {
-                limit: state.limit,
-                offset: state.offset,
+                // limit: state.limit,
+                // offset: state.offset,
                 search: state.filter.search,
                 status: state.filter.status,
                 shop_id: data.shop_id

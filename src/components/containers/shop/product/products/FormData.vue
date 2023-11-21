@@ -36,7 +36,7 @@
                     no-data-text="Data Tidak Ditemukan"
                     :disabled="isDetailForm">
                     <el-option
-                        v-for="item in category"
+                        v-for="item in filteredCategory"
                         :key="item.id"
                         :label="item.name"
                         :value="item.id">
@@ -146,8 +146,8 @@ export default {
         ...mapState({
             form: (state) => state.storeProduct.form,
             errorMessage: (state) => state.storeProduct.errorMessage,
-            category: (state) => state.storeProduct.category.data,
             typeForm: (state) => state.storeProduct.typeForm,
+            category: (state) => state.storeCategory.data,
         }),
         isDetailForm () {
             let status = false 
@@ -165,6 +165,9 @@ export default {
         },
         getCover () {
             return this.form.image ? this.productImageThumbnailUrl + this.form.image : ''
+        },
+        filteredCategory () {
+            return this.category && this.category.filter((item) => item.status === 'active')
         }
     },
     components: {

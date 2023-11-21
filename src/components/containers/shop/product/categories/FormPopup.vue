@@ -1,10 +1,9 @@
 <template>
     <div id="App">
-        <AppSideForm 
+        <AppCardPopup 
             :title="title" 
-            :enableSaveButton="!isDetailForm"
-            :onSave="onSave"
-            :onClose="onClose">
+            height="250px"
+            @onClose="onClose">
             <div 
                 v-if="isEditForm"
                 slot="toolbar" 
@@ -28,6 +27,7 @@
                                 class="post-center">
                             <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
                             <button 
+                                v-if="isEditForm"
                                 class="btn btn-sekunder btn-small-icon btn-circle" 
                                 style="position: absolute; bottom: 5px; right: 5px;" 
                                 @click="uploadImage(form)">
@@ -62,22 +62,8 @@
                         {{ errorMessage.name && errorMessage.name[0] }}
                     </div>
                 </div>
-                <div class="field-group">
-                    <div class="field-label">Keterangan (opsional)</div>
-                    <el-input 
-                        placeholder=""
-                        type="textarea"
-                        v-model="form.description"
-                        :disabled="isDetailForm"
-                        :autosize="{ minRows: 2, maxRows: 2}"></el-input>
-                    <div 
-                        v-if="errorMessage.description" 
-                        class="field-error">
-                        {{ errorMessage.description && errorMessage.description[0] }}
-                    </div>
-                </div>
             </div>
-            <div class="margin margin-bottom-0px">
+            <div class="margin margin-bottom-0">
                 <div class="fonts fonts-13 black semibold">Konfigurasi</div>
                 <div class="field-group">
                     <div class="display-flex space-between">
@@ -97,13 +83,21 @@
                     </div>
                 </div>
             </div>
-        </AppSideForm>
+            <div slot="footer" class="padding padding-15px">
+                <button 
+                    class="btn btn-main btn-full"
+                    :disabled="isDetailForm"
+                    @click="onSave">
+                    Simpan Data
+                </button>
+            </div>
+        </AppCardPopup>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import AppSideForm from '../../../../modules/AppSideForm'
+import AppCardPopup from '../../../../modules/AppCardPopup'
 import AppImage from '../../../../modules/AppImage'
 
 export default {
@@ -152,7 +146,7 @@ export default {
         }
     },
     components: {
-        AppSideForm,
+        AppCardPopup,
         AppImage,
     },
     methods: {

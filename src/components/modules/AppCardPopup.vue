@@ -5,9 +5,12 @@
                 <div class="card box-shadow bg-white no-padding">
                     <div class="display-flex space-between align-center" style="padding: 10px 15px;">
                         <div class="fonts fonts-11 semibold">{{ title }}</div>
-                        <button class="btn btn-icon btn-white btn-circle" @click="onClose">
-                            <i class="fa fa-lg fa-times"></i>
-                        </button>
+                        <div class="display-flex flex-end align-center">
+                            <slot name="toolbar" />
+                            <button class="btn btn-icon btn-white btn-circle" @click="onClose">
+                                <i class="fa fa-lg fa-times"></i>
+                            </button>
+                        </div>
                     </div>
                     <div 
                         class="change-scrollbar" 

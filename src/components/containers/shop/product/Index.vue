@@ -1,5 +1,5 @@
 <template>
-    <div id="EmployeeHome">
+    <div id="ProductHome">
         <AppTabLinks :data="tabs" @onChange="onChange" />
         <Categories v-if="selectedIndex === 'categories'" />
         <Products v-if="selectedIndex === 'products'" />
@@ -11,7 +11,7 @@ import Products from './products/Index'
 import Categories from './categories/Index'
 
 export default {
-    name: 'EmployeeHome',
+    name: 'ProductHome',
     data () {
         return {
             selectedIndex: 'categories',

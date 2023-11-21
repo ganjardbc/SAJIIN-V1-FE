@@ -48,9 +48,11 @@ export default {
         loadingForm: false,
         typeForm: 'create',
         typeFormDetail: 'create',
+        selectedIndex: '',
         data: [],
         filter: {
             search: '',
+            category: '',
             status: 'active',
         },
         category: {
@@ -215,6 +217,7 @@ export default {
                 limit: state.limit,
                 offset: state.offset,
                 search: state.filter.search,
+                category: state.filter.category,
                 status: state.filter.status,
                 shop_id: data.shop_id
             }
@@ -345,24 +348,12 @@ export default {
             let dataPrev = []
 
             let params = {
-                limit: state.category.limit,
-                offset: state.category.offset,
+                // limit: state.category.limit,
+                // offset: state.category.offset,
                 search: state.category.filter.search,
                 status: state.category.filter.status,
                 shop_id: data.shop_id,
             }
-
-            // if (data.type === 'owner') {
-            //     params = {
-            //         ...params,
-            //         user_id: data.user_id
-            //     }
-            // } else {
-            //     params = {
-            //         ...params,
-            //         shop_id: data.shop_id
-            //     }
-            // }
 
             return axios.post('/api/category/getAll', params, { 
                     headers: { Authorization: data.token } 
