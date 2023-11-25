@@ -14,10 +14,10 @@ export default {
             if (user.role_name === 'admin') {
                 this.$router.replace('/admin/home')
             }
-            if (user.role_name === 'owner') {
+            else if (user.role_name === 'owner') {
                 this.$router.replace('/owner/home')
             }
-            if (user.role_name === 'employee') {
+            else {
                 this.$router.replace('/employee/home')
             }
         }

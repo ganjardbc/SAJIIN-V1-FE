@@ -98,6 +98,7 @@ export default {
     mounted () {
         this.selectedID = this.findCurrentID(this.value)
         this.selectedLabel = this.findCurrentData(this.value)
+        this.getData()
     },
     components: {
         SearchField,

@@ -35,11 +35,11 @@
                 </div>
                 <div class="field-group">
                     <div class="field-label">Meja</div>
-                    <FieldTable 
+                    <table-field 
                         class="margin margin-top-15px"
                         :value="form.table_id"
                         @onChange="onChangeTable"
-                        @onClear="onClearTable" />
+                        @onClear="onClearTable"></table-field>
                 </div>
             </div>
  
@@ -59,7 +59,7 @@ import { mapState } from 'vuex'
 import AppSideForm from '../../../../../modules/AppSideForm'
 import AppCardCapsule from '../../../../../modules/AppCardCapsule'
 import AppEmpty from '../../../../../modules/AppEmpty'
-import FieldTable from '../../../tables/Field'
+import TableField from '../../../tables/Field'
 import CashbookField from '../../../cashBook/Field'
 
 export default {
@@ -97,7 +97,7 @@ export default {
         AppCardCapsule,
         AppSideForm,
         AppEmpty,
-        FieldTable,
+        TableField,
         CashbookField,
     },
     methods: {

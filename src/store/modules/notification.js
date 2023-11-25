@@ -30,7 +30,7 @@ export default {
     state: {
         form: defaultForm(),
         errorMessage: defaultMessage(),
-        limit: 10,
+        limit: 30,
         offset: 0,
         totalRecord: 0,
         totalRead: 0,
@@ -110,7 +110,7 @@ export default {
             commit('SET_MESSAGE_DATA', null)
         },
         resetFilter ({ commit, state }) {
-            state.limit = 10
+            state.limit = 30
             state.offset = 0
             state.data = []
         },

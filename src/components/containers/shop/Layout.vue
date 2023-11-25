@@ -75,7 +75,7 @@ import { replaceToMoreValue } from '@/services/utils'
 import VueLoadImage from 'vue-load-image'
 import logo from '@/assets/img/logo.png'
 import icon from '@/assets/img/icon.png'
-import notifSound from '@/assets/sounds/notifications-2.wav'
+import notifSoundOne from '@/assets/sounds/notifications-1.wav'
 import AppListMenu from '../../modules/AppListMenu'
 import AppToast from '../../modules/AppToast'
 import AppToastMessage from '../../modules/AppToastMessage'
@@ -115,7 +115,7 @@ export default {
             setMultipleToast: 'toastmessage/setMultipleToast',
         }),
         playNotif (enablePlay) {
-            const audio = new Audio(notifSound)
+            const audio = new Audio(notifSoundOne)
             audio.muted = !enablePlay;
             audio.addEventListener("canplaythrough", () => {
                 audio.play().catch(e => {
@@ -313,7 +313,7 @@ export default {
         connect: function () {
             this.addShopSocket()
         },
-        notification: function (data) {
+        notification: function () {
             this.playNotif(true)
         },
     }

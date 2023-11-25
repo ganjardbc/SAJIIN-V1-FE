@@ -290,6 +290,10 @@ export default {
         shopId () {
             return this.$store.state.storeSelectedShop.selectedData
         },
+        paramShopId () {
+            const shop = this.$cookies.get('shop')
+            return shop.shop_id
+        },
         paramOrderId () {
             return this.$route.query.search || ''
         },
@@ -515,6 +519,7 @@ export default {
                 if (status === 'ok') {
                     this.getData()
                     this.getDashboardMatrix()
+                    this.onSendNotification(this.selectedData, `Status untuk pesanan ${this.selectedData.order_id} berhasil diubah.`)
                     this.$message(`Berhasil merubah status pesanan ${this.selectedData.order_id}.`)
                 } else {
                     this.$message(`Gagal merubah status pesanan ${this.selectedData.order_id}.`)
@@ -630,6 +635,20 @@ export default {
                     this.$message(`Gagal merubah produk untuk pesanan ${this.form.order_id}.`)
                 }
             })
+        },
+
+        // SEND NOTIFICATION
+        onSendNotification (data, message) {
+            const payload = {
+                shopId: this.paramShopId,
+                orderId: data.order_id,
+                shopName: data.shop_name,
+                tableName: data.table_name,
+                customerName: data.customer_name,
+                type: "order-status",
+                message: message
+            }
+            this.$socket.emit('notification', payload)
         },
     }
 }

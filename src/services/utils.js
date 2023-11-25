@@ -48,8 +48,8 @@ const replaceToMoreValue = (value) => {
     if (parseInt(value) > 0) {
         text = value
     }
-    if (parseInt(value) >= 10) {
-        text =  '9+'
+    if (parseInt(value) > 99) {
+        text =  '99+'
     }
     return text
 }
