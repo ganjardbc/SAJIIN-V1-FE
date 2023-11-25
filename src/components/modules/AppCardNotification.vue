@@ -206,7 +206,6 @@ export default {
             }
         },
         buildNotification (data) {
-            let title = 'Notification'
             this.$notify({
                 title: data.shopName,
                 message: data.message,

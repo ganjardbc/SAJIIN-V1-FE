@@ -13,6 +13,10 @@
             </div>
 
             <div v-loading="loading" class="width width-100">
+                <!-- <div class="padding padding-15px">
+                    <button class="btn btn-main btn-full" @click="onSendNotification">Send Notif</button>
+                </div> -->
+                
                 <div class="padding padding-15px" style="padding-bottom: 0;">
                     <div class="width width-80px width-center" style="position: relative;">
                         <div class="image image-padding image-center image-circle border-full bg-white-grey">
@@ -187,6 +191,18 @@ export default {
         onClickNo () {
             this.visibleConfirmed = false 
         },
+        // onSendNotification () {
+        //     const payload = {
+        //         shopId: "SP0001",
+        //         orderId: "ODR-1700894024824",
+        //         shopName: "SAJIIN CAFFE",
+        //         tableName: null,
+        //         customerName: "test",
+        //         type: "order",
+        //         message: "Ada pesanan baru (ODR-1700894024824)"
+        //     }
+        //     this.$socket.emit('notification', payload)
+        // },
     },
 }
 </script>

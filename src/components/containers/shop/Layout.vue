@@ -75,6 +75,7 @@ import { replaceToMoreValue } from '@/services/utils'
 import VueLoadImage from 'vue-load-image'
 import logo from '@/assets/img/logo.png'
 import icon from '@/assets/img/icon.png'
+import notifSound from '@/assets/sounds/notifications-2.wav'
 import AppListMenu from '../../modules/AppListMenu'
 import AppToast from '../../modules/AppToast'
 import AppToastMessage from '../../modules/AppToastMessage'
@@ -113,6 +114,18 @@ export default {
             setToast: 'toast/setToast',
             setMultipleToast: 'toastmessage/setMultipleToast',
         }),
+        playNotif (enablePlay) {
+            const audio = new Audio(notifSound)
+            audio.muted = !enablePlay;
+            audio.addEventListener("canplaythrough", () => {
+                audio.play().catch(e => {
+                    if (e) this.$message({ message: 'This site can not play audio notification, please allow the Sound in your browser settings.', type: 'error' })
+                    window.addEventListener('click', () => {
+                        if (enablePlay) audio.play()
+                    }, { once: true })
+                })
+            })
+        },
         goProfile () {
             this.$router.push({name: 'shop-profile'})
         },
@@ -294,14 +307,15 @@ export default {
     },
     mounted () {
         this.getShopData()
+        this.playNotif(false)
     },
     sockets: {
         connect: function () {
             this.addShopSocket()
         },
-        // shopList: function (data) {
-        //     console.log('shopList', data)
-        // },
+        notification: function (data) {
+            this.playNotif(true)
+        },
     }
 }
 </script>
