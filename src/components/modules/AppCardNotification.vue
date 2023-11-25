@@ -21,7 +21,7 @@
                             style="margin: 5px 0; cursor: pointer;"
                             @click="onRoute(dt)">
                             <div class="display-flex align-center space-between margin margin-bottom-5px">
-                                <div class="fonts fonts-10 semibold black" style="text-transform: capitalize;">{{ dt.type }}</div>
+                                <div class="fonts fonts-9 semibold black overflow-ellipsis" style="text-transform: capitalize;">{{ getLabel(dt.type) }}</div>
                                 <div class="fonts fonts-9 grey">{{ dt.created_at | moment("from", "now") }}</div>
                             </div>
                             <div class="fonts fonts-9 normal black margin margin-bottom-5px">{{ dt.message }}</div>
@@ -126,34 +126,30 @@ export default {
         },
         onRoute (data) {
             const type = data.type 
-            switch (type) {
-                case 'order':
-                    let path = 'shop-orders'
-                    const roleName = this.$cookies.get('user') 
-                        ? this.$cookies.get('user').role_name 
-                        : ''
+            const roleName = this.$cookies.get('user') 
+                ? this.$cookies.get('user').role_name 
+                : ''
 
-                    if (roleName === 'owner') {
-                        path = 'shop-orders'
-                    } else {
-                        path = 'employee-orders'
+            if (type === 'order' || type === 'order-status') {
+                let path = 'employee-orders'
+
+                if (roleName === 'owner') {
+                    path = 'shop-orders'
+                }
+
+                this.updateNotification(data)
+                this.$router.push({
+                    name: path, 
+                    query: { 
+                        search: data.target 
                     }
-
-                    this.updateNotification(data)
-                    this.$router.push({
-                        name: path, 
-                        query: { 
-                            search: data.target 
-                        }
-                    }).catch(error => {
-                        if (error.name != "NavigationDuplicated") {
-                            throw error;
-                        }
-                    })
-                    break
-                default:
-                    this.$message('Undefined notification !')
-                    break
+                }).catch(error => {
+                    if (error.name != "NavigationDuplicated") {
+                        throw error;
+                    }
+                })
+            } else {
+                this.$message('Undefined notification !')
             }
         },
 
@@ -180,6 +176,12 @@ export default {
         },
 
         // LIST DATA
+        getLabel (value) {
+            let label = 'Pesanan'
+            if (value === 'order') label = 'Pesanan'
+            if (value === 'order-status') label = 'Status'
+            return label
+        },
         getData () {
             const token = this.$cookies.get('tokenBearer')
             const shop_id = this.shopId

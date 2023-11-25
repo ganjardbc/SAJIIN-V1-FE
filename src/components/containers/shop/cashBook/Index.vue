@@ -25,6 +25,7 @@
                             suffix-icon="el-icon-search"
                             clearable
                             v-model="filter.search"
+                            @clear="onClear"
                             @change="onSearch">
                         </el-input>
                     </div>
@@ -274,6 +275,12 @@ export default {
         }),
         onSearch (data) {
             this.filter.search = data 
+            this.resetFilter()
+            this.getAllData()
+        },
+        onClear () {
+            this.filter.search = ''
+            this.$router.replace({'query': null})
             this.resetFilter()
             this.getAllData()
         },

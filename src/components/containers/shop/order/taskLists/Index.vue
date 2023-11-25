@@ -229,7 +229,7 @@ export default {
                 if (status === 'ok') {
                     this.onRefresh()
                     this.onCloseProduct()
-                    this.onSendNotification(this.selectedOrderData, `Status untuk pesanan ${this.selectedOrderData.order_id} berhasil diubah.`)
+                    this.onSendNotification(this.selectedOrderData)
                     this.$message(`Berhasil merubah status pesanan ${this.selectedOrderData.order_id}.`)
                 } else {
                     this.$message(`Gagal merubah status pesanan ${this.selectedOrderData.order_id}.`)
@@ -243,7 +243,7 @@ export default {
         },
 
         // SEND NOTIFICATION
-        onSendNotification (data, message) {
+        onSendNotification (data) {
             const payload = {
                 shopId: this.paramShopId,
                 orderId: data.order_id,
@@ -251,7 +251,11 @@ export default {
                 tableName: data.table_name,
                 customerName: data.customer_name,
                 type: "order-status",
-                message: message
+                message: `
+                    Status pesanan 
+                    ${data.customer_name ? ' atas nama ' + data.customer_name : ''} 
+                    berhasil diubah
+                `,
             }
             this.$socket.emit('notification', payload)
         },

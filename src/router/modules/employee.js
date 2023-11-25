@@ -13,6 +13,7 @@ import Products from '@/components/containers/shop/product/products/Index'
 import Tables from '@/components/containers/shop/tables/Index'
 import Shifts from '@/components/containers/shop/employee/shifts/Index'
 import Employees from '@/components/containers/shop/employee/Index'
+import Notifications from '@/components/containers/shop/notifications/Index'
 
 const routes = {
     path: '/employee',
@@ -77,6 +78,11 @@ const routes = {
             name: 'employee-shifts',
             path: 'shifts',
             component: Shifts
+        },
+        {
+            name: 'employee-notifications',
+            path: 'notifications',
+            component: Notifications
         },
         {
             name: 'employee-employees',

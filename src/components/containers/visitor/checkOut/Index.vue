@@ -282,7 +282,12 @@ export default {
                 shopName: data.shop_name,
                 tableName: data.table_name,
                 customerName: data.customer_name,
-                type: 'order'
+                type: 'order',
+                message: `
+                    Pesanan baru 
+                    ${data.customer_name ? ' atas nama ' + data.customer_name : ''} 
+                    ${data.table_name ? ' di ' + data.table_name : ''}
+                `,
             }
             this.$socket.emit('notification', payload)
         },

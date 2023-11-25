@@ -27,6 +27,12 @@
                             </router-link>
                         </div>
                         <div class="header-content-main-right">
+                            <!-- <router-link :to="{name: 'employee-notifications'}">
+                                <button class="btn btn-white btn-icon btn-circle">
+                                    <i class="fa fa-lg fa-bell"></i>
+                                    <span v-if="totalUnread" class="notif">{{ getTotalUnread }}</span>
+                                </button>
+                            </router-link> -->
                             <AppCardNotification />
                             <AppCardProfile :data.sync="dataUser" class="margin margin-left-10px">
                                 <div slot="customMenu" class="padding margin margin-bottom-15px padding padding-bottom-15px border-bottom">
@@ -231,6 +237,7 @@ export default {
             loadingShop: (state) => state.storeSelectedShop.loading,
             matrixDashboard: (state) => state.storeDashboard.matrix,
             dataCurrent: (state) => state.storeCashBook.dataCurrent,
+            // totalUnread: (state) => state.storeNotification.totalUnread,
         }),
         shopId () {
             return this.$store.state.storeSelectedShop.selectedData
@@ -247,6 +254,9 @@ export default {
         storeLogo () {
             return this.dataShop ? this.shopImageThumbnailUrl + this.dataShop.image : ''
         },
+        // getTotalUnread () {
+        //     return replaceToMoreValue(this.totalUnread)
+        // },
         getTotalOrder () {
             let total = 0
             if (

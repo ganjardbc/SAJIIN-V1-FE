@@ -18,6 +18,7 @@
                         suffix-icon="el-icon-search"
                         clearable
                         v-model="filter.search"
+                        @clear="onClear"
                         @change="onSearch">
                     </el-input>
                 </div>
@@ -344,6 +345,12 @@ export default {
             this.resetFilter()
             this.getData()
         },
+        onClear () {
+            this.filter.search = ''
+            this.$router.replace({'query': null})
+            this.resetFilter()
+            this.getData()
+        },
         onClose () {
             this.visibleFormOrder = false
         },
@@ -519,7 +526,7 @@ export default {
                 if (status === 'ok') {
                     this.getData()
                     this.getDashboardMatrix()
-                    this.onSendNotification(this.selectedData, `Status untuk pesanan ${this.selectedData.order_id} berhasil diubah.`)
+                    this.onSendNotification(this.selectedData)
                     this.$message(`Berhasil merubah status pesanan ${this.selectedData.order_id}.`)
                 } else {
                     this.$message(`Gagal merubah status pesanan ${this.selectedData.order_id}.`)
@@ -638,7 +645,7 @@ export default {
         },
 
         // SEND NOTIFICATION
-        onSendNotification (data, message) {
+        onSendNotification (data) {
             const payload = {
                 shopId: this.paramShopId,
                 orderId: data.order_id,
@@ -646,7 +653,11 @@ export default {
                 tableName: data.table_name,
                 customerName: data.customer_name,
                 type: "order-status",
-                message: message
+                message: `
+                    Status pesanan 
+                    ${data.customer_name ? ' atas nama ' + data.customer_name : ''} 
+                    berhasil diubah
+                `,
             }
             this.$socket.emit('notification', payload)
         },
