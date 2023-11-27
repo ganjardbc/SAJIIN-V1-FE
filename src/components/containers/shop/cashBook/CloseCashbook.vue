@@ -3,9 +3,9 @@
         <AppCardPopup 
             title="Tutup Buku Kas" 
             @onClose="onClose">
-            <div>
+            <div class="width width-100">
                 <div class="margin margin-bottom-15px">
-                    <div class="fonts fonts-11 normal black">
+                    <div class="fonts fonts-10 normal black">
                         Buku Kas ini akan diubah menjadi "Tutup" dan kamu bisa download laporan untuk Buku Kas ini.
                     </div>
                 </div>
@@ -27,41 +27,101 @@
                     </div>
                     <div class="field-group">
                         <div class="field-label">Kas Summary</div>
-                        <div class="display-flex align-center">
+                        <div class="display-flex align-center margin margin-bottom-15px">
                             <div class="fonts medium semibold main-color overflow-ellipsis margin margin-right-10px">
                                 {{ format(form && form.cash_summary || 0) }}
                             </div>
                             <el-popover
-                                placement="right-start"
+                                placement="bottom"
                                 width="220"
                                 trigger="click">
                                 <div class="width width-100">
                                     <div class="fonts fonts-11 semibold black">Summary Detail</div>
-                                    <div v-for="(item, i) in form.cash_detail" :key="i" class="display-flex margin margin-top-15px">
-                                        <div class="image image-20px border-full">
-                                            <img :src="item.image ? paymentImageThumbnailUrl + item.image : ''" alt="">
+                                    <div class="display-flex margin margin-top-15px">
+                                        <div class="image image-20px">
+                                            <i class="fonts fonts-12 green fa fa-lg fa-info-circle"></i>
                                         </div>
                                         <div style="width: calc(100% - 30px); margin-left: 10px;">
-                                            <div class="fonts fonts-8 black">{{ item.name }}</div>
-                                            <div class="fonts fonts-10 black semibold">{{ format(item.cash_in) }}</div>
+                                            <div class="fonts fonts-8 black">Modal</div>
+                                            <div class="fonts fonts-10 black semibold">{{ format(form.cash_modal || 0) }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="display-flex margin margin-top-15px">
+                                        <div class="image image-20px">
+                                            <i class="fonts fonts-12 green fa fa-lg fa-check-circle"></i>
+                                        </div>
+                                        <div style="width: calc(100% - 30px); margin-left: 10px;">
+                                            <div class="fonts fonts-8 black">Keuntungan</div>
+                                            <div class="fonts fonts-10 black semibold">{{ format(form.cash_profit || 0) }}</div>
                                         </div>
                                     </div>
                                 </div>
-                                <i slot="reference" class="fonts fonts-12 grey fa fa-lg fa-info-circle"></i>
+                                <i slot="reference" class="cursor-pointer fonts fonts-12 grey fa fa-lg fa-info-circle"></i>
                             </el-popover>
                         </div>
-                    </div>
-                    <!-- <div v-if="form && form.cash_detail" class="display-flex">
-                        <div v-for="(item, i) in form.cash_detail" :key="i" class="display-flex margin margin-15px">
-                            <div class="image image-20px border-full">
-                                <img :src="item.image ? paymentImageThumbnailUrl + item.image : ''" alt="">
+                        <div class="card bg-white border-full no-padding display-flex space-between align-center wrap">
+                            <div class="width width-50 padding padding-top-10px padding-bottom-10px">
+                                <div class="padding padding-5px content-center">
+                                    <div class="display-flex center align-center">
+                                        <i class="fonts fonts-8 green fa fa-lg fa-arrow-up margin margin-right-5px"></i>
+                                        <span class="fonts fonts-9 normal grey overflow-ellipsis align-center">Kas Masuk</span>
+                                    </div>
+                                    <div class="display-flex center align-center">
+                                        <div class="fonts fonts-10 semibold black overflow-ellipsis align-center">{{ format(form.cash_in) }}</div>
+                                        <el-popover 
+                                            v-if="form.cash_detail"
+                                            placement="bottom"
+                                            width="180"
+                                            trigger="click">
+                                            <div class="width width-100">
+                                                <div class="fonts fonts-11 semibold black">Kas Masuk</div>
+                                                <div v-for="(item, i) in form.cash_detail" :key="i" class="display-flex margin margin-top-15px">
+                                                    <div class="image image-20px border-full">
+                                                        <img :src="item.image ? paymentImageThumbnailUrl + item.image : ''" alt="">
+                                                    </div>
+                                                    <div style="width: calc(100% - 30px); margin-left: 10px;">
+                                                        <div class="fonts fonts-8 black">{{ item.name }}</div>
+                                                        <div class="fonts fonts-10 black semibold">{{ format(item.cash_in) }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <i slot="reference" class="cursor-pointer fonts fonts-12 grey fa fa-lg fa-info-circle margin margin-left-10px"></i>
+                                        </el-popover>
+                                    </div>
+                                </div>
                             </div>
-                            <div style="width: calc(100% - 30px); margin-left: 10px;">
-                                <div class="fonts fonts-8 black">{{ item.name }}</div>
-                                <div class="fonts fonts-10 black semibold">{{ format(item.cash_in) }}</div>
+                            <div class="width width-50 padding padding-top-10px padding-bottom-10px">
+                                <div class="padding padding-5px border-left content-center">
+                                    <div class="display-flex center align-center">
+                                        <i class="fonts fonts-8 orange fa fa-lg fa-arrow-down margin margin-right-5px"></i>
+                                        <span class="fonts fonts-9 normal grey overflow-ellipsis align-center">Kas Keluar</span>
+                                    </div>
+                                    <div class="display-flex center align-center">
+                                        <div class="fonts fonts-10 semibold black overflow-ellipsis align-center">{{ format(form.cash_out) }}</div>
+                                        <el-popover 
+                                            v-if="form.cash_detail"
+                                            placement="bottom"
+                                            width="180"
+                                            trigger="click">
+                                            <div class="width width-100">
+                                                <div class="fonts fonts-11 semibold black">Kas Keluar</div>
+                                                <div v-for="(item, i) in form.cash_detail" :key="i" class="display-flex margin margin-top-15px">
+                                                    <div class="image image-20px border-full">
+                                                        <img :src="item.image ? paymentImageThumbnailUrl + item.image : ''" alt="">
+                                                    </div>
+                                                    <div style="width: calc(100% - 30px); margin-left: 10px;">
+                                                        <div class="fonts fonts-8 black">{{ item.name }}</div>
+                                                        <div class="fonts fonts-10 black semibold">{{ format(item.cash_out) }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <i slot="reference" class="cursor-pointer fonts fonts-12 grey fa fa-lg fa-info-circle margin margin-left-10px"></i>
+                                        </el-popover>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                     <div class="field-group">
                         <div class="field-label">Kas Aktual</div>
                         <div class="field-caption">
@@ -113,24 +173,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="width width-100">
-                    <div class="field-group display-flex space-between">
-                        <div style="width: calc(50% - 7.5px);">
-                            <button 
-                                class="btn btn-grey btn-full" 
-                                @click="onClose">
-                                Kembali
-                            </button>
-                        </div>
-                        <div style="width: calc(50% - 7.5px);">
-                            <button 
-                                :disabled="isCanSave"
-                                class="btn btn-main btn-full"
-                                @click="onSave">
-                                Tutup Buku Kas
-                            </button>
-                        </div>
-                    </div>
+            </div>
+            <div slot="footer" class="padding padding-15px display-flex space-between">
+                <div style="width: calc(50% - 7.5px);">
+                    <button 
+                        class="btn btn-grey btn-full" 
+                        @click="onClose">
+                        Kembali
+                    </button>
+                </div>
+                <div style="width: calc(50% - 7.5px);">
+                    <button 
+                        :disabled="isCanSave"
+                        class="btn btn-main btn-full"
+                        @click="onSave">
+                        Tutup Buku Kas
+                    </button>
                 </div>
             </div>
         </AppCardPopup>

@@ -121,6 +121,8 @@ export default {
             const roleName = this.$cookies.get('user') 
                 ? this.$cookies.get('user').role_name 
                 : ''
+            
+            this.updateNotification(data)
 
             if (type === 'order' || type === 'order-status') {
                 let path = 'employee-orders'
@@ -129,7 +131,23 @@ export default {
                     path = 'shop-orders'
                 }
 
-                this.updateNotification(data)
+                this.$router.push({
+                    name: path, 
+                    query: { 
+                        search: data.target 
+                    }
+                }).catch(error => {
+                    if (error.name != "NavigationDuplicated") {
+                        throw error;
+                    }
+                })
+            } else if (type === 'cashbook') {
+                let path = 'employee-cash-book'
+
+                if (roleName === 'owner') {
+                    path = 'shop-cash-book'
+                }
+
                 this.$router.push({
                     name: path, 
                     query: { 
@@ -172,6 +190,7 @@ export default {
             let label = 'Pesanan'
             if (value === 'order') label = 'Pesanan'
             if (value === 'order-status') label = 'Status'
+            if (value === 'cashbook') label = 'Buku Kas'
             return label
         },
         getData () {
