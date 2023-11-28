@@ -228,7 +228,11 @@ export default {
             let status = true
             if (this.isDigitalOrderActive) {
                 if (data.status === 'active') {
-                    status = true
+                    if (this.form.price) {
+                        status = true
+                    } else {
+                        status = false
+                    }
                 } else {
                     status = false
                 }
