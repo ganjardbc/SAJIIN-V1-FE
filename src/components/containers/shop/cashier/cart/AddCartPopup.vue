@@ -71,7 +71,8 @@
                         v-model="form.quantity"
                         :min="0"
                         :max="100"
-                        style="width: 100%;"></el-input-number>
+                        style="width: 100%;"
+                        :disabled="data.status === 'inactive' || !form.price"></el-input-number>
                 </div>
 
                 <div class="field-group">
