@@ -7,16 +7,14 @@ const defaultDayLists = () => {
 const defaultMessage = () => {
     return {
         id: '',
-        platform_id: '',
-        image: '',
-        name: '',
-        description: '',
-        currency_type: '',
-        order_fee: '',
-        order_type: '',
+        discount_id: '',
+        discount_image: '',
+        discount_name: '',
+        discount_description: '',
+        discount_type: '',
+        discount_value_type: '',
+        discount_value: '',
         status: '',
-        is_available: '',
-        description: '',
         shop_id: ''
     }
 }
@@ -24,16 +22,14 @@ const defaultMessage = () => {
 const defaultForm = () => {
     return {
         id: '',
-        platform_id: '',
-        image: '',
-        name: '',
-        description: '',
-        currency_type: 'percentage',
-        order_fee: 0,
-        order_type: 'product',
+        discount_id: '',
+        discount_image: '',
+        discount_name: '',
+        discount_description: '',
+        discount_type: 'transaction',
+        discount_value_type: 'percentage',
+        discount_value: '',
         status: '',
-        is_available: 0,
-        description: '',
         shop_id: ''
     }
 }
@@ -53,14 +49,18 @@ export default {
         loadingForm: false,
         typeForm: 'create',
         data: [],
-        platformValueType: [
-            {id: 1, label: 'Persentase', value: 'percentage'},
-            {id: 2, label: 'Nominal', value: 'nominal'},
-        ],
         filter: {
             search: '',
             status: 'active',
         },
+        discountType: [
+            {id: 1, label: 'Transaksi', value: 'transaction'},
+            {id: 2, label: 'Produk', value: 'product'},
+        ],
+        discountValueType: [
+            {id: 1, label: 'Persentase', value: 'percentage'},
+            {id: 2, label: 'Nominal', value: 'nominal'},
+        ],
         field: {
             limit: 10,
             offset: 0,
@@ -109,9 +109,8 @@ export default {
                 const time = new Date().getTime()
                 state.form = {
                     ...defaultForm(),
-                    platform_id: `PT-${time}`,
-                    status: 'active',
-                    is_available: 1
+                    discount_id: `DS-${time}`,
+                    status: 'active'
                 }
             }
         },
@@ -163,7 +162,7 @@ export default {
                 shop_id: data.shop_id
             }
 
-            return axios.post('/api/platform/getAll', params, { 
+            return axios.post('/api/discount/getAll', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {
@@ -198,7 +197,7 @@ export default {
                 ...data
             }
 
-            return axios.post('/api/platform/post', params, { 
+            return axios.post('/api/discount/post', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {
@@ -224,7 +223,7 @@ export default {
                 ...data
             }
 
-            return axios.post('/api/platform/update', params, { 
+            return axios.post('/api/discount/update', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {
@@ -250,7 +249,7 @@ export default {
                 ...data
             }
 
-            return axios.post('/api/platform/delete', params, { 
+            return axios.post('/api/discount/delete', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {
@@ -267,10 +266,10 @@ export default {
             commit('SET_LOADING_FORM', true)
     
             let params = new FormData()
-            params.append('platform_id', data.platform_id)
+            params.append('discount_id', data.discount_id)
             params.append('image', data.image)
     
-            return axios.post('/api/platform/uploadImage', params, { 
+            return axios.post('/api/discount/uploadImage', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {
@@ -302,10 +301,11 @@ export default {
                 offset: state.field.offset,
                 search: state.field.filter.search,
                 status: state.field.filter.status,
+                discount_type: data.discount_type,
                 shop_id: data.shop_id
             }
 
-            return axios.post('/api/platform/getAll', params, { 
+            return axios.post('/api/discount/getAll', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {

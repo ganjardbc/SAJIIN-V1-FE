@@ -47,15 +47,6 @@
             <div 
                 class="width width-100"
                 style="padding-bottom: 10px;">
-                <!-- START HIDDEN TEMPORARY -->
-                <!-- <AppTabs 
-                    :selectedIndex.sync="selectedIndex" 
-                    :isFull="true"
-                    :isScrollable="false"
-                    :data="tabs" 
-                    :onChange="(data) => onChangeTabs(data)"
-                /> -->
-                <!-- END HIDDEN TEMPORARY -->
                 <AppButtonCapsuleSlider
                     :index.sync="selectedIndex" 
                     :disableAll="true"
@@ -194,7 +185,6 @@ import AppPopupLoader from '../../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../../modules/AppPopupAlert'
 import SearchField from '../../../../modules/SearchField'
-import AppTabs from '../../../../modules/AppTabs'
 import AppButtonCapsuleSlider from '../../../../modules/AppButtonCapsuleSlider'
 import CashbookField from '../../cashBook/Field'
 import DetailOrder from './DetailOrder'
@@ -248,7 +238,6 @@ export default {
         AppPopupLoader,
         AppPopupConfirmed,
         AppPopupAlert,
-        AppTabs,
         AppButtonCapsuleSlider,
         CashbookField,
         SearchField,

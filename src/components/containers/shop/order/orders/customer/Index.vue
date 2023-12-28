@@ -27,17 +27,14 @@
             <div class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px">
                 <div class="fonts fonts-10 semibold black">Pelanggan</div>
                 <div class="field-group">
-                    <div class="field-label">Nama</div>
                     <el-input 
                         placeholder="Nama Pelanggan"
                         type="text"
                         v-model="form.customer_name"></el-input>
-                </div>
-                <div class="field-group">
-                    <div class="field-label">Meja</div>
                     <table-field 
                         class="margin margin-top-15px"
                         :value="form.table_id"
+                        :smallField="true"
                         @onChange="onChangeTable"
                         @onClear="onClearTable"></table-field>
                 </div>

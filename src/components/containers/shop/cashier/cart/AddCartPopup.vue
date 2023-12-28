@@ -55,9 +55,7 @@
                                 <div>
                                     <div class="ttl">{{ dt.name }}</div>
                                     <div class="val">
-                                        <span class="fonts fonts-10 black semibold">{{ format(dt.price) }}</span>
-                                        <!-- HIDDEN TEMPORARY -->
-                                        <!-- <span v-if="dt.is_discount" class="fonts fonts-9 grey normal text-line">{{ format(dt.second_price) }}</span> -->
+                                        <div class="fonts fonts-10 black semibold">{{ format(dt.price) }}</div>
                                     </div>
                                 </div>
                             </div>

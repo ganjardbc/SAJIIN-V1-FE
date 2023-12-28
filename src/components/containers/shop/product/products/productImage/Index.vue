@@ -21,7 +21,7 @@
 
             <!-- <div class="margin margin-bottom-15px">
                 <SearchField 
-                    :placeholder="'Search fotos ..'" 
+                    :placeholder="'Cari fotos ..'" 
                     :enableResponsive="true" 
                     :onChange="(data) => onSearch(data)" />
             </div> -->

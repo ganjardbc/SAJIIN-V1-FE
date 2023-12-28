@@ -1,141 +1,145 @@
 <template>
-    <div 
-        id="App" 
-        :class="formClass ? 'content-form' : 'content-form hide'">
-        <div class="left">
-            <div class="display-flex space-between display-mobile margin margin-bottom-15px">
-                <div class="width width-75 width-mobile display-flex space-between">
-                    <h1 class="fonts big black bold">Categories</h1>
-                    <div class="display-flex">
-                        <button 
-                            class="btn btn-icon btn-white" 
-                            @click="onRefresh">
-                            <i class="fa fa-lw fa-retweet"></i>
-                        </button>
-                        <button 
-                            class="btn btn-icon btn-white" 
-                            @click="onCreate">
-                            <i class="fa fa-lw fa-plus" />
-                        </button>
+    <div id="App">
+        <AppHeaderMobile title="Diskon" />
+        <div :class="formClass ? 'content-form' : 'content-form hide'">
+            <div class="left">
+                <div class="display-flex space-between display-mobile margin margin-bottom-15px">
+                    <div class="width width-75 width-mobile display-flex space-between">
+                        <h1 class="fonts big black bold">Diskon</h1>
+                        <div class="display-flex">
+                            <button 
+                                class="btn btn-icon btn-white" 
+                                @click="onRefresh">
+                                <i class="fa fa-lw fa-retweet"></i>
+                            </button>
+                            <button 
+                                v-if="isRoleOwner"
+                                class="btn btn-icon btn-white" 
+                                @click="onCreate">
+                                <i class="fa fa-lw fa-plus" />
+                            </button>
+                        </div>
+                    </div>
+                    <div class="width width-25 width-mobile">
+                        <SearchField 
+                            :placeholder="'Cari diskon ..'" 
+                            :enableResponsive="true" 
+                            :onChange="(data) => onSearch(data)" />
                     </div>
                 </div>
-                <div class="width width-25 width-mobile">
-                    <SearchField 
-                        :placeholder="'Cari categories ..'" 
-                        :enableResponsive="true" 
-                        :onChange="(data) => onSearch(data)" />
+
+                <el-alert 
+                    v-if="!isRoleOwner"
+                    title="Tambah Diskon Baru ?"
+                    description="Untuk menambah diskon baru mohon hubungi Owner dari Toko ini."
+                    type="warning"
+                    :closable="true"
+                    show-icon
+                    style="margin: 10px 0 20px 0;">
+                </el-alert>
+
+                <div class="display-flex space-between align-center display-mobile margin margin-bottom-15px">
+                    <AppTabs 
+                        class="width width-300px width-mobile"
+                        :selectedIndex.sync="selectedIndex" 
+                        :isFull="true"
+                        :isScrollable="false"
+                        :data="tabs" 
+                        :onChange="(data) => onChangeTabs(data)"
+                    />
+                </div>
+
+                <div class="width width-100">
+                    <div v-loading="loading">
+                        <AppEmpty v-if="data.length === 0" />
+                        <Card 
+                            :data.sync="data"
+                            @onChangeCover="uploadImage"
+                            @onDetail="onDetail"
+                            @onEdit="onEdit"
+                            @onDelete="onDelete"
+                            @onChangeStatus="onChangeStatus" />
+                    </div>
+                    <div class="width width-100 display-flex flex-end align-center padding padding-top-15px">
+                        <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
+                        <el-pagination
+                            background
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-size="limit"
+                            :pager-count="5"
+                            layout="prev, pager, next"
+                            :total="totalRecord">
+                        </el-pagination>
+                    </div>
                 </div>
             </div>
-
-            <div class="display-flex space-between align-center display-mobile margin margin-bottom-15px">
-                <AppTabs 
-                    class="width width-300px width-mobile"
-                    :selectedIndex.sync="selectedIndex" 
-                    :isFull="true"
-                    :isScrollable="false"
-                    :data="tabs" 
-                    :onChange="(data) => onChangeTabs(data)"
-                />
+            <div class="right">
+                <Form 
+                    @uploadImage="uploadImage"
+                    @removeImage="removeImage"
+                    @onSave="onOpenVisibleConfirmed"
+                    @onClose="onClose">
+                </Form>
             </div>
-
-            <div class="width width-100">
-                <div v-loading="loading">
-                    <AppEmpty v-if="data.length === 0" />
-                    <Card 
-                        :data.sync="data"
-                        @onChangeCover="uploadImage"
-                        @onDetail="onDetail"
-                        @onEdit="onEdit"
-                        @onDelete="onDelete"
-                        @onChangeStatus="onChangeStatus" />
-                </div>
-                <div class="width width-100 display-flex flex-end align-center padding padding-top-15px">
-                    <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
-                    <el-pagination
-                        background
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-size="limit"
-                        :pager-count="5"
-                        layout="prev, pager, next"
-                        :total="totalRecord">
-                    </el-pagination>
-                </div>
-            </div>
-
         </div>
 
-        <div class="right">
-            <Form 
-                @uploadImage="uploadImage"
-                @removeImage="removeImage"
-                @onSave="onOpenVisibleConfirmed"
-                @onClose="onClose">
-            </Form>
+        <AppFileUpload 
+            v-if="visibleUpdateCover"
+            @onClose="onCloseCover"
+            @onUpload="onUpdateCover"
+        />
 
-            <AppFileUpload 
-                v-if="visibleUpdateCover"
-                @onClose="onCloseCover"
-                @onUpload="onUpdateCover"
-            />
+        <AppPopupConfirmed 
+            v-if="visibleConfirmed"
+            :title="titleConfirmed"
+            @onClickNo="onClickNo"
+            @onClickYes="onClickYes"
+        />
 
-            <AppPopupConfirmed 
-                v-if="visibleConfirmed"
-                :title="titleConfirmed"
-                @onClickNo="onClickNo"
-                @onClickYes="onClickYes"
-            />
+        <AppPopupConfirmed 
+            v-if="visibleConfirmedDelete"
+            :title="'Hapus data platform ?'"
+            @onClickNo="onClickNoDelete"
+            @onClickYes="onClickYesDelete"
+        />
 
-            <AppPopupConfirmed 
-                v-if="visibleConfirmedDelete"
-                :title="'Delete this table ?'"
-                @onClickNo="onClickNoDelete"
-                @onClickYes="onClickYesDelete"
-            />
+        <AppPopupAlert 
+            v-if="visibleAlert"
+            :title="titleAlert"
+            :icon="iconAlert"
+            @onClickOk="onClickOk"
+        />
 
-            <AppPopupAlert 
-                v-if="visibleAlert"
-                :title="titleAlert"
-                :icon="iconAlert"
-                @onClickOk="onClickOk"
-            />
-
-            <AppPopupQrCode 
-                v-if="visibleQrCode"
-                :code="`${initUrl}visitor/${paramShopId}/${form.table_id}`"
-                @onClose="onCloseQrCode"
-            />
-
-            <AppPopupLoader 
-                v-if="loadingForm"
-            />
-        </div>
+        <AppPopupLoader 
+            v-if="loadingForm"
+        />
     </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
 import AppEmpty from '../../../modules/AppEmpty'
+import AppHeaderMobile from '../../../modules/AppHeaderMobile'
 import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../modules/AppFileUpload'
-import AppPopupQrCode from '../../../modules/AppPopupQrCode'
 import AppTabs from '../../../modules/AppTabs'
 import SearchField from '../../../modules/SearchField'
 import Form from './Form'
 import Card from './Card'
 
 const tabs = [
-    {id: 1, label: 'Active', status: 'active'},
-    {id: 2, label: 'Inactive', status: ''},
+    {id: 1, label: 'Aktif', status: 'active'},
+    {id: 2, label: 'Non-Aktif', status: ''},
 ]
 
 export default {
     name: 'App',
     metaInfo: {
-        title: 'Owner',
-        titleTemplate: '%s | Categories',
+        title: 'Shop',
+        titleTemplate: '%s | Tables',
         htmlAttrs: {
             lang: 'en',
             amp: true
@@ -147,7 +151,6 @@ export default {
             formClass: false,
             visibleUpdateCover: false,
             visibleAlert: false,
-            visibleQrCode: false,
             titleAlert: 'Gagal memproses data',
             iconAlert: 'fa fa-4x fa-info-circle',
             visibleConfirmed: false,
@@ -161,34 +164,34 @@ export default {
         this.onChangeTabs(0)
     },
     components: {
-        AppTabs,
         AppEmpty,
+        AppHeaderMobile,
         AppPopupLoader,
         AppPopupConfirmed,
         AppPopupAlert,
         AppFileUpload,
-        AppPopupQrCode,
+        AppTabs,
         SearchField,
         Form,
         Card,
     },
     computed: {
         ...mapState({
-            filter: (state) => state.storeCategory.filter,
-            form: (state) => state.storeCategory.form,
-            data: (state) => state.storeCategory.data,
-            totalRecord: (state) => state.storeCategory.totalRecord,
-            limit: (state) => state.storeCategory.limit,
-            loading: (state) => state.storeCategory.loading,
-            loadingForm: (state) => state.storeCategory.loadingForm,
-            typeForm: (state) => state.storeCategory.typeForm,
+            filter: (state) => state.storeDiscount.filter,
+            form: (state) => state.storeDiscount.form,
+            data: (state) => state.storeDiscount.data,
+            totalRecord: (state) => state.storeDiscount.totalRecord,
+            limit: (state) => state.storeDiscount.limit,
+            loading: (state) => state.storeDiscount.loading,
+            loadingForm: (state) => state.storeDiscount.loadingForm,
+            typeForm: (state) => state.storeDiscount.typeForm,
         }),
         typeForm: {
             get () {
-                return this.$store.state.storeCategory.typeForm
+                return this.$store.state.storeDiscount.typeForm
             },
             set (value) {
-                this.$store.state.storeCategory.typeForm = value
+                this.$store.state.storeDiscount.typeForm = value
             }
         },
         shopId () {
@@ -196,7 +199,15 @@ export default {
         },
         paramShopId () {
             return this.$route.params.shopId
-        }
+        },
+        isRoleOwner () {
+            let status = false 
+            const user = this.$cookies.get('user')
+            if (user.role_name === 'owner') {
+                status = true
+            }
+            return status
+        },
     },
     watch: {
         shopId (prevProps, nextProps) {
@@ -207,15 +218,15 @@ export default {
     },
     methods: {
         ...mapActions({
-            getCategory: 'storeCategory/getData',
-            setPagination: 'storeCategory/setPagination',
-            resetFormData: 'storeCategory/resetFormData',
-            resetFilter: 'storeCategory/resetFilter',
-            setFormData: 'storeCategory/setFormData',
-            createData: 'storeCategory/createData',
-            updateData: 'storeCategory/updateData',
-            deleteData: 'storeCategory/deleteData',
-            uploadCover: 'storeCategory/uploadCover',
+            getPlatform: 'storeDiscount/getData',
+            setPagination: 'storeDiscount/setPagination',
+            resetFormData: 'storeDiscount/resetFormData',
+            resetFilter: 'storeDiscount/resetFilter',
+            setFormData: 'storeDiscount/setFormData',
+            createData: 'storeDiscount/createData',
+            updateData: 'storeDiscount/updateData',
+            deleteData: 'storeDiscount/deleteData',
+            uploadCover: 'storeDiscount/uploadCover',
         }),
         onSearch (data) {
             this.filter.search = data 
@@ -244,8 +255,10 @@ export default {
         // LIST DATA
         getData () {
             const token = this.$cookies.get('tokenBearer')
-            const user_id = this.$cookies.get('user')
-            this.getCategory({ token, user_id: user_id.id })
+            const shop_id = this.shopId
+            if (shop_id) {
+                this.getPlatform({ token, shop_id })
+            }
         },
         handleCurrentChange (value) {
             this.setPagination(value)
@@ -280,7 +293,7 @@ export default {
                             this.getData()
                         } else {
                             this.$message({
-                                message: 'Failed to save this table',
+                                message: 'Gagal menyimpan data platform',
                                 type: 'error'
                             })
                         }
@@ -297,7 +310,7 @@ export default {
                             this.getData()
                         } else {
                             this.$message({
-                                message: 'Failed to edit this table',
+                                message: 'Gagal merubah data platform',
                                 type: 'error'
                             })
                         }
@@ -311,10 +324,10 @@ export default {
             this.visibleConfirmed = true
             switch (this.typeForm) {
                 case 'create':
-                    this.titleConfirmed = 'Save this table ?'
+                    this.titleConfirmed = 'Simpan data?'
                     break
                 case 'edit':
-                    this.titleConfirmed = 'Edit this table ?'
+                    this.titleConfirmed = 'Simpan perubahan ?'
                     break
             }
         },
@@ -363,7 +376,7 @@ export default {
                     this.getData()
                 } else {
                     this.visibleAlert = true 
-                    this.titleAlert = 'Failed to delete this table'
+                    this.titleAlert = 'Gagal menghapus platform'
                 }
             })
         },
@@ -407,24 +420,12 @@ export default {
             }).then((res) => {
                 const status = res.data.status 
                 if (status === 'ok') {
-                    this.$message(`Success changed status for table ${data.name}.`)
+                    this.$message(`Berhasil merubah status platform ${data.name}.`);
                 } else {
-                    this.$message({
-                        message: `Failed to change status for table ${data.name}.`,
-                        type: 'error'
-                    })
+                    this.$message(`Gagal merubah status platform ${data.name}.`);
                 }
             })
         },
-
-        // QR CODE
-        onOpenQrCode (data) {
-            this.visibleQrCode = true 
-            this.setFormData(data)
-        },
-        onCloseQrCode () {
-            this.visibleQrCode = false 
-        }
     }
 }
 </script>

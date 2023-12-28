@@ -31,6 +31,7 @@ import storeCashBook from './modules/cashBook'
 import storeExpenseType from './modules/expenseType'
 import storeExpenseList from './modules/expenseList'
 import storePlatform from './modules/platform'
+import storeDiscount from './modules/discount'
 import storeShopAdmin from './modules/admin/shop'
 import storePositionAdmin from './modules/admin/position'
 import storeEmployeeAdmin from './modules/admin/employee'
@@ -85,6 +86,7 @@ export default new Vuex.Store({
     storeExpenseType,
     storeExpenseList,
     storePlatform,
+    storeDiscount,
     storeShopAdmin,
     storePositionAdmin,
     storeEmployeeAdmin,

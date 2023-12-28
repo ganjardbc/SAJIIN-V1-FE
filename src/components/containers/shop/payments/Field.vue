@@ -1,9 +1,11 @@
 <template>
     <div id="App">
-        <div class="card no-padding bg-white border-full">
-            <div class="display-flex space-between align-center" style="padding: 10px 15px;">
+        <div v-loading="loading" :class="`card no-padding bg-white border-full ${smallField && 'border-small-radius'}`">
+            <div 
+                class="display-flex space-between align-center" 
+                :style="`padding: ${smallField ? '4px' : '10px 15px'};`">
                 <div v-if="selectedData" class="display-flex align-center" style="width: calc(100% - 40px);">
-                    <div style="width: 45px; margin-right: 15px">
+                    <div :style="`width: ${smallField ? '35px' : '45px'} ; margin-right: 15px`">
                         <div class="image image-padding border-full">
                             <img v-if="selectedData.image" :src="selectedData ? (paymentImageThumbnailUrl + selectedData.image) : ''" alt="" class="post-center">
                             <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
@@ -11,24 +13,24 @@
                     </div>
                     <div style="width: calc(100% - 60px);">
                         <div style="width: 100%;">
-                            <div class="fonts fonts-10 semibold black">
+                            <div :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} semibold black`">
                                 {{ selectedData && selectedData.name }}
                             </div>
-                            <div class="fonts fonts-10 grey">
+                            <div :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} grey`">
                                 {{ selectedData && selectedData.description }}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div v-else class="fonts fonts-10 semibold black">
+                <div v-else :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} semibold black`" :style="`padding-left: ${smallField ? '11px' : ''};`">
                     Pilih Metode Pembayaran
                 </div>
                 <div class="display-flex">
-                    <button v-if="selectedData" class="btn btn-white btn-icon" @click="onRemove">
-                        <i class="fa fa-lg fa-times"></i>
+                    <button v-if="selectedData" :class="`btn btn-white ${smallField ? 'btn-small-icon' : 'btn-icon'}`" @click="onClear">
+                        <i :class="`fa ${smallField ? 'fa-lw' : 'fa-lg'} fa-times`"></i>
                     </button>
-                    <button v-else class="btn btn-white btn-icon" @click="onOpen">
-                        <i class="fa fa-lg fa-chevron-right"></i>
+                    <button v-else :class="`btn btn-white ${smallField ? 'btn-small-icon' : 'btn-icon'}`" @click="onOpen">
+                        <i :class="`fa ${smallField ? 'fa-lw' : 'fa-lg'} fa-chevron-right`"></i>
                     </button>
                 </div>
             </div>
@@ -110,7 +112,8 @@ export default {
         }
     },
     props: {
-        value: null
+        value: null,
+        smallField: false,
     },
     mounted () {
         this.getDataField()
@@ -163,7 +166,7 @@ export default {
             this.visiblePopup = false 
             this.$emit('onChange', data)
         },
-        onRemove () {
+        onClear () {
             this.$emit('onClear')
         },
         onRefresh () {

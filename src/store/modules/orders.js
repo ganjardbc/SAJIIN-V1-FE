@@ -1,5 +1,6 @@
 import moment from 'moment'
 import axios from 'axios'
+import { getDiscountProduct, getDiscountOrder } from '../../services/utils'
 
 const defaultOrderStatus = () => {
     return [
@@ -72,8 +73,20 @@ const defaultMessage = () => {
         shipment_name: '',
         platform_name: '',
         platform_fee: '',
+        platform_price: '',
         platform_type: '',
+        platform_currency_type: '',
         platform_image: '',
+        is_platform: '',
+        discount_name: '',
+        discount_description: '',
+        discount_value: '',
+        discount_type: '',
+        discount_value_type: '',
+        discount_image: '',
+        discount_price: '',
+        discount_fee: '',
+        is_discount: '',
         config_id: '',
         shop_id: '',
         customer_id: '',
@@ -82,7 +95,8 @@ const defaultMessage = () => {
         shipment_id: '',
         payment_id: '',
         cashbook_id: '',
-        platform_id: ''
+        platform_id: '',
+        discount_id: ''
     }
 }
 
@@ -98,7 +112,7 @@ const defaultForm = () => {
         payment_status: 0,
         proof_of_payment: '',
         status: 'unconfirmed',
-        type: 'personal',
+        type: 'dine-in',
         note: '',
         customer_name: '',
         shop_name: '',
@@ -106,9 +120,21 @@ const defaultForm = () => {
         payment_name: '',
         shipment_name: '',
         platform_name: '',
-        platform_fee: '',
+        platform_fee: 0,
+        platform_price: 0,
         platform_type: '',
+        platform_currency_type: '',
         platform_image: '',
+        is_platform: false,
+        discount_name: '',
+        discount_description: '',
+        discount_value: 0,
+        discount_type: '',
+        discount_value_type: '',
+        discount_image: '',
+        discount_price: 0,
+        discount_fee: 0,
+        is_discount: false,
         config_id: null,
         shop_id: '',
         customer_id: '',
@@ -117,7 +143,8 @@ const defaultForm = () => {
         shipment_id: '',
         payment_id: '',
         cashbook_id: '',
-        platform_id: ''
+        platform_id: '',
+        discount_id: ''
     }
 }
 
@@ -263,9 +290,7 @@ export default {
             if (currentProduct === undefined) {
                 const quantity = 1
                 const price = data.varian ? data.varian.price : data.price
-                const secondPrice = data.varian ? data.varian.second_price : 0
-                const discount = data.varian ? data.varian.value_discount : 0
-                const isDiscount = data.varian ? data.varian.is_discount : 0
+                const secondPrice = data.varian ? data.varian.price : data.price 
                 const productDetail = data.varian ? data.varian.name : ''
                 const productDetailId = data.varian ? data.varian.id : ''
                 const subtotal = quantity * price
@@ -273,8 +298,6 @@ export default {
                     ...state.formProduct,
                     price: price,
                     second_price: secondPrice,
-                    discount: discount,
-                    is_discount: isDiscount,
                     quantity: quantity,
                     subtotal: subtotal,
                     product_image: data.image,
@@ -342,34 +365,6 @@ export default {
                 })
             state.form.details = payload
         },
-        CHANGE_PLATFORM_PRODUCT (state, data) {
-            const payload = state.form.details.map((item, index) => {
-                let quantity = item.quantity
-                let price = item.price
-                let secondPrice = item.second_price
-                let subtotal = quantity * price 
-
-                if (data && data.platform_fee) {
-                    let platformFee = data.platform_fee
-                    let priceFee = item.price * (platformFee / 100)
-                    price = item.price + priceFee
-                    subtotal = quantity * price 
-                    secondPrice = item.price 
-                } else {
-                    price = item.second_price
-                    subtotal = quantity * price
-                }
-
-                return {
-                    ...item,
-                    price: price,
-                    quantity: quantity,
-                    subtotal: subtotal,
-                    second_price: secondPrice,
-                }
-            })
-            state.form.details = payload
-        },
         CHANGE_QUANTITY_ORDER (state) {
             let quantity = 0
             state.form.details.map((item, index) => {
@@ -390,6 +385,134 @@ export default {
                 ...state.form,
                 total_price: price
             }
+        },
+        CHANGE_PLATFORM_PRODUCT (state, data) {
+            let totalPlatformPrice = 0
+            const payload = state.form.details.map((item) => {
+                const getPlatform = getDiscountProduct(item, data)
+
+                // editable
+                let platformPrice = getPlatform.platformPrice
+                let platformFee = getPlatform.platformFee
+                let isPlatform = getPlatform.isPlatform
+                let discountPrice = getPlatform.discountPrice
+                let discountFee = getPlatform.discountFee
+                let isDiscount = getPlatform.isDiscount
+                let quantity = getPlatform.quantity
+                let price = getPlatform.price
+                let secondPrice = getPlatform.secondPrice
+                let subtotal = getPlatform.totalPrice
+
+                // summary
+                totalPlatformPrice += platformPrice
+
+                return {
+                    ...item,
+                    price: price,
+                    quantity: quantity,
+                    subtotal: subtotal,
+                    second_price: secondPrice,
+                    discount: discountPrice,
+                    discount_fee: discountFee,
+                    discount_price: discountPrice,
+                    is_discount: isDiscount,
+                    platform: platformPrice,
+                    platform_fee: platformFee,
+                    platform_price: platformPrice,
+                    platform_name: data.platform_name,
+                    platform_type: data.platform_type,
+                    platform_currency_type: data.platform_currency_type,
+                    platform_image: data.platform_image,
+                    platform_id: data.platform_id,
+                    is_platform: isPlatform,
+                }
+            })
+            state.form.details = payload 
+            state.form.platform_price = totalPlatformPrice
+        },
+        CHANGE_DISCOUNT_PRODUCT (state, data) {
+            const payload = state.form.details.map((item) => {
+                let discount_id = item.discount_id;
+                let discount_image = item.discount_image;
+                let discount_name = item.discount_name;
+                let discount_description = item.discount_description;
+                let discount_value = item.discount_value;
+                let discount_type = item.discount_type;
+                let discount_value_type = item.discount_value_type;
+
+                // editable 
+                let isDiscount = item.is_discount
+                let discountPrice = item.discount
+                let discountFee = item.discount_fee
+                let quantity = item.quantity
+                let price = item.price
+                let secondPrice = item.second_price
+                let subtotal = item.subtotal
+                let isPlatform = item.is_platform
+                let platformPrice = item.platform
+                let platformFee = item.platform_fee
+
+                // product n varian validations
+                let isProduct = item.product_id === data.product_id ? true : false 
+                if (item.proddetail_id === data.proddetail_id) {
+                    isProduct = true 
+                } else {
+                    isProduct = false 
+                }
+                if (isProduct) {
+                    const getDiscount = getDiscountProduct(item, data)
+    
+                    isDiscount = getDiscount.isDiscount
+                    discountPrice = getDiscount.discountPrice
+                    discountFee = getDiscount.discountFee
+                    quantity = getDiscount.quantity
+                    price = getDiscount.price 
+                    secondPrice = getDiscount.secondPrice
+                    subtotal = getDiscount.totalPrice
+                    isPlatform = getDiscount.isPlatform
+                    platformPrice = getDiscount.platformPrice
+                    platformFee = getDiscount.platformFee
+
+                    discount_id = data.discount_id
+                    discount_image = data.discount_image
+                    discount_name = data.discount_name
+                    discount_description = data.discount_description
+                    discount_value = data.discount_value
+                    discount_type = data.discount_type
+                    discount_value_type = data.discount_value_type
+                }
+                return {
+                    ...item,
+                    discount_id,
+                    discount_image,
+                    discount_name,
+                    discount_description,
+                    discount_value,
+                    discount_type,
+                    discount_value_type,
+                    discount_fee: discountFee,
+                    discount_price: discountPrice,
+                    discount: discountPrice,
+                    is_discount: isDiscount,
+                    platform: platformPrice,
+                    platform_price: platformPrice,
+                    platform_fee: platformFee,
+                    is_platform: isPlatform,
+                    price: price,
+                    quantity: quantity,
+                    subtotal: subtotal,
+                    second_price: secondPrice,
+                }
+            })
+            state.form.details = payload 
+        },
+        CHANGE_DISCOUNT_ORDER (state, data) {
+            let order = state.form 
+            const getDiscount = getDiscountOrder(order, data)
+            order.discount_fee = getDiscount.discountFee
+            order.discount_price = getDiscount.discountPrice 
+            order.total_price = getDiscount.totalPrice 
+            order.is_discount = getDiscount.isDiscount
         },
         DELETE_PRODUCT (state, data) {
             let payload = []
@@ -468,6 +591,12 @@ export default {
             commit('CHANGE_PLATFORM_PRODUCT', data)
             commit('CHANGE_QUANTITY_ORDER')
             commit('CHANGE_PRICE_ORDER')
+        },
+        changeDiscountOrder ({ commit, state }, data) {
+            commit('CHANGE_DISCOUNT_ORDER', data)
+        },
+        changeDiscountProduct ({ commit, state }, data) {
+            commit('CHANGE_DISCOUNT_PRODUCT', data)
         },
         deleteProduct ({ commit, state }, data) {
             commit('DELETE_PRODUCT', data)

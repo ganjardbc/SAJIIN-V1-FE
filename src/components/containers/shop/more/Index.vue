@@ -103,8 +103,8 @@ export default {
             return [
                 {icon: 'fa fa-lg fa-list-ol', label: 'Pengeluaran', value: 0, link: 'shop-expense', permission: 'expense-list'},
                 {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'shop-employee', permission: 'employees'},
-                {icon: 'fa fa-lg fa-flag', label: 'Platform', value: 0, link: 'shop-platforms', permission: 'tables'},
-                {icon: 'fa fa-lg fa-percent', label: 'Promosi', value: 0, link: 'shop-promotions', permission: 'promotions'},
+                {icon: 'fa fa-lg fa-flag', label: 'Platform', value: 0, link: 'shop-platforms', permission: 'settings'},
+                {icon: 'fa fa-lg fa-percent', label: 'Diskon', value: 0, link: 'shop-discounts', permission: 'settings'},
                 {icon: 'fa fa-lg fa-th-large', label: 'Daftar Meja', value: 0, link: 'shop-tables', permission: 'tables'},
                 {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'shop-reports', permission: 'reports'},
                 {icon: 'fa fa-lg fa-cogs', label: 'Pengaturan', value: 0, link: 'shop-settings', permission: 'settings'},

@@ -35,7 +35,7 @@
 					<div><AppCardCapsule :data="scope.row.expense.status" :label="scope.row.expense.expense_list_id" /></div>
 				</template>
 			</el-table-column>
-			<el-table-column label="Tgl Pengeluaran" min-width="200">
+			<el-table-column label="Tgl Pengeluaran" min-width="150">
 				<template slot-scope="scope">
 					<div>{{ scope.row.expense.expense_date | moment("DD MMM YYYY") }}</div>
 				</template>
@@ -43,7 +43,12 @@
 			<el-table-column label="Tipe Pengeluaran" min-width="150">
 				<template slot-scope="scope">
 					<div>{{ scope.row.type.name || '-' }}</div>
-                    <div v-if="scope.row.expense.description">{{ scope.row.expense.description }}</div>
+                    <div v-if="scope.row.expense.description" style="font-size: 12px;">{{ scope.row.expense.description }}</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="Pembayaran" min-width="150">
+				<template slot-scope="scope">
+					<div>{{ scope.row.payment.name || '-' }}</div>
 				</template>
 			</el-table-column>
 			<el-table-column label="Total" align="right" min-width="200">

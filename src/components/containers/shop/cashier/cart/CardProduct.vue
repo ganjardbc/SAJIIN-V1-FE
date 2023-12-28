@@ -16,44 +16,59 @@
                     </div>
                     <div style="width: calc(100% - 50px);">
                         <div class="width width-100">
-                            <div class="fonts fonts-10 black">{{ dt.product_name }}</div>
-                            <div class="fonts fonts-10 black" style="margin-bottom: 3px;">{{ dt.product_detail }}</div>
-                            <div class="display-flex space-between">
-                                <!-- <div class="display-flex">
-                                    <div class="fonts fonts-10 semibold black">{{ format(dt.price) }}</div>
-                                    <div v-if="dt.is_discount" class="fonts fonts-10 grey text-line margin margin-left-5px">{{ format(dt.second_price) }}</div>
-                                </div> -->
-                                <div class="fonts fonts-10 semibold black">{{ format(dt.price) }}</div>
-                                <div class="fonts fonts-10 semibold red align-right">{{ format(dt.subtotal) }}</div>
-                            </div>
-                            <div v-if="formOrder.platform_id" class="display-flex align-center margin margin-top-5px">
-                                <div class="image image-20px border-full">
-                                    <img v-if="formOrder.platform_image" :src="platformImageThumbnailUrl + formOrder.platform_image" alt="" class="post-center">
-                                    <i v-else class="post-middle-absolute icn fa fa-lw fa-image"></i>
-                                </div>
-                                <div class="fonts fonts-9 grey margin margin-left-5px">
-                                    {{ formOrder.platform_name }} Biaya {{ formOrder.platform_fee }}%
-                                </div>
+                            <div class="fonts fonts-10 black semibold">{{ dt.product_name }}</div>
+                            <div v-if="dt.product_detail" class="fonts fonts-9 black display-flex align-center padding padding-left-5px">
+                                <i class="fonts fonts-2 fa fa-lw fa-circle margin margin-right-5px"></i>
+                                {{ dt.product_detail }}
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="display-flex space-between margin margin-top-10px">
+                    <div class="display-flex align-center">
+                        <span class="fonts fonts-10 semibold black">{{ format(dt.price) }}</span>
+                        <span 
+                            v-if="dt.is_discount || dt.is_platform" 
+                            class="fonts fonts-9 grey text-line margin margin-left-5px">{{ format(dt.second_price) }}</span>
+                    </div>
+                    <div class="fonts fonts-10 semibold red align-right">{{ format(dt.subtotal) }}</div>
+                </div>
+                <div v-if="dt.is_discount" class="display-flex align-center space-between margin margin-top-5px margin-bottom-5px">
+                    <div class="image image-20px border-full">
+                        <img v-if="dt.discount_image" :src="discountImageThumbnailUrl + dt.discount_image" alt="" class="post-center">
+                        <i v-else class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-percentage"></i>
+                    </div>
+                    <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
+                        <div class="fonts fonts-9 normal grey">Diskon</div>
+                        <div class="fonts fonts-9 normal grey align-right">{{ format(dt.discount_price * dt.quantity) }}</div>
+                    </div>
+                </div>
+                <div v-if="dt.is_platform" class="display-flex align-center space-between margin margin-top-5px margin-bottom-5px">
+                    <div class="image image-20px border-full">
+                        <img v-if="dt.platform_image" :src="platformImageThumbnailUrl + dt.platform_image" alt="" class="post-center">
+                        <i v-else class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-flag"></i>
+                    </div>
+                    <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
+                        <div class="fonts fonts-9 normal grey">Platform</div>
+                        <div class="fonts fonts-9 normal grey align-right">{{ format(dt.platform_price * dt.quantity) }}</div>
+                    </div>
+                </div>
                 <div class="display-flex space-between display-mobile">
-                    <div class="display-flex margin margin-top-15px">
+                    <div class="width width-200px width-mobile display-flex margin margin-top-10px">
                         <button 
                             :class="`btn btn-icon btn-sekunder`" 
                             style="margin-right: 5px;"
                             @click="onDelete(index)">
                             <i class="far fa-lw fa-trash-alt"></i>
                         </button>
-                        <div class="width width-150px width-mobile">
+                        <div style="width: calc(100% - 45px);">
                             <el-input 
                                 placeholder="Tulis catatan"
                                 type="text"
                                 v-model="dt.note"></el-input>
                         </div>
                     </div>
-                    <div class="width width-130px width-mobile margin margin-top-15px">
+                    <div class="width width-130px width-mobile margin margin-top-10px">
                         <el-input-number 
                             v-model="dt.quantity"
                             @change="(data) => onTotal(data, index)" 
@@ -62,6 +77,17 @@
                             style="width: 100%;"></el-input-number>
                     </div>
                 </div>
+                <div class="width width-100 margin margin-top-10px">
+                    <FieldDiscount 
+                        :value="dt.discount_id"
+                        :smallField="true"
+                        :disabledSelection="true"
+                        label="Diskon Produk"
+                        discountType="product"
+                        @onChange="(data) => onChangeDiscount(data, dt)"
+                        @onClear="onClearDiscount(dt)"
+                    />
+                </div>
             </div>
         </div>
     </div>
@@ -69,6 +95,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import AddQtyField from '../../../../modules/AddQtyField'
+import FieldDiscount from '../../discounts/Field'
 
 export default {
     name: 'App',
@@ -76,7 +103,8 @@ export default {
         data: null 
     },
     components: {
-        AddQtyField
+        AddQtyField,
+        FieldDiscount,
     },
     computed: {
         ...mapState({
@@ -87,7 +115,8 @@ export default {
     methods: {
         ...mapActions({
             deleteProduct: 'storeCashier/deleteProduct',
-            changeQuantityProduct: 'storeCashier/changeQuantityProduct'
+            changeQuantityProduct: 'storeCashier/changeQuantityProduct',
+            changeDiscountProduct: 'storeCashier/changeDiscountProduct'
         }),
         onTotal (value, index) {
             const payload = {
@@ -102,6 +131,42 @@ export default {
         },
         onDelete (index) {
             this.deleteProduct(index)
+        },
+        onChangeDiscount (discount, product) {
+            const payload = {
+                current_calculation: 'discount',
+                current_status: 'create',
+                current_type: discount.discount_type,
+                current_value: discount.discount_value,
+                discount_id: discount.id,
+                discount_image: discount.discount_image,
+                discount_name: discount.discount_name,
+                discount_description: discount.discount_description,
+                discount_value: discount.discount_value,
+                discount_type: discount.discount_type,
+                discount_value_type: discount.discount_value_type,
+                product_id: product.product_id,
+                proddetail_id: product.proddetail_id,
+            }
+            this.changeDiscountProduct(payload)
+        },
+        onClearDiscount (product) {
+            const payload = {
+                current_calculation: 'discount',
+                current_status: 'clear',
+                current_type: product.discount_type,
+                current_value: product.discount_value,
+                discount_id: '',
+                discount_image: '',
+                discount_name: '',
+                discount_description: '',
+                discount_value: '',
+                discount_type: '',
+                discount_value_type: '',
+                product_id: product.product_id,
+                proddetail_id: product.proddetail_id,
+            }
+            this.changeDiscountProduct(payload)
         }
     }
 }

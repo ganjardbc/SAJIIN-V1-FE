@@ -22,7 +22,7 @@
 
             <div class="margin margin-bottom-15px">
                 <SearchField 
-                    :placeholder="'Search varians ..'" 
+                    :placeholder="'Cari varians ..'" 
                     :enableResponsive="true" 
                     :onChange="(data) => onSearch(data)" />
             </div>

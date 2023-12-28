@@ -105,115 +105,87 @@
                     <div class="fonts fonts-11 semibold black">Produk</div>
                     <AppCardProgressProduct :data="form.details" />
                 </div>
-                <div class="display-flex space-between margin margin-bottom-10px">
-                    <div class="width width-70">
-                        <div class="fonts fonts-10 grey">Produk</div>
-                    </div>
-                    <div class="width width-30">
-                        <div class="fonts fonts-10 grey">Harga</div>
-                    </div>
-                </div>
-
                 <div 
-                    v-for="(dt, index) in form.details" 
+                    v-for="(detail, index) in form.details" 
                     :key="index" 
-                    class="width width-100 margin margin-bottom-18px">
-                    <div class="display-flex space-between margin margin-bottom-5px">
-                        <div class="width width-70 display-flex">
-                            <div class="width width-40px margin margin-right-15px">
-                                <div class="image image-padding border-full">
-                                    <img v-if="dt.product_image" :src="productImageThumbnailUrl + dt.product_image" alt="" class="post-center">
-                                    <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-                                </div>
-                            </div>
-                            <div style="width: calc(100% - 60px);">
-                                <div class="fonts fonts-10 semibold black">
-                                    {{ dt.product_name }}
-                                    <span v-if="dt.product_detail" class="fonts fonts-10 normal black"> - {{ dt.product_detail }}</span>
-                                </div>
-                                <div class="fonts fonts-9 grey">
-                                    {{ dt.quantity }} x {{ format(dt.price) }}
-                                    <!-- HIDDEN TEMPORARY -->
-                                    <!-- <span v-if="dt.is_discount" class="fonts fonts-9 grey text-line">{{ format(dt.second_price) }}</span> -->
-                                </div>
-                                <div v-if="dt.note" class="fonts fonts-9 grey">
-                                    {{ dt.note }}
-                                </div>
-                                <AppCardCapsule class="margin margin-top-8px" :data="dt.status" />
+                    class="card bg-white border-full margin margin-bottom-18px">
+                    <div class="display-flex space-between">
+                        <div class="width width-45px margin margin-right-15px">
+                            <div class="image image-padding border-full">
+                                <img 
+                                    v-if="detail.product_image" 
+                                    :src="productImageThumbnailUrl + detail.product_image" 
+                                    alt="" 
+                                    class="post-center">
+                                <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
                             </div>
                         </div>
-                        <div class="width width-30">
-                            <div class="fonts fonts-10 semibold black">{{ format(dt.subtotal) }}</div>
+                        <div style="width: calc(100% - 160px);">
+                            <div class="fonts fonts-11 semibold">{{ detail.product_name }}</div>
+                            <div v-if="detail.product_detail" class="fonts fonts-9 black display-flex align-center padding padding-left-5px">
+                                <i class="fonts fonts-2 fa fa-lw fa-circle margin margin-right-5px"></i>
+                                {{ detail.product_detail }}
+                            </div>
+                        </div>
+                        <div class="width width-100px display-flex flex-end">
+                            <AppCardCapsule :data="detail.status" />
                         </div>
                     </div>
-                </div>
-
-                <div class="margin margin-bottom-15px border-bottom border-dashed"></div>
-
-                <div class="display-flex space-between margin margin-bottom-5px">
-                    <div class="width width-70">
-                        <div class="fonts fonts-10 semibold black">Total ({{ form.total_item }} produk)</div>
-                    </div>
-                    <div class="width width-30">
-                        <div class="fonts fonts-10 semibold black">{{ format(form.total_price) }}</div>
-                    </div>
-                </div>
-
-                <div class="display-flex space-between">
-                    <div class="width width-70">
-                        <div class="fonts fonts-10 normal black">Diskon</div>
-                    </div>
-                    <div class="width width-30">
-                        <div class="fonts fonts-10 normal black">{{ format(0) }}</div>
-                    </div>
-                </div>
-
-                <div  class="padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed"></div>
-
-                <div class="display-flex space-between">
-                    <div class="width width-70">
-                        <div class="fonts fonts-10 normal black">Platform</div>
-                    </div>
-                    <div class="width width-30">
-                        <div v-if="form.platform_id" class="display-flex align-center">
+                    <div class="width width-100 padding padding-top-10px">
+                        <div v-if="detail.note" class="display-flex space-between">
+                            <div class="fonts fonts-10 normal black">Catatan</div>
+                            <div class="fonts fonts-10 normal black">{{ detail.note }}</div>
+                        </div>
+                        <div class="display-flex space-between">
+                            <div class="fonts fonts-10 normal black">Harga</div>
+                            <div class="display-flex align-center">
+                                <span 
+                                    v-if="detail.is_discount || detail.is_platform" 
+                                    class="fonts fonts-9 grey text-line margin margin-right-5px">{{ format(detail.second_price) }}</span>
+                                <span class="fonts fonts-10 normal black semibold align-right">{{ format(detail.price) }}</span>
+                            </div>
+                        </div>
+                        <div v-if="detail.is_discount" class="display-flex align-center margin margin-top-5px margin-bottom-5px">
                             <div class="image image-20px border-full">
-                                <img v-if="form.platform_image" :src="platformImageThumbnailUrl + form.platform_image" alt="" class="post-center">
-                                <i v-else class="post-middle-absolute icn fa fa-lw fa-image"></i>
+                                <img v-if="detail.discount_image" :src="discountImageThumbnailUrl + detail.discount_image" alt="" class="post-center">
+                                <i v-else class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-percentage"></i>
                             </div>
-                            <div class="fonts fonts-10 semibold black margin margin-left-5px">
-                                {{ form.platform_name }}
+                            <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
+                                <div class="fonts fonts-9 normal grey">{{ detail.discount_name }}</div>
+                                <div class="fonts fonts-9 normal grey align-right">{{ format(detail.discount_price) }}</div>
                             </div>
                         </div>
-                        <div v-else class="fonts fonts-10 semibold black">-</div>
+                        <div v-if="detail.is_platform" class="display-flex align-center margin margin-top-5px margin-bottom-5px">
+                            <div class="image image-20px border-full">
+                                <img v-if="detail.platform_image" :src="platformImageThumbnailUrl + detail.platform_image" alt="" class="post-center">
+                                <i v-else class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-flag"></i>
+                            </div>
+                            <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
+                                <div class="fonts fonts-9 normal grey">{{ detail.platform_name }}</div>
+                                <div class="fonts fonts-9 normal grey align-right">{{ format(detail.platform_price) }}</div>
+                            </div>
+                        </div>
+                        <div class="display-flex space-between margin margin-top-5px">
+                            <div class="fonts fonts-10 normal black">Jumlah</div>
+                            <div class="fonts fonts-10 normal black semibold align-right">{{ detail.quantity }} x</div>
+                        </div>
+                        <div class="padding padding-bottom-10px margin margin-bottom-10px border-bottom border-dashed"></div>
+                        <div class="display-flex space-between">
+                            <div class="fonts fonts-10 semibold black">Total</div>
+                            <div class="fonts fonts-10 semibold main-color">{{ format(detail.subtotal) }}</div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed"></div>
-
-                <!-- HIDDEN TEMPORARY -->
-
-                <!-- <div v-if="form.is_discount" class="display-flex space-between">
-                    <div class="width width-70">
-                        <div class="fonts fonts-10 normal black">Discount</div>
-                    </div>
-                    <div class="width width-30">
-                        <div class="fonts fonts-10 normal black">{{ format(form.total_discount) }}</div>
-                    </div>
+                <div class="margin margin-bottom-15px border-bottom border-dashed"></div>
+                <div class="fonts fonts-9 grey normal margin margin-bottom-10px">
+                    Kamu masih bisa merubah data produk selama status pesanan adalah "Pesanan Baru / Diproses" dan status pembayaran adalah "Belum Bayar".
                 </div>
-
-                <div v-if="form.is_discount" class="padding padding-bottom-15px margin margin-bottom-15px border-bottom"></div> -->
-
-                <div>
-                    <div class="fonts fonts-9 grey normal margin margin-bottom-10px">
-                        Kamu masih bisa merubah data produk selama status pesanan adalah "Pesanan Baru / Diproses" dan status pembayaran adalah "Belum Bayar".
-                    </div>
-                    <button 
-                        class="btn btn-sekunder btn-full" 
-                        :disabled="!isButtonEditDisabled(form)"
-                        @click="onProduct(form)">
-                        Edit Produk
-                    </button>
-                </div>
+                <button 
+                    class="btn btn-sekunder btn-full" 
+                    :disabled="!isButtonEditDisabled(form)"
+                    @click="onProduct(form)">
+                    Edit Produk
+                </button>
             </div>
 
             <div class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px">
@@ -226,7 +198,7 @@
                         <AppCardCapsule :data="form.payment_status ? 'paid' : 'unpaid'" />
                     </div>
                 </div>
-                <div class="display-flex space-between align-center margin margin-bottom-15px">
+                <div class="display-flex space-between align-center margin margin-bottom-10px">
                     <div class="width width-70">
                         <div class="fonts fonts-10 black">Metode</div>
                     </div>
@@ -247,8 +219,38 @@
                         <div v-else class="fonts fonts-10 semibold black">-</div>
                     </div>
                 </div>
-
                 <div class="fonts fonts-11 semibold black">Tagihan</div>
+                <div class="display-flex space-between">
+                    <div class="width width-70">
+                        <div class="fonts fonts-10 black">Total ({{ form.total_item }} produk)</div>
+                    </div>
+                    <div class="width width-30">
+                        <div class="fonts fonts-10 semibold black">{{ format(form.total_price) }}</div>
+                    </div>
+                </div>
+                <div v-if="form.is_discount" class="display-flex space-between margin margin-top-5px margin-bottom-5px">
+                    <div class="width width-70 display-flex align-center">
+                        <div class="image image-20px border-full">
+                            <img v-if="form.discount_image" :src="discountImageThumbnailUrl + form.discount_image" alt="" class="post-center">
+                            <i v-else class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-percentage"></i>
+                        </div>
+                        <div style="width: calc(100% - 25px);" class="margin margin-left-5px">
+                            <div class="fonts fonts-9 normal grey">{{ form.discount_name }}</div>
+                        </div>
+                    </div>
+                    <div class="width width-30">
+                        <div class="fonts fonts-9 normal grey">{{ format(form.discount_price) }}</div>
+                    </div>
+                </div>
+                <div v-if="isThereDiscountProduct || isThereDiscountTransaction" class="display-flex space-between">
+                    <div class="width width-70">
+                        <div class="fonts fonts-10 black">Total Diskon</div>
+                    </div>
+                    <div class="width width-30">
+                        <div class="fonts fonts-10 black semibold">{{ format(totalDiscount) }}</div>
+                    </div>
+                </div>
+                <div class="padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed"></div>
                 <div class="display-flex space-between">
                     <div class="width width-70">
                         <div class="fonts fonts-10 black">Bayar</div>
@@ -380,6 +382,38 @@ export default {
         },
         getCover () {
             return this.form.image ? this.productImageThumbnailUrl + this.form.image : ''
+        },
+        totalDiscountProduct () {
+            let price = 0
+            this.form.details && this.form.details.map((item) => {
+                let quantity = item.quantity
+                if (item.is_discount) {
+                    price += quantity * item.discount_price
+                }
+            })
+            return price
+        },
+        isThereDiscountProduct () {
+            let status = false
+            this.form.details && this.form.details.map((item) => {
+                if (item.is_discount) {
+                    status = true 
+                }
+            })
+            return status
+        },
+        totalDiscountTransaction () {
+            return this.form.discount_price 
+        },
+        isThereDiscountTransaction () {
+            let status = false 
+            if (this.form.discount_price ) {
+                status = true 
+            }
+            return status
+        },
+        totalDiscount () {
+            return this.totalDiscountProduct + this.totalDiscountTransaction
         },
     },
     components: {

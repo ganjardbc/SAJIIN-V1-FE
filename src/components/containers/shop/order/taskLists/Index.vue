@@ -33,7 +33,7 @@
                     <AppEmpty v-if="data.length === 0" />
                     <Card 
                         :data.sync="data"
-                        @onViewProduct="onViewProduct"
+                        @onChangeStatus="onChangeStatus"
                         @onChangeOrderStatus="onChangeOrderStatus" />
                 </div>
                 <div class="width width-100 display-flex flex-end align-center padding padding-top-15px">
@@ -48,15 +48,6 @@
                         :total="totalRecord">
                     </el-pagination>
                 </div>
-            </div>
-        </div>
-
-        <div :class="`content-form ${!visibleFormTaskList && 'hide'}`">
-            <div class="right">
-                <Form 
-                    @onClose="onCloseProduct"
-                    @onChangeStatus="onChangeStatus"
-                    @onChangeOrderStatus="onChangeOrderStatus"></Form>
             </div>
         </div>
 
@@ -81,7 +72,6 @@ import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
 import AppPopupLoader from '../../../../modules/AppPopupLoader'
 import CashbookField from '../../cashBook/Field'
 import Card from './Card'
-import Form from './Form'
 
 export default {
     name: 'App',
@@ -97,7 +87,6 @@ export default {
         return {
             selectedOrderData: null,
             currentPage: 0,
-            visibleFormTaskList: false,
             visibleConfirmedStatus: false,
             titleConfirmedStatus: 'Update status pesanan ?',
         }
@@ -113,7 +102,6 @@ export default {
         AppPopupLoader,
         CashbookField,
         Card,
-        Form
     },
     computed: {
         ...mapState({
@@ -180,15 +168,6 @@ export default {
         handleFilterCashbook (value) {
             this.filter.cashbook_id = value 
             this.getData()
-        },
-
-        // VIEW PRODUCT 
-        onViewProduct (data) {
-            this.setSelected(data)
-            this.visibleFormTaskList = true 
-        },
-        onCloseProduct () {
-            this.visibleFormTaskList = false 
         },
 
         // STATUS 

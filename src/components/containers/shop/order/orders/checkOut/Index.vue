@@ -16,6 +16,7 @@
                 <div class="margin margin-bottom-15px">
                     <FieldPayment 
                         :value="form.payment_id"
+                        :smallField="true"
                         @onChange="onChangePayment"
                         @onClear="onClearPayment"
                     />
@@ -25,15 +26,19 @@
                     <div class="fonts fonts-10 semibold main-color">{{ format(form.total_price) }}</div>
                 </div>
                 <div class="padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed"></div>
-                <div class="display-flex space-between">
+                <div class="display-flex space-between margin margin-bottom-15px">
                     <div class="fonts fonts-10 normal grey">Diskon</div>
-                    <div class="fonts fonts-10 normal black">{{ format(0) }}</div>
-                </div>
-                <!-- <div v-if="isThereDiscount" class="padding padding-bottom-15px margin margin-bottom-15px border-bottom"></div>
-                <div v-if="isThereDiscount" class="display-flex space-between">
-                    <div class="fonts fonts-10 normal grey">Discount</div>
                     <div class="fonts fonts-10 normal black">{{ format(totalDiscount) }}</div>
-                </div> -->
+                </div>
+                <FieldDiscount 
+                    :value="form.discount_id"
+                    :smallField="true"
+                    :disabledSelection="true"
+                    label="Tambah Diskon Transaksi"
+                    discountType="transaction"
+                    @onChange="onChangeDiscount"
+                    @onClear="onClearDiscount"
+                />
             </div>
 
             <div class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px">
@@ -99,6 +104,7 @@ import AppCardCapsule from '../../../../../modules/AppCardCapsule'
 import AppCardPriceSuggestion from '../../../../../modules/AppCardPriceSuggestion'
 import InputNumber from '../../../../../modules/InputNumber'
 import FieldPayment from '../../../payments/Field'
+import FieldDiscount from '../../../discounts/Field'
 
 export default {
     name: 'App',
@@ -113,10 +119,12 @@ export default {
         AppCardPriceSuggestion,
         InputNumber,
         FieldPayment,
+        FieldDiscount,
     },
     methods: {
         ...mapActions({
-            setOrderBills: 'storeOrders/setOrderBills'
+            setOrderBills: 'storeOrders/setOrderBills',
+            changeDiscountOrder: 'storeOrders/changeDiscountOrder',
         }),
         onClose () {
             this.$emit('onClose')
@@ -144,6 +152,52 @@ export default {
             this.form.payment_name = ''
             this.form.payment = null
         },
+
+        // DISCOUNT
+        onChangeDiscount (data) {
+            this.form.discount_id = data.id 
+            this.form.discount_name = data.discount_name 
+            this.form.discount_description = data.discount_description
+            this.form.discount_value = data.discount_value
+            this.form.discount_type = data.discount_type
+            this.form.discount_value_type = data.discount_value_type
+            this.form.discount_image = data.discount_image
+            this.form.is_discount = true
+            this.formDiscount = data 
+            const payload = {
+                current_calculation: 'discount',
+                current_status: 'create',
+                current_type: this.form.discount_type,
+                current_value: this.form.discount_value,
+                discount_value: this.form.discount_value,
+                discount_type: this.form.discount_type,
+                discount_value_type: this.form.discount_value_type,
+            }
+            this.changeDiscountOrder(payload)
+        },
+        onClearDiscount () {
+            const currentType = this.form.discount_type
+            const currentValue = this.form.discount_value
+            this.form.discount_id = ''
+            this.form.discount_name = ''
+            this.form.discount_description = ''
+            this.form.discount_value = ''
+            this.form.discount_type = ''
+            this.form.discount_value_type = ''
+            this.form.discount_image = ''
+            this.form.is_discount = false
+            this.formDiscount = null 
+            const payload = {
+                current_calculation: 'discount',
+                current_status: 'clear',
+                current_type: currentType,
+                current_value: currentValue,
+                discount_value: this.form.discount_value,
+                discount_type: this.form.discount_type,
+                discount_value_type: this.form.discount_value_type,
+            }
+            this.changeDiscountOrder(payload)
+        },
     },
     computed: {
         ...mapState({
@@ -166,32 +220,37 @@ export default {
             })
             return price
         },
-        orderPriceBeforeDiscount () {
+        totalDiscountProduct () {
             let price = 0
             this.details && this.details.map((item) => {
                 let quantity = item.quantity
-                price += quantity * item.price
-                // HIDDEN TEMPORARY
-                // if (item.is_discount) {
-                //     price += quantity * item.second_price
-                // } else {
-                //     price += quantity * item.price
-                // }
+                if (item.is_discount) {
+                    price += quantity * item.discount_price
+                }
             })
             return price
         },
-        totalDiscount () {
-            return this.orderPriceBeforeDiscount - this.orderPrice
-        },
-        isThereDiscount () {
+        isThereDiscountProduct () {
             let status = false
-            // HIDDEN TEMPORARY
-            // this.details && this.details.map((item) => {
-            //     if (item.is_discount) {
-            //         status = true 
-            //     }
-            // })
+            this.details && this.details.map((item) => {
+                if (item.is_discount) {
+                    status = true 
+                }
+            })
             return status
+        },
+        totalDiscountTransaction () {
+            return this.form.discount_price 
+        },
+        isThereDiscountTransaction () {
+            let status = false 
+            if (this.form.discount_price ) {
+                status = true 
+            }
+            return status
+        },
+        totalDiscount () {
+            return this.totalDiscountProduct + this.totalDiscountTransaction
         },
         isButtonEnable () {
             let status = false 

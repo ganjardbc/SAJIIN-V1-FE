@@ -40,27 +40,44 @@
 					<div>{{ scope.row.order.created_at | moment("DD MMM YYYY") }}</div>
 				</template>
 			</el-table-column>
-			<el-table-column label="Platform" min-width="150">
-				<template slot-scope="scope">
-					<div>{{ scope.row.order.platform_name || '-' }}</div>
-				</template>
-			</el-table-column>
 			<el-table-column label="Produk" min-width="320">
 				<template slot-scope="scope">
 					<div 
 						v-for="(dt, i) in scope.row.details" 
 						:key="i" 
 						class="width width-100 padding padding-bottom-5px padding-top-5px">
-						<div>{{ dt.product_name }} {{ dt.product_detail ? `- ${dt.product_detail}` : '' }}</div>
+						<div style="font-weight: bold;">{{ dt.product_name }} {{ dt.product_detail ? `- ${dt.product_detail}` : '' }}</div>
 						<div class="display-flex space-between">
-							<div> {{ dt.quantity }} x</div>
-							<div style="font-weight: bold;">{{ format(dt.price) }}</div>
+							<div style="font-size: 13px;">Harga</div>
+							<div style="font-size: 13px; font-weight: bold;">{{ format(dt.price) }}</div>
 						</div>
+						<div v-if="dt.is_discount" class="display-flex space-between">
+							<div style="font-size: 12px; margin-left: 10px;">Diskon : {{ dt.discount_name }}</div>
+							<div style="font-size: 12px;">{{ format(dt.discount_price) }}</div>
+						</div>
+						<div v-if="dt.is_platform" class="display-flex space-between">
+							<div style="font-size: 12px; margin-left: 10px;">Platform : {{ dt.platform_name }}</div>
+							<div style="font-size: 12px;">{{ format(dt.platform_price) }}</div>
+						</div>
+						<div class="display-flex space-between">
+							<div style="font-size: 13px;">Jumlah</div>
+							<div style="font-size: 13px; font-weight: bold;">{{ dt.quantity }}x</div>
+						</div>
+					</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="Diskon" min-width="150">
+				<template slot-scope="scope">
+					<div>{{ scope.row.order.discount_name || '-' }}</div>
+					<div v-if="scope.row.order.is_discount" class="display-flex space-between">
+						<div style="font-size: 12px;">Biaya</div>
+						<div style="font-size: 12px;">{{ format(scope.row.order.discount_price) }}</div>
 					</div>
 				</template>
 			</el-table-column>
 			<el-table-column label="Total" align="right" min-width="180">
 				<template slot-scope="scope">
+					<div style="font-size: 12px; font-weight: normal;">{{ scope.row.order.total_item }} produk</div>
 					<div style="font-weight: bold;">{{ format(scope.row.order.total_price) }}</div>
 				</template>
 			</el-table-column>

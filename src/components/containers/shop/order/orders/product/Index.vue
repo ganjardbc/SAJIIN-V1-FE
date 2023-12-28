@@ -17,9 +17,11 @@
                 <Card v-if="form.details" :data.sync="form.details" :form.sync="form" />
                 <div class="padding padding-bottom-15px margin margin-bottom-30px border-bottom"></div>
                 <div class="card box-shadow bg-white">
-                    <div class="field-group">
+                    <div class="field-group padding padding-top-0px padding-bottom-0px">
+                        <div class="field-label">Platform</div>
                         <FieldPlatform
                             :value="form.platform_id"
+                            :smallField="true"
                             @onChange="onChangePlatform"
                             @onClear="onClearPlatform" />
                     </div>
@@ -32,15 +34,14 @@
                             <div class="fonts fonts-10 semibold black">Total ({{ form.total_item }} produk)</div>
                             <div class="fonts fonts-10 semibold black">{{ format(form.total_price) }}</div>
                         </div>
-                        <div class="display-flex space-between">
-                            <div class="fonts fonts-10 normal black">Diskon</div>
-                            <div class="fonts fonts-10 normal black align-right">{{ format(0) }}</div>
+                        <div v-if="isThereDiscount" class="display-flex align-center space-between">
+                            <div class="fonts fonts-9 normal grey">Diskon</div>
+                            <div class="fonts fonts-9 normal grey align-right">{{ format(totalDiscount) }}</div>
                         </div>
-                        <!-- HIDDEN TEMPORARY -->
-                        <!-- <div v-if="isThereDiscount" class="display-flex space-between">
-                            <div class="fonts fonts-10 normal black">Discount</div>
-                            <div class="fonts fonts-10 normal black align-right">{{ format(totalDiscount) }}</div>
-                        </div> -->
+                        <div v-if="isTherePlatform" class="display-flex align-center space-between">
+                            <div class="fonts fonts-9 normal grey">Platform</div>
+                            <div class="fonts fonts-9 normal grey align-right">{{ format(totalPlatform) }}</div>
+                        </div>
                     </div>
                     <button 
                         class="btn btn-main btn-full" 
@@ -84,6 +85,7 @@ export default {
         ...mapState({
             form: (state) => state.storeOrders.form,
             errorMessage: (state) => state.storeOrders.errorMessage,
+            details: (state) => state.storeOrders.form.details,
             typeForm: (state) => state.storeOrders.typeForm,
             category: (state) => state.storeCategory.data,
         }),
@@ -95,31 +97,42 @@ export default {
                 this.$store.state.storeOrders.form.id = value
             }
         },
-        orderPriceBeforeDiscount () {
-            let price = 0
-            this.form && this.form.details && this.form.details.map((item) => {
-                let quantity = item.quantity
-                price += quantity * item.price
-                // HIDDEN TEMPORARY
-                // if (item.is_discount) {
-                //     price += quantity * item.second_price
-                // } else {
-                //     price += quantity * item.price
-                // }
-            })
-            return price
-        },
         totalDiscount () {
-            return this.orderPriceBeforeDiscount - this.form.total_price
+            let discount = 0
+            this.details && this.details.map((item) => {
+                let quantity = item.quantity
+                if (item.is_discount) {
+                    discount += quantity * item.discount
+                }
+            })
+            return discount
         },
         isThereDiscount () {
             let status = false
-            // HIDDEN TEMPORARY
-            // this.form && this.form.details && this.form.details.map((item) => {
-            //     if (item.is_discount) {
-            //         status = true 
-            //     }
-            // })
+            this.details && this.details.map((item) => {
+                if (item.is_discount) {
+                    status = true 
+                }
+            })
+            return status
+        },
+        totalPlatform () {
+            let platform = 0
+            this.details && this.details.map((item) => {
+                let quantity = item.quantity
+                if (item.is_platform) {
+                    platform += quantity * item.platform
+                }
+            })
+            return platform
+        },
+        isTherePlatform () {
+            let status = false
+            this.details && this.details.map((item) => {
+                if (item.is_platform) {
+                    status = true 
+                }
+            })
             return status
         },
     },
@@ -169,27 +182,48 @@ export default {
         // PLATFORM 
         onChangePlatform (data) {
             this.form.platform_id = data.id 
-            this.form.platform_image = data.image 
             this.form.platform_name = data.name 
             this.form.platform_fee = data.order_fee
             this.form.platform_type = data.order_type
-            this.form.platform = data
-
+            this.form.platform_currency_type = data.currency_type
+            this.form.platform_image = data.image
+            this.form.is_platform = true
+            this.formPlatform = data 
             const payload = {
+                current_calculation: 'platform',
+                current_status: 'create',
+                current_value: this.form.platform_fee,
+                current_type: this.form.platform_currency_type,
+                platform_id: this.form.platform_id,
+                platform_name: this.form.platform_name,
                 platform_fee: this.form.platform_fee,
+                platform_type: this.form.platform_type,
+                platform_currency_type: this.form.platform_currency_type,
+                platform_image: this.form.platform_image,
             }
             this.changePlatformProduct(payload)
         },
         onClearPlatform () {
-            this.form.platform_fee = ''
+            const currentValue = this.form.platform_fee
             this.form.platform_id = ''
-            this.form.platform_image = ''
             this.form.platform_name = ''
+            this.form.platform_fee = ''
             this.form.platform_type = ''
-            this.form.platform = null
-
+            this.form.platform_currency_type = ''
+            this.form.platform_image = ''
+            this.form.is_platform = false
+            this.formPlatform = null 
             const payload = {
+                current_calculation: 'platform',
+                current_status: 'clear',
+                current_value: currentValue,
+                current_type: this.form.platform_currency_type,
+                platform_id: this.form.platform_id,
+                platform_name: this.form.platform_name,
                 platform_fee: this.form.platform_fee,
+                platform_type: this.form.platform_type,
+                platform_currency_type: this.form.platform_currency_type,
+                platform_image: this.form.platform_image,
             }
             this.changePlatformProduct(payload)
         },

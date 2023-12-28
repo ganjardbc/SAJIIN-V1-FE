@@ -22,7 +22,7 @@
                     </div>
                     <div class="width width-25 width-mobile">
                         <SearchField 
-                            :placeholder="'Search platform ..'" 
+                            :placeholder="'Cari platform ..'" 
                             :enableResponsive="true" 
                             :onChange="(data) => onSearch(data)" />
                     </div>

@@ -917,15 +917,14 @@ a {
     flex-wrap: nowrap;
     width: 100%;
     &.hide {
-        // transition: 0.2s;
         .left {
             width: 100%;
             transition: 0.2s;
         }
         .right {
             .form-side {
-                // transition: 0.2s;
                 right: -110%;
+                display: none;
             }
         }
     }
@@ -946,6 +945,7 @@ a {
             right: 0;
             z-index: 100;
             transition: 0.2s;
+            display: block;
         }
     }
     @media (max-width: $min-width) {

@@ -25,54 +25,73 @@
                     <el-input 
                         placeholder=""
                         type="text"
-                        v-model="form.platform_id"
+                        v-model="form.discount_id"
                         :disabled="true"></el-input>
                     <div 
-                        v-if="errorMessage.platform_id" 
+                        v-if="errorMessage.discount_id" 
                         class="field-error">
-                        {{ errorMessage.platform_id && errorMessage.platform_id[0] }}
+                        {{ errorMessage.discount_id && errorMessage.discount_id[0] }}
                     </div>
                 </div>
                 <div class="field-group">
-                    <div class="field-label">Nama</div>
+                    <div class="field-label">Nama Diskon</div>
                     <el-input 
                         placeholder=""
                         type="text"
-                        v-model="form.name"
+                        v-model="form.discount_name"
                         :disabled="isDetailForm"></el-input>
                     <div 
-                        v-if="errorMessage.name" 
+                        v-if="errorMessage.discount_name" 
                         class="field-error">
-                        {{ errorMessage.name && errorMessage.name[0] }}
+                        {{ errorMessage.discount_name && errorMessage.discount_name[0] }}
                     </div>
                 </div>
                 <div class="field-group">
-                    <div class="field-label">Tipe Biaya</div>
+                    <div class="field-label">Tipe Diskon</div>
                     <el-select 
-                        v-model="form.currency_type" 
+                        v-model="form.discount_type" 
                         placeholder="Pilih"
                         no-data-text="Data Tidak Ditemukan"
-                        :disabled="isDetailForm"
-                        @change="onChangeCurrencyType">
+                        :disabled="isDetailForm">
                         <el-option
-                            v-for="item in platformValueType"
+                            v-for="item in discountType"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
                         </el-option>
                     </el-select>
                     <div 
-                        v-if="errorMessage.currency_type" 
+                        v-if="errorMessage.discount_type" 
                         class="field-error">
-                        {{ errorMessage.currency_type && errorMessage.currency_type[0] }}
+                        {{ errorMessage.discount_type && errorMessage.discount_type[0] }}
                     </div>
                 </div>
-                <div v-if="form.currency_type === 'percentage'" class="field-group">
-                    <div class="field-label">Biaya Persentase</div>
-                    <div class="field-caption">Masukan biaya platform dalam persen.</div>
+                <div class="field-group">
+                    <div class="field-label">Tipe Nilai</div>
+                    <el-select 
+                        v-model="form.discount_value_type" 
+                        placeholder="Pilih"
+                        no-data-text="Data Tidak Ditemukan"
+                        :disabled="isDetailForm">
+                        <el-option
+                            v-for="item in discountValueType"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <div 
+                        v-if="errorMessage.discount_value_type" 
+                        class="field-error">
+                        {{ errorMessage.discount_value_type && errorMessage.discount_value_type[0] }}
+                    </div>
+                </div>
+                <div v-if="form.discount_value_type === 'percentage'" class="field-group">
+                    <div class="field-label">Persentase</div>
+                    <div class="field-caption">Masukan nilai diskon dalam persen.</div>
                     <input-number
                         class="width width-100"
-                        v-model="form.order_fee"
+                        v-model="form.discount_value"
                         thousand-separated
                         :min="0"
                         :max="100"
@@ -82,17 +101,17 @@
                         <template>%</template>
                     </input-number>
                     <div 
-                        v-if="errorMessage.order_fee" 
+                        v-if="errorMessage.discount_value" 
                         class="field-error">
-                        {{ errorMessage.order_fee && errorMessage.order_fee[0] }}
+                        {{ errorMessage.discount_value && errorMessage.discount_value[0] }}
                     </div>
                 </div>
-                <div v-if="form.currency_type === 'nominal'" class="field-group">
-                    <div class="field-label">Biaya Nominal</div>
-                    <div class="field-caption">Masukan nilai platform dalam nominal uang.</div>
+                <div v-if="form.discount_value_type === 'nominal'" class="field-group">
+                    <div class="field-label">Nominal</div>
+                    <div class="field-caption">Masukan nilai diskon dalam nominal uang.</div>
                     <input-number
                         class="width width-100"
-                        v-model="form.order_fee"
+                        v-model="form.discount_value"
                         thousand-separated
                         :min="0"
                         placeholder="0"
@@ -101,9 +120,9 @@
                         <template>Rp</template>
                     </input-number>
                     <div 
-                        v-if="errorMessage.order_fee" 
+                        v-if="errorMessage.discount_value" 
                         class="field-error">
-                        {{ errorMessage.order_fee && errorMessage.order_fee[0] }}
+                        {{ errorMessage.discount_value && errorMessage.discount_value[0] }}
                     </div>
                 </div>
                 <div class="field-group">
@@ -111,13 +130,13 @@
                     <el-input 
                         placeholder=""
                         type="textarea"
-                        v-model="form.description"
+                        v-model="form.discount_description"
                         :disabled="isDetailForm"
                         :autosize="{ minRows: 2, maxRows: 2}"></el-input>
                     <div 
-                        v-if="errorMessage.description" 
+                        v-if="errorMessage.discount_description" 
                         class="field-error">
-                        {{ errorMessage.description && errorMessage.description[0] }}
+                        {{ errorMessage.discount_description && errorMessage.discount_description[0] }}
                     </div>
                 </div>
             </div>
@@ -160,10 +179,11 @@ export default {
     mounted () {},
     computed: {
         ...mapState({
-            form: (state) => state.storePlatform.form,
-            errorMessage: (state) => state.storePlatform.errorMessage,
-            typeForm: (state) => state.storePlatform.typeForm,
-            platformValueType: (state) => state.storePlatform.platformValueType,
+            form: (state) => state.storeDiscount.form,
+            errorMessage: (state) => state.storeDiscount.errorMessage,
+            typeForm: (state) => state.storeDiscount.typeForm,
+            discountType: (state) => state.storeDiscount.discountType,
+            discountValueType: (state) => state.storeDiscount.discountValueType,
         }),
         isDetailForm () {
             let status = false 
@@ -173,19 +193,19 @@ export default {
             return status
         },
         getCover () {
-            return this.form.image ? this.platformImageThumbnailUrl + this.form.image : ''
+            return this.form.image ? this.discountImageThumbnailUrl + this.form.image : ''
         },
         title () {
             let currentTitle = ''
             switch (this.typeForm) {
                 case 'create':
-                    currentTitle = 'Tambah Platform'
+                    currentTitle = 'Tambah Diskon'
                     break
                 case 'detail':
-                    currentTitle = 'Detail Platform'
+                    currentTitle = 'Detail Diskon'
                     break
                 case 'edit':
-                    currentTitle = 'Edit Platform'
+                    currentTitle = 'Edit Diskon'
                     break
             }
             return currentTitle
@@ -194,7 +214,7 @@ export default {
     components: {
         AppSideForm,
         AppImage,
-        InputNumber
+        InputNumber,
     },
     methods: {
         uploadImage (data) {
@@ -209,9 +229,6 @@ export default {
         onClose () {
             this.$emit('onClose')
         },
-        onChangeCurrencyType () {
-            this.form.order_fee = 0
-        }
     },
 }
 </script>

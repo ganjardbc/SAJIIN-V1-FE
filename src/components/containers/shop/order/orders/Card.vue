@@ -78,11 +78,24 @@
                 </div>
             </div>
 
-            <div class="width width-100 display-flex row space-between display-row-mobile margin margin-top-5px margin-bottom-10px">
-                <div class="fonts fonts-10 semibold black margin margin-bottom-5px">Total Harga</div>
-                <div class="display-flex align-center row-reverse-mobile">
-                    <div class="fonts fonts-10 semibold overflow-ellipsis">{{ format(dt.order.total_price) }}</div>
-                    <AppCardCapsule :data="dt.order.payment_status ? 'paid' : 'unpaid'" style="margin: 0 10px;" />
+            <div class="width width-100 margin margin-top-5px margin-bottom-10px">
+                <div class="display-flex row space-between display-row-mobile margin margin-bottom-5px">
+                    <div class="fonts fonts-10 semibold black">Total Harga</div>
+                    <div class="display-flex align-center">
+                        <!-- <AppCardCapsule :data="dt.order.payment_status ? 'paid' : 'unpaid'" style="margin: 0 10px;" /> -->
+                        <div class="fonts fonts-10 semibold margin margin-right-10px">({{ dt.order.payment_status ? 'Dibayar' : 'Belum Bayar' }})</div>
+                        <div class="fonts fonts-10 semibold overflow-ellipsis">{{ format(dt.order.total_price) }}</div>
+                    </div>
+                </div>
+                <div v-if="dt.order.is_discount" class="display-flex align-center margin margin-top-5px margin-bottom-5px">
+                    <div class="image image-20px border-full">
+                        <img v-if="dt.order.discount_image" :src="discountImageThumbnailUrl + dt.order.discount_image" alt="" class="post-center">
+                        <i v-else class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-percentage"></i>
+                    </div>
+                    <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
+                        <div class="fonts fonts-9 normal grey">{{ dt.order.discount_name }}</div>
+                        <div class="fonts fonts-9 normal grey align-right">{{ format(dt.order.discount_price) }}</div>
+                    </div>
                 </div>
             </div>
 
@@ -111,34 +124,52 @@
                                 </div>
                                 <div style="width: calc(100% - 160px);">
                                     <div class="fonts fonts-11 semibold">{{ detail.product_name }}</div>
-                                    <div v-if="detail.product_detail" class="fonts fonts-10 normal grey">{{ detail.product_detail }}</div>
+                                    <div v-if="detail.product_detail" class="fonts fonts-9 black display-flex align-center padding padding-left-5px">
+                                        <i class="fonts fonts-2 fa fa-lw fa-circle margin margin-right-5px"></i>
+                                        {{ detail.product_detail }}
+                                    </div>
                                 </div>
                                 <div class="width width-100px display-flex flex-end">
                                     <AppCardCapsule :data="detail.status" />
                                 </div>
                             </div>
-
-                            <div class="width width-100 padding padding-top-15px">
+                            <div class="width width-100 padding padding-top-10px">
                                 <div v-if="detail.note" class="display-flex space-between">
-                                    <div class="fonts fonts-10 normal grey">Catatan</div>
-                                    <div class="fonts fonts-10 normal grey">{{ detail.note }}</div>
+                                    <div class="fonts fonts-10 normal black">Catatan</div>
+                                    <div class="fonts fonts-10 normal black">{{ detail.note }}</div>
                                 </div>
                                 <div class="display-flex space-between">
-                                    <div class="fonts fonts-10 normal grey">Harga</div>
+                                    <div class="fonts fonts-10 normal black">Harga</div>
                                     <div class="display-flex">
-                                        <div class="fonts fonts-10 normal grey">{{ format(detail.price) }}</div>
-                                        <!-- <div 
-                                            v-if="detail.is_discount" 
-                                            class="fonts fonts-10 normal grey text-line margin margin-left-5px">
-                                            {{ format(detail.second_price) }}
-                                        </div> -->
+                                        <span v-if="detail.is_discount" class="fonts fonts-9 grey text-line margin margin-right-5px">{{ format(detail.second_price) }}</span>
+                                        <span class="fonts fonts-10 normal black semibold align-right">{{ format(detail.price) }}</span>
                                     </div>
                                 </div>
-                                <div class="display-flex space-between">
-                                    <div class="fonts fonts-10 normal grey">Jumlah</div>
-                                    <div class="fonts fonts-10 normal grey">{{ detail.quantity }} x</div>
+                                <div v-if="detail.is_discount" class="display-flex align-center margin margin-top-5px margin-bottom-5px">
+                                    <div class="image image-20px border-full">
+                                        <img v-if="detail.discount_image" :src="discountImageThumbnailUrl + detail.discount_image" alt="" class="post-center">
+                                        <i v-else class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-percentage"></i>
+                                    </div>
+                                    <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
+                                        <div class="fonts fonts-9 normal grey">{{ detail.discount_name }}</div>
+                                        <div class="fonts fonts-9 normal grey align-right">{{ format(detail.discount_price) }}</div>
+                                    </div>
                                 </div>
-                                <div class="padding padding-bottom-10px margin margin-bottom-10px border-bottom"></div>
+                                <div v-if="detail.is_platform" class="display-flex align-center margin margin-top-5px margin-bottom-5px">
+                                    <div class="image image-20px border-full">
+                                        <img v-if="detail.platform_image" :src="platformImageThumbnailUrl + detail.platform_image" alt="" class="post-center">
+                                        <i v-else class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-flag"></i>
+                                    </div>
+                                    <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
+                                        <div class="fonts fonts-9 normal grey">{{ detail.platform_name }}</div>
+                                        <div class="fonts fonts-9 normal grey align-right">{{ format(detail.platform_price) }}</div>
+                                    </div>
+                                </div>
+                                <div class="display-flex space-between margin margin-top-5px">
+                                    <div class="fonts fonts-10 normal black">Jumlah</div>
+                                    <div class="fonts fonts-10 normal black semibold align-right">{{ detail.quantity }} x</div>
+                                </div>
+                                <div class="padding padding-bottom-10px margin margin-bottom-10px border-bottom border-dashed"></div>
                                 <div class="display-flex space-between">
                                     <div class="fonts fonts-10 semibold black">Total</div>
                                     <div class="fonts fonts-10 semibold main-color">{{ format(detail.subtotal) }}</div>

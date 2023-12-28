@@ -4,10 +4,10 @@
             <div class="display-flex space-between align-center padding padding-bottom-15px margin margin-bottom-20px border-bottom">
                 <div class="display-flex align-center">
                     <div class="width width-30px">
-                        <i class="fa fa-1x fa-flag fonts main-color"></i>
+                        <i class="fa fa-1x fa-percentage fonts main-color"></i>
                     </div>
                     <div>
-                        <div class="fonts fonts-10 semibold">{{ dt.platform_id }}</div>
+                        <div class="fonts fonts-10 semibold">{{ dt.discount_id }}</div>
                         <div class="fonts fonts-10 grey">{{ dt.created_at | moment("DD MMMM YYYY") }}</div>
                     </div>
                 </div>
@@ -45,7 +45,8 @@
             </div>
 
             <el-alert 
-                :title="`Manambah harga di semua produk sebanyak ${dt.currency_type === 'percentage' ? dt.order_fee + '%' : format(dt.order_fee)} ketika membuat pesanan baru.`"
+                v-if="dt.currency_type === 'percentage'"
+                :title="`Manambah harga di semua produk sebanyak ${dt.order_fee}% ketika membuat pesanan baru.`"
                 :closable="false"
                 show-icon
                 style="margin-bottom: 15px;">
@@ -55,8 +56,8 @@
                 <div class="width width-80px margin marign-right-15px">
                     <div class="image image-padding border-full">
                         <img 
-                            v-if="dt.image" 
-                            :src="platformImageThumbnailUrl + dt.image" 
+                            v-if="dt.discount_image" 
+                            :src="discountImageThumbnailUrl + dt.discount_image" 
                             alt="" 
                             class="post-center">
                         <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
@@ -70,14 +71,23 @@
                 </div>
                 <div style="width: calc(100% - 95px);">
                     <div class="width width-100">
-                        <div class="fonts fonts-11 semibold">{{ dt.name }}</div>
+                        <div class="fonts fonts-11 semibold">{{ dt.discount_name }}</div>
                         <AppCardCaption 
+                            v-if="dt.discount_value_type === 'percentage'"
+                            icon="fa fa-lg fa-percentage" 
+                            :caption="`Diskon ${dt.discount_value}%`" />
+                        <AppCardCaption 
+                            v-if="dt.discount_value_type === 'nominal'"
                             icon="fa fa-lg fa-calculator" 
-                            :caption="`Biaya Platform ${dt.currency_type === 'percentage' ? dt.order_fee + '%' : format(dt.order_fee)}`" />
+                            :caption="`Diskon ${format(dt.discount_value)}`" />
                         <AppCardCaption 
-                            v-if="dt.description"
+                            v-if="dt.discount_type"
                             icon="fa fa-lg fa-info-circle" 
-                            :caption="dt.description" />
+                            :caption="`Per ${dt.discount_type === 'transaction' ? 'Transaksi' : 'Produk'}`" />
+                        <AppCardCaption 
+                            v-if="dt.discount_description"
+                            icon="fa fa-lg fa-info-circle" 
+                            :caption="dt.discount_description" />
                     </div>
                     <div class="display-flex space-between padding padding-top-15px">
                         <div class="fonts micro black semibold">

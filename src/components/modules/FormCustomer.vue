@@ -83,7 +83,7 @@
                 <div style="width: 300px; margin: auto; padding-top: 10px; padding-bottom: 40px;">
                     <SearchField 
                         id="search-customer" 
-                        :placeholder="'Search customer by email'"
+                        :placeholder="'Cari customer by email'"
                         :onChange="(data) => onSearchCustomer(data)"
                     />
                     <!-- <button class="btn btn-main btn-full" @click="onShowCustomer('CREATE')"> 

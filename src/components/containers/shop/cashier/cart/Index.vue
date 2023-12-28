@@ -17,10 +17,10 @@
                     <AppEmpty v-if="!isThereDetails" />
                     <CardProduct :data.sync="details" />
 
-                    <div class="padding padding-bottom-15px margin margin-bottom-30px border-bottom"></div>
+                    <div v-if="isThereDetails" class="padding padding-bottom-15px margin margin-bottom-30px border-bottom"></div>
 
-                    <div class="card box-shadow bg-white">
-                        <div class="field-group">
+                    <div v-if="isThereDetails" class="card box-shadow bg-white margin margin-bottom-15px">
+                        <div class="field-group padding padding-top-0px">
                             <div class="field-label">Pelanggan</div>
                             <el-input 
                                 placeholder="Nama Pelanggan"
@@ -28,22 +28,22 @@
                                 :disabled="!isThereDetails"
                                 v-model="form.customer_name"></el-input>
                         </div>
-
-                        <div v-if="isThereDetails" class="margin margin-bottom-15px">
-                            <FieldTable 
-                                :value="form.table_id"
-                                @onChange="onChangeTable"
-                                @onClear="onClearTable"
-                            />
+                        <FieldTable 
+                            class="margin margin-bottom-15px"
+                            :value="form.table_id"
+                            :smallField="true"
+                            @onChange="onChangeTable"
+                            @onClear="onClearTable"
+                        />
+                        <div class="field-group padding padding-top-0px padding-bottom-0px">
+                            <div class="field-label">Platform</div>
                         </div>
-
-                        <div v-if="isThereDetails" class="margin margin-bottom-15px">
-                            <FieldPlatform 
-                                :value="form.platform_id"
-                                @onChange="onChangePlatform"
-                                @onClear="onClearPlatform"
-                            />
-                        </div>
+                        <FieldPlatform 
+                            :value="form.platform_id"
+                            :smallField="true"
+                            @onChange="onChangePlatform"
+                            @onClear="onClearPlatform"
+                        />
                     </div>
                 </div>
             </div>
@@ -54,15 +54,14 @@
                             <div class="fonts fonts-10 semibold black">Total ({{ orderQuantity }} produk)</div>
                             <div class="fonts fonts-10 semibold main-color">{{ format(orderPrice) }}</div>
                         </div>
-                        <div class="display-flex space-between">
-                            <div class="fonts fonts-10 normal black">Diskon</div>
-                            <div class="fonts fonts-10 normal black align-right">{{ format(0) }}</div>
+                        <div v-if="isThereDiscount" class="display-flex align-center space-between">
+                            <div class="fonts fonts-9 normal grey">Diskon</div>
+                            <div class="fonts fonts-9 normal grey align-right">{{ format(totalDiscount) }}</div>
                         </div>
-                        <!-- HIDDEN TEMPORARY -->
-                        <!-- <div v-if="isThereDiscount" class="display-flex space-between">
-                            <div class="fonts fonts-10 normal black">Diskon</div>
-                            <div class="fonts fonts-10 normal black align-right">{{ format(totalDiscount) }}</div>
-                        </div> -->
+                        <div v-if="isTherePlatform" class="display-flex align-center space-between">
+                            <div class="fonts fonts-9 normal grey">Platform</div>
+                            <div class="fonts fonts-9 normal grey align-right">{{ format(totalPlatform) }}</div>
+                        </div>
                     </div>
 
                     <div class="width width-100 display-flex">
@@ -102,7 +101,7 @@ export default {
         AppCardCollapse,
         CardProduct,
         FieldPlatform,
-        FieldTable
+        FieldTable,
     },
     computed: {
         ...mapState({
@@ -127,6 +126,14 @@ export default {
                 return this.$store.state.storeCashier.form.platform
             }
         },
+        formDiscount: {
+            set(value) {
+                this.$store.state.storeCashier.form.discount = value 
+            },
+            get() {
+                return this.$store.state.storeCashier.form.discount
+            }
+        },
         orderQuantity () {
             let quantity = 0
             this.details && this.details.map((item) => {
@@ -142,31 +149,42 @@ export default {
             })
             return price
         },
-        orderPriceBeforeDiscount () {
-            let price = 0
+        totalDiscount () {
+            let discount = 0
             this.details && this.details.map((item) => {
                 let quantity = item.quantity
-                price += quantity * item.price
-                // HIDDEN TEMPORARY
-                // if (item.is_discount) {
-                //     price += quantity * item.second_price
-                // } else {
-                //     price += quantity * item.price
-                // }
+                if (item.is_discount) {
+                    discount += quantity * item.discount
+                }
             })
-            return price
-        },
-        totalDiscount () {
-            return this.orderPriceBeforeDiscount - this.orderPrice
+            return discount
         },
         isThereDiscount () {
             let status = false
-            // HIDDEN TEMPORARY
-            // this.details && this.details.map((item) => {
-            //     if (item.is_discount) {
-            //         status = true 
-            //     }
-            // })
+            this.details && this.details.map((item) => {
+                if (item.is_discount) {
+                    status = true 
+                }
+            })
+            return status
+        },
+        totalPlatform () {
+            let platform = 0
+            this.details && this.details.map((item) => {
+                let quantity = item.quantity
+                if (item.is_platform) {
+                    platform += quantity * item.platform
+                }
+            })
+            return platform
+        },
+        isTherePlatform () {
+            let status = false
+            this.details && this.details.map((item) => {
+                if (item.is_platform) {
+                    status = true 
+                }
+            })
             return status
         },
         isThereDetails () {
@@ -193,7 +211,7 @@ export default {
         ...mapActions({
             setOrder: 'storeCashier/setOrder',
             deleteAllProduct: 'storeCashier/deleteAllProduct',
-            changePlatformProduct: 'storeCashier/changePlatformProduct'
+            changePlatformProduct: 'storeCashier/changePlatformProduct',
         }),
         onCreateOrder () {
             const payload = {
@@ -237,27 +255,48 @@ export default {
             this.form.platform_name = data.name 
             this.form.platform_fee = data.order_fee
             this.form.platform_type = data.order_type
+            this.form.platform_currency_type = data.currency_type
             this.form.platform_image = data.image
+            this.form.is_platform = true
             this.formPlatform = data 
-
             const payload = {
+                current_calculation: 'platform',
+                current_status: 'create',
+                current_value: this.form.platform_fee,
+                current_type: this.form.platform_currency_type,
+                platform_id: this.form.platform_id,
+                platform_name: this.form.platform_name,
                 platform_fee: this.form.platform_fee,
+                platform_type: this.form.platform_type,
+                platform_currency_type: this.form.platform_currency_type,
+                platform_image: this.form.platform_image,
             }
             this.changePlatformProduct(payload)
         },
         onClearPlatform () {
+            const currentValue = this.form.platform_fee
             this.form.platform_id = ''
             this.form.platform_name = ''
             this.form.platform_fee = ''
             this.form.platform_type = ''
+            this.form.platform_currency_type = ''
             this.form.platform_image = ''
+            this.form.is_platform = false
             this.formPlatform = null 
-
             const payload = {
+                current_calculation: 'platform',
+                current_status: 'clear',
+                current_value: currentValue,
+                current_type: this.form.platform_currency_type,
+                platform_id: this.form.platform_id,
+                platform_name: this.form.platform_name,
                 platform_fee: this.form.platform_fee,
+                platform_type: this.form.platform_type,
+                platform_currency_type: this.form.platform_currency_type,
+                platform_image: this.form.platform_image,
             }
             this.changePlatformProduct(payload)
-        }
+        },
     }
 }
 </script>

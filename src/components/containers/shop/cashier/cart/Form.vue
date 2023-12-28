@@ -28,7 +28,6 @@
                             :disabled="!isThereDetails"
                             v-model="form.customer_name"></el-input>
                     </div>
-
                     <div v-if="isThereDetails" class="margin margin-bottom-15px">
                         <FieldTable 
                             :value="form.table_id"
@@ -36,7 +35,12 @@
                             @onClear="onClearTable"
                         />
                     </div>
+                </div>
 
+                <div class="card box-shadow bg-white">
+                    <div class="field-group">
+                        <div class="field-label">Platform</div>
+                    </div>
                     <div v-if="isThereDetails" class="margin margin-bottom-15px">
                         <FieldPlatform 
                             :value="form.platform_id"

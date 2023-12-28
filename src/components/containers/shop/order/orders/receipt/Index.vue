@@ -128,8 +128,10 @@
                                 class="width width-100">
                                 <div :class="`display-flex space-between`">
                                     <div style="width: calc(100% - 110px);">
-                                        <span class="fonts fonts-9 black">{{ dt.product_name }}</span>
-                                        <span v-if="dt.product_detail" class="fonts fonts-9 black"> - {{ dt.product_detail }}</span>
+                                        <div class="fonts fonts-9 black">
+                                            {{ dt.product_name }} {{ dt.product_detail ? `- ${dt.product_detail}` : '' }}
+                                        </div>
+                                        <div class="fonts fonts-8 black">{{ format(dt.price) }}</div>
                                     </div>
                                     <div style="width: 30px;">
                                         <span class="fonts fonts-9 black">{{ dt.quantity }}</span>
@@ -151,15 +153,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="form.is_discount" class="width width-100 border-bottom"></div>
-                        <div v-if="form.is_discount" class="padding padding-top-5px padding-bottom-5px">
-                            <div v-if="form.is_discount" class="display-flex flex-end">
-                                <div style="width: calc(100% - 80px);">
-                                    <div class="fonts fonts-9 black">Diskon</div>
-                                </div>
-                                <div style="width: 80px;">
-                                    <div class="fonts fonts-9 black">{{ format(form.total_discount) }}</div>
-                                </div>
+                        <div v-if="isThereDiscountProduct || isThereDiscountTransaction" class="width width-100 border-bottom"></div>
+                        <div v-if="isThereDiscountProduct || isThereDiscountTransaction" class="display-flex flex-end padding padding-top-5px padding-bottom-5px">
+                            <div style="width: calc(100% - 80px);">
+                                <div class="fonts fonts-9 black">Diskon</div>
+                            </div>
+                            <div style="width: 80px;">
+                                <div class="fonts fonts-9 black">{{ format(totalDiscount) }}</div>
                             </div>
                         </div>
                         <div class="width width-100 border-bottom"></div>                            
@@ -341,6 +341,7 @@ export default {
                 await this.sendPrintLine(printer)
 
                 // Products 
+                let totalDiscount = 0
                 if (data.details && data.details.length > 0) {
                     // await printer.writeValue(encoder.encode(fontBold + fontSmall + alignLeft + 'Products                          Subtotal' + fontBoldOff + fontNormal + CMD.EOL))
 
@@ -349,6 +350,9 @@ export default {
                         let productName = element.product_name
                         if (element.product_detail) {
                             productName += `, ${element.product_detail}`
+                        }
+                        if (element.is_discount) {
+                            totalDiscount += element.discount_price
                         }
 
                         await printer.writeValue(encoder.encode(alignLeft + productName +  CMD.EOL))
@@ -363,9 +367,9 @@ export default {
 
                 // Discount 
                 await printer.writeValue(encoder.encode(alignLeft + 'Diskon     : ' + formatCurrency(0) + CMD.EOL))
-                // if (data.total_discount) {
-                //     await printer.writeValue(encoder.encode(alignLeft + 'Diskon     : ' + formatCurrency(data.total_discount) + CMD.EOL))
-                // }
+                if (data.discount_price || totalDiscount) {
+                    await printer.writeValue(encoder.encode(alignLeft + 'Diskon     : ' + formatCurrency(data.discount_price + totalDiscount) + CMD.EOL))
+                }
 
                 // Bills 
                 await printer.writeValue(encoder.encode(alignLeft + 'Bayar      : ' + formatCurrency(data.bills_price) + CMD.EOL))
@@ -533,7 +537,39 @@ export default {
         },
         orderId () {
             return this.form.order_id
-        }
+        },
+        totalDiscountProduct () {
+            let price = 0
+            this.form.details && this.form.details.map((item) => {
+                let quantity = item.quantity
+                if (item.is_discount) {
+                    price += quantity * item.discount_price
+                }
+            })
+            return price
+        },
+        isThereDiscountProduct () {
+            let status = false
+            this.form.details && this.form.details.map((item) => {
+                if (item.is_discount) {
+                    status = true 
+                }
+            })
+            return status
+        },
+        totalDiscountTransaction () {
+            return this.form.discount_price 
+        },
+        isThereDiscountTransaction () {
+            let status = false 
+            if (this.form.discount_price ) {
+                status = true 
+            }
+            return status
+        },
+        totalDiscount () {
+            return this.totalDiscountProduct + this.totalDiscountTransaction
+        },
     },
     watch: {
         orderId () {

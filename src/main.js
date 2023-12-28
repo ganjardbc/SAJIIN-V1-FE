@@ -120,6 +120,8 @@ Vue.prototype.expenseListImageThumbnailUrl = api + '/contents/expense_lists/thum
 Vue.prototype.expenseListImageCoverlUrl = api + '/contents/expense_lists/covers/'
 Vue.prototype.platformImageThumbnailUrl = api + '/contents/platforms/thumbnails/'
 Vue.prototype.platformImageCoverUrl = api + '/contents/platforms/covers/'
+Vue.prototype.discountImageThumbnailUrl = api + '/contents/discounts/thumbnails/'
+Vue.prototype.discountImageCoverUrl = api + '/contents/discounts/covers/'
 
 const router = new VueRouter({
     mode: 'history',

@@ -1,5 +1,5 @@
 <template>
-    <div id="AppFieldPlatforms">
+    <div id="AppFieldDiscounts">
         <div v-loading="loading" :class="`card no-padding bg-white border-full ${smallField && 'border-small-radius'}`">
             <div 
                 class="display-flex space-between align-center" 
@@ -7,26 +7,38 @@
                 <div v-if="selectedData" class="display-flex align-center" style="width: calc(100% - 40px);">
                     <div :style="`width: ${smallField ? '35px' : '45px'} ; margin-right: 15px`">
                         <div class="image image-padding border-full">
-                            <img v-if="selectedData.image" :src="selectedData ? (platformImageThumbnailUrl + selectedData.image) : ''" alt="" class="post-center">
-                            <i v-else class="post-middle-absolute icn fa fa-lg fa-flag"></i>
+                            <img 
+                                v-if="selectedData.discount_image" 
+                                :src="selectedData ? (discountImageThumbnailUrl + selectedData.discount_image) : ''" 
+                                alt="" 
+                                class="post-center">
+                            <i v-else class="post-middle-absolute icn fa fa-lg fa-percentage"></i>
                         </div>
                     </div>
-                    <div style="width: calc(100% - 60px);">
-                        <div style="width: 100%;">
-                            <div :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} semibold black`">
-                                Platform {{ selectedData && selectedData.name }}
+                    <div :style="`width: ${smallField ? 'calc(100% - 50px)' : 'calc(100% - 60px)'};`">
+                        <div class="width width-100">
+                            <div v-if="selectedData" :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} semibold black`">
+                                {{ selectedData.discount_name }}
                             </div>
-                            <div :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} grey`">
-                                Biaya {{ selectedData.currency_type === 'percentage' ? selectedData.order_fee + '%' : format(selectedData.order_fee) }}
+                            <div v-if="selectedData" :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} grey`">
+                                Diskon {{ selectedData.discount_value_type === 'percentage' 
+                                    ? `${selectedData.discount_value}%` 
+                                    : `${format(selectedData.discount_value)}` }} 
+                                {{ selectedData.discount_type === 'transaction' 
+                                    ? 'Per Transaksi' 
+                                    : 'Per Produk' }} 
+                            </div>
+                            <div v-if="!disabledSelection" :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} grey`">
+                                1 Diskon dipilih
                             </div>
                         </div>
                     </div>
                 </div>
                 <div v-else :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} semibold black`" :style="`padding-left: ${smallField ? '11px' : ''};`">
-                    Pilih Platform <span class="fonts fonts-10 normal grey">(opsional)</span>
+                    {{ label ? label : 'Pilih Diskon' }} <span v-if="!disabledOpsional" :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} normal grey`">(opsional)</span>
                 </div>
                 <div class="display-flex">
-                    <button v-if="selectedData" :class="`btn btn-white ${smallField ? 'btn-small-icon' : 'btn-icon'}`" @click="onRemove">
+                    <button v-if="selectedData" :class="`btn btn-white ${smallField ? 'btn-small-icon' : 'btn-icon'}`" @click="onClear">
                         <i :class="`fa ${smallField ? 'fa-lw' : 'fa-lg'} fa-times`"></i>
                     </button>
                     <button v-else :class="`btn btn-white ${smallField ? 'btn-small-icon' : 'btn-icon'}`" @click="onOpen">
@@ -38,13 +50,13 @@
 
         <AppCardPopup 
             v-if="visiblePopup" 
-            title="Pilih Platform" 
+            title="Pilih Diskon" 
             @onClose="onClose">
             <div class="width width-100">
                 <div class="width width-100 display-flex space-between">
                     <div style="width: calc(100% - 50px);">
                         <SearchField 
-                            :placeholder="'Cari platform ..'" 
+                            :placeholder="'Cari diskon ..'" 
                             :enableResponsive="true" 
                             :onChange="(data) => onSearch(data)" />
                     </div>
@@ -61,13 +73,21 @@
                             <div class="padding padding-15px display-flex space-between align-center">
                                 <div class="width width-60px">
                                     <div class="image image-45px border-full">
-                                        <img v-if="dt.image" :src="platformImageThumbnailUrl + dt.image" alt="" class="post-center">
-                                        <i v-else class="post-middle-absolute icn fa fa-lg fa-flag"></i>
+                                        <img v-if="dt.discount_image" :src="discountImageThumbnailUrl + dt.discount_image" alt="" class="post-center">
+                                        <i v-else class="post-middle-absolute icn fa fa-lg fa-percentage"></i>
                                     </div>
                                 </div>
                                 <div style="width: calc(100% - 100px);">
-                                    <div class="fonts fonts-10 semibold">{{ dt.name }}</div>
-                                    <div class="fonts fonts-9 grey">Biaya {{ dt.currency_type === 'percentage' ? dt.order_fee + '%' : format(dt.order_fee) }}</div>
+                                    <div class="fonts fonts-10 semibold">{{ dt.discount_name }}</div>
+                                    <div class="fonts fonts-9 grey">
+                                        Diskon 
+                                        {{ dt.discount_value_type === 'percentage' 
+                                            ? `${dt.discount_value}%` 
+                                            : `${format(dt.discount_value)}` }} 
+                                        {{ dt.discount_type === 'transaction' 
+                                            ? 'Per Transaksi' 
+                                            : 'Per Produk' }} 
+                                    </div>
                                 </div>
                                 <div class="width width-40px">
                                     <button 
@@ -103,7 +123,7 @@ import AppEmpty from '../../../modules/AppEmpty'
 import AppCardPopup from '../../../modules/AppCardPopup'
 
 export default {
-    name: 'AppFieldPlatforms',
+    name: 'AppFieldDiscounts',
     data () {
         return {
             visiblePopup: false,
@@ -111,11 +131,7 @@ export default {
             selectedID: null,
         }
     },
-    props: {
-        value: null,
-        smallField: false,
-    },
-    created () {
+    mounted () {
         this.selectedID = this.value
         this.getDataField()
     },
@@ -124,20 +140,13 @@ export default {
         AppEmpty,
         AppCardPopup
     },
-    computed: {
-        ...mapState({
-            data: (state) => state.storePlatform.field.data,
-            totalRecord: (state) => state.storePlatform.field.totalRecord,
-            limit: (state) => state.storePlatform.field.limit,
-            filter: (state) => state.storePlatform.field.filter,
-            loading: (state) => state.storePlatform.field.loading,
-        }),
-        shopId () {
-            return this.$store.state.storeSelectedShop.selectedData
-        },
-        selectedData () {
-            return this.data.find((item) => item.id === this.selectedID)
-        }
+    props: {
+        value: null,
+        label: null,
+        smallField: false,
+        disabledOpsional: false,
+        disabledSelection: false,
+        discountType: null,
     },
     watch: {
         shopId (prevProps, nextProps) {
@@ -149,11 +158,26 @@ export default {
             this.selectedID = props 
         }
     },
+    computed: {
+        ...mapState({
+            data: (state) => state.storeDiscount.field.data,
+            totalRecord: (state) => state.storeDiscount.field.totalRecord,
+            limit: (state) => state.storeDiscount.field.limit,
+            filter: (state) => state.storeDiscount.field.filter,
+            loading: (state) => state.storeDiscount.field.loading,
+        }),
+        shopId () {
+            return this.$store.state.storeSelectedShop.selectedData
+        },
+        selectedData () {
+            return this.data.find((item) => item.id === this.selectedID)
+        }
+    },
     methods: {
         ...mapActions({
-            getFieldData: 'storePlatform/getFieldData',
-            resetFilter: 'storePlatform/resetFieldFilter',
-            setPagination: 'storePlatform/setFieldPagination',
+            getFieldData: 'storeDiscount/getFieldData',
+            resetFilter: 'storeDiscount/resetFieldFilter',
+            setPagination: 'storeDiscount/setFieldPagination',
         }),
         onClose () {
             this.visiblePopup = false 
@@ -167,7 +191,7 @@ export default {
             this.visiblePopup = false 
             this.$emit('onChange', data)
         },
-        onRemove () {
+        onClear () {
             this.$emit('onClear')
         },
         onRefresh () {
@@ -187,7 +211,8 @@ export default {
         getDataField () {
             const token = this.$cookies.get('tokenBearer')
             const shop_id = this.shopId
-            this.getFieldData({ token, shop_id })
+            const discount_type = this.discountType ? this.discountType : ''
+            this.getFieldData({ token, shop_id, discount_type })
         },
     }
 }

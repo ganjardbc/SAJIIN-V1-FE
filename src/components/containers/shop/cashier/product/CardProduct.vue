@@ -108,10 +108,19 @@ export default {
             this.visiblePopup = false
         },
         onAddProduct (value) {
+            let payload = { 
+                ...value, 
+                second_price: value.price 
+            }
             const varian = this.detailProduct.find((item) => item.id === value.proddetail_id)
-            const payload = {
-                ...value,
-                varian: varian
+            if (varian !== undefined) {
+                payload = {
+                    ...value,
+                    varian: {
+                        ...varian,
+                        second_price: varian.price,
+                    }
+                }
             }
             this.addProduct(payload)
             this.closePopupCart()

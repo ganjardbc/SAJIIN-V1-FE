@@ -1,34 +1,36 @@
 <template>
     <div id="AppFieldTables">
-        <div v-loading="loading" class="card no-padding bg-white border-full">
-            <div class="display-flex space-between align-center" style="padding: 10px 15px;">
+        <div v-loading="loading" :class="`card no-padding bg-white border-full ${smallField && 'border-small-radius'}`">
+            <div 
+                class="display-flex space-between align-center" 
+                :style="`padding: ${smallField ? '4px' : '10px 15px'};`">
                 <div v-if="selectedData" class="display-flex align-center" style="width: calc(100% - 40px);">
-                    <div style="width: 45px; margin-right: 15px">
+                    <div :style="`width: ${smallField ? '35px' : '45px'} ; margin-right: 15px`">
                         <div class="image image-padding border-full">
                             <img v-if="selectedData.image" :src="selectedData ? (tableImageThumbnailUrl + selectedData.image) : ''" alt="" class="post-center">
-                            <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
+                            <i v-else class="post-middle-absolute icn fa fa-lg fa-th-large"></i>
                         </div>
                     </div>
                     <div style="width: calc(100% - 60px);">
                         <div style="width: 100%;">
-                            <div class="fonts fonts-10 semibold black">
-                                {{ selectedData && selectedData.name }} ({{ selectedData && selectedData.code }})
+                            <div :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} semibold black`">
+                                {{ selectedData && selectedData.name }}
                             </div>
-                            <div class="fonts fonts-10 grey">
-                                1 Meja dipilih
+                            <div :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} grey`">
+                                {{ selectedData && selectedData.code }}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div v-else class="fonts fonts-10 semibold black">
+                <div v-else :class="`fonts ${smallField ? 'fonts-9' : 'fonts-10'} semibold black`" :style="`padding-left: ${smallField ? '11px' : ''};`">
                     Pilih Meja <span class="fonts fonts-10 normal grey">(opsional)</span>
                 </div>
                 <div class="display-flex">
-                    <button v-if="selectedData" class="btn btn-white btn-icon" @click="onRemove">
-                        <i class="fa fa-lg fa-times"></i>
+                    <button v-if="selectedData" :class="`btn btn-white ${smallField ? 'btn-small-icon' : 'btn-icon'}`" @click="onRemove">
+                        <i :class="`fa ${smallField ? 'fa-lw' : 'fa-lg'} fa-times`"></i>
                     </button>
-                    <button v-else class="btn btn-white btn-icon" @click="onOpen">
-                        <i class="fa fa-lg fa-chevron-right"></i>
+                    <button v-else :class="`btn btn-white ${smallField ? 'btn-small-icon' : 'btn-icon'}`" @click="onOpen">
+                        <i :class="`fa ${smallField ? 'fa-lw' : 'fa-lg'} fa-chevron-right`"></i>
                     </button>
                 </div>
             </div>
@@ -60,7 +62,7 @@
                                 <div class="width width-60px">
                                     <div class="image image-45px border-full">
                                         <img v-if="dt.image" :src="tableImageThumbnailUrl + dt.image" alt="" class="post-center">
-                                        <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
+                                        <i v-else class="post-middle-absolute icn fa fa-lg fa-th-large"></i>
                                     </div>
                                 </div>
                                 <div style="width: calc(100% - 100px);">
@@ -112,7 +114,8 @@ export default {
         }
     },
     props: {
-        value: null
+        value: null,
+        smallField: false,
     },
     created () {
         this.selectedID = this.value
