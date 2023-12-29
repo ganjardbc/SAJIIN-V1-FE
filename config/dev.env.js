@@ -6,7 +6,7 @@ module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
   BASE_URL: '"http://localhost:8080/"',
   // API_URL: '"https://internal.sajiin.com/"',
-  API_URL: '"http://localhost:8000"',
+  API_URL: '"http://localhost:8000/"',
   SOCKET_URL: '"https://websocket.sajiin.com/"',
   PRINTER_URL: '"http://localhost:9999"'
 });
