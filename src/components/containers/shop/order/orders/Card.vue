@@ -80,7 +80,11 @@
                     </div>
                     <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
                         <div class="fonts fonts-9 normal grey">{{ dt.order.discount_name }}</div>
-                        <div class="fonts fonts-9 normal grey align-right">{{ format(dt.order.discount_price) }}</div>
+                        <div class="fonts fonts-9 normal grey align-right">
+                            -{{ dt.order.discount_value_type === 'percentage' 
+                                ? `${dt.order.discount_fee}%` 
+                                : format(dt.order.discount_price) }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,7 +142,11 @@
                                     </div>
                                     <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
                                         <div class="fonts fonts-9 normal grey">{{ detail.discount_name }}</div>
-                                        <div class="fonts fonts-9 normal grey align-right">{{ format(detail.discount_price) }}</div>
+                                        <div class="fonts fonts-9 normal grey align-right">
+                                            -{{ detail.discount_value_type === 'percentage' 
+                                                ? `${detail.discount_fee}%` 
+                                                : format(detail.discount_price) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div v-if="detail.is_platform" class="display-flex align-center margin margin-top-5px margin-bottom-5px">
@@ -148,7 +156,11 @@
                                     </div>
                                     <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
                                         <div class="fonts fonts-9 normal grey">{{ detail.platform_name }}</div>
-                                        <div class="fonts fonts-9 normal grey align-right">{{ format(detail.platform_price) }}</div>
+                                        <div class="fonts fonts-9 normal grey align-right">
+                                            +{{ detail.platform_currency_type === 'percentage' 
+                                                ? `${detail.platform_fee}%`
+                                                : format(detail.platform_price) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="display-flex space-between margin margin-top-5px">

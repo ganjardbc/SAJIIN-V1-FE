@@ -36,11 +36,11 @@
                         </div>
                         <div v-if="isThereDiscount" class="display-flex align-center space-between">
                             <div class="fonts fonts-9 normal grey">Diskon</div>
-                            <div class="fonts fonts-9 normal grey align-right">{{ format(totalDiscount) }}</div>
+                            <div class="fonts fonts-9 normal grey align-right">-{{ format(totalDiscount) }}</div>
                         </div>
                         <div v-if="isTherePlatform" class="display-flex align-center space-between">
                             <div class="fonts fonts-9 normal grey">Platform</div>
-                            <div class="fonts fonts-9 normal grey align-right">{{ format(totalPlatform) }}</div>
+                            <div class="fonts fonts-9 normal grey align-right">+{{ format(totalPlatform) }}</div>
                         </div>
                     </div>
                     <button 

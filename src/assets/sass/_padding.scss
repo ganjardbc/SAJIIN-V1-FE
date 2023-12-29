@@ -30,6 +30,12 @@
         &.padding-bottom-#{$var}px {
             padding-bottom: #{$var} + 'px';
         }
+        &.padding-x-#{$var}px {
+            padding: #{$var} + 'px' + ' 0';
+        }
+        &.padding-y-#{$var}px {
+            padding: 0 #{$var} + 'px';
+        }
     }
 
     &.padding-mobile-left-none {
@@ -90,6 +96,12 @@
         }
         &.margin-bottom-#{$var}px {
             margin-bottom: #{$var} + 'px';
+        }
+        &.margin-x-#{$var}px {
+            margin: #{$var} + 'px' + ' 0';
+        }
+        &.margin-y-#{$var}px {
+            margin: 0 #{$var} + 'px';
         }
         &.margin-mobile-#{$var}px {
             @media (max-width: $min-width) {

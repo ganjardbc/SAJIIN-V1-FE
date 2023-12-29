@@ -33,25 +33,27 @@
                     </div>
                     <div class="fonts fonts-10 semibold red align-right">{{ format(dt.subtotal) }}</div>
                 </div>
-                <div v-if="dt.is_discount" class="display-flex align-center space-between margin margin-top-5px margin-bottom-5px">
-                    <div class="image image-20px border-full">
-                        <img v-if="dt.discount_image" :src="discountImageThumbnailUrl + dt.discount_image" alt="" class="post-center">
-                        <i v-else class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-percentage"></i>
-                    </div>
-                    <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
-                        <div class="fonts fonts-9 normal grey">Diskon</div>
-                        <div class="fonts fonts-9 normal grey align-right">{{ format(dt.discount_price * dt.quantity) }}</div>
-                    </div>
-                </div>
-                <div v-if="dt.is_platform" class="display-flex align-center space-between margin margin-top-5px margin-bottom-5px">
-                    <div class="image image-20px border-full">
-                        <img v-if="dt.platform_image" :src="platformImageThumbnailUrl + dt.platform_image" alt="" class="post-center">
-                        <i v-else class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-flag"></i>
-                    </div>
-                    <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
-                        <div class="fonts fonts-9 normal grey">Platform</div>
-                        <div class="fonts fonts-9 normal grey align-right">{{ format(dt.platform_price * dt.quantity) }}</div>
-                    </div>
+                <div v-if="dt.is_discount || dt.is_platform" class="display-flex align-center margin margin-top-5px">
+                    <AppCardFillSigner 
+                        v-if="dt.is_discount"
+                        :label="`
+                            -${dt.discount_value_type === 'percentage'
+                                ? `${dt.discount_fee}%`
+                                : format(dt.discount_price)}`
+                        "
+                        background="bg-orange"
+                        color="white"
+                    />
+                    <AppCardFillSigner 
+                        v-if="dt.is_platform"
+                        :label="`
+                            +${dt.platform_currency_type === 'percentage' 
+                                ? `${dt.platform_fee}%`
+                                : format(dt.platform_price)}`
+                        "
+                        background="bg-green"
+                        color="white"
+                    />
                 </div>
                 <div class="display-flex space-between display-mobile">
                     <div class="width width-200px width-mobile display-flex margin margin-top-10px">
@@ -95,6 +97,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import AddQtyField from '../../../../modules/AddQtyField'
+import AppCardFillSigner from '../../../../modules/AppCardFillSigner'
 import FieldDiscount from '../../discounts/Field'
 
 export default {
@@ -104,6 +107,7 @@ export default {
     },
     components: {
         AddQtyField,
+        AppCardFillSigner,
         FieldDiscount,
     },
     computed: {

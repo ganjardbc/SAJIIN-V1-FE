@@ -28,7 +28,7 @@
                     <div class="padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed"></div>
                     <div class="display-flex space-between margin margin-bottom-15px">
                         <div class="fonts fonts-10 normal grey">Diskon</div>
-                        <div class="fonts fonts-10 normal black">{{ format(totalDiscount) }}</div>
+                        <div class="fonts fonts-10 normal black">-{{ format(totalDiscount) }}</div>
                     </div>
                     <FieldDiscount 
                         :value="form.discount_id"
