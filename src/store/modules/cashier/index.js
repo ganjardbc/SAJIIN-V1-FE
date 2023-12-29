@@ -209,12 +209,12 @@ export default {
                     ))
             }
             if (currentProduct === undefined) {
-                const quantity = data.quantity ? data.quantity : 1
-                const price = data.varian ? data.varian.price : data.price
-                const secondPrice = data.varian ? data.varian.second_price : data.second_price
-                const productDetail = data.varian ? data.varian.name : null 
-                const productDetailId = data.varian ? data.varian.id : null
-                const subtotal = quantity * price
+                let quantity = data.quantity ? data.quantity : 1
+                let price = data.varian ? data.varian.price : data.price
+                let secondPrice = data.varian ? data.varian.second_price : data.second_price
+                let productDetail = data.varian ? data.varian.name : null 
+                let productDetailId = data.varian ? data.varian.id : null
+                let subtotal = quantity * price
                 const payload = {
                     ...state.formProduct,
                     price: price,
@@ -229,7 +229,47 @@ export default {
                     shop_id: data.shop_id,
                     status: "to-do"
                 }
-                state.form.details.push(payload)
+                const platform = {
+                    current_calculation: 'platform',
+                    current_status: state.form.order.platform_id ? 'create' : 'remove',
+                    current_value: state.form.order.platform_fee,
+                    current_type: state.form.order.platform_currency_type,
+                    platform_id: state.form.order.platform_id,
+                    platform_name: state.form.order.platform_name,
+                    platform_fee: state.form.order.platform_fee,
+                    platform_type: state.form.order.platform_type,
+                    platform_currency_type: state.form.order.platform_currency_type,
+                    platform_image: state.form.order.platform_image,
+                }
+                if (platform.platform_id) {
+                    const getPlatform = getDiscountProduct(payload, platform)
+                    const platformPrice = getPlatform.platformPrice
+                    const platformFee = getPlatform.platformFee
+                    const isPlatform = getPlatform.isPlatform
+                    quantity = getPlatform.quantity
+                    price = getPlatform.price
+                    secondPrice = getPlatform.secondPrice
+                    subtotal = getPlatform.totalPrice
+                    const newPayload = {
+                        ...payload,
+                        quantity: quantity,
+                        price: price,
+                        second_price: secondPrice,
+                        subtotal: subtotal,
+                        platform: platformPrice,
+                        platform_fee: platformFee,
+                        platform_price: platformPrice,
+                        platform_name: platform.platform_name,
+                        platform_type: platform.platform_type,
+                        platform_currency_type: platform.platform_currency_type,
+                        platform_image: platform.platform_image,
+                        platform_id: platform.platform_id,
+                        is_platform: isPlatform,
+                    }
+                    state.form.details.push(newPayload)
+                } else {
+                    state.form.details.push(payload)
+                }
             } else {
                 const payload = state
                     .form

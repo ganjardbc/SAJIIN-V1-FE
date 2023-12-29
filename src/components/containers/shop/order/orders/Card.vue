@@ -51,30 +51,17 @@
             </el-alert>
 
             <div class="display-flex space-between display-mobile padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed">
-                <div class="width width-25 width-mobile display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
-                    <div class="fonts fonts-9 normal grey margin margin-bottom-5px">Kasir</div>
-                    <div class="fonts fonts-10 semibold black overflow-ellipsis">{{ dt.order.cashier_name || '-' }}</div>
-                </div>
-                <div class="width width-25 width-mobile display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
+                <div class="width width-row-3 width-mobile display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
                     <div class="fonts fonts-9 normal grey margin margin-bottom-5px">Pelanggan</div>
                     <div class="fonts fonts-10 semibold black overflow-ellipsis">{{ dt.order.customer_name || '-' }}</div>
                 </div>
-                <div class="width width-25 width-mobile display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
+                <div class="width width-row-3 width-mobile display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
                     <div class="fonts fonts-9 normal grey margin margin-bottom-5px">Meja</div>
                     <div class="fonts fonts-10 semibold black overflow-ellipsis">{{ dt.order.table_name || '-' }}</div>
                 </div>
-                <div class="width width-25 width-mobile display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
-                    <div class="fonts fonts-9 normal grey margin margin-bottom-5px">Platform</div>
-                    <div v-if="dt.order.platform_id" class="display-flex align-center">
-                        <div class="image image-20px border-full">
-                            <img v-if="dt.order.platform_image" :src="platformImageThumbnailUrl + dt.order.platform_image" alt="" class="post-center">
-                            <i v-else class="post-middle-absolute icn fa fa-lw fa-image"></i>
-                        </div>
-                        <div class="fonts fonts-10 semibold black overflow-ellipsis margin margin-left-5px">
-                            {{ dt.order.platform_name }}
-                        </div>
-                    </div>
-                    <div v-else class="fonts fonts-10 semibold black overflow-ellipsis">-</div>
+                <div class="width width-row-3 width-mobile display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
+                    <div class="fonts fonts-9 normal grey margin margin-bottom-5px">Kasir</div>
+                    <div class="fonts fonts-10 semibold black overflow-ellipsis">{{ dt.order.cashier_name || '-' }}</div>
                 </div>
             </div>
 
@@ -82,7 +69,6 @@
                 <div class="display-flex row space-between display-row-mobile margin margin-bottom-5px">
                     <div class="fonts fonts-10 semibold black">Total Harga</div>
                     <div class="display-flex align-center">
-                        <!-- <AppCardCapsule :data="dt.order.payment_status ? 'paid' : 'unpaid'" style="margin: 0 10px;" /> -->
                         <div class="fonts fonts-10 semibold margin margin-right-10px">({{ dt.order.payment_status ? 'Dibayar' : 'Belum Bayar' }})</div>
                         <div class="fonts fonts-10 semibold overflow-ellipsis">{{ format(dt.order.total_price) }}</div>
                     </div>

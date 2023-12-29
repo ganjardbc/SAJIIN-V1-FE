@@ -91,10 +91,6 @@ export default {
             return this.data.details.map((item) => {
                 let firstPrice = item.price
                 let secondPrice = 0
-                // if (item.is_discount) {
-                //     secondPrice = item.price 
-                //     firstPrice = item.price - (item.price * (item.value_discount / 100))
-                // }
                 return {
                     ...item,
                     price: firstPrice,

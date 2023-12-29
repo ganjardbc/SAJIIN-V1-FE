@@ -53,7 +53,9 @@
                     </div>
                     <div style="width: calc(100% - 25px);" class="display-flex space-between margin margin-left-5px">
                         <div class="fonts fonts-9 normal grey">Platform</div>
-                        <div class="fonts fonts-9 normal grey align-right">{{ format(dt.platform_price) }}</div>
+                        <div class="fonts fonts-9 normal grey align-right">
+                            {{ format(dt.platform_price) }}
+                        </div>
                     </div>
                 </div>
                 <div class="display-flex space-between display-mobile">

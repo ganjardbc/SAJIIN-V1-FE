@@ -91,7 +91,7 @@ const getDiscountOrder = (order, calculation) => {
     return payload
 }
 
-const getDiscountProduct = (product, calculation) => {
+const getDiscountProduct = (data, calculation) => {
     const payload = {
         // default 
         price: 0,
@@ -109,20 +109,20 @@ const getDiscountProduct = (product, calculation) => {
         platformPrice: 0,
         isPlatform: false,
     }
-    let price = parseInt(product.price)
-    let secondPrice = parseInt(product.second_price)
-    let quantity = parseInt(product.quantity)
+    let price = parseInt(data.price)
+    let secondPrice = parseInt(data.second_price)
+    let quantity = parseInt(data.quantity)
     let totalPrice = price * quantity
 
     // discount
-    let discountPrice = parseInt(product.discount_price)
-    let discountFee = parseInt(product.discount_fee)
-    let isDiscount = product.is_discount
+    let discountPrice = parseInt(data.discount_price)
+    let discountFee = parseInt(data.discount_fee)
+    let isDiscount = data.is_discount
 
     // platform
-    let platformPrice = parseInt(product.platform_price)
-    let platformFee = parseInt(product.platform_fee)
-    let isPlatform = product.is_platform
+    let platformPrice = parseInt(data.platform_price)
+    let platformFee = parseInt(data.platform_fee)
+    let isPlatform = data.is_platform
 
     if (calculation.current_calculation === 'discount') {
         if (calculation.current_status === 'create') {
@@ -135,12 +135,12 @@ const getDiscountProduct = (product, calculation) => {
             isDiscount = true 
         } else {
             if (isPlatform) {
-                platformPrice = product.platform_currency_type === 'percentage'
+                platformPrice = data.platform_currency_type === 'percentage'
                     ? parseInt(secondPrice * (platformFee / 100))
                     : platformFee 
                 price = secondPrice + platformPrice
             } else {
-                let discountPreviousValue = parseInt(product.discount_price)
+                let discountPreviousValue = parseInt(data.discount_price)
                 price = price + discountPreviousValue
             }
             totalPrice = price * quantity 
@@ -162,12 +162,12 @@ const getDiscountProduct = (product, calculation) => {
             isPlatform = true 
         } else {
             if (isDiscount) {
-                discountPrice = product.discount_value_type === 'percentage'
+                discountPrice = data.discount_value_type === 'percentage'
                     ? parseInt(secondPrice * (discountFee / 100))
                     : discountFee
                 price = secondPrice - discountPrice
             } else {
-                let platformPreviousValue = parseInt(product.platform)
+                let platformPreviousValue = parseInt(data.platform)
                 price = price - platformPreviousValue
             }
             totalPrice = quantity * price

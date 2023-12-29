@@ -116914,9 +116914,10 @@ a {
   position: relative;
   right: 0;
   width: calc(100% - 370px);
-  padding: 40px;
+  padding-top: 40px;
   padding-bottom: 0;
   padding-left: 330px;
+  padding-right: 40px;
 }
 @media (max-width: 768px) {
   #admin .main .main-content {
@@ -117180,7 +117181,8 @@ a {
   }
 }
 #admin.mobile-admin .mobile-main .header .header-content-fixed {
-  width: calc(100% - 210px);
+  width: calc(100% - 270px);
+  right: 70px;
 }
 @media (max-width: 768px) {
   #admin.mobile-admin .mobile-main .header .header-content-fixed {
@@ -117191,8 +117193,9 @@ a {
   }
 }
 #admin.mobile-admin .mobile-main .main-content {
-  width: calc(100% - 210px);
-  padding-left: 170px;
+  width: calc(100% - 270px);
+  padding-left: 200px;
+  padding-right: 70px;
 }
 @media (max-width: 768px) {
   #admin.mobile-admin .mobile-main .main-content {
