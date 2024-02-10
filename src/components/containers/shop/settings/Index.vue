@@ -212,8 +212,8 @@
                                             v-model="form.status"
                                             :active-value="'active'"
                                             :inactive-value="'inactive'"
-                                            active-text="Active"
-                                            inactive-text="Inactive"></el-switch>
+                                            active-text="Aktif"
+                                            inactive-text="Non-Aktif"></el-switch>
                                     </div>
                                     <div 
                                         v-if="errorMessage.status" 
@@ -226,8 +226,8 @@
                                         <div class="field-label">Is Non FnB</div>
                                         <el-switch 
                                             v-model="form.is_non_fnb"
-                                            active-text="Aktive"
-                                            inactive-text="Inactive"
+                                            active-text="Aktif"
+                                            inactive-text="Non-Aktif"
                                             :active-value="1"
                                             :inactive-value="0"></el-switch>
                                     </div>
@@ -245,8 +245,8 @@
                                             v-model="form.is_digital_menu_active"
                                             :active-value="1"
                                             :inactive-value="0"
-                                            active-text="Active"
-                                            inactive-text="Inactive"
+                                            active-text="Aktif"
+                                            inactive-text="Non-Aktif"
                                             @change="onChangeDigitalMenu"></el-switch>
                                     </div>
                                     <div 
@@ -261,8 +261,8 @@
                                             v-model="form.is_digital_order_active"
                                             :active-value="1"
                                             :inactive-value="0"
-                                            active-text="Active"
-                                            inactive-text="Inactive"
+                                            active-text="Aktif"
+                                            inactive-text="Non-Aktif"
                                             @change="onChangeDigitalOrder"></el-switch>
                                     </div>
                                     <div 
