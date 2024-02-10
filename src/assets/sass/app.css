@@ -301,8 +301,8 @@ a.btn {
 }
 .btn .notif {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 5px;
+  right: 5px;
   font-size: 11px;
   width: 18px;
   height: 18px;
@@ -310,6 +310,15 @@ a.btn {
   border-radius: 100%;
   background-color: #e3342f;
   color: #fff;
+}
+.btn .sign {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  background-color: #e3342f;
 }
 .btn .icon {
   margin-right: 8px;

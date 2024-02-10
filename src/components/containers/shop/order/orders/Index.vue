@@ -260,6 +260,7 @@ export default {
             loadingForm: (state) => state.storeOrders.loadingForm,
             formVarian: (state) => state.storeOrdersDetail.form,
             matrixDashboard: (state) => state.storeDashboard.matrix,
+            dataShop: (state) => state.storeSelectedShop.form,
         }),
         typeForm: {
             get () {
@@ -292,17 +293,31 @@ export default {
             const onProgress = this.matrixDashboard.onProgress
             const ready = this.matrixDashboard.ready
             const delivered = this.matrixDashboard.delivered
-            const all = newOrder + onProgress + ready + delivered
-            return [
-                {id: 1, icon: 'fa fa-lw fa-list-ul', label: 'Semua Pesanan', value: replaceToMoreValue(all), status: 'active'},
-                {id: 2, icon: 'far fa-lw fa-clock', label: `Baru Masuk`, value: replaceToMoreValue(newOrder), status: ''},
-                {id: 3, icon: 'fa fa-lw fa-stopwatch', label: `Disiapkan`, value: replaceToMoreValue(onProgress), status: ''},
-                {id: 5, icon: 'fa fa-lw fa-truck', label: `Diantarkan`, value: replaceToMoreValue(ready), status: ''},
-                {id: 6, icon: 'far fa-lw fa-thumbs-up', label: `Diterima`, value: replaceToMoreValue(delivered), status: ''},
-                {id: 7, icon: 'far fa-lw fa-check-circle', label: `Selesai`, status: ''},
-                {id: 8, icon: 'far fa-lw fa-times-circle', label: `Dibatalkan`, status: ''},
-            ]
-        }
+            const done = this.matrixDashboard.done
+            if (this.isNonFnB) {
+                const all = newOrder + done
+                return [
+                    {id: 1, icon: 'fa fa-lw fa-list-ul', label: 'Semua Pesanan', value: replaceToMoreValue(all), status: 'active'},
+                    {id: 2, icon: 'far fa-lw fa-clock', label: `Baru Masuk`, value: replaceToMoreValue(newOrder), status: ''},
+                    {id: 3, icon: 'far fa-lw fa-check-circle', label: `Selesai`, value: replaceToMoreValue(done), status: ''},
+                    {id: 4, icon: 'far fa-lw fa-times-circle', label: `Dibatalkan`, status: ''},
+                ]
+            } else {
+                const all = newOrder + onProgress + ready + delivered 
+                return [
+                    {id: 1, icon: 'fa fa-lw fa-list-ul', label: 'Semua Pesanan', value: replaceToMoreValue(all), status: 'active'},
+                    {id: 2, icon: 'far fa-lw fa-clock', label: `Baru Masuk`, value: replaceToMoreValue(newOrder), status: ''},
+                    {id: 3, icon: 'fa fa-lw fa-stopwatch', label: `Disiapkan`, value: replaceToMoreValue(onProgress), status: ''},
+                    {id: 5, icon: 'fa fa-lw fa-truck', label: `Diantarkan`, value: replaceToMoreValue(ready), status: ''},
+                    {id: 6, icon: 'far fa-lw fa-thumbs-up', label: `Diterima`, value: replaceToMoreValue(delivered), status: ''},
+                    {id: 7, icon: 'far fa-lw fa-check-circle', label: `Selesai`, value: replaceToMoreValue(done), status: ''},
+                    {id: 8, icon: 'far fa-lw fa-times-circle', label: `Dibatalkan`, status: ''},
+                ]
+            }
+        },
+        isNonFnB () {
+            return this.dataShop && this.dataShop.is_non_fnb
+        },
     },
     watch: {
         shopId (prevProps, nextProps) {
@@ -351,28 +366,45 @@ export default {
             if (data !== this.selectedIndex) {
                 this.selectedIndex = data
             }
-            switch (this.selectedIndex) {
-                case 0:
-                    this.filter.status = ''
-                    break
-                case 1:
-                    this.filter.status = 'new-order'
-                    break
-                case 2:
-                    this.filter.status = 'on-progress'
-                    break
-                case 3:
-                    this.filter.status = 'ready'
-                    break
-                case 4:
-                    this.filter.status = 'delivered'
-                    break
-                case 5:
-                    this.filter.status = 'done'
-                    break
-                case 6:
-                    this.filter.status = 'canceled'
-                    break
+            if (this.isNonFnB) {
+                switch (this.selectedIndex) {
+                    case 0:
+                        this.filter.status = ''
+                        break
+                    case 1:
+                        this.filter.status = 'new-order'
+                        break
+                    case 2:
+                        this.filter.status = 'done'
+                        break
+                    case 3:
+                        this.filter.status = 'canceled'
+                        break
+                }
+            } else {
+                switch (this.selectedIndex) {
+                    case 0:
+                        this.filter.status = ''
+                        break
+                    case 1:
+                        this.filter.status = 'new-order'
+                        break
+                    case 2:
+                        this.filter.status = 'on-progress'
+                        break
+                    case 3:
+                        this.filter.status = 'ready'
+                        break
+                    case 4:
+                        this.filter.status = 'delivered'
+                        break
+                    case 5:
+                        this.filter.status = 'done'
+                        break
+                    case 6:
+                        this.filter.status = 'canceled'
+                        break
+                }
             }
             this.handleFilterSearch()
         },

@@ -87,6 +87,7 @@ export default {
             form: (state) => state.storeProfile.form,
             errorMessage: (state) => state.storeProfile.errorMessage,
             loading: (state) => state.storeProfile.loading,
+            dataShop: (state) => state.storeSelectedShop.form,
         }),
         loadingForm: {
             get () {
@@ -100,7 +101,7 @@ export default {
             return this.form.image ? this.adminImageThumbnailUrl + this.form.image : ''
         },
         moreMenu () {
-            return [
+            let payload = [
                 {icon: 'fa fa-lg fa-list-ol', label: 'Pengeluaran', value: 0, link: 'shop-expense', permission: 'expense-list'},
                 {icon: 'fa fa-lg fa-users', label: 'Karyawan', value: 0, link: 'shop-employee', permission: 'employees'},
                 {icon: 'fa fa-lg fa-flag', label: 'Platform', value: 0, link: 'shop-platforms', permission: 'settings'},
@@ -109,7 +110,16 @@ export default {
                 {icon: 'fa fa-lg fa-calendar-alt', label: 'Laporan', value: 0, link: 'shop-reports', permission: 'reports'},
                 {icon: 'fa fa-lg fa-cogs', label: 'Pengaturan', value: 0, link: 'shop-settings', permission: 'settings'},
             ]
-        }
+            if (this.isNonFnB) {
+                payload = payload.filter((item) => {
+                    return item.permission !== 'tables'
+                })
+            }
+            return payload
+        },
+        isNonFnB () {
+            return this.dataShop && this.dataShop.is_non_fnb
+        },
     },
     methods: {
         ...mapActions({

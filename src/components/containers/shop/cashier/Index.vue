@@ -37,7 +37,7 @@
                 </div>
             </div>
             <CashBook @onOpenOrderList="onOpenOrderList" />
-            <Product v-if="isThereOpenedCashbook" :column="'column-3 mobile-column'" />
+            <Product v-if="isThereOpenedCashbook" :column="'column-2 mobile-column'" />
         </div>
 
         <div :class="`content-form ${!visibleCart && 'hide'}`">

@@ -1,6 +1,8 @@
 <template>
     <div id="AppFieldTables">
-        <div v-loading="loading" :class="`card no-padding bg-white border-full ${smallField && 'border-small-radius'}`">
+        <div 
+            v-loading="loading"
+            :class="`card no-padding bg-white border-full ${smallField && 'border-small-radius'}`">
             <div 
                 class="display-flex space-between align-center" 
                 :style="`padding: ${smallField ? '4px' : '10px 15px'};`">

@@ -16,7 +16,7 @@
                         class="change-scrollbar" 
                         :style="`
                             padding: 10px 15px;
-                            max-height: calc(100vh - ${height ? height : '150px'}); 
+                            max-height: calc(100vh - ${height ? height : '200px'}); 
                             overflow-y: auto;
                             overflow-x: hidden;
                         `">

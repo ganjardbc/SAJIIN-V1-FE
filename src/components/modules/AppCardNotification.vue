@@ -44,7 +44,8 @@
                 slot="reference"
                 class="btn btn-white btn-icon btn-circle">
                 <i class="fa fa-lg fa-bell"></i>
-                <span v-if="totalUnread" class="notif">{{ getTotalUnread }}</span>
+                <span v-if="totalUnread" class="sign"></span>
+                <!-- <span v-if="totalUnread" class="notif">{{ getTotalUnread }}</span> -->
             </button>
         </el-popover>
     </div>

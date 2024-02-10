@@ -32,7 +32,9 @@
                             placeholder=""
                             type="text"
                             v-model="form.username"
-                            :disabled="loading"></el-input>
+                            :disabled="loading">
+                            <i slot="prefix" class="el-input__icon el-icon-user"></i>
+                        </el-input>
                         <div 
                             v-if="errorMessage.username" 
                             class="field-error">
@@ -47,7 +49,9 @@
                             type="password"
                             v-model="form.password"
                             :disabled="loading"
-                            show-password></el-input>
+                            show-password>
+                            <i slot="prefix" class="el-input__icon el-icon-lock"></i>
+                        </el-input>
                         <div 
                             v-if="errorMessage.password" 
                             class="field-error">

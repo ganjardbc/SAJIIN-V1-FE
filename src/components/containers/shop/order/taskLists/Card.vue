@@ -1,6 +1,6 @@
 <template>
     <div id="App" class="display-flex wrap">
-        <div v-for="(dt, i) in data" :key="i" class="column-3 mobile-column">
+        <div v-for="(dt, i) in data" :key="i" class="column-2 mobile-column">
             <div class="margin margin-15px margin-mobile-left-none margin-mobile-right-none">
                 <div class="card bg-white box-shadow">
                     <div class="display-flex space-between align-center padding padding-bottom-15px margin margin-bottom-15px border-bottom">
@@ -21,7 +21,7 @@
                         <div class="fonts fonts-9 normal grey">Produk</div>
                         <AppCardProgressProduct :data="dt.details" />
                     </div>
-                    <div class="width width-100 change-scrollbar margin margin-bottom-15px" style="max-height: 270px;">
+                    <div class="width width-100 change-scrollbar margin margin-bottom-15px" style="max-height: 255px; overflow-x: hidden;">
                         <div v-for="(detail, j) in dt.details" :key="j" :style="`margin: 0 2px; margin-bottom: ${j < (dt.details.length - 1) ? '15px' : ''};`">
                             <div class="card bg-white border border-full">
                                 <div class="display-flex align-center space-between margin margin-bottom-10px">

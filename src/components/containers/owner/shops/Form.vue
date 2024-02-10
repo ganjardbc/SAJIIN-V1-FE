@@ -202,6 +202,23 @@
                     </div>
                 </div>
                 <div class="field-group">
+                    <div class="display-flex space-between">
+                        <div class="field-label">Is Non FnB</div>
+                        <el-switch 
+                            v-model="form.is_non_fnb"
+                            :disabled="isDetailForm"
+                            active-text="Aktif"
+                            inactive-text="Non-Aktif"
+                            :active-value="1"
+                            :inactive-value="0"></el-switch>
+                    </div>
+                    <div 
+                        v-if="errorMessage.is_non_fnb" 
+                        class="field-error">
+                        {{ errorMessage.is_non_fnb && errorMessage.is_non_fnb[0] }}
+                    </div>
+                </div>
+                <div class="field-group">
                     <div class="field-label">Pengunjung</div>
                     <div class="display-flex space-between">
                         <div class="fonts micro black">Digital Menu</div>

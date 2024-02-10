@@ -483,7 +483,7 @@ export default {
                     cashier_name: data.user.name,
                     total_item: data.total_item,
                     total_price: totalPrice,
-                    status: 'on-progress'
+                    status: data.shop.is_non_fnb ? data.status : 'on-progress',
                 },
                 shop: {
                     ...data.shop

@@ -83,7 +83,7 @@
                                 v-model="form.status"
                                 :disabled="isButtonEnable"
                                 :active-value="'done'"
-                                :inactive-value="'on-progress'"></el-switch>
+                                :inactive-value="isNonFnB ? 'new-order' : 'on-progress'"></el-switch>
                         </div>
                     </div>
                     <button 
@@ -204,7 +204,11 @@ export default {
             form: (state) => state.storeOrders.form,
             errorMessage: (state) => state.storeOrders.errorMessage,
             details: (state) => state.storeOrders.form.details,
+            dataShop: (state) => state.storeSelectedShop.form,
         }),
+        isNonFnB () {
+            return this.dataShop && this.dataShop.is_non_fnb
+        },
         orderQuantity () {
             let quantity = 0
             this.details && this.details.map((item) => {

@@ -28,7 +28,7 @@
                     <div class="padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed"></div>
                     <div class="display-flex space-between margin margin-bottom-15px">
                         <div class="fonts fonts-10 normal grey">Diskon</div>
-                        <div class="fonts fonts-10 normal black">-{{ format(totalDiscount) }}</div>
+                        <div class="fonts fonts-10 normal black">{{ totalDiscount > 0 ? `-${format(totalDiscount)}` : `${format(totalDiscount)}` }}</div>
                     </div>
                     <FieldDiscount 
                         :value="form.discount_id"
@@ -71,6 +71,27 @@
                         <div class="fonts fonts-10 semibold main-color">{{ format(form.change_price) }}</div>
                     </div>
                 </div>
+                <div v-if="isNonFnB" class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px">
+                    <div class="fonts fonts-11 semibold black">
+                        Status 
+                    </div>
+                    <div class="field-group">
+                        <div class="display-flex space-between">
+                            <div class="field-label">Selesaikan pesanan ini ?</div>
+                            <el-switch 
+                                v-model="form.status"
+                                :active-value="'done'"
+                                :inactive-value="'new-order'"
+                                active-text="Selesai"
+                                inactive-text="Baru Masuk"></el-switch>
+                        </div>
+                        <div 
+                            v-if="errorMessage.status" 
+                            class="field-error">
+                            {{ errorMessage.status && errorMessage.status[0] }}
+                        </div>
+                    </div>
+                </div>
             </div>
             <div slot="footer">
                 <div class="right-form-footer">
@@ -109,8 +130,9 @@ export default {
     computed: {
         ...mapState({
             form: (state) => state.storeCashier.form.order,
-            details: (state) => state.storeCashier.form.details ,
-            errorMessage: (state) => state.storeCashier.errorMessage
+            details: (state) => state.storeCashier.form.details,
+            errorMessage: (state) => state.storeCashier.errorMessage,
+            dataShop: (state) => state.storeSelectedShop.form,
         }),
         formPayment: {
             set(value) {
@@ -179,6 +201,9 @@ export default {
                 status = true 
             }
             return status
+        },
+        isNonFnB () {
+            return this.dataShop && this.dataShop.is_non_fnb
         },
     },
     methods: {

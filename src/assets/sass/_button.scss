@@ -29,8 +29,8 @@ a {
     }
     .notif {
         position: absolute;
-        top: 0;
-        right: 0;
+        top: 5px;
+        right: 5px;
         font-size: 11px;
         width: 18px;
         height: 18px;
@@ -38,6 +38,15 @@ a {
         border-radius: 100%;
         background-color: $red;
         color: #fff;
+    }
+    .sign {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 8px;
+        height: 8px;
+        border-radius: 100%;
+        background-color: $red;
     }
     .icon {
         margin-right: 8px;

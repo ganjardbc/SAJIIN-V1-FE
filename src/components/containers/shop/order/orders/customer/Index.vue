@@ -28,10 +28,11 @@
                 <div class="fonts fonts-10 semibold black">Pelanggan</div>
                 <div class="field-group">
                     <el-input 
-                        placeholder="Nama Pelanggan"
+                        :placeholder="`Nama Pelanggan ${isNonFnB ? '(opsional)' : ''}`"
                         type="text"
                         v-model="form.customer_name"></el-input>
                     <table-field 
+                        v-if="!isNonFnB"
                         class="margin margin-top-15px"
                         :value="form.table_id"
                         :smallField="true"
@@ -80,7 +81,11 @@ export default {
             errorMessage: (state) => state.storeOrders.errorMessage,
             typeForm: (state) => state.storeOrders.typeForm,
             category: (state) => state.storeCategory.data,
+            dataShop: (state) => state.storeSelectedShop.form,
         }),
+        isNonFnB () {
+            return this.dataShop && this.dataShop.is_non_fnb
+        },
         formId: {
             get () {
                 return this.$store.state.storeOrders.form.id

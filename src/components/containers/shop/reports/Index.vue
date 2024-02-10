@@ -8,7 +8,7 @@
             </div>
             <div class="display-flex space-between display-mobile padding padding-bottom-10px margin margin-bottom-15px border-bottom" style="align-items: flex-end;">
                 <div class="display-flex display-mobile" style="align-items: flex-end;">
-                    <div class="width width-150px width-mobile margin margin-right-10px no-margin-padding">
+                    <div class="width width-120px width-mobile margin margin-right-10px no-margin-padding">
                         <div class="field-group padding padding-bottom-5px">
                             <div class="field-label">Tipe Laporan</div>
                             <el-select 
@@ -44,17 +44,20 @@
                             </el-date-picker>
                         </div>
                     </div>
-                    <div class="width width-150px width-mobile margin margin-right-10px no-margin-padding">
+                </div>
+                <div class="display-flex flex-end">
+                    <div class="width width-120px width-mobile margin margin-right-10px">
                         <div class="field-group padding padding-bottom-5px">
-                            <div class="field-label">Status Pesanan</div>
+                            <div class="field-label">Status</div>
                             <el-select 
                                 v-model="filter.order_status" 
                                 :clearable="false"
                                 placeholder="Pilih"
                                 no-data-text="Data Tidak Ditemukan"
-                                :disabled="!filter.order_status">
+                                :disabled="!filter.order_status"
+                                @change="handleFilterSearch">
                                 <el-option
-                                    v-for="(item, i) in orderStatus"
+                                    v-for="(item, i) in customOrderStatus"
                                     :key="i"
                                     :label="item.label"
                                     :value="item.value">
@@ -62,15 +65,16 @@
                             </el-select>
                         </div>
                     </div>
-                    <div class="width width-150px width-mobile margin margin-right-10px no-margin-padding">
+                    <div class="width width-120px width-mobile margin margin-left-10px">
                         <div class="field-group padding padding-bottom-5px">
-                            <div class="field-label">Status Pembayaran</div>
+                            <div class="field-label">Pembayaran</div>
                             <el-select 
                                 v-model="filter.payment_status" 
                                 :clearable="false"
                                 placeholder="Pilih"
                                 no-data-text="Data Tidak Ditemukan"
-                                :disabled="!filter.payment_status">
+                                :disabled="!filter.payment_status"
+                                @change="handleFilterSearch">
                                 <el-option
                                     v-for="(item, i) in orderPaymentStatus"
                                     :key="i"
@@ -78,22 +82,6 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                        </div>
-                    </div>
-                </div>
-                <div class="display-flex flex-end">
-                    <div class="field-group padding padding-bottom-5px">
-                        <div class="display-flex space-between">
-                            <div style="width: calc(50% - 5px); margin-right: 5px;">
-                                <button class="btn btn-sekunder btn-full" :disabled="!isButtonApplyEnable" @click="handleFilterSearch">
-                                    Apply
-                                </button>
-                            </div>
-                            <div style="width: calc(50% - 5px); margin-left: 5px;">
-                                <button class="btn btn-sekunder btn-full" :disabled="!isButtonApplyEnable" @click="handleFilterClear">
-                                    Clear
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -109,19 +97,6 @@
                         <span v-else>Tanggal Kosong</span>
                     </div>
                 </div>
-                <!-- <div class="width width-100 display-flex align-center margin margin-bottom-15px">
-                    <div style="width: calc(50% - 20px);">
-                        <div class="fonts fonts-9 normal grey">Kas Summary</div>
-                        <div class="fonts fonts-14 semibold main-color overflow-ellipsis">{{ format(cashSummary) }}</div>
-                    </div>
-                    <div class="image image-40px image-circle bg-white">
-                        <i class="post-middle-absolute fonts fonts-10 fa fa-lg fa-equals"></i>
-                    </div>
-                    <div style="width: calc(50% - 20px);">
-                        <div class="fonts fonts-9 normal grey align-right">Kas Aktual</div>
-                        <div class="fonts fonts-14 semibold black overflow-ellipsis align-right">{{ format(cashActual) }}</div>
-                    </div>
-                </div> -->
                 <div class="card bg-white-grey no-padding margin margin-bottom-15px">
                     <div class="width width-100 display-flex space-between align-center wrap">
                         <div class="width width-row-4 width-mobile-row-2 padding padding-top-10px padding-bottom-10px">
@@ -214,9 +189,9 @@
         </div>
 
         <div class="main-content-footer">
-            <div class="main-content-footer-container">
+            <div class="main-content-footer-container display-flex space-between">
                 <button class="btn btn-main btn-full" :disabled="!isButtonReportEnable" @click="downloadReport">
-                    <i class="icn icn-left fa fa-lw fa-download"></i> Download Laporan
+                    <i class="icn icn-left fa fa-lw fa-download"></i> Download
                 </button>
             </div>
         </div>
@@ -287,7 +262,22 @@ export default {
             cashBookList: (state) => state.storeReports.cashBookList,
             rangeDate: (state) => state.storeReports.rangeDate,
             expenseList: (state) => state.storeReports.expense.data,
+            dataShop: (state) => state.storeSelectedShop.form,
         }),
+        customOrderStatus () {
+            if (this.isNonFnB) {
+                return this.orderStatus.filter((item) => (
+                    item.value !== 'on-progress' &&
+                    item.value !== 'ready' &&
+                    item.value !== 'delivered'
+                ))
+            } else {
+                return this.orderStatus
+            }
+        },
+        isNonFnB () {
+            return this.dataShop && this.dataShop.is_non_fnb
+        },
         isButtonApplyEnable () {
             return this.filter.order_date && this.filter.payment_status && this.filter.order_status
         },
@@ -336,10 +326,15 @@ export default {
             const token = this.$cookies.get('tokenBearer')
             const shop_id = this.shopId
             const search = this.filter.search 
-            const startDate = moment(this.filter.order_date[0]).format('YYYY-MM-DD 00:00:00')
-            const endDate = moment(this.filter.order_date[1]).format('YYYY-MM-DD 23:59:59')
             const orderStatus = this.filter.order_status !== 'all' ? this.filter.order_status : ''
             const paymentStatus = this.filter.payment_status !== 'all' ? this.filter.payment_status : ''
+            let startDate = ''
+            let endDate = ''
+
+            if (this.filter.order_date && this.filter.order_date.length > 0) {
+                startDate = moment(this.filter.order_date[0]).startOf('month').format('YYYY-MM-DD 00:00:00')
+                endDate = moment(this.filter.order_date[1]).format('YYYY-MM-DD 23:59:59')
+            }
 
             const payload = {
                 search: search,
@@ -409,10 +404,14 @@ export default {
                 this.filter.payment_status = '1'
                 this.filter.order_date = [startDate, endDate]
             }
+
+            this.handleFilterSearch()
         },
         handleOrderDate (data) {
+            this.filter.order_date = data
             this.filter.order_status = 'done'
             this.filter.payment_status = '1'
+            this.handleFilterSearch()
         },
         downloadReport () {
             const token = this.$cookies.get('tokenBearer')

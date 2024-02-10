@@ -23,12 +23,13 @@
                         <div class="field-group padding padding-top-0px">
                             <div class="field-label">Pelanggan</div>
                             <el-input 
-                                placeholder="Nama Pelanggan"
+                                :placeholder="`Nama Pelanggan ${isNonFnB ? '(opsional)' : ''}`"
                                 type="text"
                                 :disabled="!isThereDetails"
                                 v-model="form.customer_name"></el-input>
                         </div>
                         <FieldTable 
+                            v-if="!isNonFnB"
                             class="margin margin-bottom-15px"
                             :value="form.table_id"
                             :smallField="true"
@@ -109,6 +110,7 @@ export default {
             errorMessage: (state) => state.storeCashier.errorMessage,
             details: (state) => state.storeCashier.form.details,
             dataCurrent: (state) => state.storeCashBook.dataCurrent,
+            dataShop: (state) => state.storeSelectedShop.form,
         }),
         formTable: {
             set(value) {
@@ -195,10 +197,13 @@ export default {
             if (this.details.length === 0) {
                 status = true 
             }
-            if (!this.form.customer_name) {
+            if (!this.form.customer_name && !this.isNonFnB) {
                 status = true 
             }
             return status
+        },
+        isNonFnB () {
+            return this.dataShop && this.dataShop.is_non_fnb
         },
         getShopData () {
             return this.dataCurrent && this.dataCurrent.shop
@@ -218,7 +223,8 @@ export default {
                 user: this.getUserData,
                 shop: this.getShopData,
                 total_item: this.orderQuantity,
-                total_price: this.orderPrice
+                total_price: this.orderPrice,
+                status: this.isNonFnB ? 'new-order' : 'on-progress'
             }
             this.setOrder(payload)
             this.$emit('onCreateOrder')

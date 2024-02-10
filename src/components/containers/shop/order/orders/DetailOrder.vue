@@ -51,7 +51,7 @@
                                 {{ form.cashbook && form.cashbook.cash_date | moment("dddd, DD MMM YYYY") }}
                             </div>
                         </div>
-                        <div class="margin margin-bottom-15px">
+                        <div v-if="form.cashier_name" class="margin margin-bottom-15px">
                             <div class="fonts fonts-10 grey">
                                 Kasir
                             </div>
@@ -59,7 +59,7 @@
                                 {{ form.cashier_name || '-' }}
                             </div>
                         </div>
-                        <div class="margin margin-bottom-15px">
+                        <div v-if="form.customer_name" class="margin margin-bottom-15px">
                             <div class="fonts fonts-10 grey">
                                 Pelanggan
                             </div>
@@ -67,8 +67,7 @@
                                 {{ form.customer_name || '-' }}
                             </div>
                         </div>
-                        <div 
-                            class="margin margin-bottom-0">
+                        <div v-if="form.table_name" class="margin margin-bottom-15px">
                             <div class="fonts fonts-10 grey">
                                 Meja
                             </div>
@@ -89,7 +88,7 @@
 
                 <div>
                     <div class="fonts fonts-9 grey normal margin margin-bottom-10px">
-                        Kami masih bisa merubah data pesanan selama status pesanan adalah "Pesanan Baru" atau "Diproses".
+                        Kami masih bisa merubah data pesanan selama status pesanan belum "Selesai".
                     </div>
                     <button 
                         class="btn btn-sekunder btn-full" 
@@ -186,7 +185,7 @@
                 </div>
                 <div class="margin margin-bottom-15px border-bottom border-dashed"></div>
                 <div class="fonts fonts-9 grey normal margin margin-bottom-10px">
-                    Kamu masih bisa merubah data produk selama status pesanan adalah "Pesanan Baru / Diproses" dan status pembayaran adalah "Belum Bayar".
+                    Kamu masih bisa merubah data produk selama status pesanan belum "Selesai" dan status pembayaran adalah "Belum Bayar".
                 </div>
                 <button 
                     class="btn btn-sekunder btn-full" 
@@ -309,45 +308,55 @@
 
             <div slot="footer">
                 <div class="right-form-footer display-flex space-between">
-                    <div v-if="form.status === 'new-order'" class="width width-100">
-                        <button 
-                            class="btn btn-full btn-sekunder"
-                            @click="onChangeStatus(form, 'on-progress')">
-                            Terima Pesanan
-                        </button>
-                    </div>
+                    <div v-if="!isNonFnB" class="width width-100">
+                        <div v-if="form.status === 'new-order'" class="width width-100">
+                            <button 
+                                class="btn btn-full btn-sekunder"
+                                @click="onChangeStatus(form, 'on-progress')">
+                                Terima Pesanan
+                            </button>
+                        </div>
 
-                    <div v-if="form.status === 'on-progress'" class="width width-100">
-                        <button 
-                            :disabled="isButtonOnProgressDisabled(form)"
-                            class="btn btn-full btn-sekunder"
-                            @click="onChangeStatus(form, 'ready')">
-                            Siap Diantarkan
-                        </button>
-                    </div>
+                        <div v-if="form.status === 'on-progress'" class="width width-100">
+                            <button 
+                                :disabled="isButtonOnProgressDisabled(form)"
+                                class="btn btn-full btn-sekunder"
+                                @click="onChangeStatus(form, 'ready')">
+                                Siap Diantarkan
+                            </button>
+                        </div>
 
-                    <div v-if="form.status === 'ready'" class="width width-100">
-                        <button 
-                            class="btn btn-full btn-sekunder"
-                            @click="onChangeStatus(form, 'delivered')">
-                            Pesanan Diterima
-                        </button>
-                    </div>
+                        <div v-if="form.status === 'ready'" class="width width-100">
+                            <button 
+                                class="btn btn-full btn-sekunder"
+                                @click="onChangeStatus(form, 'delivered')">
+                                Pesanan Diterima
+                            </button>
+                        </div>
 
-                    <div v-if="form.status === 'delivered'" class="width width-100">
+                        <div v-if="form.status === 'delivered'" class="width width-100">
+                            <button 
+                                :disabled="!isButtonDoneDisabled(form)"
+                                class="btn btn-full btn-green"
+                                @click="onChangeStatus(form, 'done')">
+                                Pesanan Selesai
+                            </button>
+                        </div>
+
+                        <div v-if="form.status === 'done' || form.status === 'canceled'" class="width width-100">
+                            <button 
+                                class="btn btn-full btn-sekunder btn-full" 
+                                @click="onChangeStatus(form, 'new-order')">
+                                Re-open Pesanan
+                            </button>
+                        </div>
+                    </div>
+                    <div v-if="isNonFnB && form.status === 'new-order'" class="width width-100">
                         <button 
-                            :disabled="!isButtonDoneDisabled(form)"
+                            :disabled="!isButtonDoneDisabledNonFnB(form)"
                             class="btn btn-full btn-green"
                             @click="onChangeStatus(form, 'done')">
                             Pesanan Selesai
-                        </button>
-                    </div>
-
-                    <div v-if="form.status === 'done' || form.status === 'canceled'" class="width width-100">
-                        <button 
-                            class="btn btn-full btn-sekunder btn-full" 
-                            @click="onChangeStatus(form, 'new-order')">
-                            Re-open Pesanan
                         </button>
                     </div>
                 </div>
@@ -383,6 +392,7 @@ export default {
             errorMessage: (state) => state.storeOrders.errorMessage,
             typeForm: (state) => state.storeOrders.typeForm,
             category: (state) => state.storeCategory.data,
+            dataShop: (state) => state.storeSelectedShop.form,
         }),
         formId: {
             get () {
@@ -427,6 +437,9 @@ export default {
         totalDiscount () {
             return this.totalDiscountProduct + this.totalDiscountTransaction
         },
+        isNonFnB () {
+            return this.dataShop && this.dataShop.is_non_fnb
+        },
     },
     components: {
         AppCardCapsule,
@@ -450,6 +463,9 @@ export default {
         },
         isButtonDoneDisabled (data) {
             return data.payment_status && data.status === 'delivered'
+        },
+        isButtonDoneDisabledNonFnB (data) {
+            return data.payment_status && data.status === 'new-order'
         },
         isOrderStatusDC (data) {
             return data.status === 'done' || data.status === 'canceled'

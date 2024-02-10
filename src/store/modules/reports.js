@@ -1,5 +1,4 @@
 import axios from 'axios'
-import moment from 'moment'
 
 const defaultOrderStatus = () => {
     return [
@@ -61,6 +60,7 @@ export default {
         cashActual: 0,
         loading: false,
         loadingDownload: false,
+        loadingDownloadOnly: false,
         loadMore: false,
         typeForm: 'create',
         rangeDate: [],
@@ -89,6 +89,9 @@ export default {
         },
         SET_LOADING_DOWNLOAD (state, value) {
             state.loadingDownload = value 
+        },
+        SET_LOADING_DOWNLOAD_ONLY (state, value) {
+            state.loadingDownloadOnly = value 
         },
         SET_LOAD_MORE (state, value) {
             state.loadMore = value
@@ -266,6 +269,31 @@ export default {
                 })
                 .finally(() => {
                     commit('SET_LOADING_DOWNLOAD', false)
+                })
+
+        },
+        downloadOnly ({ commit, state }, data) {
+            commit('SET_LOADING_DOWNLOAD_ONLY', true)
+
+            const params = {
+                search: data.search,
+                status: data.status,
+                payment_status: data.payment_status,
+                start_date: data.start_date,
+                end_date: data.end_date,
+                shop_id: data.shop_id,
+                cashbook_id: data.cashbook_id,
+            }
+
+            return axios.post('/api/order/downloadReport', params, { 
+                    headers: { Authorization: data.token },
+                    responseType: 'blob'
+                })
+                .then((res) => {
+                    return res 
+                })
+                .finally(() => {
+                    commit('SET_LOADING_DOWNLOAD_ONLY', false)
                 })
 
         }

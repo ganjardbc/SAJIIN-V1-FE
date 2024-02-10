@@ -73,7 +73,7 @@ export default {
     },
     props: {
         column: {
-            default: 'column-3',
+            default: 'column-3 mobile-column',
             required: false,
         }
     },

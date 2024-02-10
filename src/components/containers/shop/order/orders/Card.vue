@@ -50,16 +50,16 @@
                 style="margin-bottom: 15px;">
             </el-alert>
 
-            <div class="display-flex space-between display-mobile padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed">
-                <div class="width width-row-3 width-mobile display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
+            <div class="display-flex display-mobile padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed">
+                <div v-if="dt.order.customer_name" class="width width-100 display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
                     <div class="fonts fonts-9 normal grey margin margin-bottom-5px">Pelanggan</div>
                     <div class="fonts fonts-10 semibold black overflow-ellipsis">{{ dt.order.customer_name || '-' }}</div>
                 </div>
-                <div class="width width-row-3 width-mobile display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
+                <div v-if="dt.order.table_name" class="width width-100 display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
                     <div class="fonts fonts-9 normal grey margin margin-bottom-5px">Meja</div>
                     <div class="fonts fonts-10 semibold black overflow-ellipsis">{{ dt.order.table_name || '-' }}</div>
                 </div>
-                <div class="width width-row-3 width-mobile display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
+                <div class="width width-100 display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px">
                     <div class="fonts fonts-9 normal grey margin margin-bottom-5px">Kasir</div>
                     <div class="fonts fonts-10 semibold black overflow-ellipsis">{{ dt.order.cashier_name || '-' }}</div>
                 </div>
@@ -178,22 +178,22 @@
                 </div>
             </AppCardCollapse>
 
-            <div class="display-flex flex-end">
-                <div class="display-flex flex-end align-center">
-                    <div v-if="dt.order.status !== 'canceled' && dt.order.payment_status">
-                        <button 
-                            class="btn btn-main-reverse with-hover margin margin-left-5px"
-                            @click="onReceipt(dt)">
-                            <i class="fa fa-lw fa-print"></i>
-                        </button>
-                    </div>
-                    <div v-if="dt.order.status !== 'canceled' && !dt.order.payment_status">
-                        <button 
-                            class="btn btn-main-reverse with-hover margin margin-left-5px"
-                            @click="onCheckout(dt)">
-                            <i class="fa fa-lw fa-calculator"></i>
-                        </button>
-                    </div>
+            <div class="display-flex flex-end align-center">
+                <div v-if="dt.order.status !== 'canceled' && dt.order.payment_status">
+                    <button 
+                        class="btn btn-main-reverse with-hover margin margin-left-5px"
+                        @click="onReceipt(dt)">
+                        <i class="fa fa-lw fa-print"></i>
+                    </button>
+                </div>
+                <div v-if="dt.order.status !== 'canceled' && !dt.order.payment_status">
+                    <button 
+                        class="btn btn-main-reverse with-hover margin margin-left-5px"
+                        @click="onCheckout(dt)">
+                        <i class="fa fa-lw fa-calculator"></i>
+                    </button>
+                </div>
+                <div v-if="!isNonFnB" class="display-flex flex-end align-center">
                     <div v-if="dt.order.status === 'new-order'">
                         <button 
                             class="btn btn-sekunder margin margin-left-5px"
@@ -224,16 +224,26 @@
                             Pesanan Selesai
                         </button>
                     </div>
-                    <button class="btn btn-sekunder margin margin-left-5px" @click="onDetail(dt)">
-                        Detail
-                    </button>
                 </div>
+                <div v-else class="display-flex flex-end align-center">
+                    <div v-if="dt.order.status === 'new-order'">
+                        <button 
+                            :disabled="!isButtonDoneDisabledNonFnB(dt)"
+                            class="btn btn-green margin margin-left-5px"
+                            @click="onChangeStatus(dt.order, 'done')">
+                            Pesanan Selesai
+                        </button>
+                    </div>
+                </div>
+                <button class="btn btn-sekunder margin margin-left-5px" @click="onDetail(dt)">
+                    Detail
+                </button>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import AppCardCapsule from '../../../../modules/AppCardCapsule'
 import AppCardCollapse from '../../../../modules/AppCardCollapse'
 import AppCardCaption from '../../../../modules/AppCardCaption'
@@ -250,6 +260,14 @@ export default {
         AppCardCaption,
         AppCardProgressProduct,
     },
+    computed: {
+        ...mapState({
+            dataShop: (state) => state.storeSelectedShop.form,
+        }),
+        isNonFnB () {
+            return this.dataShop && this.dataShop.is_non_fnb
+        },
+    },
     methods: {
         ...mapActions({
             download: 'storeOrders/download',
@@ -261,6 +279,9 @@ export default {
         },
         isButtonDoneDisabled (data) {
             return data.order.payment_status && data.order.status === 'delivered'
+        },
+        isButtonDoneDisabledNonFnB (data) {
+            return data.order.payment_status && data.order.status === 'new-order'
         },
         
         // COVER

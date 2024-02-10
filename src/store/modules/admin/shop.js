@@ -23,6 +23,7 @@ const defaultForm = () => {
         is_digital_menu_active: '',
         is_digital_order_active: '',
         is_opened: '',
+        is_non_fnb: '',
         user_id: '',
     }
 }
