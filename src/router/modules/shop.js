@@ -25,130 +25,130 @@ import Discounts from '@/components/containers/shop/discounts/Index'
 import More from '@/components/containers/shop/more/Index'
 
 const routes = {
-    path: '/shop/:shopId',
-    component: Layout,
-    children: [
-        {
-            name: 'shop-profile',
-            path: 'profile',
-            component: Profile
-        },
-        {
-            name: 'shop-settings',
-            path: 'settings',
-            component: Settings
-        },
-        {
-            name: 'shop-home',
-            path: 'home',
-            component: Home
-        },
-        {
-            name: 'shop-dashboard',
-            path: 'dashboard',
-            component: Dashboard
-        },
-        {
-            name: 'shop-cashier',
-            path: 'cashier',
-            component: Cashier
-        },
-        {
-            name: 'shop-cash-book',
-            path: 'cash-book',
-            component: CashBook
-        },
-        {
-            name: 'shop-order',
-            path: 'order',
-            component: OrderHome
-        },
-        {
-            name: 'shop-orders',
-            path: 'orders',
-            component: Orders
-        },
-        {
-            name: 'shop-task-lists',
-            path: 'task-lists',
-            component: TaskLists
-        },
-        {
-            name: 'shop-expense',
-            path: 'expense',
-            component: ExpenseHome
-        },
-        {
-            name: 'shop-expense-type',
-            path: 'expense-type',
-            component: ExpenseType
-        },
-        {
-            name: 'shop-expense-list',
-            path: 'expense-list',
-            component: ExpenseList
-        },
-        {
-            name: 'shop-product',
-            path: 'product',
-            component: ProductHome
-        },
-        {
-            name: 'shop-products',
-            path: 'products',
-            component: Products
-        },
-        {
-            name: 'shop-categories',
-            path: 'categories',
-            component: Categories
-        },
-        {
-            name: 'shop-tables',
-            path: 'tables',
-            component: Tables
-        },
-        {
-            name: 'shop-employee',
-            path: 'employee',
-            component: EmployeeHome
-        },
-        {
-            name: 'shop-employees',
-            path: 'employees',
-            component: Employees
-        },
-        {
-            name: 'shop-shifts',
-            path: 'shifts',
-            component: Shifts
-        },
-        {
-            name: 'shop-notifications',
-            path: 'notifications',
-            component: Notifications
-        },
-        {
-            name: 'shop-reports',
-            path: 'reports',
-            component: Reports
-        },
-        {
-            name: 'shop-platforms',
-            path: 'platforms',
-            component: Platforms
-        },
-        {
-            name: 'shop-discounts',
-            path: 'discounts',
-            component: Discounts
-        },
-        {
-            name: 'shop-more',
-            path: 'more',
-            component: More
-        }
-    ]
+  path: '/shop/:shopId',
+  component: Layout,
+  children: [
+    {
+      name: 'shop-profile',
+      path: 'profile',
+      component: Profile,
+    },
+    {
+      name: 'shop-settings',
+      path: 'settings',
+      component: Settings,
+    },
+    {
+      name: 'shop-home',
+      path: 'home',
+      component: Home,
+    },
+    {
+      name: 'shop-dashboard',
+      path: 'dashboard',
+      component: Dashboard,
+    },
+    {
+      name: 'shop-cashier',
+      path: 'cashier',
+      component: Cashier,
+    },
+    {
+      name: 'shop-cash-book',
+      path: 'cash-book',
+      component: CashBook,
+    },
+    {
+      name: 'shop-order',
+      path: 'order',
+      component: OrderHome,
+    },
+    {
+      name: 'shop-orders',
+      path: 'orders',
+      component: Orders,
+    },
+    {
+      name: 'shop-task-lists',
+      path: 'task-lists',
+      component: TaskLists,
+    },
+    {
+      name: 'shop-expense',
+      path: 'expense',
+      component: ExpenseHome,
+    },
+    {
+      name: 'shop-expense-type',
+      path: 'expense-type',
+      component: ExpenseType,
+    },
+    {
+      name: 'shop-expense-list',
+      path: 'expense-list',
+      component: ExpenseList,
+    },
+    {
+      name: 'shop-product',
+      path: 'product',
+      component: ProductHome,
+    },
+    {
+      name: 'shop-products',
+      path: 'products',
+      component: Products,
+    },
+    {
+      name: 'shop-categories',
+      path: 'categories',
+      component: Categories,
+    },
+    {
+      name: 'shop-tables',
+      path: 'tables',
+      component: Tables,
+    },
+    {
+      name: 'shop-employee',
+      path: 'employee',
+      component: EmployeeHome,
+    },
+    {
+      name: 'shop-employees',
+      path: 'employees',
+      component: Employees,
+    },
+    {
+      name: 'shop-shifts',
+      path: 'shifts',
+      component: Shifts,
+    },
+    {
+      name: 'shop-notifications',
+      path: 'notifications',
+      component: Notifications,
+    },
+    {
+      name: 'shop-reports',
+      path: 'reports',
+      component: Reports,
+    },
+    {
+      name: 'shop-platforms',
+      path: 'platforms',
+      component: Platforms,
+    },
+    {
+      name: 'shop-discounts',
+      path: 'discounts',
+      component: Discounts,
+    },
+    {
+      name: 'shop-more',
+      path: 'more',
+      component: More,
+    },
+  ],
 }
 
-export default routes 
+export default routes

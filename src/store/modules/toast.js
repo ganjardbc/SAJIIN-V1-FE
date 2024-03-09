@@ -1,37 +1,37 @@
 import axios from 'axios'
 
 export default {
-    namespaced: true,
+  namespaced: true,
 
-    state: {
-        title: '',
-        subtitle: '',
-        visible: false 
+  state: {
+    title: '',
+    subtitle: '',
+    visible: false,
+  },
+
+  getters: {
+    visible(state) {
+      return state.visible
     },
-
-    getters: {
-        visible (state) {
-            return state.visible
-        },
-        title (state) {
-            return state.title
-        },
-        subtitle (state) {
-            return state.subtitle
-        }
+    title(state) {
+      return state.title
     },
-
-    mutations: {
-        SET_TOAST (state, value) {
-            state.title = value.title ? value.title : state.title
-            state.subtitle = value.subtitle ? value.subtitle : state.subtitle
-            state.visible = value.visible
-        }
+    subtitle(state) {
+      return state.subtitle
     },
+  },
 
-    actions: {
-        setToast ({ commit }, status) {
-            commit('SET_TOAST', status)
-        }
-    }
+  mutations: {
+    SET_TOAST(state, value) {
+      state.title = value.title ? value.title : state.title
+      state.subtitle = value.subtitle ? value.subtitle : state.subtitle
+      state.visible = value.visible
+    },
+  },
+
+  actions: {
+    setToast({ commit }, status) {
+      commit('SET_TOAST', status)
+    },
+  },
 }

@@ -2,392 +2,405 @@ import axios from 'axios'
 import moment from 'moment'
 
 const defaultMessage = () => {
-    return {
-        id: '',
-        expense_list_id: '',
-        image: '',
-        expense_date: '',
-        expense_price: '',
-        status: '',
-        description: '',
-        shop_id: '',
-        cashbook_id: '',
-        payment_id: '',
-        expense_type_id: '',
-    }
+  return {
+    id: '',
+    expense_list_id: '',
+    image: '',
+    expense_date: '',
+    expense_price: '',
+    status: '',
+    description: '',
+    shop_id: '',
+    cashbook_id: '',
+    payment_id: '',
+    expense_type_id: '',
+  }
 }
 
 const defaultForm = () => {
-    return {
-        id: '',
-        expense_list_id: '',
-        image: '',
-        expense_date: '',
-        expense_price: 0,
-        status: 'active',
-        description: '',
-        shop_id: '',
-        cashbook_id: '',
-        payment_id: '',
-        expense_type_id: '',
-    }
+  return {
+    id: '',
+    expense_list_id: '',
+    image: '',
+    expense_date: '',
+    expense_price: 0,
+    status: 'active',
+    description: '',
+    shop_id: '',
+    cashbook_id: '',
+    payment_id: '',
+    expense_type_id: '',
+  }
 }
 
 export default {
-    namespaced: true,
+  namespaced: true,
 
-    state: {
-        form: defaultForm(),
-        errorMessage: defaultMessage(),
-        limit: 10,
-        offset: 0,
-        totalRecord: 0,
-        loading: false,
-        loadMore: false,
-        loadingForm: false,
-        typeForm: 'create',
-        data: [],
-        filter: {
-            cashbook_id: '',
-            payment_id: '',
-            expense_type_id: '',
-            search: '',
-            status: 'active',
-        },
-        expenseType: {
-            limit: 1000,
-            offset: 0,
-            totalRecord: 0,
-            loading: false,
-            data: [],
-            filter: {
-                search: '',
-                status: 'active',
-            },
-        },
-        payment: {
-            limit: 1000,
-            offset: 0,
-            totalRecord: 0,
-            loading: false,
-            data: [],
-            filter: {
-                search: '',
-                status: 'active',
-            },
-        },
+  state: {
+    form: defaultForm(),
+    errorMessage: defaultMessage(),
+    limit: 10,
+    offset: 0,
+    totalRecord: 0,
+    loading: false,
+    loadMore: false,
+    loadingForm: false,
+    typeForm: 'create',
+    data: [],
+    filter: {
+      cashbook_id: '',
+      payment_id: '',
+      expense_type_id: '',
+      search: '',
+      status: 'active',
+    },
+    expenseType: {
+      limit: 1000,
+      offset: 0,
+      totalRecord: 0,
+      loading: false,
+      data: [],
+      filter: {
+        search: '',
+        status: 'active',
+      },
+    },
+    payment: {
+      limit: 1000,
+      offset: 0,
+      totalRecord: 0,
+      loading: false,
+      data: [],
+      filter: {
+        search: '',
+        status: 'active',
+      },
+    },
+  },
+
+  getters: {},
+
+  mutations: {
+    RESET_ERROR_MESSAGE(state) {
+      state.errorMessage = defaultMessage()
+    },
+    SET_LOADING(state, value) {
+      state.loading = value
+    },
+    SET_LOAD_MORE(state, value) {
+      state.loadMore = value
+    },
+    SET_LOADING_FORM(state, value) {
+      state.loadingForm = value
+    },
+    SET_OFFSET(state, value) {
+      state.offset += value
+    },
+    SET_DATA(state, value) {
+      state.data = value
+    },
+    SET_MESSAGE_DATA(state, value) {
+      if (value) {
+        state.errorMessage = value
+      } else {
+        state.errorMessage = defaultMessage()
+      }
+    },
+    SET_FORM_DATA(state, value) {
+      if (value) {
+        state.form = value
+      } else {
+        const time = new Date().getTime()
+        state.form = {
+          ...defaultForm(),
+          expense_list_id: `EL-${time}`,
+          status: 'active',
+          is_available: 1,
+        }
+      }
+    },
+    SET_TOTAL_RECORD(state, value) {
+      state.totalRecord = value
     },
 
-    getters: {},
-
-    mutations: {
-        RESET_ERROR_MESSAGE (state) {
-            state.errorMessage = defaultMessage()
+    // EXPENSE TYPE
+    SET_EXPENSE_TYPE_LOADING(state, value) {
+      state.expenseType.loading = value
+    },
+    SET_EXPENSE_TYPE_OFFSET(state, value) {
+      state.expenseType.offset += value
+    },
+    SET_EXPENSE_TYPE_DATA(state, value) {
+      let data = [
+        {
+          value: '',
+          label: 'Semua Tipe',
         },
-        SET_LOADING (state, value) {
-            state.loading = value
-        },
-        SET_LOAD_MORE (state, value) {
-            state.loadMore = value
-        },
-        SET_LOADING_FORM (state, value) {
-            state.loadingForm = value 
-        },
-        SET_OFFSET (state, value) {
-            state.offset += value
-        },
-        SET_DATA (state, value) {
-            state.data = value
-        },
-        SET_MESSAGE_DATA (state, value) {
-            if (value) {
-                state.errorMessage = value 
-            } else {
-                state.errorMessage = defaultMessage() 
-            }
-        },
-        SET_FORM_DATA (state, value) {
-            if (value) {
-                state.form = value
-            } else {
-                const time = new Date().getTime()
-                state.form = {
-                    ...defaultForm(),
-                    expense_list_id: `EL-${time}`,
-                    status: 'active',
-                    is_available: 1
-                }
-            }
-        },
-        SET_TOTAL_RECORD (state, value) {
-            state.totalRecord = value
-        },
-
-        // EXPENSE TYPE 
-        SET_EXPENSE_TYPE_LOADING (state, value) {
-            state.expenseType.loading = value
-        },
-        SET_EXPENSE_TYPE_OFFSET (state, value) {
-            state.expenseType.offset += value
-        },
-        SET_EXPENSE_TYPE_DATA (state, value) {
-            let data = [
-                {
-                    value: '',
-                    label: 'Semua Tipe'
-                }
-            ]
-            value && value.map((item) => {
-                data.push({
-                    value: item.id,
-                    label: item.name,
-                })
-            })
-            state.expenseType.data = data 
-        },
-        SET_EXPENSE_TYPE_TOTAL_RECORD (state, value) {
-            state.expenseType.totalRecord = value
-        },
-
-        // PAYMENT 
-        SET_PAYMENT_LOADING (state, value) {
-            state.payment.loading = value
-        },
-        SET_PAYMENT_OFFSET (state, value) {
-            state.payment.offset += value
-        },
-        SET_PAYMENT_DATA (state, value) {
-            state.payment.data = value && value.map((item) => {
-                return {
-                    value: item.id,
-                    label: item.name,
-                }
-            })
-        },
-        SET_PAYMENT_TOTAL_RECORD (state, value) {
-            state.payment.totalRecord = value
-        },
+      ]
+      value &&
+        value.map((item) => {
+          data.push({
+            value: item.id,
+            label: item.name,
+          })
+        })
+      state.expenseType.data = data
+    },
+    SET_EXPENSE_TYPE_TOTAL_RECORD(state, value) {
+      state.expenseType.totalRecord = value
     },
 
-    actions: {
-        setPagination ({ commit, state }, data) {
-            state.offset = (data - 1) * state.limit
-        },
-        setFormData ({ commit, state }, data) {
-            commit('SET_FORM_DATA', data)
-        },
-        resetFormData ({ commit, state }) {
-            commit('SET_FORM_DATA', null)
-            commit('SET_MESSAGE_DATA', null)
-        },
-        resetFilter ({ commit, state }) {
-            state.limit = 10
-            state.offset = 0
-        },
-        getData ({ commit, state }, data) {
-            commit('SET_LOADING', true)
+    // PAYMENT
+    SET_PAYMENT_LOADING(state, value) {
+      state.payment.loading = value
+    },
+    SET_PAYMENT_OFFSET(state, value) {
+      state.payment.offset += value
+    },
+    SET_PAYMENT_DATA(state, value) {
+      state.payment.data =
+        value &&
+        value.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          }
+        })
+    },
+    SET_PAYMENT_TOTAL_RECORD(state, value) {
+      state.payment.totalRecord = value
+    },
+  },
 
-            let dataPrev = []
+  actions: {
+    setPagination({ commit, state }, data) {
+      state.offset = (data - 1) * state.limit
+    },
+    setFormData({ commit, state }, data) {
+      commit('SET_FORM_DATA', data)
+    },
+    resetFormData({ commit, state }) {
+      commit('SET_FORM_DATA', null)
+      commit('SET_MESSAGE_DATA', null)
+    },
+    resetFilter({ commit, state }) {
+      state.limit = 10
+      state.offset = 0
+    },
+    getData({ commit, state }, data) {
+      commit('SET_LOADING', true)
 
-            let params = {
-                limit: state.limit,
-                offset: state.offset,
-                search: state.filter.search,
-                status: state.filter.status,
-                cashbook_id: state.filter.cashbook_id,
-                expense_type_id: state.filter.expense_type_id,
-                shop_id: data.shop_id
-            }
+      let dataPrev = []
 
-            return axios.post('/api/expense-list/getAll', params, { 
-                    headers: { Authorization: data.token } 
-                })
-                .then((res) => {
-                    const payload = res.data.data 
+      let params = {
+        limit: state.limit,
+        offset: state.offset,
+        search: state.filter.search,
+        status: state.filter.status,
+        cashbook_id: state.filter.cashbook_id,
+        expense_type_id: state.filter.expense_type_id,
+        shop_id: data.shop_id,
+      }
 
-                    payload && payload.map((dt) => {
-                        dataPrev.push({ ...dt })
-                    })
+      return axios
+        .post('/api/expense-list/getAll', params, {
+          headers: { Authorization: data.token },
+        })
+        .then((res) => {
+          const payload = res.data.data
 
-                    commit('SET_DATA', dataPrev)
-                    commit('SET_TOTAL_RECORD', res.data.total_record)
+          payload &&
+            payload.map((dt) => {
+              dataPrev.push({ ...dt })
+            })
 
-                    return res
-                })
-                .catch((e) => {
-                    console.log('error', e)
-                })
-                .finally(() => {
-                    commit('SET_LOADING', false)
-                })
-        },
-        createData ({ commit, state }, data) {
-            commit('SET_LOADING_FORM', true)
-            
-            const params = {
-                ...data,
-                expense_date: moment(data.expense_date).format('YYYY-MM-DD hh:mm:ss')
-            }
+          commit('SET_DATA', dataPrev)
+          commit('SET_TOTAL_RECORD', res.data.total_record)
 
-            return axios.post('/api/expense-list/post', params, { 
-                    headers: { Authorization: data.token } 
-                })
-                .then((res) => {
-                    const data = res.data 
-                    if (data.status === 'ok') {
-                        commit('SET_MESSAGE_DATA', data.message)
-                    } else {
-                        commit('SET_MESSAGE_DATA', data.message)
-                    }
-                    return res
-                })
-                .catch((e) => {
-                    console.log('error', e)
-                })
-                .finally(() => {
-                    commit('SET_LOADING_FORM', false)
-                })
-        },
-        updateData ({ commit, state }, data) {
-            commit('SET_LOADING_FORM', true)
-            
-            const params = {
-                ...data,
-                expense_date: moment(data.expense_date).format('YYYY-MM-DD hh:mm:ss')
-            }
+          return res
+        })
+        .catch((e) => {
+          console.log('error', e)
+        })
+        .finally(() => {
+          commit('SET_LOADING', false)
+        })
+    },
+    createData({ commit, state }, data) {
+      commit('SET_LOADING_FORM', true)
 
-            return axios.post('/api/expense-list/update', params, { 
-                    headers: { Authorization: data.token } 
-                })
-                .then((res) => {
-                    const data = res.data 
-                    if (data.status === 'ok') {
-                        commit('SET_MESSAGE_DATA', data.message)
-                    } else {
-                        commit('SET_MESSAGE_DATA', data.message)
-                    }
-                    return res
-                })
-                .catch((e) => {
-                    console.log('error', e)
-                })
-                .finally(() => {
-                    commit('SET_LOADING_FORM', false)
-                })
-        },
-        deleteData ({ commit, state }, data) {
-            commit('SET_LOADING_FORM', true)
-            
-            const params = {
-                ...data
-            }
+      const params = {
+        ...data,
+        expense_date: moment(data.expense_date).format('YYYY-MM-DD hh:mm:ss'),
+      }
 
-            return axios.post('/api/expense-list/delete', params, { 
-                    headers: { Authorization: data.token } 
-                })
-                .then((res) => {
-                    return res
-                })
-                .catch((e) => {
-                    console.log('error', e)
-                })
-                .finally(() => {
-                    commit('SET_LOADING_FORM', false)
-                })
-        },
-        uploadCover ({ commit, state }, data) {
-            commit('SET_LOADING_FORM', true)
-    
-            let params = new FormData()
-            params.append('expense_list_id', data.expense_list_id)
-            params.append('image', data.image)
-    
-            return axios.post('/api/expense-list/uploadImage', params, { 
-                    headers: { Authorization: data.token } 
-                })
-                .then((res) => {
-                    return res
-                })
-                .catch((e) => {
-                    console.log('error', e)
-                })
-                .finally(() => {
-                    commit('SET_LOADING_FORM', false)
-                })
-        },
+      return axios
+        .post('/api/expense-list/post', params, {
+          headers: { Authorization: data.token },
+        })
+        .then((res) => {
+          const data = res.data
+          if (data.status === 'ok') {
+            commit('SET_MESSAGE_DATA', data.message)
+          } else {
+            commit('SET_MESSAGE_DATA', data.message)
+          }
+          return res
+        })
+        .catch((e) => {
+          console.log('error', e)
+        })
+        .finally(() => {
+          commit('SET_LOADING_FORM', false)
+        })
+    },
+    updateData({ commit, state }, data) {
+      commit('SET_LOADING_FORM', true)
 
-        // EXPENSE TYPE 
-        getDataExpenseType ({ commit, state }, data) {
-            commit('SET_EXPENSE_TYPE_LOADING', true)
+      const params = {
+        ...data,
+        expense_date: moment(data.expense_date).format('YYYY-MM-DD hh:mm:ss'),
+      }
 
-            let dataPrev = []
+      return axios
+        .post('/api/expense-list/update', params, {
+          headers: { Authorization: data.token },
+        })
+        .then((res) => {
+          const data = res.data
+          if (data.status === 'ok') {
+            commit('SET_MESSAGE_DATA', data.message)
+          } else {
+            commit('SET_MESSAGE_DATA', data.message)
+          }
+          return res
+        })
+        .catch((e) => {
+          console.log('error', e)
+        })
+        .finally(() => {
+          commit('SET_LOADING_FORM', false)
+        })
+    },
+    deleteData({ commit, state }, data) {
+      commit('SET_LOADING_FORM', true)
 
-            let params = {
-                limit: state.limit,
-                offset: state.offset,
-                search: state.filter.search,
-                status: state.filter.status,
-                shop_id: data.shop_id
-            }
+      const params = {
+        ...data,
+      }
 
-            return axios.post('/api/expense-type/getAll', params, { 
-                    headers: { Authorization: data.token } 
-                })
-                .then((res) => {
-                    const payload = res.data.data 
+      return axios
+        .post('/api/expense-list/delete', params, {
+          headers: { Authorization: data.token },
+        })
+        .then((res) => {
+          return res
+        })
+        .catch((e) => {
+          console.log('error', e)
+        })
+        .finally(() => {
+          commit('SET_LOADING_FORM', false)
+        })
+    },
+    uploadCover({ commit, state }, data) {
+      commit('SET_LOADING_FORM', true)
 
-                    payload && payload.map((dt) => {
-                        dataPrev.push({ ...dt })
-                    })
+      let params = new FormData()
+      params.append('expense_list_id', data.expense_list_id)
+      params.append('image', data.image)
 
-                    commit('SET_EXPENSE_TYPE_DATA', dataPrev)
-                    commit('SET_EXPENSE_TYPE_TOTAL_RECORD', res.data.total_record)
+      return axios
+        .post('/api/expense-list/uploadImage', params, {
+          headers: { Authorization: data.token },
+        })
+        .then((res) => {
+          return res
+        })
+        .catch((e) => {
+          console.log('error', e)
+        })
+        .finally(() => {
+          commit('SET_LOADING_FORM', false)
+        })
+    },
 
-                    return res
-                })
-                .catch((e) => {
-                    console.log('error', e)
-                })
-                .finally(() => {
-                    commit('SET_EXPENSE_TYPE_LOADING', false)
-                })
-        },
+    // EXPENSE TYPE
+    getDataExpenseType({ commit, state }, data) {
+      commit('SET_EXPENSE_TYPE_LOADING', true)
 
-        // PAYMENT 
-        getDataPayment ({ commit, state }, data) {
-            commit('SET_PAYMENT_LOADING', true)
+      let dataPrev = []
 
-            let dataPrev = []
+      let params = {
+        limit: state.limit,
+        offset: state.offset,
+        search: state.filter.search,
+        status: state.filter.status,
+        shop_id: data.shop_id,
+      }
 
-            let params = {
-                limit: state.limit,
-                offset: state.offset,
-                search: state.filter.search,
-                status: state.filter.status,
-                shop_id: data.shop_id
-            }
+      return axios
+        .post('/api/expense-type/getAll', params, {
+          headers: { Authorization: data.token },
+        })
+        .then((res) => {
+          const payload = res.data.data
 
-            return axios.post('/api/payment/getAll', params, { 
-                    headers: { Authorization: data.token } 
-                })
-                .then((res) => {
-                    const payload = res.data.data 
+          payload &&
+            payload.map((dt) => {
+              dataPrev.push({ ...dt })
+            })
 
-                    payload && payload.map((dt) => {
-                        dataPrev.push({ ...dt })
-                    })
+          commit('SET_EXPENSE_TYPE_DATA', dataPrev)
+          commit('SET_EXPENSE_TYPE_TOTAL_RECORD', res.data.total_record)
 
-                    commit('SET_PAYMENT_DATA', dataPrev)
-                    commit('SET_PAYMENT_TOTAL_RECORD', res.data.total_record)
+          return res
+        })
+        .catch((e) => {
+          console.log('error', e)
+        })
+        .finally(() => {
+          commit('SET_EXPENSE_TYPE_LOADING', false)
+        })
+    },
 
-                    return res
-                })
-                .catch((e) => {
-                    console.log('error', e)
-                })
-                .finally(() => {
-                    commit('SET_PAYMENT_LOADING', false)
-                })
-        },
-    }
+    // PAYMENT
+    getDataPayment({ commit, state }, data) {
+      commit('SET_PAYMENT_LOADING', true)
+
+      let dataPrev = []
+
+      let params = {
+        limit: state.limit,
+        offset: state.offset,
+        search: state.filter.search,
+        status: state.filter.status,
+        shop_id: data.shop_id,
+      }
+
+      return axios
+        .post('/api/payment/getAll', params, {
+          headers: { Authorization: data.token },
+        })
+        .then((res) => {
+          const payload = res.data.data
+
+          payload &&
+            payload.map((dt) => {
+              dataPrev.push({ ...dt })
+            })
+
+          commit('SET_PAYMENT_DATA', dataPrev)
+          commit('SET_PAYMENT_TOTAL_RECORD', res.data.total_record)
+
+          return res
+        })
+        .catch((e) => {
+          console.log('error', e)
+        })
+        .finally(() => {
+          commit('SET_PAYMENT_LOADING', false)
+        })
+    },
+  },
 }

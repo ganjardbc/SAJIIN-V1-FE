@@ -17,7 +17,10 @@ const PORT = process.env.PORT && Number(process.env.PORT)
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
+    rules: utils.styleLoaders({
+      sourceMap: config.dev.cssSourceMap,
+      usePostCSS: true,
+    }),
   },
   // cheap-module-eval-source-map is faster for development
   devtool: config.dev.devtool,
@@ -27,7 +30,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
-        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
+        {
+          from: /.*/,
+          to: path.posix.join(config.dev.assetsPublicPath, 'index.html'),
+        },
       ],
     },
     hot: true,
@@ -44,11 +50,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
-    }
+    },
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': require('../config/dev.env')
+      'process.env': require('../config/dev.env'),
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
@@ -71,10 +77,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       {
         from: path.resolve(__dirname, '../static'),
         to: config.dev.assetsSubDirectory,
-        ignore: ['.*']
-      }
+        ignore: ['.*'],
+      },
     ]),
-  ]
+  ],
 })
 
 module.exports = new Promise((resolve, reject) => {
@@ -89,14 +95,18 @@ module.exports = new Promise((resolve, reject) => {
       devWebpackConfig.devServer.port = port
 
       // Add FriendlyErrorsPlugin
-      devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
-        compilationSuccessInfo: {
-          messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
-        },
-        onErrors: config.dev.notifyOnErrors
-        ? utils.createNotifierCallback()
-        : undefined
-      }))
+      devWebpackConfig.plugins.push(
+        new FriendlyErrorsPlugin({
+          compilationSuccessInfo: {
+            messages: [
+              `Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`,
+            ],
+          },
+          onErrors: config.dev.notifyOnErrors
+            ? utils.createNotifierCallback()
+            : undefined,
+        })
+      )
 
       resolve(devWebpackConfig)
     }

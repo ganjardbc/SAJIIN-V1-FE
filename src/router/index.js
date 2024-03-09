@@ -7,11 +7,11 @@ import routeScanner from './modules/scanner'
 import routeVisitor from './modules/visitor'
 
 export const routes = [
-    { ...routeAuth },
-    { ...routeAdmin },
-    { ...routeOwner },
-    { ...routeEmployee },
-    { ...routeShop },
-    { ...routeScanner },
-    { ...routeVisitor },
-];
+  { ...routeAuth },
+  { ...routeAdmin },
+  { ...routeOwner },
+  { ...routeEmployee },
+  { ...routeShop },
+  { ...routeScanner },
+  { ...routeVisitor },
+]

@@ -1,0 +1,24 @@
+# Ignore artifacts:
+docs/
+src/assets/
+static/img/
+public/img/
+
+# Ignore files:
+.babelrc
+.editorconfig 
+.eslintrc
+.gitignore
+.gitlab-ci.yml
+.postcssrc.js
+.prettierignore
+.prettierrc
+default.conf
+deploy.sh
+Dockerfile
+eslint.config.js
+package.json
+package-lock.json
+README.md
+vue.config.js
+yarn.lock

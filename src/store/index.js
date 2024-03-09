@@ -105,5 +105,5 @@ export default new Vuex.Store({
     storeVisitorProductList,
     storeVisitorProductActive,
     storeVisitorProductInactive,
-  }
+  },
 })

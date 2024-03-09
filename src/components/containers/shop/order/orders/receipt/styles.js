@@ -105,6 +105,13 @@ const cssBorder = `
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 `
-const styles = [ cssCover, cssFonts, cssDisplay, cssPadding, cssMargin, cssBorder ]
+const styles = [
+  cssCover,
+  cssFonts,
+  cssDisplay,
+  cssPadding,
+  cssMargin,
+  cssBorder,
+]
 
 export default styles
