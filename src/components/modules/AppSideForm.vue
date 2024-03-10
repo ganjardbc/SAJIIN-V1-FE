@@ -21,7 +21,7 @@
         <slot />
       </div>
       <div class="fs-footer">
-        <div v-if="enableCustomFooter">
+        <div v-if="isThereCustomFooter">
           <slot name="footer" />
         </div>
         <button
@@ -71,6 +71,11 @@ export default {
     onClose: {
       type: Function,
       required: false,
+    },
+  },
+  computed: {
+    isThereCustomFooter() {
+      return this.$slots.footer
     },
   },
   methods: {

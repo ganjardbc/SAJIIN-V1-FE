@@ -41,12 +41,6 @@
               </router-link>
             </div>
             <div class="header-content-main-right">
-              <!-- <router-link :to="{name: 'shop-notifications'}">
-                                <button class="btn btn-white btn-icon btn-circle">
-                                    <i class="fa fa-lg fa-bell"></i>
-                                    <span v-if="totalUnread" class="notif">{{ getTotalUnread }}</span>
-                                </button>
-                            </router-link> -->
               <AppCardNotification />
               <AppCardProfile
                 :data.sync="dataUser"
@@ -83,7 +77,7 @@
         </div>
       </div>
       <div class="main-content">
-        <div class="main-content-small">
+        <div class="main-content-smalls">
           <router-view />
         </div>
         <div class="display-flex center padding padding-20px">

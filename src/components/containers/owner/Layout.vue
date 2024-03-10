@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="main-content">
-        <div class="main-content-small">
+        <div class="main-content-smalls">
           <router-view />
         </div>
         <div class="display-flex center padding padding-20px">

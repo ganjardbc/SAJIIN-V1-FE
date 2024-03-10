@@ -763,7 +763,7 @@ a {
     }
     .left-form {
         position: relative;
-        width: calc(100% - 470px);
+        width: calc(100% - 410px);
         @media (max-width: $min-width) {
             width: 100%;
         }
@@ -772,7 +772,7 @@ a {
         position: fixed;
         top: 0;
         right: 0;
-        width: 470px;
+        width: 450px;
         height: 100vh;
         @media (max-width: $min-width) {
             display: none;
@@ -780,12 +780,12 @@ a {
         .right-form-container {
             position: relative;
             padding-top: 100px;
-            padding-right: 40px;
+            padding-right: 70px;
         }
         .right-form-card {
             position: relative;
             width: 100%;
-            height: calc(100vh - 120px);
+            max-height: calc(100vh - 120px);
             border-radius: 15px;
             overflow-y: auto;
             .right-form-header {

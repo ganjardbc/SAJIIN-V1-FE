@@ -7,11 +7,11 @@
         class="width width-70 width-mobile display-flex space-between align-center"
       >
         <div class="fonts small black semibold">Produk</div>
-        <div class="display-flex">
+        <!-- <div class="display-flex">
           <button class="btn btn-icon btn-white" @click="onRefresh">
             <i class="fa fa-lw fa-retweet"></i>
           </button>
-        </div>
+        </div> -->
       </div>
       <div class="width width-30 width-mobile">
         <SearchField
@@ -30,13 +30,13 @@
         @onChange="onCategory"
       />
     </div>
-    <div class="width width-100">
+    <div class="width width-100 padding padding-top-10px">
       <div v-loading="loadingProduct">
         <AppEmpty v-if="dataProduct.length === 0" />
         <CardProduct :data.sync="dataProduct" :column="column" />
       </div>
       <div
-        class="width width-100 display-flex flex-end align-center padding padding-top-5px"
+        class="width width-100 display-flex flex-end align-center padding padding-top-15px"
       >
         <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
         <el-pagination
@@ -80,7 +80,7 @@ export default {
   },
   props: {
     column: {
-      default: 'column-3 mobile-column',
+      default: 'width width-100',
       required: false,
     },
   },
