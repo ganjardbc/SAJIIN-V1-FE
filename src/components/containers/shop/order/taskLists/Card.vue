@@ -1,5 +1,8 @@
 <template>
-  <div id="App" class="display-grid grid-item-4 grid-item-mobile-1">
+  <div
+    id="App"
+    class="display-grid grid-item-3 grid-item-mobile-medium-2 grid-item-mobile-small-1"
+  >
     <div v-for="(dt, i) in data" :key="i" class="width width-100">
       <div class="card bg-white box-shadow">
         <div

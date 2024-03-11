@@ -2,7 +2,7 @@
   <div id="App">
     <div class="right-form-body">
       <div class="width width-100">
-        <AppEmpty v-if="!isThereDetails" />
+        <AppEmpty v-if="!isThereDetails" title="KERANJANG KOSONG" />
         <CardProduct :data.sync="details" />
 
         <div
@@ -18,6 +18,7 @@
               type="text"
               :disabled="!isThereDetails"
               v-model="form.customer_name"
+              clearable
             ></el-input>
           </div>
           <FieldTable
@@ -47,22 +48,16 @@
             {{ format(orderPrice) }}
           </div>
         </div>
-        <div
-          v-if="isThereDiscount"
-          class="display-flex align-center space-between"
-        >
+        <div class="display-flex align-center space-between">
           <div class="fonts fonts-9 normal grey">Diskon</div>
           <div class="fonts fonts-9 normal grey align-right">
-            -{{ format(totalDiscount) }}
+            {{ format(totalDiscount) }}
           </div>
         </div>
-        <div
-          v-if="isTherePlatform"
-          class="display-flex align-center space-between"
-        >
+        <div class="display-flex align-center space-between">
           <div class="fonts fonts-9 normal grey">Platform</div>
           <div class="fonts fonts-9 normal grey align-right">
-            +{{ format(totalPlatform) }}
+            {{ format(totalPlatform) }}
           </div>
         </div>
       </div>
@@ -81,7 +76,7 @@
           :disabled="isButtonEnable"
           @click="onCheckOut"
         >
-          Lanjut ke Pembayaran
+          Pembayaran
         </button>
       </div>
     </div>

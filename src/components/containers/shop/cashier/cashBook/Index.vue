@@ -1,5 +1,5 @@
 <template>
-  <div id="CashierCashBook" class="margin margin-bottom-15px">
+  <div id="CashierCashBook">
     <div v-loading="loading" class="width width-100">
       <el-alert
         v-if="showWarning"
@@ -12,7 +12,7 @@
       >
       </el-alert>
 
-      <div class="display-flex space-between margin margin-bottom-15px">
+      <div class="display-flex space-between margin margin-bottom-5px">
         <div class="width width-50">
           <div class="display-flex align-center">
             <h1 class="fonts big black bold margin margin-right-10px">Kasir</h1>
@@ -27,7 +27,9 @@
             <div class="fonts fonts-9 normal">
               {{ currentCashBook.cash_date | moment('DD MMMM YYYY') }}
             </div>
-            <div class="display-flex flex-end align-center">
+            <div
+              class="display-flex flex-end align-center margin margin-top-2px"
+            >
               <div class="display-flex center align-center">
                 <el-popover
                   v-if="currentCashBook"
@@ -80,7 +82,7 @@
                 </el-popover>
               </div>
               <div
-                class="display-flex center align-center padding padding-left-10px margin margin-left-10px border-left"
+                class="display-flex center align-center margin margin-left-10px"
               >
                 <el-popover
                   v-if="currentCashBook"
@@ -132,6 +134,20 @@
                   </div>
                 </el-popover>
               </div>
+              <button
+                class="btn btn-small-icon btn-circle btn-sekunder margin margin-left-10px"
+                @click="onOpenOrderList"
+              >
+                <span
+                  v-if="
+                    currentCashBook &&
+                    currentCashBook.cash_detail &&
+                    currentCashBook.cash_detail.length > 0
+                  "
+                  class="sign"
+                ></span>
+                <i class="fa fa-lw fa-book-open"></i>
+              </button>
             </div>
           </div>
           <button v-else class="btn btn-main" @click="createCashBook">
@@ -139,14 +155,6 @@
           </button>
         </div>
       </div>
-
-      <OrderStatus
-        v-if="currentCashBook"
-        class="padding padding-10px padding-left-15px padding-right-15px border-radius bg-white-grey"
-        :data="currentCashBook"
-        :enableButton="true"
-        @onClick="onOpenOrderList"
-      />
 
       <AppEmpty
         v-if="!isThereOpenedCashbook"
@@ -176,7 +184,6 @@ import AppCardCapsule from '../../../../modules/AppCardCapsule'
 import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
 import AppEmpty from '../../../../modules/AppEmpty'
 import Form from './Form'
-import OrderStatus from '../../cashBook/OrderStatus'
 
 export default {
   name: 'CashierCashBook',
@@ -195,7 +202,6 @@ export default {
     AppPopupConfirmed,
     AppEmpty,
     Form,
-    OrderStatus,
   },
   computed: {
     ...mapState({

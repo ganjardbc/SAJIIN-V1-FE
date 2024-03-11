@@ -1,28 +1,14 @@
 <template>
   <div id="App">
-    <div
-      class="display-flex space-between display-mobile margin margin-bottom-5px"
-    >
-      <div
-        class="width width-70 width-mobile display-flex space-between align-center"
-      >
-        <div class="fonts small black semibold">Produk</div>
-        <!-- <div class="display-flex">
-          <button class="btn btn-icon btn-white" @click="onRefresh">
-            <i class="fa fa-lw fa-retweet"></i>
-          </button>
-        </div> -->
-      </div>
-      <div class="width width-30 width-mobile">
-        <SearchField
-          :placeholder="'Cari produk ..'"
-          :enableResponsive="true"
-          :onChange="(data) => onSearch(data)"
-        />
-      </div>
-    </div>
-    <div class="width width-100">
+    <div class="display-flex row-reverse align-center display-mobile">
+      <SearchField
+        class="width width-30 width-mobile"
+        :placeholder="'Cari produk ..'"
+        :enableResponsive="true"
+        :onChange="(data) => onSearch(data)"
+      />
       <AppButtonCapsuleSlider
+        class="width width-70 width-mobile"
         :index.sync="selectedIndex"
         customAllLabel="Semua Produk"
         customIcon="fa fa-lw fa-box"

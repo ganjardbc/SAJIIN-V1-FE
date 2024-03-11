@@ -1,5 +1,5 @@
 <template>
-  <div id="App" class="display-popup-normal" style="z-index: 1000">
+  <div id="AppCardPopup" class="display-popup-normal" style="z-index: 1000">
     <div
       :class="`post-middle-absolute width width-${width ? width : '500px'} width-mobile`"
     >
@@ -40,7 +40,7 @@
 
 <script>
 export default {
-  name: 'App',
+  name: 'AppCardPopup',
   props: {
     title: {
       type: String,

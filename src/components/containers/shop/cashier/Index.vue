@@ -5,44 +5,8 @@
       <Product v-if="isThereOpenedCashbook" />
     </div>
     <div class="right-form">
-      <div class="right-form-container">
-        <CartForm @onCreateOrder="onCreateOrder" @onCheckOut="onOpenCheckOut" />
-      </div>
+      <CartForm @onCreateOrder="onCreateOrder" @onCheckOut="onOpenCheckOut" />
     </div>
-
-    <!-- <div class="cashier-container">
-      <div
-        class="display-flex space-between align-center margin margin-bottom-5px"
-      >
-        <h1 class="fonts big black bold">Kasir</h1>
-        <div class="display-flex flex-end align-center">
-          <button
-            class="btn btn-icon btn-small-radius btn-white"
-            @click="getDataCashBook"
-          >
-            <i class="fa fa-lw fa-retweet"></i>
-          </button>
-          <CashBookNotification class="margin marign-left-5px" />
-        </div>
-      </div>
-      <CashBook @onOpenOrderList="onOpenOrderList" />
-      <Product
-        v-if="isThereOpenedCashbook"
-        :column="'column-3 mobile-column'"
-      />
-    </div>
-
-    <div :class="`content-form ${!visibleCart && 'hide'}`">
-      <div class="right">
-        <Cart
-          @onCreateOrder="onCreateOrder"
-          @onCheckOut="onOpenCheckOut"
-          @onClose="onCloseCart"
-        />
-      </div>
-    </div>
-
-    <CartPopup v-if="isThereOpenedCashbook" @onClick="onOpenCart" /> -->
 
     <div :class="`content-form ${!visibleCheckOut && 'hide'}`">
       <div class="right">
@@ -114,8 +78,6 @@ import FormReceipt from '../order/orders/receipt/Index'
 import CashBook from './cashBook/Index'
 import CashBookNotification from './cashBook/Notification'
 import Product from './product/Index'
-// import Cart from './cart/Index'
-// import CartPopup from './cart/CartPopup'
 import CartForm from './cart/Form'
 import CheckOut from './checkOut/Index'
 import CashBookDetail from '../cashBook/Detail'
@@ -165,8 +127,6 @@ export default {
     CashBook,
     CashBookNotification,
     Product,
-    // Cart,
-    // CartPopup,
     CartForm,
     CheckOut,
     CashBookDetail,

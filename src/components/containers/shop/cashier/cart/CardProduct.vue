@@ -3,7 +3,7 @@
     <div
       v-for="(dt, index) in data"
       :key="index"
-      class="margin margin-top-15px margin-bottom-15px"
+      class="margin margin-bottom-15px"
     >
       <div class="card bg-white box-shadow">
         <div class="display-flex">
@@ -78,9 +78,9 @@
             color="white"
           />
         </div>
-        <div class="display-flex space-between display-mobile">
+        <div class="display-flex space-between display-mobile align-center">
           <div
-            class="width width-200px width-mobile display-flex margin margin-top-10px"
+            class="width width-180px width-mobile display-flex margin margin-top-10px"
           >
             <button
               :class="`btn btn-icon btn-sekunder`"
@@ -97,7 +97,7 @@
               ></el-input>
             </div>
           </div>
-          <div class="width width-130px width-mobile margin margin-top-10px">
+          <div class="width width-110px width-mobile margin margin-top-10px">
             <el-input-number
               v-model="dt.quantity"
               @change="(data) => onTotal(data, index)"

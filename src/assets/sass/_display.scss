@@ -88,58 +88,46 @@
 }
 
 $grid-default-gap : 15px;
-$grid-default-width : calc(100% - $grid-default-gap);
 .display-grid {
     display: grid;
     column-gap: $grid-default-gap;
     row-gap: $grid-default-gap;
-    width: calc(100% - $grid-default-gap);
     &.display-mobile {
         @media (max-width: $min-width) {
             display: block;
-            width: 100%;
         }
     }
-    &.grid-item-1 {
-        grid-template-columns: 100%;
-        width: 100%;
-    }
-    &.grid-item-2 {
-        grid-template-columns: calc($grid-default-width / 2) calc($grid-default-width / 2);
-    }
-    &.grid-item-3 {
-        grid-template-columns: calc($grid-default-width / 3) calc($grid-default-width / 3) calc($grid-default-width / 3);
-    }
-    &.grid-item-4 {
-        grid-template-columns: calc($grid-default-width / 4) calc($grid-default-width / 4) calc($grid-default-width / 4) calc($grid-default-width / 4);
-    }
-    &.grid-item-5 {
-        grid-template-columns: calc($grid-default-width / 5) calc($grid-default-width / 5) calc($grid-default-width / 5) calc($grid-default-width / 5) calc($grid-default-width / 5);
-    }
-    &.grid-item-mobile-1 {
-        @media (max-width: $min-width) {
-            grid-template-columns: 100%;
-            width: 100%;
+    @for $var from 1 to 6 {
+        &.grid-item-#{$var} {
+            grid-template-columns: repeat($var, 1fr);
         }
     }
-    &.grid-item-mobile-2 {
-        @media (max-width: $min-width) {
-            grid-template-columns: calc($grid-default-width / 2) calc($grid-default-width / 2);
+    @for $var from 1 to 6 {
+        &.grid-item-mobile-large-#{$var} {
+            @media (max-width: $max-width) {
+                grid-template-columns: repeat($var, 1fr);
+            }
         }
     }
-    &.grid-item-mobile-3 {
-        @media (max-width: $min-width) {
-            grid-template-columns: calc($grid-default-width / 3) calc($grid-default-width / 3) calc($grid-default-width / 3);
+    @for $var from 1 to 6 {
+        &.grid-item-mobile-medium-#{$var} {
+            @media (max-width: $med-width) {
+                grid-template-columns: repeat($var, 1fr);
+            }
         }
     }
-    &.grid-item-mobile-4 {
-        @media (max-width: $min-width) {
-            grid-template-columns: calc($grid-default-width / 4) calc($grid-default-width / 4) calc($grid-default-width / 4) calc($grid-default-width / 4);
+    @for $var from 1 to 6 {
+        &.grid-item-mobile-small-#{$var} {
+            @media (max-width: $min-width) {
+                grid-template-columns: repeat($var, 1fr);
+            }
         }
     }
-    &.grid-item-mobile-5 {
-        @media (max-width: $min-width) {
-            grid-template-columns: calc($grid-default-width / 5) calc($grid-default-width / 5) calc($grid-default-width / 5) calc($grid-default-width / 5) calc($grid-default-width / 5);
+    @for $var from 1 to 6 {
+        &.grid-item-mobile-micro-#{$var} {
+            @media (max-width: $micro-width) {
+                grid-template-columns: repeat($var, 1fr);
+            }
         }
     }
     @for $var from 0 to 100 {
