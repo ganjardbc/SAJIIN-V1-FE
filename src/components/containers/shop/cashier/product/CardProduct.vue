@@ -39,7 +39,7 @@
             :disabled="isButtonEnable(item)"
             @click="openPopupCart(item)"
           >
-            <i class="icn icn-left fa fa-lw fa-cart-plus"></i> Tambah ke
+            <i class="icn icn-left fa fa-lw fa-plus"></i>
             Keranjang
           </button>
         </div>
