@@ -2374,13 +2374,6 @@ a.btn {
   right: 20px;
   width: 350px;
 }
-@media (max-width: 1024px) {
-  .card-check-out-fixed {
-    width: calc(100% - 270px);
-    right: 70px;
-    bottom: 20px;
-  }
-}
 @media (max-width: 820px) {
   .card-check-out-fixed {
     width: calc(100% - 30px);
@@ -2709,27 +2702,27 @@ a.btn {
 .display-grid.grid-item-5 {
   grid-template-columns: repeat(5, 1fr);
 }
-@media (max-width: 1138px) {
+@media (max-width: 1180px) {
   .display-grid.grid-item-mobile-large-1 {
     grid-template-columns: repeat(1, 1fr);
   }
 }
-@media (max-width: 1138px) {
+@media (max-width: 1180px) {
   .display-grid.grid-item-mobile-large-2 {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 1138px) {
+@media (max-width: 1180px) {
   .display-grid.grid-item-mobile-large-3 {
     grid-template-columns: repeat(3, 1fr);
   }
 }
-@media (max-width: 1138px) {
+@media (max-width: 1180px) {
   .display-grid.grid-item-mobile-large-4 {
     grid-template-columns: repeat(4, 1fr);
   }
 }
-@media (max-width: 1138px) {
+@media (max-width: 1180px) {
   .display-grid.grid-item-mobile-large-5 {
     grid-template-columns: repeat(5, 1fr);
   }
@@ -129041,7 +129034,7 @@ a {
   z-index: 100;
 }
 #app #header #header-container {
-  width: 1138px;
+  width: 1180px;
   margin: auto;
 }
 @media (max-width: 820px) {
@@ -129064,7 +129057,7 @@ a {
   padding-top: 60px;
 }
 #app #body #body-container {
-  width: 1138px;
+  width: 1180px;
   margin: auto;
   padding-top: 30px;
 }
@@ -129081,7 +129074,7 @@ a {
   padding-bottom: 50px;
 }
 #app #footer #footer-content {
-  width: 1138px;
+  width: 1180px;
   margin: auto;
 }
 @media (max-width: 820px) {
@@ -129154,7 +129147,7 @@ a {
   justify-content: end;
 }
 #app .main-screen {
-  width: 1138px;
+  width: 1180px;
   margin: auto;
 }
 @media (max-width: 820px) {
@@ -129234,7 +129227,7 @@ a {
 }
 #app .banner .banner-container {
   position: relative;
-  width: 1138px;
+  width: 1180px;
   margin: auto;
 }
 @media (max-width: 820px) {
@@ -129687,7 +129680,7 @@ a {
   width: 820px;
   margin: auto;
 }
-@media (max-width: 1138px) {
+@media (max-width: 1180px) {
   #admin .main .main-content-small {
     width: 100%;
   }
@@ -129784,12 +129777,12 @@ a {
   border-radius: 0;
 }
 #admin .main.single-container .header .header-small-content {
-  width: 1138px;
+  width: 1180px;
   height: 60px;
   margin: auto;
 }
 #admin .main.single-container .main-content {
-  width: 1138px;
+  width: 1180px;
   margin: auto;
   padding-left: 0;
   padding-right: 0;
@@ -129823,6 +129816,11 @@ a {
 }
 @media (max-width: 1024px) {
   #admin .left-form {
+    width: calc(100% - 400px);
+  }
+}
+@media (max-width: 820px) {
+  #admin .left-form {
     width: 100%;
   }
 }
@@ -129832,7 +129830,7 @@ a {
   right: 0;
   width: 450px;
 }
-@media (max-width: 1024px) {
+@media (max-width: 820px) {
   #admin .right-form {
     top: 0;
     width: 100%;
@@ -129863,13 +129861,18 @@ a {
 }
 @media (max-width: 1024px) {
   #admin .right-form .right-form-card {
+    right: 20px;
+  }
+}
+@media (max-width: 820px) {
+  #admin .right-form .right-form-card {
     top: 15px;
     right: -550px;
     width: 500px;
     height: calc(100% - 120px);
   }
 }
-@media (max-width: 820px) {
+@media (max-width: 375px) {
   #admin .right-form .right-form-card {
     top: 0;
     right: -110%;
@@ -129881,12 +129884,12 @@ a {
 #admin .right-form .right-form-card.show {
   transition: 0.2s;
 }
-@media (max-width: 1024px) {
+@media (max-width: 820px) {
   #admin .right-form .right-form-card.show {
     right: 15px;
   }
 }
-@media (max-width: 820px) {
+@media (max-width: 375px) {
   #admin .right-form .right-form-card.show {
     right: 0;
   }
@@ -129980,6 +129983,12 @@ a {
   width: calc(100% - 270px);
   right: 70px;
 }
+@media (max-width: 1024px) {
+  #admin.mobile-admin .mobile-main .header .header-content-fixed {
+    right: 20px;
+    width: calc(100% - 160px);
+  }
+}
 @media (max-width: 820px) {
   #admin.mobile-admin .mobile-main .header .header-content-fixed {
     top: 0;
@@ -129992,6 +130001,13 @@ a {
   width: calc(100% - 270px);
   padding-left: 200px;
   padding-right: 70px;
+}
+@media (max-width: 1024px) {
+  #admin.mobile-admin .mobile-main .main-content {
+    padding-left: 140px;
+    padding-right: 20px;
+    width: calc(100% - 160px);
+  }
 }
 @media (max-width: 820px) {
   #admin.mobile-admin .mobile-main .main-content {

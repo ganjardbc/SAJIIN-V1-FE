@@ -765,6 +765,9 @@ a {
         position: relative;
         width: calc(100% - 410px);
         @media (max-width: $med-width) {
+            width: calc(100% - 400px);
+        }
+        @media (max-width: $min-width) {
             width: 100%;
         }
     }
@@ -773,7 +776,7 @@ a {
         top: 0;
         right: 0;
         width: 450px;
-        @media (max-width: $med-width) {
+        @media (max-width: $min-width) {
             top: 0;
             width: 100%;
             height: 45px;
@@ -798,12 +801,15 @@ a {
             z-index: 100;
             overflow-y: auto;
             @media (max-width: $med-width) {
+                right: 20px;
+            }
+            @media (max-width: $min-width) {
                 top: 15px;
                 right: -550px;
                 width: 500px;
                 height: calc(100% - 120px);
             }
-            @media (max-width: $min-width) {
+            @media (max-width: $micro-width) {
                 top: 0;
                 right: -110%;
                 width: 100%;
@@ -812,10 +818,10 @@ a {
             }
             &.show {
                 transition: 0.2s;
-                @media (max-width: $med-width) {
+                @media (max-width: $min-width) {
                     right: 15px;
                 }
-                @media (max-width: $min-width) {
+                @media (max-width: $micro-width) {
                     right: 0;
                 }
             }
@@ -827,14 +833,7 @@ a {
             }
             .right-form-body{
                 width: calc(100% - 30px);
-                // height: calc(100% - 390px);
                 padding: 15px;
-                // @media (max-width: $med-width) {
-                //     height: calc(100% - 300px);
-                // }
-                // @media (max-width: $min-width) {
-                //     height: calc(100% - 270px);
-                // }
             }
             .right-form-footer {
                 position: sticky;
@@ -907,6 +906,10 @@ a {
                 .header-content-fixed {
                     width: calc(100% - 270px);
                     right: 70px;
+                    @media (max-width: $med-width) {
+                        right: 20px;
+                        width: calc(100% - 160px);
+                    }
                     @media (max-width: $min-width) {
                         top: 0;
                         right: 0;
@@ -919,6 +922,11 @@ a {
                 width: calc(100% - 270px);
                 padding-left: 200px;
                 padding-right: 70px;
+                @media (max-width: $med-width) {
+                    padding-left: 140px;
+                    padding-right: 20px;
+                    width: calc(100% - 160px);
+                }
                 @media (max-width: $min-width) {
                     padding: 15px;
                     padding-top: 60px;

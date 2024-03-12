@@ -2,7 +2,7 @@
   <div id="App" class="right-form-container">
     <CartPopup
       v-if="isThereOpenedCashbook"
-      class="mobile-medium-visible"
+      class="mobile-visible"
       @onClick="onOpenCart"
     />
     <div
@@ -26,7 +26,7 @@
             Hapus Produk
           </button>
           <button
-            class="btn btn-white btn-icon btn-circle margin margin-left-10px mobile-medium-visible"
+            class="btn btn-white btn-icon btn-circle margin margin-left-10px mobile-visible"
             @click="onCloseCart"
           >
             <i class="fa fa-lg fa-times"></i>
