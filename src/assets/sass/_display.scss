@@ -117,15 +117,22 @@ $grid-default-gap : 15px;
         }
     }
     @for $var from 1 to 6 {
-        &.grid-item-mobile-small-#{$var} {
+        &.grid-item-mobile-minimum-#{$var} {
             @media (max-width: $min-width) {
                 grid-template-columns: repeat($var, 1fr);
             }
         }
     }
     @for $var from 1 to 6 {
+        &.grid-item-mobile-small-#{$var} {
+            @media (max-width: $sml-width) {
+                grid-template-columns: repeat($var, 1fr);
+            }
+        }
+    }
+    @for $var from 1 to 6 {
         &.grid-item-mobile-micro-#{$var} {
-            @media (max-width: $micro-width) {
+            @media (max-width: $mic-width) {
                 grid-template-columns: repeat($var, 1fr);
             }
         }
