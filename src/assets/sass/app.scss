@@ -807,9 +807,9 @@ a {
                 top: 15px;
                 right: -550px;
                 width: 500px;
-                height: calc(100% - 120px);
+                height: calc(100% - 30px);
             }
-            @media (max-width: $mic-width) {
+            @media (max-width: $sml-width) {
                 top: 0;
                 right: -110%;
                 width: 100%;
@@ -821,7 +821,7 @@ a {
                 @media (max-width: $min-width) {
                     right: 15px;
                 }
-                @media (max-width: $mic-width) {
+                @media (max-width: $sml-width) {
                     right: 0;
                 }
             }
@@ -995,7 +995,7 @@ a {
             transition: 0.2s;
         }
     }
-    @media (max-width: $min-width) {
+    @media (max-width: $sml-width) {
         .left {
             width: 100%;
             padding-left: 0;
