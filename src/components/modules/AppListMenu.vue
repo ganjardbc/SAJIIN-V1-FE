@@ -105,7 +105,12 @@ export default {
     },
     onCheckPermission(value) {
       let stt = false
-      const data = this.permissions
+      let data = []
+      try {
+        data = JSON.parse(this.permissions)
+      } catch (error) {
+        data = this.permissions
+      }
       if (data && data.length > 0) {
         const isTherePermission = data.find(
           (item) => item.permission_name === value
@@ -155,6 +160,7 @@ export default {
       required: false,
     },
     data: {
+      type: [Array, String],
       required: true,
     },
   },

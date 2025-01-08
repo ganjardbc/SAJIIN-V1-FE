@@ -5,11 +5,12 @@
         icon="fa fa-3x fa-shapes"
         title="WELCOME TO SAJI-IN SHOP PANEL"
       />
-      <AppCardCircle :data="cards" />
+      <AppCardCircle :data="remappedCards" />
     </div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import AppEmpty from '../../modules/AppEmpty'
 import AppCardCircle from '../../modules/AppCardCircle'
 
@@ -36,6 +37,25 @@ export default {
         { title: 'Produk', icon: 'fa fa-2x fa-box', link: 'shop-products' },
       ],
     }
+  },
+  computed: {
+    ...mapState({
+      dataShop: (state) => state.storeSelectedShop.form,
+    }),
+    isNonFnB() {
+      return this.dataShop && this.dataShop.is_non_fnb
+    },
+    remappedCards() {
+      return this.cards.map((card) => {
+        if (this.isNonFnB && card.title === 'Pesanan') {
+          return {
+            ...card,
+            title: 'Penjualan',
+          }
+        }
+        return card
+      })
+    },
   },
   components: {
     AppEmpty,

@@ -5,7 +5,9 @@
         class="display-flex space-between align-center"
         style="padding-bottom: 10px"
       >
-        <h1 class="fonts big black bold">Pesanan</h1>
+        <h1 class="fonts big black bold">
+          {{ isNonFnB ? 'Penjualan' : 'Pesanan' }}
+        </h1>
         <button class="btn btn-icon btn-white" @click="onRefresh">
           <i class="fa fa-lw fa-retweet"></i>
         </button>
@@ -18,7 +20,7 @@
         >
           <el-input
             class="margin margin-right-14px margin-mobile-right-none"
-            placeholder="Cari pesanan .."
+            :placeholder="`Cari pesanan ..`"
             suffix-icon="el-icon-search"
             clearable
             v-model="filter.search"

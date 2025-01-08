@@ -134,6 +134,7 @@ export default {
       getShop: 'storeSelectedShop/getByID',
       getCashBook: 'storeCashBook/getCurrent',
       resetCashBook: 'storeCashBook/restDataCurrent',
+      dataShop: (state) => state.storeSelectedShop.form,
 
       // old store
       setToast: 'toast/setToast',
@@ -299,6 +300,9 @@ export default {
         ? this.shopImageThumbnailUrl + this.getSelectedData.image
         : ''
     },
+    isNonFnB() {
+      return this.dataShop && this.dataShop.is_non_fnb
+    },
     // getTotalUnread () {
     //     return replaceToMoreValue(this.totalUnread)
     // },
@@ -347,7 +351,7 @@ export default {
             },
             {
               icon: 'fa fa-lg fa-list-ul',
-              label: 'Pesanan',
+              label: this.isNonFnB ? 'Penjualan' : 'Pesanan',
               value: replaceToMoreValue(this.getTotalOrder),
               link: 'shop-order',
               permission: 'orders',
