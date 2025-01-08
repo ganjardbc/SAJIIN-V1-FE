@@ -22,6 +22,7 @@ import Tables from '@/components/containers/shop/tables/Index'
 import Reports from '@/components/containers/shop/reports/Index'
 import Platforms from '@/components/containers/shop/platforms/Index'
 import Discounts from '@/components/containers/shop/discounts/Index'
+import LogActivities from '@/components/containers/shop/logActivities/Index'
 import More from '@/components/containers/shop/more/Index'
 
 const routes = {
@@ -142,6 +143,11 @@ const routes = {
       name: 'shop-discounts',
       path: 'discounts',
       component: Discounts,
+    },
+    {
+      name: 'shop-log-activities',
+      path: 'log-activities',
+      component: LogActivities,
     },
     {
       name: 'shop-more',

@@ -22,7 +22,10 @@ export default {
     }
   },
   props: {
-    data: [],
+    data: {
+      type: [Array, String],
+      required: true,
+    },
   },
   methods: {
     onClick() {
@@ -44,7 +47,7 @@ export default {
     },
     onCheckPermission(value) {
       let stt = false
-      const data = this.permissions
+      const data = JSON.parse(this.permissions)
       if (data && data.length > 0) {
         const isTherePermission = data.find(
           (item) => item.permission_name === value

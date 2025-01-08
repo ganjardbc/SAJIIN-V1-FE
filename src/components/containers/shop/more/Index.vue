@@ -145,6 +145,13 @@ export default {
           permission: 'reports',
         },
         {
+          icon: 'fa fa-lg fa-history',
+          label: 'Log Aktivitas',
+          value: 0,
+          link: 'shop-log-activities',
+          permission: 'settings',
+        },
+        {
           icon: 'fa fa-lg fa-cogs',
           label: 'Pengaturan',
           value: 0,
