@@ -5,7 +5,7 @@
         icon="fa fa-3x fa-shapes"
         title="WELCOME TO SAJI-IN EMPLOYEE PANEL"
       />
-      <AppCardCircle :data="cards" />
+      <AppCardCircle :data="remappedCards" />
     </div>
   </div>
 </template>
@@ -108,6 +108,25 @@ export default {
         ]
         break
     }
+  },
+  computed: {
+    dataShop() {
+      return this.$cookies.get('shop')
+    },
+    isNonFnB() {
+      return this.dataShop && this.dataShop.is_non_fnb
+    },
+    remappedCards() {
+      return this.cards.map((card) => {
+        if (this.isNonFnB && card.title === 'Pesanan') {
+          return {
+            ...card,
+            title: 'Penjualan',
+          }
+        }
+        return card
+      })
+    },
   },
   components: {
     AppEmpty,

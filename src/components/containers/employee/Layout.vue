@@ -289,6 +289,9 @@ export default {
         ? this.shopImageThumbnailUrl + this.dataShop.image
         : ''
     },
+    isNonFnB() {
+      return this.dataShop && this.dataShop.is_non_fnb
+    },
     // getTotalUnread () {
     //     return replaceToMoreValue(this.totalUnread)
     // },
@@ -337,7 +340,7 @@ export default {
             },
             {
               icon: 'fa fa-lg fa-list-ul',
-              label: 'Pesanan',
+              label: this.isNonFnB ? 'Penjualan' : 'Pesanan',
               value: replaceToMoreValue(this.getTotalOrder),
               link: 'employee-orders',
               permission: 'orders',
