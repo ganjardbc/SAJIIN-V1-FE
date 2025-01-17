@@ -111,7 +111,7 @@
                   class="btn btn-sekunder btn-full"
                   @click="onChangeStatus(detail, 'on-progress')"
                 >
-                  Kerjakan Item
+                  Siapkan Produk
                 </button>
                 <button
                   v-if="detail.status === 'on-progress'"
@@ -123,7 +123,7 @@
                   "
                   @click="onChangeStatus(detail, 'done')"
                 >
-                  Tandai Selesai
+                  Produk Selesai Dibuat
                 </button>
                 <button
                   v-if="detail.status === 'done'"
@@ -135,7 +135,7 @@
                   "
                   @click="onChangeStatus(detail, 'to-do')"
                 >
-                  Re-Open
+                  Siapkan Ulang
                 </button>
               </div>
             </div>
@@ -146,7 +146,7 @@
             class="btn btn-sekunder btn-full"
             @click="onChangeOrderStatus(dt.order, 'ready')"
           >
-            Siap Diantarkan
+            Antarkan Produk
           </button>
         </div>
       </div>

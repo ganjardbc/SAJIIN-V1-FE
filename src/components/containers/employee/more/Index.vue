@@ -102,11 +102,11 @@ export default {
     moreMenu() {
       return [
         {
-          icon: 'fa fa-lg fa-list-ol',
-          label: 'Pengeluaran',
+          icon: 'fa fa-lg fa-box',
+          label: 'Product',
           value: 0,
-          link: 'employee-expense',
-          permission: 'expense-list',
+          link: 'employee-products',
+          permission: 'products',
         },
         {
           icon: 'fa fa-lg fa-users',

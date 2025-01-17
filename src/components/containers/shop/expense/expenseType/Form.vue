@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="field-group">
-          <div class="field-label">ID Tipe Pengeluaran</div>
+          <div class="field-label">ID Kategori</div>
           <el-input
             placeholder=""
             type="text"
@@ -120,13 +120,13 @@ export default {
       let currentTitle = ''
       switch (this.typeForm) {
         case 'create':
-          currentTitle = 'Tambah Tipe'
+          currentTitle = 'Tambah Kategori'
           break
         case 'detail':
-          currentTitle = 'Detail Tipe'
+          currentTitle = 'Detail Kategori'
           break
         case 'edit':
-          currentTitle = 'Edit Tipe'
+          currentTitle = 'Edit Kategori'
           break
       }
       return currentTitle

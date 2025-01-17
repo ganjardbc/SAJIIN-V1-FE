@@ -12,13 +12,13 @@
               ></i>
               <span
                 class="fonts fonts-9 normal grey overflow-ellipsis align-center"
-                >Jumlah Pengeluaran</span
+                >Jumlah Pembelian</span
               >
             </div>
             <div
               class="fonts fonts-11 semibold black overflow-ellipsis align-center"
             >
-              {{ data.length }} pengeluaran
+              {{ data.length }} pembelian
             </div>
           </div>
         </div>
@@ -34,7 +34,7 @@
               ></i>
               <span
                 class="fonts fonts-9 normal grey overflow-ellipsis align-center"
-                >Total Keseluruhan</span
+                >Total Pembelian</span
               >
             </div>
             <div
@@ -55,7 +55,7 @@
         align="center"
         :index="indexMethod"
       ></el-table-column>
-      <el-table-column label="ID Pengeluaran" min-width="200">
+      <el-table-column label="ID Transaksi" min-width="200">
         <template slot-scope="scope">
           <div>
             <AppCardCapsule
@@ -65,14 +65,14 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Tgl Pengeluaran" min-width="150">
+      <el-table-column label="Tanggal" min-width="150">
         <template slot-scope="scope">
           <div>
             {{ scope.row.expense.expense_date | moment('DD MMM YYYY') }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Tipe Pengeluaran" min-width="150">
+      <el-table-column label="Tipe" min-width="150">
         <template slot-scope="scope">
           <div>{{ scope.row.type.name || '-' }}</div>
           <div v-if="scope.row.expense.description" style="font-size: 12px">

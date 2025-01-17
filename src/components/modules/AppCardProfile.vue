@@ -43,8 +43,11 @@
         {{ data && data.username }}
         <i class="icn icn-right fa fa-lw fa-caret-down"></i>
       </button>
-      <button v-else slot="reference" class="btn btn-icon btn-white btn-circle">
-        <i class="fa fa-lg fa-user"></i>
+      <button v-else slot="reference" class="btn btn-white btn-circle">
+        <i class="icon icn-left fa fa-lw fa-user"></i>
+        <span class="fonts micro capitalize">
+          {{ data && data.role_name }}
+        </span>
       </button>
     </el-popover>
 

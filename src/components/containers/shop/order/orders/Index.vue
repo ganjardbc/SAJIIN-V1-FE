@@ -6,7 +6,7 @@
         style="padding-bottom: 10px"
       >
         <h1 class="fonts big black bold">
-          {{ isNonFnB ? 'Penjualan' : 'Pesanan' }}
+          Penjualan
         </h1>
         <button class="btn btn-icon btn-white" @click="onRefresh">
           <i class="fa fa-lw fa-retweet"></i>
@@ -20,7 +20,7 @@
         >
           <el-input
             class="margin margin-right-14px margin-mobile-right-none"
-            :placeholder="`Cari pesanan ..`"
+            :placeholder="`Cari transaksi ..`"
             suffix-icon="el-icon-search"
             clearable
             v-model="filter.search"
@@ -173,7 +173,7 @@
 
     <AppPopupConfirmed
       v-if="visibleConfirmedDelete"
-      :title="'Hapus pesanan ?'"
+      :title="'Hapus transaksi ?'"
       @onClickNo="onClickNoDelete"
       @onClickYes="onClickYesDelete"
     />
@@ -232,8 +232,8 @@ export default {
       visibleConfirmedStatus: false,
       visibleConfirmedProduct: false,
       titleConfirmed: 'Simpan data ?',
-      titleConfirmedStatus: 'Update status pesanan ?',
-      titleConfirmedProduct: 'Update produk di pesanan ini ?',
+      titleConfirmedStatus: 'Update status transaksi ?',
+      titleConfirmedProduct: 'Update produk di transaksi ini ?',
       currentPage: 1,
       selectedData: null,
     }
@@ -312,7 +312,7 @@ export default {
           {
             id: 1,
             icon: 'fa fa-lw fa-list-ul',
-            label: 'Semua Pesanan',
+            label: 'Semua Transaksi',
             value: replaceToMoreValue(all),
             status: 'active',
           },
@@ -343,7 +343,7 @@ export default {
           {
             id: 1,
             icon: 'fa fa-lw fa-list-ul',
-            label: 'Semua Pesanan',
+            label: 'Semua Transaksi',
             value: replaceToMoreValue(all),
             status: 'active',
           },
@@ -537,14 +537,14 @@ export default {
           this.visibleFormCustomer = false
           this.getData()
           this.getDashboardMatrix()
-          this.$message('Pesanan berhasil di-edit')
+          this.$message('Transaksi berhasil di-edit')
 
           if (this.typeForm === 'checkout') {
             this.visibleFormReceipt = true
           }
         } else {
           this.visibleAlert = true
-          this.titleAlert = 'Gagal menyimpan pesanan'
+          this.titleAlert = 'Gagal menyimpan transaksi'
         }
       })
     },
@@ -552,7 +552,7 @@ export default {
     // SAVE
     onOpenVisibleConfirmed() {
       this.visibleConfirmed = true
-      this.titleConfirmed = 'Simpan pesanan ?'
+      this.titleConfirmed = 'Simpan transaksi ?'
     },
 
     // CREATE
@@ -597,10 +597,10 @@ export default {
         const status = res.data.status
         if (status === 'ok') {
           this.getData()
-          this.$message('Pesanan ini berhasil dihapus')
+          this.$message('Transaksi ini berhasil dihapus')
         } else {
           this.visibleAlert = true
-          this.titleAlert = 'Gagal menghapus pesanan'
+          this.titleAlert = 'Gagal menghapus transaksi'
         }
       })
     },
@@ -625,33 +625,33 @@ export default {
           this.getDashboardMatrix()
           this.onSendNotification(this.selectedData)
           this.$message(
-            `Berhasil merubah status pesanan ${this.selectedData.order_id}.`
+            `Berhasil merubah status transaksi ${this.selectedData.order_id}.`
           )
         } else {
           this.$message(
-            `Gagal merubah status pesanan ${this.selectedData.order_id}.`
+            `Gagal merubah status transaksi ${this.selectedData.order_id}.`
           )
         }
       })
     },
     onChangeStatus(data) {
       if (data.status === 'new-order') {
-        this.titleConfirmedStatus = 'Re-Open pesanan ?'
+        this.titleConfirmedStatus = 'Re-Open transaksi ?'
       }
       if (data.status === 'on-progress') {
-        this.titleConfirmedStatus = 'Terima pesanan ?'
+        this.titleConfirmedStatus = 'Terima transaksi ?'
       }
       if (data.status === 'ready') {
-        this.titleConfirmedStatus = 'Pesanan siap diantarkan ?'
+        this.titleConfirmedStatus = 'Produk siap diantarkan ?'
       }
       if (data.status === 'delivered') {
-        this.titleConfirmedStatus = 'Pesanan sudah diterima ?'
+        this.titleConfirmedStatus = 'Produk sudah diterima oleh Pelanggan ?'
       }
       if (data.status === 'done') {
-        this.titleConfirmedStatus = 'Tandai "Selesai" untuk pesanan ?'
+        this.titleConfirmedStatus = 'Tandai "Selesai" untuk transaksi ini ?'
       }
       if (data.status === 'canceled') {
-        this.titleConfirmedStatus = 'Batalkan pesanan ?'
+        this.titleConfirmedStatus = 'Batalkan transaksi ?'
       }
       this.visibleConfirmedStatus = true
       this.selectedData = data
@@ -691,7 +691,7 @@ export default {
     },
     onSaveCustomer() {
       this.visibleConfirmed = true
-      this.titleConfirmed = 'Edit pesanan ?'
+      this.titleConfirmed = 'Edit transaksi ?'
     },
     onCloseCustomer() {
       this.visibleFormCustomer = false
@@ -739,11 +739,11 @@ export default {
           this.visibleFormProduct = false
           this.getData()
           this.$message(
-            `Berhasil merubah produk untuk pesanan ${this.form.order_id}.`
+            `Berhasil merubah produk untuk transaksi ${this.form.order_id}.`
           )
         } else {
           this.$message(
-            `Gagal merubah produk untuk pesanan ${this.form.order_id}.`
+            `Gagal merubah produk untuk transaksi ${this.form.order_id}.`
           )
         }
       })
@@ -759,7 +759,7 @@ export default {
         customerName: data.customer_name,
         type: 'order-status',
         message: `
-                    Status pesanan 
+                    Status transaksi 
                     ${data.customer_name ? ' atas nama ' + data.customer_name : ''} 
                     berhasil diubah
                 `,

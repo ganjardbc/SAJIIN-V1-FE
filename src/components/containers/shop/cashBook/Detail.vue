@@ -28,7 +28,7 @@
               class="icn icn-left fa fa-lg fa-info-circle"
             ></i>
             <div class="fonts fonts-10 normal red">
-              Untuk menutup buku kas, semua pesanan harus diselesaikan terlebih
+              Untuk menutup buku kas, semua penjualan harus diselesaikan terlebih
               dahulu.
             </div>
           </el-popover>
@@ -39,7 +39,7 @@
         <el-alert
           v-if="form.cash_status === 'open'"
           title="Penutupan Buku Kas !"
-          description="Untuk menutup buku kas, semua pesanan harus diselesaikan terlebih dahulu."
+          description="Untuk menutup buku kas, semua penjualan harus diselesaikan terlebih dahulu."
           type="info"
           :closable="true"
           :show-icon="true"
@@ -427,7 +427,7 @@
                   class="btn btn-full btn-sekunder"
                   @click="onRoute(dt.order)"
                 >
-                  Lihat Pesanan
+                  Lihat Penjualan
                 </button>
               </div>
             </div>
@@ -494,7 +494,7 @@
       <div slot="footer">
         <div v-if="selectedIndex === 0" class="margin margin-bottom-15px">
           <div class="display-flex space-between">
-            <div class="fonts fonts-10 semibold black">Total Pesanan</div>
+            <div class="fonts fonts-10 semibold black">Total Penjualan</div>
             <div class="display-flex column align-right">
               <div class="fonts fonts-10 semibold main-color align-right">
                 {{ format(grandTotal) }}
@@ -507,7 +507,7 @@
         </div>
         <div v-if="selectedIndex === 1" class="margin margin-bottom-15px">
           <div class="display-flex space-between">
-            <div class="fonts fonts-10 semibold black">Total Pengeluaran</div>
+            <div class="fonts fonts-10 semibold black">Total Pembelian</div>
             <div class="display-flex column align-right">
               <div class="fonts fonts-10 semibold main-color align-right">
                 {{ format(grandTotalExpense) }}
@@ -562,8 +562,8 @@ export default {
     return {
       selectedIndex: 0,
       tabs: [
-        { id: 1, label: 'Pesanan', status: 'active' },
-        { id: 2, label: 'Pengeluaran', status: '' },
+        { id: 1, label: 'Penjualan', status: 'active' },
+        { id: 2, label: 'Pembelian', status: '' },
       ],
     }
   },

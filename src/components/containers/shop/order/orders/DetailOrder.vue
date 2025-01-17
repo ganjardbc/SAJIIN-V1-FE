@@ -1,7 +1,7 @@
 <template>
   <div id="App">
     <AppSideForm
-      :title="'Detail Pesanan'"
+      :title="'Detail Transaksi'"
       :subtitle="form.order_id"
       :enableCustomFooter="true"
       :onClose="onClose"
@@ -24,19 +24,19 @@
               {{ form.shop_name ? form.shop_name : '-' }}
             </div>
             <div class="margin margin-bottom-15px">
-              <div class="fonts fonts-10 grey">ID Pesanan</div>
+              <div class="fonts fonts-10 grey">ID Transaksi</div>
               <div class="fonts fonts-10 semibold black">
                 {{ form.order_id }}
               </div>
             </div>
             <div class="margin margin-bottom-15px">
-              <div class="fonts fonts-10 grey">Status Pesanan</div>
+              <div class="fonts fonts-10 grey">Status Transaksi</div>
               <div class="display-flex padding padding-top-10px">
                 <AppCardCapsule :data="form.status" />
               </div>
             </div>
             <div class="margin margin-bottom-15px">
-              <div class="fonts fonts-10 grey">Tgl Pesanan</div>
+              <div class="fonts fonts-10 grey">Tgl Transaksi</div>
               <div class="fonts fonts-10 black semibold">
                 {{ form.created_at | moment('dddd, DD MMM YYYY') }}
               </div>
@@ -87,7 +87,7 @@
 
         <div>
           <div class="fonts fonts-9 grey normal margin margin-bottom-10px">
-            Kami masih bisa merubah data pesanan selama status pesanan belum
+            Kami masih bisa merubah data transaksi selama status transaksi belum
             "Selesai".
           </div>
           <button
@@ -95,7 +95,7 @@
             :disabled="!isButtonCustomerDisabled(form)"
             @click="onCustomer(form)"
           >
-            Edit Pesanan
+            Edit Transaksi
           </button>
         </div>
       </div>
@@ -251,7 +251,7 @@
           class="margin margin-bottom-15px border-bottom border-dashed"
         ></div>
         <div class="fonts fonts-9 grey normal margin margin-bottom-10px">
-          Kamu masih bisa merubah data produk selama status pesanan belum
+          Kamu masih bisa merubah data produk selama status transaksi belum
           "Selesai" dan status pembayaran adalah "Belum Bayar".
         </div>
         <button
@@ -399,7 +399,7 @@
           ></div>
 
           <div class="fonts fonts-9 grey normal margin margin-bottom-10px">
-            Kamu bisa melakukan pembayaran untuk pesanan ini.
+            Kamu bisa melakukan pembayaran untuk transaksi ini.
           </div>
           <button class="btn btn-sekunder btn-full" @click="onCheckout(form)">
             Lakukan Pembayaran
@@ -412,10 +412,10 @@
           ></div>
 
           <div class="fonts fonts-9 grey normal margin margin-bottom-10px">
-            Kamu bisa download/print nota untuk pesanan ini.
+            Kamu bisa download/print nota untuk transaksi ini.
           </div>
           <button class="btn btn-sekunder btn-full" @click="onReceipt(form)">
-            Nota Pesanan
+            Nota Transaksi
           </button>
         </div>
       </div>
@@ -428,7 +428,7 @@
                 class="btn btn-full btn-sekunder"
                 @click="onChangeStatus(form, 'on-progress')"
               >
-                Terima Pesanan
+                Terima Transaksi
               </button>
             </div>
 
@@ -447,7 +447,7 @@
                 class="btn btn-full btn-sekunder"
                 @click="onChangeStatus(form, 'delivered')"
               >
-                Pesanan Diterima
+                Transaksi Diterima
               </button>
             </div>
 
@@ -457,7 +457,7 @@
                 class="btn btn-full btn-green"
                 @click="onChangeStatus(form, 'done')"
               >
-                Pesanan Selesai
+                Transaksi Selesai
               </button>
             </div>
 
@@ -469,7 +469,7 @@
                 class="btn btn-full btn-sekunder btn-full"
                 @click="onChangeStatus(form, 'new-order')"
               >
-                Re-open Pesanan
+                Re-open Transaksi
               </button>
             </div>
           </div>
@@ -482,7 +482,7 @@
               class="btn btn-full btn-green"
               @click="onChangeStatus(form, 'done')"
             >
-              Pesanan Selesai
+              Transaksi Selesai
             </button>
           </div>
         </div>

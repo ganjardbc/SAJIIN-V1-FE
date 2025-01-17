@@ -77,7 +77,7 @@
         </div>
       </div>
       <div class="main-content">
-        <div class="main-content-smalls">
+        <div class="width width-100">
           <router-view />
         </div>
         <div class="display-flex center padding padding-20px">
@@ -134,7 +134,6 @@ export default {
       getShop: 'storeSelectedShop/getByID',
       getCashBook: 'storeCashBook/getCurrent',
       resetCashBook: 'storeCashBook/restDataCurrent',
-      dataShop: (state) => state.storeSelectedShop.form,
 
       // old store
       setToast: 'toast/setToast',
@@ -284,7 +283,6 @@ export default {
       dataShop: (state) => state.storeSelectedShop.form,
       matrixDashboard: (state) => state.storeDashboard.matrix,
       dataCurrent: (state) => state.storeCashBook.dataCurrent,
-      // totalUnread: (state) => state.storeNotification.totalUnread,
     }),
     ...mapGetters({
       getSelectedData: 'storeSelectedShop/getSelectedData',
@@ -300,12 +298,6 @@ export default {
         ? this.shopImageThumbnailUrl + this.getSelectedData.image
         : ''
     },
-    isNonFnB() {
-      return this.dataShop && this.dataShop.is_non_fnb
-    },
-    // getTotalUnread () {
-    //     return replaceToMoreValue(this.totalUnread)
-    // },
     getTotalOrder() {
       let total = 0
       if (
@@ -341,7 +333,6 @@ export default {
           value: 0,
           disableMenu: false,
           menu: [
-            // {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'shop-dashboard', permission: 'dashboard'},
             {
               icon: 'fa fa-lg fa-laptop',
               label: 'Kasir',
@@ -351,10 +342,17 @@ export default {
             },
             {
               icon: 'fa fa-lg fa-list-ul',
-              label: this.isNonFnB ? 'Penjualan' : 'Pesanan',
+              label: 'Penjualan',
               value: replaceToMoreValue(this.getTotalOrder),
               link: 'shop-order',
               permission: 'orders',
+            },
+            {
+              icon: 'fa fa-lg fa-calendar-minus',
+              label: 'Pembelian',
+              value: 0,
+              link: 'shop-expense',
+              permission: 'expense-list',
             },
             {
               icon: 'fa fa-lg fa-book-open',
@@ -362,13 +360,6 @@ export default {
               value: replaceToMoreValue(this.getTotalOpenedCashbook),
               link: 'shop-cash-book',
               permission: 'cashbooks',
-            },
-            {
-              icon: 'fa fa-lg fa-box',
-              label: 'Produk',
-              value: 0,
-              link: 'shop-products',
-              permission: 'products',
             },
             {
               icon: 'fa fa-lg fa-bars',

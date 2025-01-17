@@ -1,10 +1,12 @@
 <template>
   <div id="App">
+    <AppHeaderMobile title="Edit Profil" />
     <Profile />
   </div>
 </template>
 <script>
 import Profile from '../../user/profile/Index'
+import AppHeaderMobile from '../../../modules/AppHeaderMobile'
 
 export default {
   name: 'App',
@@ -17,6 +19,7 @@ export default {
     },
   },
   components: {
+    AppHeaderMobile,
     Profile,
   },
 }

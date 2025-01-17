@@ -88,10 +88,10 @@
       <div slot="footer">
         <div class="right-form-footer">
           <div class="field-group" style="padding-top: 0">
-            <div class="field-label">Status Pesanan</div>
+            <div class="field-label">Status Transaksi</div>
             <div class="display-flex space-between">
               <div class="fonts micro black">
-                Apakah pesanan ini sudah "Selesai" ?
+                Apakah transaksi ini sudah "Selesai" ?
               </div>
               <el-switch
                 v-model="form.status"
@@ -106,7 +106,7 @@
             :disabled="isButtonEnable"
             @click="onCreateOrder"
           >
-            Simpan Pesanan
+            Simpan Transaksi
           </button>
         </div>
       </div>

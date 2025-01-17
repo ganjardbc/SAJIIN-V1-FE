@@ -134,7 +134,7 @@ export default {
       let data = [
         {
           value: '',
-          label: 'Semua Tipe',
+          label: 'Semua Kategori',
         },
       ]
       value &&

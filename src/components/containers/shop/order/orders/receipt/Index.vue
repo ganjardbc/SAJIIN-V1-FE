@@ -73,7 +73,7 @@
             <div class="margin margin-top-7px margin-bottom-7px">
               <div class="display-flex space-between">
                 <div style="width: 75px">
-                  <div class="fonts fonts-9">ID Pesanan</div>
+                  <div class="fonts fonts-9">ID Transaksi</div>
                 </div>
                 <div style="width: calc(100% - 75px)">
                   <div class="fonts fonts-9">: {{ form.order_id }}</div>
@@ -226,7 +226,7 @@
 
             <div class="margin margin-top-10px">
               <div class="fonts fonts-8 normal align-center">
-                Scan Untuk Cek Pesanan
+                Scan Untuk Cek Transaksi
               </div>
               <div class="width width-150px width-center">
                 <VueQrcode
@@ -308,7 +308,7 @@ export default {
   name: 'App',
   data() {
     return {
-      title: 'Nota Pesanan',
+      title: 'Nota Transaksi',
       visiblePrintReceipt: false,
       selectedIndex: 1,
       selectedData: thermalSizing[0],
@@ -403,7 +403,7 @@ export default {
 
         // order
         await printer.writeValue(
-          encoder.encode(alignLeft + 'ID Pesanan : ' + data.order_id + CMD.EOL)
+          encoder.encode(alignLeft + 'ID Transaksi : ' + data.order_id + CMD.EOL)
         )
         await printer.writeValue(
           encoder.encode(

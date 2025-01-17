@@ -1,14 +1,12 @@
 <template>
   <div
     id="App"
-    class="display-grid grid-item-3 grid-item-mobile-large-2 grid-item-mobile-micro-1"
+    class="display-grid grid-item-2 grid-item-mobile-large-1"
   >
     <div v-for="(item, i) in data" :key="i" :class="`${column}`">
       <div class="card bg-white box-shadow">
-        <div class="width width-100">
-          <div
-            class="image image-padding border-full margin margin-bottom-15px"
-          >
+        <div class="width width-100 display-flex flex-column">
+          <div class="image image-50px border-full">
             <img
               v-if="item.image"
               :src="productImageThumbnailUrl + item.image"
@@ -17,18 +15,20 @@
             />
             <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
           </div>
-          <div class="fonts fonts-11 semibold">
-            {{ item.name }}
-          </div>
-          <div class="display-flex space-between">
-            <div v-if="item.price" class="fonts fonts-10 grey">
-              {{ format(item.price) }}
+          <div style="width: calc(100% - 65px); margin-left: 15px;">
+            <div class="fonts fonts-11 semibold">
+              {{ item.name }}
             </div>
-            <div
-              v-if="item.details && item.details.length > 0"
-              class="fonts fonts-10 grey"
-            >
-              {{ item.details.length }} Varian
+            <div class="display-flex space-between">
+              <div v-if="item.price" class="fonts fonts-10 grey">
+                {{ format(item.price) }}
+              </div>
+              <div
+                v-if="item.details && item.details.length > 0"
+                class="fonts fonts-10 grey"
+              >
+                {{ item.details.length }} Varian
+              </div>
             </div>
           </div>
         </div>

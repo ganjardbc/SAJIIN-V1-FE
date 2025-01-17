@@ -5,7 +5,7 @@
         class="display-flex space-between display-mobile margin margin-bottom-15px"
       >
         <div class="width width-75 width-mobile display-flex space-between">
-          <h1 class="fonts big black bold">Pengeluaran</h1>
+          <h1 class="fonts big black bold">Pembelian</h1>
           <div class="display-flex">
             <button class="btn btn-icon btn-white" @click="onRefresh">
               <i class="fa fa-lw fa-retweet"></i>
@@ -17,7 +17,7 @@
         </div>
         <div class="width width-25 width-mobile">
           <SearchField
-            :placeholder="'Cari pengeluaran ..'"
+            :placeholder="'Cari transaksi ..'"
             :enableResponsive="true"
             :onChange="(data) => onSearch(data)"
           />
@@ -123,7 +123,7 @@
 
       <AppPopupConfirmed
         v-if="visibleConfirmedDelete"
-        :title="'Hapus pengeluaran ?'"
+        :title="'Hapus transaksi ?'"
         @onClickNo="onClickNoDelete"
         @onClickYes="onClickYesDelete"
       />
@@ -359,7 +359,7 @@ export default {
               this.getData()
             } else {
               this.$message({
-                message: 'Gagal menyimpan pengeluaran',
+                message: 'Gagal menyimpan transaksi',
                 type: 'error',
               })
             }
@@ -376,7 +376,7 @@ export default {
               this.getData()
             } else {
               this.$message({
-                message: 'Gagal merubah pengeluaran',
+                message: 'Gagal merubah transaksi',
                 type: 'error',
               })
             }
@@ -442,7 +442,7 @@ export default {
           this.getData()
         } else {
           this.visibleAlert = true
-          this.titleAlert = 'Gagal menghapus pengeluaran'
+          this.titleAlert = 'Gagal menghapus transaksi'
         }
       })
     },
@@ -487,11 +487,11 @@ export default {
         const status = res.data.status
         if (status === 'ok') {
           this.$message(
-            `Berhasil merubah status pengeluaran ${data.expense_list_id}.`
+            `Berhasil merubah status transaksi ${data.expense_list_id}.`
           )
         } else {
           this.$message(
-            `Gagal merubah status pengeluaran ${data.expense_list_id}.`
+            `Gagal merubah status transaksi ${data.expense_list_id}.`
           )
         }
       })

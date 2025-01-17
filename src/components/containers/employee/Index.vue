@@ -34,7 +34,7 @@ export default {
       case 'kitchen':
         this.cards = [
           {
-            title: 'Task',
+            title: 'Produksi',
             icon: 'fa fa-2x fa-list-alt',
             link: 'employee-task-lists',
           },
@@ -48,7 +48,7 @@ export default {
       case 'waiter':
         this.cards = [
           {
-            title: 'Pesanan',
+            title: 'Penjualan',
             icon: 'fa fa-2x fa-list-ul',
             link: 'employee-orders',
           },
@@ -67,7 +67,7 @@ export default {
             link: 'employee-cashier',
           },
           {
-            title: 'Pesanan',
+            title: 'Penjualan',
             icon: 'fa fa-2x fa-list-ul',
             link: 'employee-orders',
           },
@@ -91,7 +91,7 @@ export default {
             link: 'employee-cash-book',
           },
           {
-            title: 'Pesanan',
+            title: 'Penjualan',
             icon: 'fa fa-2x fa-list-ul',
             link: 'employee-orders',
           },

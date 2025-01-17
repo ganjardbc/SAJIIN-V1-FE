@@ -316,8 +316,8 @@ import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppHeaderMobile from '../../../modules/AppHeaderMobile'
 
 const tabs = [
-  { id: 1, label: 'Pesanan', status: 'active' },
-  { id: 2, label: 'Pengeluaran', status: '' },
+  { id: 1, label: 'Penjualan', status: 'active' },
+  { id: 2, label: 'Pembelian', status: '' },
 ]
 
 export default {

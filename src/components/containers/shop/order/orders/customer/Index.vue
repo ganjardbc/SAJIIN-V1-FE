@@ -1,7 +1,7 @@
 <template>
   <div id="App">
     <AppSideForm
-      :title="'Edit Pesanan'"
+      :title="'Edit Transaksi'"
       :subtitle="form.order_id"
       :enableCustomFooter="true"
       :onClose="onClose"
@@ -9,7 +9,7 @@
       <div
         class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px"
       >
-        <div class="fonts fonts-10 semibold black">Pesanan</div>
+        <div class="fonts fonts-10 semibold black">Transaksi</div>
         <div class="field-group">
           <div class="field-label">Kasir</div>
           <el-input
@@ -52,7 +52,7 @@
 
       <div slot="footer">
         <button class="btn btn-main btn-full" @click="onSave">
-          Simpan Pesanan
+          Simpan Transaksi
         </button>
       </div>
     </AppSideForm>

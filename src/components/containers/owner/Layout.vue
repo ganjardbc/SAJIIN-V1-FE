@@ -1,23 +1,8 @@
 <template>
-  <div id="admin" class="mobile-admin">
-    <div class="sidebar mobile-sidebar">
-      <div class="header mobile-hidden">
-        <div class="header-content display-flex center align-center">
-          <div class="fonts medium bold black">Owner</div>
-        </div>
-      </div>
-      <div class="content with-header">
-        <AppListMenu
-          :data.sync="sidebar"
-          :isSidebarSmall="false"
-          :enableResponsive="true"
-          @onClick="onCloseSidebar"
-        />
-      </div>
-    </div>
-    <div class="main mobile-main">
+  <div id="admin">
+    <div class="main single-container">
       <div class="header">
-        <div class="header-content-fixed">
+        <div class="header-content">
           <div class="header-content-main">
             <div class="width width-auto">
               <router-link
@@ -31,13 +16,29 @@
               <AppCardProfile
                 :data.sync="dataUser"
                 class="margin margin-left-10px"
-              />
+              >
+                <div
+                  slot="customMenu"
+                  class="padding margin margin-bottom-15px padding padding-bottom-15px border-bottom"
+                >
+                  <button
+                    class="btn btn-white btn-align-left btn-full"
+                    @click="goProfile"
+                  >
+                    <i class="icn icn-left fa fa-user"></i>
+                    Edit Profil
+                    <i
+                      class="icn icn-float-right fonts grey fa fa-lg fa-chevron-right"
+                    ></i>
+                  </button>
+                </div>
+              </AppCardProfile>
             </div>
           </div>
         </div>
       </div>
       <div class="main-content">
-        <div class="main-content-smalls">
+        <div class="main-content-small">
           <router-view />
         </div>
         <div class="display-flex center padding padding-20px">
@@ -60,32 +61,6 @@ import icon from '@/assets/img/icon.png'
 import AppToast from '../../modules/AppToast'
 import AppToastMessage from '../../modules/AppToastMessage'
 import AppCardProfile from '../../modules/AppCardProfile'
-import AppListMenu from '../../modules/AppListMenu'
-
-const defaultSidebar = [
-  {
-    icon: 'fa fa-lg fa-database',
-    label: 'OWNER',
-    value: 0,
-    disableMenu: true,
-    menu: [
-      {
-        icon: 'fa fa-lg fa-store',
-        label: 'TOKO',
-        value: 0,
-        link: 'owner-home',
-        permission: 'shops',
-      },
-      {
-        icon: 'fa fa-lg fa-user',
-        label: 'PROFIL',
-        value: 0,
-        link: 'owner-profile',
-        permission: 'profile',
-      },
-    ],
-  },
-]
 
 export default {
   name: 'app',
@@ -93,8 +68,6 @@ export default {
     return {
       logo: logo,
       icon: icon,
-      visibleSidebar: false,
-      sidebar: defaultSidebar,
       countNotif: 0,
     }
   },
@@ -114,7 +87,6 @@ export default {
     AppToastMessage,
     AppToast,
     AppCardProfile,
-    AppListMenu,
   },
   methods: {
     ...mapActions({
@@ -126,11 +98,8 @@ export default {
       setToast: 'toast/setToast',
       setMultipleToast: 'toastmessage/setMultipleToast',
     }),
-    onOpenSidebar() {
-      this.visibleSidebar = true
-    },
-    onCloseSidebar() {
-      this.visibleSidebar = false
+    goProfile() {
+      this.$router.push({ name: 'owner-profile' })
     },
     onChangeMenu(data) {
       this.selectedLabel = this.menuShops[data].label

@@ -10,7 +10,7 @@
       >
         <div class="display-flex align-center">
           <div class="width width-30px">
-            <i class="fa fa-1x fa-list-ul fonts main-color"></i>
+            <i class="fa fa-1x fa-calendar-minus fonts main-color"></i>
           </div>
           <div>
             <div class="fonts fonts-10 semibold">{{ dt.expense_list_id }}</div>

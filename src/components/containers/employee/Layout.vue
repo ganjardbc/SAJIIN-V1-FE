@@ -41,12 +41,6 @@
               </router-link>
             </div>
             <div class="header-content-main-right">
-              <!-- <router-link :to="{name: 'employee-notifications'}">
-                                <button class="btn btn-white btn-icon btn-circle">
-                                    <i class="fa fa-lg fa-bell"></i>
-                                    <span v-if="totalUnread" class="notif">{{ getTotalUnread }}</span>
-                                </button>
-                            </router-link> -->
               <AppCardNotification />
               <AppCardProfile
                 :data.sync="dataUser"
@@ -270,7 +264,6 @@ export default {
       loadingShop: (state) => state.storeSelectedShop.loading,
       matrixDashboard: (state) => state.storeDashboard.matrix,
       dataCurrent: (state) => state.storeCashBook.dataCurrent,
-      // totalUnread: (state) => state.storeNotification.totalUnread,
     }),
     shopId() {
       return this.$store.state.storeSelectedShop.selectedData
@@ -292,9 +285,6 @@ export default {
     isNonFnB() {
       return this.dataShop && this.dataShop.is_non_fnb
     },
-    // getTotalUnread () {
-    //     return replaceToMoreValue(this.totalUnread)
-    // },
     getTotalOrder() {
       let total = 0
       if (
@@ -330,7 +320,6 @@ export default {
           value: 0,
           disableMenu: false,
           menu: [
-            // {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'employee-dashboard', permission: 'dashboard'},
             {
               icon: 'fa fa-lg fa-laptop',
               label: 'Kasir',
@@ -340,10 +329,24 @@ export default {
             },
             {
               icon: 'fa fa-lg fa-list-ul',
-              label: this.isNonFnB ? 'Penjualan' : 'Pesanan',
+              label: 'Penjualan',
               value: replaceToMoreValue(this.getTotalOrder),
               link: 'employee-orders',
               permission: 'orders',
+            },
+            {
+              icon: 'fa fa-lg fa-calendar-minus',
+              label: 'Pembelian',
+              value: 0,
+              link: 'employee-expense',
+              permission: 'expense-list',
+            },
+            {
+              icon: 'fa fa-lg fa-list-alt',
+              label: 'Produksi',
+              value: 0,
+              link: 'employee-task-lists',
+              permission: 'tasklists',
             },
             {
               icon: 'fa fa-lg fa-book-open',
@@ -351,13 +354,6 @@ export default {
               value: replaceToMoreValue(this.getTotalOpenedCashbook),
               link: 'employee-cash-book',
               permission: 'cashbooks',
-            },
-            {
-              icon: 'fa fa-lg fa-box',
-              label: 'Produk',
-              value: 0,
-              link: 'employee-products',
-              permission: 'products',
             },
             {
               icon: 'fa fa-lg fa-bars',

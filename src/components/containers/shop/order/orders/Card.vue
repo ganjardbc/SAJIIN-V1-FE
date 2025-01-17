@@ -58,7 +58,7 @@
       <el-alert
         v-if="!dt.cashbook"
         title="Non Buku Kas !"
-        description="Pesanan ini tidak terdaftar di Buku Kas."
+        description="Transaksi ini tidak terdaftar di Buku Kas."
         type="warning"
         :closable="false"
         show-icon
@@ -335,7 +335,7 @@
               class="btn btn-sekunder margin margin-left-5px"
               @click="onChangeStatus(dt.order, 'on-progress')"
             >
-              Terima Pesanan
+              Terima Transaksi
             </button>
           </div>
           <div v-if="dt.order.status === 'on-progress'">
@@ -352,7 +352,7 @@
               class="btn btn-sekunder margin margin-left-5px"
               @click="onChangeStatus(dt.order, 'delivered')"
             >
-              Pesanan Diterima
+              Diterima Pelanggan
             </button>
           </div>
           <div v-if="dt.order.status === 'delivered'">
@@ -361,7 +361,7 @@
               class="btn btn-green margin margin-left-5px"
               @click="onChangeStatus(dt.order, 'done')"
             >
-              Pesanan Selesai
+              Transaksi Selesai
             </button>
           </div>
         </div>
@@ -372,7 +372,7 @@
               class="btn btn-green margin margin-left-5px"
               @click="onChangeStatus(dt.order, 'done')"
             >
-              Pesanan Selesai
+              Transaksi Selesai
             </button>
           </div>
         </div>

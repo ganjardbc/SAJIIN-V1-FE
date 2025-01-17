@@ -2,8 +2,8 @@
   <div id="EmployeeHome">
     <AppHeaderMobile title="Karyawan" />
     <AppTabLinks :data="tabs" @onChange="onChange" />
-    <EmployeeShifts v-if="selectedIndex === 'shifts'" />
     <EmployeeLists v-if="selectedIndex === 'employees'" />
+    <EmployeeShifts v-if="selectedIndex === 'shifts'" />
   </div>
 </template>
 <script>
@@ -18,8 +18,8 @@ export default {
     return {
       selectedIndex: 'shifts',
       tabs: [
-        { id: 1, title: 'Shift', path: 'shifts' },
-        { id: 2, title: 'Karyawan', path: 'employees' },
+        { id: 1, title: 'Karyawan', path: 'employees' },
+        { id: 2, title: 'Shift', path: 'shifts' },
       ],
     }
   },

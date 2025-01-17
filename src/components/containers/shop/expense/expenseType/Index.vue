@@ -5,7 +5,7 @@
         class="display-flex space-between display-mobile margin margin-bottom-15px"
       >
         <div class="width width-75 width-mobile display-flex space-between">
-          <h1 class="fonts big black bold">Tipe</h1>
+          <h1 class="fonts big black bold">Kategori</h1>
           <div class="display-flex">
             <button class="btn btn-icon btn-white" @click="onRefresh">
               <i class="fa fa-lw fa-retweet"></i>
@@ -21,7 +21,7 @@
         </div>
         <div class="width width-25 width-mobile">
           <SearchField
-            :placeholder="'Cari tipe ..'"
+            :placeholder="'Cari kategori ..'"
             :enableResponsive="true"
             :onChange="(data) => onSearch(data)"
           />
@@ -30,8 +30,8 @@
 
       <el-alert
         v-if="!isRoleOwner"
-        title="Tambah tipe pengeluaran baru ?"
-        description="Untuk menambah tipe pengeluaran baru mohon hubungi Owner dari Toko ini."
+        title="Tambah kategori pengeluaran baru ?"
+        description="Untuk menambah kategori pengeluaran baru mohon hubungi Owner dari Toko ini."
         type="warning"
         :closable="true"
         show-icon
@@ -107,7 +107,7 @@
 
       <AppPopupConfirmed
         v-if="visibleConfirmedDelete"
-        :title="'Hapus tipe pengeluaran ?'"
+        :title="'Hapus kategori ?'"
         @onClickNo="onClickNoDelete"
         @onClickYes="onClickYesDelete"
       />
@@ -307,7 +307,7 @@ export default {
               this.getData()
             } else {
               this.$message({
-                message: 'Gagal menyimpan tipe pengeluaran',
+                message: 'Gagal menyimpan kategori',
                 type: 'error',
               })
             }
@@ -324,7 +324,7 @@ export default {
               this.getData()
             } else {
               this.$message({
-                message: 'Gagal merubah tipe pengeluaran',
+                message: 'Gagal merubah kategori',
                 type: 'error',
               })
             }
@@ -390,7 +390,7 @@ export default {
           this.getData()
         } else {
           this.visibleAlert = true
-          this.titleAlert = 'Gagal menghapus tipe pengeluaran'
+          this.titleAlert = 'Gagal menghapus kategori'
         }
       })
     },
@@ -435,11 +435,11 @@ export default {
         const status = res.data.status
         if (status === 'ok') {
           this.$message(
-            `Berhasil merubah status tipe pengeluaran ${data.expense_type_id}.`
+            `Berhasil merubah status kategori ${data.expense_type_id}.`
           )
         } else {
           this.$message(
-            `Gagal merubah status tipe pengeluaran ${data.expense_type_id}.`
+            `Gagal merubah status kategori ${data.expense_type_id}.`
           )
         }
       })

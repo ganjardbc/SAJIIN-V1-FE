@@ -1,5 +1,7 @@
 <template>
   <div id="App">
+    <AppHeaderMobile title="Produk" />
+
     <div
       class="display-flex space-between display-mobile margin margin-bottom-15px"
     >
@@ -140,6 +142,7 @@ import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../../modules/AppFileUpload'
 import AppTabs from '../../../../modules/AppTabs'
+import AppHeaderMobile from '../../../../modules/AppHeaderMobile'
 import SearchField from '../../../../modules/SearchField'
 import Category from '../categories/Slider'
 import Form from './Form'
@@ -186,6 +189,7 @@ export default {
     AppPopupAlert,
     AppFileUpload,
     AppTabs,
+    AppHeaderMobile,
     SearchField,
     Category,
     Form,

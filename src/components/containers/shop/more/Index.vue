@@ -103,11 +103,18 @@ export default {
     moreMenu() {
       let payload = [
         {
-          icon: 'fa fa-lg fa-list-ol',
-          label: 'Pengeluaran',
+          icon: 'fa fa-lg fa-box',
+          label: 'Produk',
           value: 0,
-          link: 'shop-expense',
-          permission: 'expense-list',
+          link: 'shop-products',
+          permission: 'products',
+        },
+        {
+          icon: 'fa fa-lg fa-percent',
+          label: 'Diskon',
+          value: 0,
+          link: 'shop-discounts',
+          permission: 'settings',
         },
         {
           icon: 'fa fa-lg fa-users',
@@ -121,13 +128,6 @@ export default {
           label: 'Platform',
           value: 0,
           link: 'shop-platforms',
-          permission: 'settings',
-        },
-        {
-          icon: 'fa fa-lg fa-percent',
-          label: 'Diskon',
-          value: 0,
-          link: 'shop-discounts',
           permission: 'settings',
         },
         {

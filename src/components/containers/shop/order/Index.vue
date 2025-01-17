@@ -17,8 +17,8 @@ export default {
     return {
       selectedIndex: 'orders',
       tabs: [
-        { id: 1, title: 'Pesanan', path: 'orders' },
-        { id: 2, title: 'Task Lists', path: 'task-lists' },
+        { id: 1, title: 'Penjualan', path: 'orders' },
+        { id: 2, title: 'Produksi', path: 'task-lists' },
       ],
     }
   },

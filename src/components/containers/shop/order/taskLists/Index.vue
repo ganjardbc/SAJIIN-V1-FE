@@ -5,7 +5,7 @@
         class="display-flex space-between display-mobile margin margin-bottom-15px"
       >
         <div class="width width-60 width-mobile display-flex space-between">
-          <h1 class="fonts big black bold">Task Lists</h1>
+          <h1 class="fonts big black bold">Produksi</h1>
           <div class="display-flex">
             <button class="btn btn-icon btn-white" @click="onRefresh">
               <i class="fa fa-lw fa-retweet"></i>
@@ -14,7 +14,7 @@
         </div>
         <div class="width width-22 width-mobile display-flex space-between">
           <SearchField
-            :placeholder="'Cari pesanan ..'"
+            :placeholder="'Cari transaksi ..'"
             :enableResponsive="true"
             :onChange="(data) => onSearch(data)"
             class="width width-100 margin margin-mobile-bottom-15px"
@@ -91,7 +91,7 @@ export default {
       selectedOrderData: null,
       currentPage: 0,
       visibleConfirmedStatus: false,
-      titleConfirmedStatus: 'Update status pesanan ?',
+      titleConfirmedStatus: 'Update status transaksi ?',
     }
   },
   mounted() {
@@ -216,17 +216,17 @@ export default {
           this.onCloseProduct()
           this.onSendNotification(this.selectedOrderData)
           this.$message(
-            `Berhasil merubah status pesanan ${this.selectedOrderData.order_id}.`
+            `Berhasil merubah status transaksi ${this.selectedOrderData.order_id}.`
           )
         } else {
           this.$message(
-            `Gagal merubah status pesanan ${this.selectedOrderData.order_id}.`
+            `Gagal merubah status transaksi ${this.selectedOrderData.order_id}.`
           )
         }
       })
     },
     onChangeOrderStatus(data) {
-      this.titleConfirmedStatus = 'Pesanan siap diantarkan ?'
+      this.titleConfirmedStatus = 'Produk siap diantarkan ?'
       this.visibleConfirmedStatus = true
       this.selectedOrderData = data
     },
@@ -241,7 +241,7 @@ export default {
         customerName: data.customer_name,
         type: 'order-status',
         message: `
-                    Status pesanan 
+                    Status transaksi 
                     ${data.customer_name ? ' atas nama ' + data.customer_name : ''} 
                     berhasil diubah
                 `,

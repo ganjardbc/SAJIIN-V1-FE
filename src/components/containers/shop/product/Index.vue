@@ -1,5 +1,6 @@
 <template>
   <div id="ProductHome">
+    <AppHeaderMobile title="Produk" />
     <AppTabLinks :data="tabs" @onChange="onChange" />
     <Categories v-if="selectedIndex === 'categories'" />
     <Products v-if="selectedIndex === 'products'" />
@@ -7,6 +8,7 @@
 </template>
 <script>
 import AppTabLinks from '../../../modules/AppTabLinks'
+import AppHeaderMobile from '../../../modules/AppHeaderMobile'
 import Products from './products/Index'
 import Categories from './categories/Index'
 
@@ -23,6 +25,7 @@ export default {
   },
   components: {
     AppTabLinks,
+    AppHeaderMobile,
     Products,
     Categories,
   },

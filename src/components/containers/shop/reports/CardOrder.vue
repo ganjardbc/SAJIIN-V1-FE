@@ -3,7 +3,7 @@
     <div class="card bg-white-grey no-padding margin margin-bottom-15px">
       <div class="width width-100 display-flex space-between align-center wrap">
         <div
-          class="width width-50 padding padding-top-10px padding-bottom-10px"
+          class="width width-30 padding padding-top-10px padding-bottom-10px"
         >
           <div class="padding padding-5px content-center">
             <div class="display-flex center align-center">
@@ -23,7 +23,7 @@
           </div>
         </div>
         <div
-          class="width width-50 padding padding-top-10px padding-bottom-10px"
+          class="width width-30 padding padding-top-10px padding-bottom-10px"
         >
           <div class="padding padding-5px border-left content-center">
             <div class="display-flex center align-center">
@@ -32,7 +32,27 @@
               ></i>
               <span
                 class="fonts fonts-9 normal grey overflow-ellipsis align-center"
-                >Total Keseluruhan</span
+                >Total Kembalian</span
+              >
+            </div>
+            <div
+              class="fonts fonts-11 semibold black overflow-ellipsis align-center"
+            >
+              {{ format(changeTotal) }}
+            </div>
+          </div>
+        </div>
+        <div
+          class="width width-30 padding padding-top-10px padding-bottom-10px"
+        >
+          <div class="padding padding-5px border-left content-center">
+            <div class="display-flex center align-center">
+              <i
+                class="fonts fonts-8 main-color fa fa-lg fa-info-circle margin margin-right-5px"
+              ></i>
+              <span
+                class="fonts fonts-9 normal grey overflow-ellipsis align-center"
+                >Total Penjualan</span
               >
             </div>
             <div
@@ -53,7 +73,7 @@
         align="center"
         :index="indexMethod"
       ></el-table-column>
-      <el-table-column label="ID Pesanan" min-width="200">
+      <el-table-column label="ID Transaksi" min-width="200">
         <template slot-scope="scope">
           <div>
             <AppCardCapsule
@@ -63,7 +83,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Tgl Pesanan" min-width="150">
+      <el-table-column label="Tanggal" min-width="150">
         <template slot-scope="scope">
           <div>{{ scope.row.order.created_at | moment('DD MMM YYYY') }}</div>
         </template>
@@ -102,6 +122,13 @@
               <div style="font-size: 13px; font-weight: bold">
                 {{ dt.quantity }}x
               </div>
+            </div>
+          </div>
+          <div class="width width-full border border-bottom border-dashed margin margin-bottom-5px"></div>
+          <div class="display-flex space-between">
+            <div style="font-size: 13px">Kembalian</div>
+            <div style="font-size: 13px; font-weight: bold">
+              {{ format(scope.row.order.change_price) }}
             </div>
           </div>
         </template>
@@ -174,6 +201,16 @@ export default {
         this.pageSize * this.page - this.pageSize,
         this.pageSize * this.page
       )
+    },
+    changeTotal() {
+      let total = 0
+      if (this.data && this.data.length > 0) {
+        this.data &&
+          this.data.map((item) => {
+            total += item.order.change_price
+          })
+      }
+      return total
     },
     grandTotal() {
       let total = 0

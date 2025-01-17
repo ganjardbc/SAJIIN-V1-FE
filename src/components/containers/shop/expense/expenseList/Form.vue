@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="field-group">
-          <div class="field-label">ID Pengeluaran</div>
+          <div class="field-label">ID Transaksi</div>
           <el-input
             placeholder=""
             type="text"
@@ -37,12 +37,12 @@
           </div>
         </div>
         <div class="field-group">
-          <div class="field-label">Tipe Pengeluaran</div>
+          <div class="field-label">Kategori</div>
           <el-select
             v-model="form.expense_type_id"
             :loading="loadingExpenseType"
             clearable
-            placeholder="Pilih tipe pengeluaran"
+            placeholder="Pilih kategori"
             no-data-text="Data Tidak Ditemukan"
             :disabled="isDetailForm"
             style="width: 100%"
@@ -212,13 +212,13 @@ export default {
       let currentTitle = ''
       switch (this.typeForm) {
         case 'create':
-          currentTitle = 'Tambah Pengeluaran'
+          currentTitle = 'Tambah Transaksi'
           break
         case 'detail':
-          currentTitle = 'Detail Pengeluaran'
+          currentTitle = 'Detail Transaksi'
           break
         case 'edit':
-          currentTitle = 'Edit Pengeluaran'
+          currentTitle = 'Edit Transaksi'
           break
       }
       return currentTitle
