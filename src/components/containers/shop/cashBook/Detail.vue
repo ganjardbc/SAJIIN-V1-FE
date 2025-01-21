@@ -553,7 +553,7 @@ import AppCardCapsule from '../../../modules/AppCardCapsule'
 import AppCardCollapse from '../../../modules/AppCardCollapse'
 import AppTabs from '../../../modules/AppTabs'
 import AppEmpty from '../../../modules/AppEmpty'
-import CardOrder from '../reports/CardOrder'
+import CardOrder from '../reports/orderExpense/CardOrder'
 import OrderStatus from './OrderStatus'
 
 export default {

@@ -153,9 +153,9 @@
 import { mapActions, mapState } from 'vuex'
 import ViewPdf from 'vue-pdf'
 import moment from 'moment'
-import AppCardPopup from '../../../modules/AppCardPopup'
-import AppEmpty from '../../../modules/AppEmpty'
-import AppPopupLoader from '../../../modules/AppPopupLoader'
+import AppCardPopup from '../../../../modules/AppCardPopup'
+import AppEmpty from '../../../../modules/AppEmpty'
+import AppPopupLoader from '../../../../modules/AppPopupLoader'
 
 export default {
   data() {

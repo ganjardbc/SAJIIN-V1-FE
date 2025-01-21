@@ -58,6 +58,12 @@ export default {
     cashSummary: 0,
     cashProfit: 0,
     cashActual: 0,
+    cashFlow: 0,
+    cashEnding: 0,
+    discountOrder: 0,
+    lossProfit: 0,
+    lossProfitOperational: 0,
+    lossProfitClean: 0,
     loading: false,
     loadingDownload: false,
     loadingDownloadOnly: false,
@@ -138,6 +144,24 @@ export default {
     SET_CASH_ACTUAL(state, value) {
       state.cashActual = value
     },
+    SET_CASH_FLOW(state, value) {
+      state.cashFlow = value
+    },
+    SET_CASH_ENDING(state, value) {
+      state.cashEnding = value
+    },
+    SET_DISCOUNT_ORDER(state, value) {
+      state.discountOrder = value
+    },
+    SET_LOSS_PROFIT(state, value) {
+      state.lossProfit = value
+    },
+    SET_LOSS_PROFIT_OPERATIONAL(state, value) {
+      state.lossProfitOperational = value
+    },
+    SET_LOSS_PROFIT_CLEAN(state, value) {
+      state.lossProfitClean = value
+    },
     SET_TOTAL_RECORD(state, value) {
       state.totalRecord = value
     },
@@ -173,6 +197,8 @@ export default {
       state.cashSummary = 0
       state.cashActual = 0
       state.cashProfit = 0
+      state.discountOrder = 0
+      state.lossProfit = 0
       state.expense.data = []
       state.expense.grandItem = 0
       state.expense.grandTotal = 0
@@ -223,6 +249,12 @@ export default {
           commit('SET_CASH_SUMMARY', res.data.cash_summary)
           commit('SET_CASH_PROFIT', res.data.cash_profit)
           commit('SET_CASH_ACTUAL', res.data.cash_actual)
+          commit('SET_CASH_FLOW', res.data.cash_flow)
+          commit('SET_CASH_ENDING', res.data.cash_ending)
+          commit('SET_DISCOUNT_ORDER', res.data.discount_order)
+          commit('SET_LOSS_PROFIT', res.data.loss_profit)
+          commit('SET_LOSS_PROFIT_OPERATIONAL', res.data.loss_profit_operational)
+          commit('SET_LOSS_PROFIT_CLEAN', res.data.loss_profit_clean)
           commit('SET_TOTAL_RECORD', res.data.total_record)
           commit('SET_EXPENSE_DATA', res.data.expense_list)
           commit('SET_EXPENSE_GRAND_ITEM', res.data.expense_list_item)
