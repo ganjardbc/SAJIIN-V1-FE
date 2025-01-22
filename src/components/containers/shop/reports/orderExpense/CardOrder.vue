@@ -177,7 +177,7 @@
   </div>
 </template>
 <script>
-import AppCardCapsule from '../../../modules/AppCardCapsule'
+import AppCardCapsule from '../../../../modules/AppCardCapsule'
 
 export default {
   name: 'AppCardOrder',

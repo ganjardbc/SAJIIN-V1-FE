@@ -192,7 +192,7 @@ import { mapState } from 'vuex'
 import AppSideForm from '../../../modules/AppSideForm'
 import AppCardCapsule from '../../../modules/AppCardCapsule'
 import AppCardCollapse from '../../../modules/AppCardCollapse'
-import CardOrder from '../reports/CardOrder'
+import CardOrder from '../reports/orderExpense/CardOrder'
 import OrderStatus from './OrderStatus'
 
 export default {
