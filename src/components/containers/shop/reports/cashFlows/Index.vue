@@ -58,7 +58,7 @@
       </div>
 
       <div class="display-flex space-between align-center margin margin-top-15px">
-        <div class="fonts fonts-14px black semibold">Saldow Awal</div>
+        <div class="fonts fonts-14px black semibold">Saldo Awal</div>
         <div class="fonts fonts-14px black semibold">{{ format(cashModal) }}</div>
       </div>
 
