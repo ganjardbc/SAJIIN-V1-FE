@@ -253,7 +253,41 @@ export default {
       this.getData(payload)
     },
     downloadReport() {
-      console.log('Download Report')
+      const token = this.$cookies.get('tokenBearer')
+      const shop_id = this.shopId
+      const search = this.filter.search
+      const startDate = moment(this.filter.order_date[0]).format(
+        'YYYY-MM-DD 00:00:00'
+      )
+      const endDate = moment(this.filter.order_date[1]).format(
+        'YYYY-MM-DD 23:59:59'
+      )
+      const orderStatus =
+        this.filter.order_status !== 'all' ? this.filter.order_status : ''
+      const paymentStatus =
+        this.filter.payment_status !== 'all' ? this.filter.payment_status : ''
+
+      const payload = {
+        search: search,
+        status: orderStatus,
+        payment_status: paymentStatus,
+        start_date: startDate,
+        end_date: endDate,
+        shop_id: shop_id,
+        token: token,
+        download_type: 'cash-flows',
+      }
+
+      this.download(payload).then((res) => {
+        if (res.status === 200) {
+          this.$message('Downloaded order report')
+        } else {
+          this.$message({
+            message: 'Failed to download order report',
+            type: 'error',
+          })
+        }
+      })
     },
   },
 }

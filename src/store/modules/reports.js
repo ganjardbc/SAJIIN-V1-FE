@@ -278,6 +278,7 @@ export default {
         payment_status: data.payment_status,
         start_date: data.start_date,
         end_date: data.end_date,
+        download_type: data.download_type,
         shop_id: data.shop_id,
         cashbook_id: data.cashbook_id,
       }

@@ -592,6 +592,7 @@ export default {
         end_date: endDate,
         shop_id: shop_id,
         token: token,
+        download_type: 'order-reports',
       }
 
       this.download(payload).then((res) => {

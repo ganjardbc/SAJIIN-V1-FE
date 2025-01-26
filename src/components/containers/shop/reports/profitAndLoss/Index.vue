@@ -282,6 +282,7 @@ export default {
         end_date: endDate,
         shop_id: shop_id,
         token: token,
+        download_type: 'profit-and-loss',
       }
 
       this.download(payload).then((res) => {
