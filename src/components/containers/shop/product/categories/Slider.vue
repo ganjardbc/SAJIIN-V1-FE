@@ -150,7 +150,7 @@ export default {
         return {
           id: item.id,
           label: item.name,
-          image: item.image ? this.categoryImageThumbnailUrl + item.image : '',
+          image: item.imageUrl ? item.imageUrl : '',
           status: item.status,
           icon: 'fa fa-lw fa-box',
         }
@@ -210,6 +210,15 @@ export default {
       if (shop_id) {
         this.filter.status = ''
         this.getCategory({ token, shop_id })
+        .then((res) => {
+          const statusCode = res.data.statusCode
+          if (statusCode >= 400) {
+            this.$notify.error({
+              title: 'Error while getting category',
+              message: res.data.message
+            });
+          }
+        })
       }
     },
     handleCurrentChange(value) {
@@ -256,16 +265,15 @@ export default {
             ...this.form,
             token: token,
           }).then((res) => {
-            const status = res.data.status
-            if (status === 'ok') {
-              this.formClass = false
-              this.getData()
-            } else {
-              this.$message({
-                message: 'Gagal merubah kategori',
-                type: 'error',
-              })
+            const statusCode = res.data.statusCode
+            if (statusCode >= 400) {
+              this.$notify.error({
+                title: 'Error while updating category',
+                message: res.data.message
+              });
             }
+            this.formClass = false
+            this.getData()
           })
           break
       }
@@ -352,20 +360,22 @@ export default {
     onUpdateCover(data) {
       this.visibleUpdateCover = false
       const token = this.$cookies.get('tokenBearer')
+      const shop_id = this.shopId
       this.uploadCover({
         ...this.form,
         image: data,
         token: token,
+        shopId: shop_id
       }).then((res) => {
-        const status = res.data.status
-        if (status === 'ok') {
-          this.formClass = false
-          this.getData()
-        } else {
-          this.formClass = false
-          this.visibleAlert = true
-          this.titleAlert = 'Gagal upload cover'
+        const statusCode = res.data.statusCode
+        if (statusCode >= 400) {
+          this.$notify.error({
+            title: 'Error while uploading cover',
+            message: res.data.message
+          });
         }
+        this.formClass = false
+        this.getData()
       })
     },
 

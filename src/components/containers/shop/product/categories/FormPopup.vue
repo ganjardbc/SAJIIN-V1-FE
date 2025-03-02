@@ -1,11 +1,11 @@
 <template>
   <div id="App">
     <AppCardPopup :title="title" height="250px" @onClose="onClose">
-      <div v-if="isEditForm" slot="toolbar" class="margin margin-right-10px">
+      <!-- <div v-if="isEditForm" slot="toolbar" class="margin margin-right-10px">
         <button class="btn btn-sekunder btn-full" @click="onDelete(form)">
           Hapus
         </button>
-      </div>
+      </div> -->
       <div class="margin margin-bottom-20px">
         <div class="fonts fonts-13 black semibold">Informasi</div>
         <div class="field-group">
@@ -13,8 +13,8 @@
           <div class="width width-80px">
             <div class="image image-padding border border-full">
               <img
-                v-if="form.image"
-                :src="getCover"
+                v-if="form.imageUrl"
+                :src="form.imageUrl"
                 alt=""
                 class="post-center"
               />
@@ -37,11 +37,11 @@
           <el-input
             placeholder=""
             type="text"
-            v-model="form.category_id"
+            v-model="form.categoryId"
             :disabled="true"
           ></el-input>
-          <div v-if="errorMessage.category_id" class="field-error">
-            {{ errorMessage.category_id && errorMessage.category_id[0] }}
+          <div v-if="errorMessage.categoryId" class="field-error">
+            {{ errorMessage.categoryId && errorMessage.categoryId[0] }}
           </div>
         </div>
         <div class="field-group">
@@ -134,11 +134,6 @@ export default {
         status = true
       }
       return status
-    },
-    getCover() {
-      return this.form.image
-        ? this.categoryImageThumbnailUrl + this.form.image
-        : ''
     },
   },
   components: {

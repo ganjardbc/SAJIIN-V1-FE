@@ -413,8 +413,7 @@ export default {
         image: data,
         token: token,
       }).then((res) => {
-        const status = res.data.status
-        if (status === 'ok') {
+        if (res.data.statusCode === "200") {
           this.getData()
         } else {
           this.visibleAlert = true

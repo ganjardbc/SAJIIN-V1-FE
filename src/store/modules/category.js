@@ -1,4 +1,5 @@
 import axios from 'axios'
+import apiv2 from '@/services/axios'
 
 const defaultMessage = () => {
   return {
@@ -14,9 +15,6 @@ const defaultMessage = () => {
 
 const defaultForm = () => {
   return {
-    id: '',
-    category_id: '',
-    image: '',
     name: '',
     status: 'active',
     description: '',
@@ -112,32 +110,23 @@ export default {
       let dataPrev = []
 
       let params = {
-        // limit: state.limit,
-        // offset: state.offset,
-        search: state.filter.search,
-        status: state.filter.status,
-        shop_id: data.shop_id,
+        shopId: data.shop_id,
       }
 
-      return axios
-        .post('/api/category/getAll', params, {
-          headers: { Authorization: data.token },
-        })
+      return apiv2
+        .get(`/api/categories`, {params})
         .then((res) => {
           const payload = res.data.data
-
-          payload &&
-            payload.map((dt) => {
-              dataPrev.push({ ...dt })
-            })
-
-          commit('SET_DATA', dataPrev)
-          commit('SET_TOTAL_RECORD', res.data.total_record)
-
+          commit('SET_DATA', payload)
+          commit('SET_TOTAL_RECORD', res.data.pagination.totalItem)
           return res
         })
         .catch((e) => {
-          console.log('error', e)
+          if (e.response) {
+            return e.response
+          } else {
+            return e
+          }
         })
         .finally(() => {
           commit('SET_LOADING', false)
@@ -174,24 +163,23 @@ export default {
       commit('SET_LOADING_FORM', true)
 
       const params = {
-        ...data,
+        shopId: data.shopId,
+        name: data.name,
+        status: data.status,
+        description: data.description
       }
 
-      return axios
-        .post('/api/category/update', params, {
-          headers: { Authorization: data.token },
-        })
+      return apiv2
+        .put(`/api/categories/${data.id}`, params)
         .then((res) => {
-          const data = res.data
-          if (data.status === 'ok') {
-            commit('SET_MESSAGE_DATA', data.message)
-          } else {
-            commit('SET_MESSAGE_DATA', data.message)
-          }
-          return res
+          return res.data
         })
         .catch((e) => {
-          console.log('error', e)
+          if (e.response) {
+            return e.response
+          } else {
+            return e
+          }
         })
         .finally(() => {
           commit('SET_LOADING_FORM', false)
@@ -222,18 +210,24 @@ export default {
       commit('SET_LOADING_FORM', true)
 
       let params = new FormData()
-      params.append('category_id', data.category_id)
       params.append('image', data.image)
 
-      return axios
-        .post('/api/category/uploadImage', params, {
-          headers: { Authorization: data.token },
+      return apiv2
+        .post(`/api/categories/${data.id}/upload-image?shopId=${data.shopId}`, params, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         })
         .then((res) => {
-          return res
+          const payload = res.data
+          return payload
         })
         .catch((e) => {
-          console.log('error', e)
+          if (e.response) {
+            return e.response
+          } else {
+            return e
+          }
         })
         .finally(() => {
           commit('SET_LOADING_FORM', false)
