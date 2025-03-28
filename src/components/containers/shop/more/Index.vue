@@ -104,17 +104,10 @@ export default {
       let payload = [
         {
           icon: 'fa fa-lg fa-box',
-          label: 'Produk',
+          label: 'Product',
           value: 0,
           link: 'shop-products',
           permission: 'products',
-        },
-        {
-          icon: 'fa fa-lg fa-percent',
-          label: 'Diskon',
-          value: 0,
-          link: 'shop-discounts',
-          permission: 'settings',
         },
         {
           icon: 'fa fa-lg fa-users',
@@ -122,13 +115,6 @@ export default {
           value: 0,
           link: 'shop-employee',
           permission: 'employees',
-        },
-        {
-          icon: 'fa fa-lg fa-flag',
-          label: 'Platform',
-          value: 0,
-          link: 'shop-platforms',
-          permission: 'settings',
         },
         {
           icon: 'fa fa-lg fa-th-large',
@@ -144,20 +130,42 @@ export default {
           link: 'shop-reports',
           permission: 'reports',
         },
-        {
-          icon: 'fa fa-lg fa-cogs',
-          label: 'Pengaturan',
-          value: 0,
-          link: 'shop-settings',
-          permission: 'settings',
-        },
       ]
+      if (this.isOwner) {
+        payload = [
+          ...payload,
+          {
+            icon: 'fa fa-lg fa-percent',
+            label: 'Diskon',
+            value: 0,
+            link: 'shop-discounts',
+            permission: 'settings',
+          },
+          {
+            icon: 'fa fa-lg fa-flag',
+            label: 'Platform',
+            value: 0,
+            link: 'shop-platforms',
+            permission: 'settings',
+          },
+          {
+            icon: 'fa fa-lg fa-cogs',
+            label: 'Pengaturan',
+            value: 0,
+            link: 'shop-settings',
+            permission: 'settings',
+          },
+        ]
+      }
       if (this.isNonFnB) {
         payload = payload.filter((item) => {
           return item.permission !== 'tables'
         })
       }
       return payload
+    },
+    isOwner() {
+      return this.form.role_name === 'owner'
     },
     isNonFnB() {
       return this.dataShop && this.dataShop.is_non_fnb

@@ -51,6 +51,7 @@
                   class="padding margin margin-bottom-15px padding padding-bottom-15px border-bottom"
                 >
                   <button
+                    v-if="isOwner"
                     class="btn btn-white btn-align-left btn-full margin margin-bottom-5px"
                     @click="goBack"
                   >
@@ -292,6 +293,9 @@ export default {
     },
     dataUser() {
       return this.data && this.data.user
+    },
+    isOwner() {
+      return this.dataUser.role_name === 'owner'
     },
     storeLogo() {
       return this.getSelectedData

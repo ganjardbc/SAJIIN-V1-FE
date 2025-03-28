@@ -147,11 +147,12 @@ export default {
         this.$cookies.set('permissions', JSON.stringify(data.permissions))
 
         if (data.user.role_name === 'admin') {
-          this.$router.replace('/admin/home')
+          this.$router.replace({ name: 'admin-home' })
         } else if (data.user.role_name === 'owner') {
-          this.$router.replace('/owner/home')
+          this.$router.replace({ name: 'owner-home' })
         } else {
-          this.$router.replace('/employee/home')
+          this.$store.state.storeSelectedShop.selectedData = data.shop.id
+          this.$router.replace({ name: 'shop-home', params: { shopId: data.shop.shop_id } })
         }
       }
     },

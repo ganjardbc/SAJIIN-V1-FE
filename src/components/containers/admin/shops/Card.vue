@@ -42,21 +42,6 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Link" width="120">
-        <template slot-scope="scope">
-          <div
-            v-if="scope.row.shop.status === 'active'"
-            class="display-flex flex-start"
-          >
-            <button
-              class="btn btn-sekunder margin margin-left-10px"
-              @click="onManage(scope.row.shop)"
-            >
-              Kelola
-            </button>
-          </div>
-        </template>
-      </el-table-column>
       <el-table-column width="60">
         <template slot-scope="scope">
           <el-popover placement="bottom-end" width="180" trigger="click">

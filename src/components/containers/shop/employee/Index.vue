@@ -16,7 +16,7 @@ export default {
   name: 'EmployeeHome',
   data() {
     return {
-      selectedIndex: 'shifts',
+      selectedIndex: 'employees',
       tabs: [
         { id: 1, title: 'Karyawan', path: 'employees' },
         { id: 2, title: 'Shift', path: 'shifts' },
