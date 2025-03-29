@@ -26,13 +26,26 @@ export default {
   data() {
     return {
       cards: [
-        { title: 'Kasir', icon: 'fa fa-2x fa-laptop', link: 'shop-cashier' },
-        { title: 'Penjualan', icon: 'fa fa-2x fa-list-ul', link: 'shop-order' },
-        { title: 'Pembelian', icon: 'fa fa-2x fa-calendar-minus', link: 'shop-expense' },
+        { title: 'Kasir', icon: 'fa fa-2x fa-laptop', link: 'shop-cashier', permission: 'cashier' },
+        { title: 'Penjualan', icon: 'fa fa-2x fa-list-ul', link: 'shop-orders', permission: 'orders' },
+        {
+          title: 'Produksi',
+          icon: 'fa fa-2x fa-cubes',
+          link: 'shop-task-lists',
+          permission: 'tasklists',
+        },
+        { title: 'Pembelian', icon: 'fa fa-2x fa-coins', link: 'shop-expense', permission: 'expense-list' },
         {
           title: 'Buku Kas',
-          icon: 'fa fa-2x fa-book-open',
+          icon: 'fa fa-2x fa-money-check',
           link: 'shop-cash-book',
+          permission: 'cashbooks',
+        },
+        {
+          title: 'Lainnya',
+          icon: 'fa fa-2x fa-bars',
+          link: 'shop-more',
+          permission: 'more',
         },
       ],
     }

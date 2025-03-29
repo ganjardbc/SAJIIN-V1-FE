@@ -152,7 +152,7 @@ export default {
   name: 'App',
   metaInfo: {
     title: 'Shop',
-    titleTemplate: '%s | Expense Type',
+    titleTemplate: '%s | Kategori',
     htmlAttrs: {
       lang: 'en',
       amp: true,

@@ -169,7 +169,7 @@ export default {
   name: 'App',
   metaInfo: {
     title: 'Shop',
-    titleTemplate: '%s | Expense List',
+    titleTemplate: '%s | Pembelian',
     htmlAttrs: {
       lang: 'en',
       amp: true,

@@ -210,7 +210,7 @@ export default {
   name: 'App',
   metaInfo: {
     title: 'Shop',
-    titleTemplate: '%s | Orders',
+    titleTemplate: '%s | Penjualan',
     htmlAttrs: {
       lang: 'en',
       amp: true,

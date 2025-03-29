@@ -53,7 +53,7 @@
                   <div class="ml-icon" exact>
                     <i :class="child.icon" />
                   </div>
-                  <div class="ml-label">
+                  <div class="ml-label mobile-micro-hidden">
                     {{ child.label }}
                   </div>
                   <div class="val-container">

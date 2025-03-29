@@ -335,7 +335,7 @@ export default {
               permission: 'orders',
             },
             {
-              icon: 'fa fa-lg fa-calendar-minus',
+              icon: 'fa fa-lg fa-coins',
               label: 'Pembelian',
               value: 0,
               link: 'employee-expense',

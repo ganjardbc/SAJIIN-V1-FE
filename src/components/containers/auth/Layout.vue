@@ -10,12 +10,15 @@ export default {
   beforeMount: function () {
     if (this.$cookies.get('token')) {
       const user = this.$cookies.get('user')
+      const shop = this.$cookies.get('shop')
+
       if (user.role_name === 'admin') {
-        this.$router.replace('/admin/home')
+        this.$router.replace({ name: 'admin-home' })
       } else if (user.role_name === 'owner') {
-        this.$router.replace('/owner/home')
+        this.$router.replace({ name: 'owner-home' })
       } else {
-        this.$router.replace('/employee/home')
+        this.$store.state.storeSelectedShop.selectedData = shop.id
+        this.$router.replace({ name: 'shop-home', params: { shopId: shop.shop_id } })
       }
     }
   },

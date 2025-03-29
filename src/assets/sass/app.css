@@ -130261,6 +130261,36 @@ a {
   }
 }
 
+@media (max-width: 414px) {
+  .mobile-small-hidden {
+    display: none !important;
+  }
+}
+
+.mobile-small-visible {
+  display: none !important;
+}
+@media (max-width: 414px) {
+  .mobile-small-visible {
+    display: block !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .mobile-micro-hidden {
+    display: none !important;
+  }
+}
+
+.mobile-micro-visible {
+  display: none !important;
+}
+@media (max-width: 375px) {
+  .mobile-micro-visible {
+    display: block !important;
+  }
+}
+
 .show-app {
   display: block;
   -webkit-transition: all 0.25s ease;

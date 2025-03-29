@@ -80,7 +80,7 @@ export default {
   name: 'App',
   metaInfo: {
     title: 'Shop',
-    titleTemplate: '%s | Task Lists',
+    titleTemplate: '%s | Produksi',
     htmlAttrs: {
       lang: 'en',
       amp: true,

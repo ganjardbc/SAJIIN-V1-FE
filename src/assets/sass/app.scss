@@ -1159,6 +1159,32 @@ a {
     }
 }
 
+.mobile-small-hidden {
+    @media (max-width: $sml-width) {
+        display: none !important;
+    }
+}
+
+.mobile-small-visible {
+    display: none !important;
+    @media (max-width: $sml-width) {
+        display: block !important;
+    }
+}
+
+.mobile-micro-hidden {
+    @media (max-width: $mic-width) {
+        display: none !important;
+    }
+}
+
+.mobile-micro-visible {
+    display: none !important;
+    @media (max-width: $mic-width) {
+        display: block !important;
+    }
+}
+
 .show-app {
     display: block;
     @include animate_1();
