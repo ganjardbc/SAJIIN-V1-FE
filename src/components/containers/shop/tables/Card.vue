@@ -1,88 +1,85 @@
 <template>
-  <div id="App">
+  <div id="App" class="flex flex-col gap-4">
     <div
       v-for="(dt, i) in data"
       :key="i"
-      class="card box-shadow margin margin-top-15px margin-bottom-15px"
+      class="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-4"
     >
-      <div
-        class="display-flex space-between align-center padding padding-bottom-15px margin margin-bottom-20px border-bottom"
-      >
-        <div class="display-flex align-center">
-          <div class="width width-30px">
-            <i class="fa fa-1x fa-th-large fonts main-color"></i>
-          </div>
-          <div>
-            <div class="fonts fonts-10 semibold">{{ dt.table_id }}</div>
-            <div class="fonts fonts-10 grey">
+      <div class="flex justify-between items-center pb-4 border-b border-gray-200">
+        <div class="flex items-center gap-2">
+          <i class="fa fa-1x fa-th-large text-vermillion-500"></i>
+          <div class="flex-1 flex flex-col">
+            <div class="text text-xs text-black font-semibold">
+              {{ dt.table_id }}
+            </div>
+            <div class="text text-xs text-gray-500">
               {{ dt.created_at | moment('DD MMMM YYYY') }}
             </div>
           </div>
         </div>
-        <div class="display-flex flex-end align-center">
-          <AppCardCapsule :data="dt.status" class="margin margin-left-10px" />
-          <el-popover placement="bottom-end" width="180" trigger="click">
-            <div class="width width-100">
+        <div class="flex flex-end items-center gap-2">
+          <AppCardCapsule :data="dt.status" />
+          <el-popover placement="bottom-end" class="flex-1" trigger="click">
+            <div class="default-menu">
               <button
-                class="btn btn-white btn-full btn-align-left"
+                class="menu-item small"
                 @click="onEdit(dt)"
               >
-                <i class="icn icn-left fa fa-lw fa-edit"></i> Edit
+                <i class="icon fa fa-lw fa-edit"></i>
+                <span class="label text-left">Edit</span>
               </button>
               <button
-                class="btn btn-white btn-full btn-align-left"
+                class="menu-item small"
                 @click="onDetail(dt)"
               >
-                <i class="icn icn-left fa fa-lw fa-align-left"></i> Detail
+                <i class="icon fa fa-lw fa-align-left"></i>
+                <span class="label text-left">Detail</span>
               </button>
               <button
                 v-if="isRoleOwner"
-                class="btn btn-white btn-full btn-align-left"
+                class="menu-item small"
                 @click="onDelete(dt)"
               >
-                <i class="icn icn-left fa fa-lw fa-trash-alt"></i> Hapus
+                <i class="icon fa fa-lw fa-trash-alt"></i>
+                <span class="label text-left">Hapus</span>
               </button>
             </div>
-            <button slot="reference" class="btn btn-icon btn-circle btn-white">
+            <el-button
+              slot="reference"
+              size="small"
+              circle
+              style="width: 32px; height: 32px;"
+            >
               <i class="fa fa-lw fa-ellipsis-v"></i>
-            </button>
+            </el-button>
           </el-popover>
         </div>
       </div>
 
-      <div class="display-flex space-between">
-        <div class="width width-80px margin marign-right-15px">
-          <div class="image image-padding border-full">
-            <img
-              v-if="dt.image"
-              :src="tableImageThumbnailUrl + dt.image"
-              alt=""
-              class="post-center"
-            />
-            <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-            <button
-              class="btn btn-sekunder btn-small-icon btn-circle"
-              style="position: absolute; bottom: 5px; right: 5px"
-              @click="onChangeCover(dt)"
-            >
-              <i
-                class="post-middle-absolute fonts fonts-11 grey fa fa-lg fa-camera"
-              />
-            </button>
-          </div>
-        </div>
-        <div style="width: calc(100% - 95px)">
-          <div class="width width-100">
-            <div class="fonts fonts-11 semibold">
+      <div class="flex flex-col md:flex-row justify-between gap-4">
+        <AppCardAvatar
+          :src="`${tableImageThumbnailUrl}${dt.image}`"
+          :is-upload="isRoleOwner"
+          @upload="onChangeCover(dt)"
+        />
+        <div class="flex-1 flex flex-col gap-2">
+          <div class="w-full flex flex-col gap-1">
+            <div class="text-sm text-black font-semibold">
               {{ dt.name }} ({{ dt.code }})
             </div>
             <AppCardCaption
+              v-if="dt.description"
               icon="fa fa-lg fa-info-circle"
               :caption="dt.description"
             />
+            <AppCardCaption
+              v-if="dt.price"
+              icon="fa fa-lg fa-calculator"
+              :caption="format(dt.price)"
+            />
           </div>
-          <div class="display-flex space-between padding padding-top-15px">
-            <div class="fonts micro black semibold">Status</div>
+          <div class="w-full flex justify-between items-center">
+            <div class="text-sm text-black font-semibold">Status</div>
             <el-switch
               v-model="dt.status"
               :active-value="'active'"
@@ -98,6 +95,7 @@
   </div>
 </template>
 <script>
+import AppCardAvatar from '../../../modules/AppCardAvatar'
 import AppCardCapsule from '../../../modules/AppCardCapsule'
 import AppCardCaption from '../../../modules/AppCardCaption'
 
@@ -107,6 +105,7 @@ export default {
     data: null,
   },
   components: {
+    AppCardAvatar,
     AppCardCapsule,
     AppCardCaption,
   },

@@ -1,0 +1,334 @@
+/* src/assets/css/app.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+$--color-primary: FB3640 !default;
+/* $--color-success: $green !default;
+$--color-danger: $red !default; */
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: 'Graphik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.field-group {
+  @apply flex flex-col gap-1;
+}
+
+.field-label {
+  @apply text-md text-gray-700;
+}
+
+.field-error {
+  @apply text-sm text-red-600;
+}
+
+.field-caption {
+  @apply text-xs text-gray-500;
+}
+
+/* DEFAULT LAYOUTS */
+.default-layout {
+  @apply w-full h-screen;
+}
+
+.default-layout .header {
+  @apply sticky top-0 left-0 px-2 flex items-center justify-between w-full bg-white border-b border-gray-200 overflow-hidden;
+  height: 60px;
+  z-index: 10;
+}
+
+.default-layout .header .title {
+  @apply text-2xl text-black font-semibold;
+}
+
+@media (max-width: 768px) {
+  .default-layout .header .title {
+    display: none;
+  }
+}
+
+.default-layout .header .logo {
+  height: 32px;
+}
+
+.default-layout .content {
+  @apply relative w-full flex;
+  height: calc(100vh - 60px);
+}
+
+@media (max-width: 768px) {
+  .default-layout .content {
+    height: calc(100vh - 120px);
+  }
+}
+
+.default-layout .sidebar {
+  @apply sticky left-0 top-0 h-full bg-white border-r border-gray-200 overflow-y-auto;
+  width: 280px;
+}
+
+.default-layout.collapse .sidebar {
+  width: 84px;
+}
+
+@media (max-width: 768px) {
+  .default-layout .sidebar {
+    @apply fixed top-0;
+    display: none;
+  }
+}
+
+.default-layout .viewer {
+  @apply h-full overflow-y-auto;
+  width: calc(100% - 280px);
+}
+
+.default-layout.collapse .viewer {
+  width: calc(100% - 84px);
+}
+
+@media (max-width: 768px) {
+  .default-layout .viewer,
+  .default-layout.collapse .viewer {
+    @apply w-full;
+  }
+}
+
+.default-layout .menu {
+  @apply flex gap-2 justify-center items-center px-4 rounded-lg;
+  min-width: 48px;
+  height: 48px;
+}
+
+.default-layout .menu .icon {
+  @apply text-gray-700;
+  font-size: 14px;
+}
+
+.default-layout .menu .label {
+  @apply text-gray-500;
+  font-size: 12px;
+}
+
+.default-layout .menu:hover {
+  @apply bg-gray-100 cursor-pointer;
+}
+
+.default-layout .menu.router-link-active {
+  @apply bg-vermillion-100;
+}
+
+.default-layout .menu.router-link-active .icon {
+  @apply text-vermillion-500;
+}
+
+.default-layout .menu.router-link-active .label {
+  @apply text-vermillion-500;
+}
+
+.default-layout .navbar {
+  @apply flex items-center overflow-hidden;
+  height: 60px;
+}
+
+.default-layout .navbar .menu {
+  min-width: 36px;
+  height: 36px;
+}
+
+@media (max-width: 768px) {
+  .default-layout .navbar {
+    @apply fixed bottom-0 left-0 w-full flex justify-around bg-white border-t border-gray-200;
+    top: unset;
+  }
+
+  .default-layout .navbar .menu {
+    @apply flex-1 flex-col w-full rounded-none;
+    height: 60px;
+  }
+
+  .default-layout .navbar .menu .label {
+    font-size: 10px;
+  }
+}
+
+.default-layout .subnavbar {
+  @apply sticky top-0 bg-white z-10 border-b border-gray-200 w-full h-xl flex items-center justify-between px-4;
+}
+
+.default-menu {
+  @apply flex flex-col gap-1;
+}
+
+.default-menu .menu-item {
+  @apply px-2 rounded-lg flex gap-2 items-center w-full;
+  height: 48px;
+}
+
+.default-menu .menu-item.small {
+  height: 36px;
+}
+
+.default-menu .menu-item .icon {
+  @apply flex justify-center text-gray-700;
+  font-size: 16px;
+  width: 22px;
+}
+
+.default-menu .menu-item .label {
+  @apply flex-1 text-gray-500;
+  font-size: 12px;
+}
+
+.default-menu .menu-item:hover {
+  @apply bg-gray-100 cursor-pointer;
+}
+
+.default-menu .menu-item.router-link-active {
+  @apply bg-vermillion-100;
+}
+
+.default-menu .menu-item.router-link-active .icon {
+  @apply text-vermillion-500;
+}
+
+.default-menu .menu-item.router-link-active .label {
+  @apply text-vermillion-500;
+}
+
+.default-menu.collapse {
+  @apply justify-center;
+  width: 52px;
+}
+
+.default-menu.collapse .icon {
+  font-size: 22px;
+}
+
+.default-menu.collapse .label {
+  display: none;
+}
+
+.default-menu.collapse .counter {
+  display: none;
+}
+
+.default-menu.collapse .menu-item {
+  @apply flex justify-center;
+  height: 52px;
+}
+
+.default-dialog {
+  @apply fixed top-0 left-0 right-0 bottom-0 bg-black w-screen h-screen flex justify-center items-center p-4 transition duration-300 ease-in-out;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.default-dialog .dialog-container {
+  @apply rounded-lg shadow-lg bg-white max-h-full overflow-auto;
+}
+
+.default-dialog .dialog-container .dialog-content {
+  @apply p-4 w-full flex flex-col gap-4;
+}
+
+.default-dialog .dialog-container .dialog-header,
+.default-dialog .dialog-container .dialog-footer {
+  @apply p-4 w-full flex items-center justify-between bg-white z-10;
+}
+
+.default-dialog .dialog-container .dialog-header {
+  @apply sticky top-0 left-0 border-b border-gray-200 py-2;
+}
+
+.default-dialog .dialog-container .dialog-footer {
+  @apply sticky bottom-0 left-0 border-t border-gray-200;
+}
+
+/* Custom Element UI */
+.el-button--primary {
+  @apply bg-vermillion-500 border-vermillion-500;
+}
+
+.el-button--primary:hover,
+.el-button--primary:focus {
+  @apply bg-vermillion-600 border-vermillion-600;
+}
+
+.el-button--primary.is-disabled,
+.el-button--primary.is-disabled:hover {
+  @apply bg-vermillion-300 border-vermillion-300 outline-none;
+}
+
+.el-button--default {
+  @apply bg-white border-gray-300 text-gray-700;
+}
+
+.el-button--default:hover,
+.el-button--default:focus {
+  @apply bg-vermillion-100 border-vermillion-300 outline-none text-vermillion-500;
+}
+
+.el-button--default.is-disabled,
+.el-button--default.is-disabled:hover {
+  @apply bg-white border-gray-300 text-gray-400;
+}
+
+.el-radio-button__orig-radio:checked + .el-radio-button__inner {
+  @apply bg-vermillion-500 border-vermillion-500 text-white;
+  box-shadow: none;
+}
+
+.el-radio-button__orig-radio:checked:hover + .el-radio-button__inner {
+  @apply text-white;
+}
+
+.el-radio-button .el-radio-button__inner:hover {
+  @apply text-vermillion-500;
+}
+
+.el-switch.is-checked .el-switch__core {
+  @apply bg-vermillion-500 border-vermillion-500;
+}
+
+.el-switch__label * {
+  @apply text-xs font-normal;
+}
+
+.el-switch__label.is-active {
+  @apply text-vermillion-500;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  @apply bg-vermillion-500 text-white;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active:hover {
+  @apply text-white;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled):hover {
+  @apply text-vermillion-500;
+}
+
+.el-loading-spinner {
+  @apply flex justify-center;
+}
+
+.el-loading-spinner .circular {
+  @apply border-vermillion-500;
+}

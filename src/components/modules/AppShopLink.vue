@@ -1,28 +1,28 @@
 <template>
-  <div id="AppShopLink" class="width width-100">
-    <div v-if="!disableLabel" class="margin margin-bottom-10px">
-      <div class="fonts fonts-13px black semibold">Link Toko</div>
-    </div>
+  <div id="AppShopLink" class="w-full flex flex-col gap-1">
     <div
-      class="padding padding-15px bg-white-grey border-full border-radius display-flex space-between align-center"
+      v-if="!disableLabel"
+      class="text-xs text-black font-semibold"
     >
-      <div style="width: calc(100% - 110px)">
-        <a :href="`${link}`" target="_blank" style="width: 100%">
-          <div
-            class="fonts fonts-11 normal red overflow-ellipsis"
-            id="visitor-shop-link"
-          >
-            {{ `${link}` }}
-          </div>
-        </a>
-      </div>
-      <div style="width: 95px" class="display-flex flex-end">
-        <button
+      Link Toko
+    </div>
+    <div class="p-2 flex items-center justify-between gap-2 bg-gray-100 border border-gray-200 rounded-lg">
+      <a
+        id="visitor-shop-link"
+        :href="`${link}`"
+        target="_blank"
+        class="text-xs text-red-500 overflow-hidden truncate" style="width: calc(100% - 120px)"
+      >
+        {{ `${link}` }}
+      </a>
+      <div style="width: 100px" class="flex justify-end">
+        <el-button
+          size="small"
+          class="w-full"
           @click="onCopy('visitor-shop-link')"
-          class="btn btn-small btn-sekunder"
         >
           Salin Link
-        </button>
+        </el-button>
       </div>
     </div>
   </div>

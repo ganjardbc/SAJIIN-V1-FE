@@ -1,13 +1,14 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="isCanSave"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
-      <div class="margin margin-bottom-20px">
-        <div class="fonts fonts-13 black semibold">Informasi</div>
+  <AppSideForm
+    :value="openForm"
+    :title="title"
+    :enableSaveButton="isCanSave"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <div class="text-md text-black font-semibold">Informasi</div>
         <div class="field-group">
           <div class="field-label">ID Buku Kas</div>
           <el-input
@@ -38,7 +39,7 @@
         <div class="field-group">
           <div class="field-label">Modal</div>
           <input-number
-            class="width width-100"
+            class="w-full"
             v-model="form.cash_modal"
             thousand-separated
             :min="0"
@@ -54,7 +55,7 @@
         <div v-if="isCreateForm" class="field-group">
           <div class="field-label">Kas Masuk</div>
           <input-number
-            class="width width-100"
+            class="w-full"
             v-model="form.cash_in"
             thousand-separated
             :min="0"
@@ -70,7 +71,7 @@
         <div v-if="isCreateForm" class="field-group">
           <div class="field-label">Kas Keluar</div>
           <input-number
-            class="width width-100"
+            class="w-full"
             v-model="form.cash_out"
             thousand-separated
             :min="0"
@@ -86,7 +87,7 @@
         <div v-if="isCreateForm" class="field-group">
           <div class="field-label">Kas Summary</div>
           <input-number
-            class="width width-100"
+            class="w-full"
             v-model="form.cash_summary"
             thousand-separated
             :min="0"
@@ -102,7 +103,7 @@
       </div>
 
       <div v-if="isCreateForm" class="margin margin-bottom-20px">
-        <div class="fonts fonts-13 black semibold">Penutupan</div>
+        <div class="text-md text-black font-semibold">Penutupan</div>
         <div class="field-group">
           <div class="field-label">Status</div>
           <div class="display-flex space-between">
@@ -124,7 +125,7 @@
         <div v-if="form.cash_status === 'closed'" class="field-group">
           <div class="field-label">Kas Aktual</div>
           <input-number
-            class="width width-100"
+            class="w-full"
             v-model="form.cash_actual"
             thousand-separated
             :min="0"
@@ -148,10 +149,10 @@
         </el-alert>
       </div>
 
-      <div class="margin margin-bottom-0px">
-        <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+      <div class="flex flex-col gap-2">
+        <div class="text-md text-black font-semibold">Konfigurasi</div>
         <div class="field-group">
-          <div class="display-flex space-between">
+          <div class="flex items-center justify-between gap-2">
             <div class="field-label">Status</div>
             <el-switch
               v-model="form.status"
@@ -167,8 +168,8 @@
           </div>
         </div>
       </div>
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
@@ -188,7 +189,13 @@ export default {
       },
     }
   },
-  mounted() {},
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   computed: {
     ...mapState({
       form: (state) => state.storeCashBook.form,
@@ -199,13 +206,13 @@ export default {
       let currentTitle = ''
       switch (this.typeForm) {
         case 'create':
-          currentTitle = 'Create Cash Book'
+          currentTitle = 'Buat Buku Kas'
           break
         case 'detail':
-          currentTitle = 'Detail Cash Book'
+          currentTitle = 'Detail Buku Kas'
           break
         case 'edit':
-          currentTitle = 'Edit Cash Book'
+          currentTitle = 'Edit Buku Kas'
           break
       }
       return currentTitle

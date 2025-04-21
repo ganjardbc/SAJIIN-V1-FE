@@ -1,35 +1,24 @@
 <template>
   <div
     id="Login"
-    class="post-top"
-    style="padding-left: 10px; padding-right: 10px"
+    class="px-sm w-1/3"
+    style="width: 420px"
+    v-loading="loading"
   >
-    <div
-      class="card card-login border-radius box-shadow bg-white"
-      style="margin: auto"
-      v-loading="loading"
-    >
+    <div class="px-6 py-8 rounded-lg shadow-md bg-white">
+      <div class="w-full flex items-center justify-between">
+        <div class="text-3xl text-black font-semibold">
+          Login
+        </div>
+        <img :src="logo" alt="" style="width: 120px" />
+      </div>
+
       <form
         action="#"
         @submit.prevent="submit"
-        class="width width-100 padding padding-top-30px padding-bottom-20px"
+        class="flex flex-col gap-4 py-6"
       >
-        <div class="width width-150px width-center">
-          <div
-            class="image image-full image-center bg-transparent"
-            style="padding-bottom: 40%"
-          >
-            <img :src="logo" alt="" class="post-center" style="width: 100%" />
-          </div>
-        </div>
-
-        <div
-          class="fonts fonts-11 semibold black align-center margin margin-top-15px"
-        >
-          Serve All You Want
-        </div>
-
-        <div class="padding padding-top-15px padding-bottom-15px">
+        <div class="flex flex-col gap-4">
           <div class="field-group">
             <div class="field-label">Username</div>
             <el-input
@@ -37,6 +26,7 @@
               type="text"
               v-model="form.username"
               :disabled="loading"
+              rounded
             >
               <i slot="prefix" class="el-input__icon el-icon-user"></i>
             </el-input>
@@ -53,6 +43,7 @@
               v-model="form.password"
               :disabled="loading"
               show-password
+              rounded
             >
               <i slot="prefix" class="el-input__icon el-icon-lock"></i>
             </el-input>
@@ -60,29 +51,18 @@
               {{ errorMessage.password }}
             </div>
           </div>
-        </div>
 
-        <button class="btn btn-full btn-main" :disabled="isButtonDisabled">
-          Login
-        </button>
-
-        <div class="width width-100">
-          <div class="display-flex center padding padding-top-15px">
-            <div class="fonts fonts-11 black align-center">atau</div>
-          </div>
-          <div class="display-flex center padding padding-top-10px">
-            <router-link
-              :to="{ name: 'visitor-landing' }"
-              class="fonts fonts-11 red semibold align-center"
-              >Masuk Sebagai Visitor</router-link
-            >
-          </div>
-        </div>
-
-        <div class="display-flex center padding padding-top-30px">
-          <div class="fonts fonts-10 grey align-center">{{ appVersion }}</div>
+          <el-button
+            class="w-full"
+            type="primary"
+            :disabled="isButtonDisabled"
+            @click="submit">
+            Login
+          </el-button>
         </div>
       </form>
+
+      <div class="text-sm text-gray-500 text-center pt-2">{{ appVersion }}</div>
     </div>
   </div>
 </template>

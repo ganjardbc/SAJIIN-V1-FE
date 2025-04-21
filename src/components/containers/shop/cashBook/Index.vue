@@ -1,115 +1,82 @@
 <template>
-  <div id="App">
-    <div :class="formClass ? 'content-form' : 'content-form hide'">
-      <div class="left">
-        <div
-          class="display-flex space-between display-mobile margin margin-bottom-15px"
-        >
-          <div class="width width-75 width-mobile display-flex space-between">
-            <h1 class="fonts big black bold">Buku Kas</h1>
-            <div class="display-flex">
-              <button class="btn btn-icon btn-white" @click="onRefresh">
-                <i class="fa fa-lw fa-retweet"></i>
-              </button>
-              <button
-                v-if="visibleCreateButton"
-                class="btn btn-icon btn-white"
-                @click="onCreate"
-              >
-                <i class="fa fa-lw fa-plus" />
-              </button>
-            </div>
-          </div>
-          <div class="width width-25 width-mobile">
-            <el-input
-              placeholder="Cari buku kas .."
-              suffix-icon="el-icon-search"
-              clearable
-              v-model="filter.search"
-              @clear="onClear"
-              @change="onSearch"
-            >
-            </el-input>
-          </div>
-        </div>
-
-        <div
-          class="display-flex space-between align-center display-mobile margin margin-bottom-15px"
-        >
-          <AppTabs
-            class="width width-300px width-mobile"
-            :selectedIndex.sync="selectedIndex"
-            :isFull="true"
-            :isScrollable="false"
-            :data="tabs"
-            :onChange="(data) => onChangeTabs(data)"
-          />
-        </div>
-
-        <div class="width width-100">
-          <div v-loading="loading">
-            <AppEmpty v-if="data.length === 0" />
-            <Card
-              :data.sync="data"
-              @onChangeCover="uploadImage"
-              @onDetail="onDetail"
-              @onReOpen="onReOpen"
-              @onDelete="onDelete"
-              @onChangeStatus="onChangeStatus"
-              @onDownload="onDownloadReport"
-              @onOpenCashBook="onOpenCashBook"
-              @onOpenOrderList="onOpenOrderList"
-              @onOpenDetail="onOpenDetail"
-            />
-          </div>
-          <div
-            class="width width-100 display-flex flex-end align-center padding padding-top-15px"
-          >
-            <div class="fonts fonts-10 normal black">
-              Total {{ totalRecord }}
-            </div>
-            <el-pagination
-              background
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-size="limit"
-              :pager-count="5"
-              layout="prev, pager, next"
-              :total="totalRecord"
-            >
-            </el-pagination>
-          </div>
-        </div>
-      </div>
-
-      <div class="right">
-        <Form
-          @uploadImage="uploadImage"
-          @removeImage="removeImage"
-          @onSave="onOpenVisibleConfirmed"
-          @onClose="onClose"
-        >
-        </Form>
-      </div>
+  <div id="App" class="w-full flex flex-col gap-4 p-4">
+    <div class="w-full flex items-center justify-between">
+      <h1 class="text-3xl text-black font-semibold">
+        Buku Kas
+      </h1>
+      <el-button @click="onCreate">
+        <i class="fa fa-lw fa-plus mr-2" /> Buat Buku Kas
+      </el-button>
     </div>
 
-    <div :class="formOrderClass ? 'content-form' : 'content-form hide'">
-      <div class="right">
-        <OrderList @onDownload="onDownloadReport" @onClose="onCloseOrderList">
-        </OrderList>
-      </div>
-    </div>
+    <SearchField
+      placeholder="Cari buku kas .."
+      :enableResponsive="true"
+      :onChange="(data) => onSearch(data)"
+    />
 
-    <div :class="formDetailClass ? 'content-form' : 'content-form hide'">
-      <div class="right">
-        <Detail
-          @onClosingCashBook="onOpenCashBook"
+    <AppTabs
+      class="w-full"
+      :selectedIndex.sync="selectedIndex"
+      :isFull="true"
+      :isScrollable="false"
+      :data="tabs"
+      :onChange="(data) => onChangeTabs(data)"
+    />
+
+    <div class="w-full flex flex-col gap-4">
+      <div v-loading="loading" class="w-full">
+        <AppEmpty v-if="data.length === 0" />
+        <Card
+          :data.sync="data"
+          @onChangeCover="uploadImage"
+          @onDetail="onDetail"
+          @onReOpen="onReOpen"
+          @onDelete="onDelete"
+          @onChangeStatus="onChangeStatus"
           @onDownload="onDownloadReport"
-          @onClose="onCloseDetail"
+          @onOpenCashBook="onOpenCashBook"
+          @onOpenOrderList="onOpenOrderList"
+          @onOpenDetail="onOpenDetail"
+        />
+      </div>
+      <div class="w-full flex justify-between items-center gap-2">
+        <div class="text-md text-black">
+          Total {{ totalRecord }}
+        </div>
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="limit"
+          :pager-count="5"
+          layout="prev, pager, next"
+          :total="totalRecord"
         >
-        </Detail>
+        </el-pagination>
       </div>
     </div>
+
+    <Form
+      :open-form="formClass"
+      @uploadImage="uploadImage"
+      @removeImage="removeImage"
+      @onSave="onOpenVisibleConfirmed"
+      @onClose="onClose"
+    />
+
+    <OrderList
+      :open-form="formOrderClass"
+      @onDownload="onDownloadReport"
+      @onClose="onCloseOrderList"
+    />
+
+    <Detail
+      :open-form="formDetailClass"
+      @onClosingCashBook="onOpenCashBook"
+      @onDownload="onDownloadReport"
+      @onClose="onCloseDetail"
+    />
 
     <CloseCashbook
       v-if="visibleCashBook"

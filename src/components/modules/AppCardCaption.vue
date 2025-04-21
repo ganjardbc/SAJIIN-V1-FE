@@ -1,10 +1,16 @@
 <template>
-  <div id="App" class="display-flex align-center">
-    <div class="width width-20px">
-      <i :class="`fonts fonts-9 ${iconColor ? iconColor : 'grey'} ${icon}`"></i>
+  <div class="w-full flex-1 flex gap-2">
+    <div
+      class="flex items-center justify-center"
+      style="width: 18px; height: 18px"
+    >
+      <i
+        class="text-md"
+        :class="`${iconColor ? iconColor : 'text-gray-700'} ${icon}`"
+      />
     </div>
-    <div class="margin margin-top-5px" style="width: calc(100% - 20px)">
-      <div class="fonts fonts-10 grey overflow-ellipsis">{{ caption }}</div>
+    <div class="flex-1">
+      <div class="text-xs text-gray-700">{{ caption }}</div>
     </div>
   </div>
 </template>

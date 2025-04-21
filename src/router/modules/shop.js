@@ -32,6 +32,9 @@ const routes = {
       name: 'shop-profile',
       path: 'profile',
       component: Profile,
+      meta: {
+        title: 'Profil',
+      },
     },
     {
       name: 'shop-settings',
@@ -42,11 +45,17 @@ const routes = {
       name: 'shop-home',
       path: 'home',
       component: Home,
+      meta: {
+        title: 'Home',
+      },
     },
     {
       name: 'shop-dashboard',
       path: 'dashboard',
       component: Dashboard,
+      meta: {
+        title: 'Dashboard',
+      },
     },
     {
       name: 'shop-cashier',
@@ -127,6 +136,9 @@ const routes = {
       name: 'shop-notifications',
       path: 'notifications',
       component: Notifications,
+      meta: {
+        title: 'Notifikasi',
+      },
     },
     {
       name: 'shop-reports',

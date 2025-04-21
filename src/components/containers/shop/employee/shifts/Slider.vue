@@ -1,82 +1,27 @@
 <template>
-  <div id="App" class="w-full flex flex-col gap-4 p-4">
-    <div class="w-full flex items-center justify-between">
-      <h1 class="text-3xl text-black font-semibold">
-        Produk
-      </h1>
-      <el-button
-        v-if="isRoleOwner"
-        @click="onCreate"
-      >
-        <i class="fa fa-lw fa-plus mr-2" /> Tambah Produk
-      </el-button>
-    </div>
-
-    <SearchField
-      :placeholder="'Cari produk ..'"
-      :enableResponsive="true"
-      :onChange="(data) => onSearch(data)"
+  <div id="App" class="w-full flex flex-col gap-4">
+    <AppButtonCapsuleSlider
+      v-loading="loading"
+      :index.sync="selectedIndex"
+      customAllLabel="Semua Shift"
+      customIcon="fa fa-lw fa-clock"
+      :enableCreateButton="isRoleOwner"
+      :enableEditButton="isRoleOwner"
+      :data="filteredShift"
+      @onChange="onChange"
+      @onCreate="onCreate"
+      @onEdit="onEdit"
     />
-
-    <el-alert
-      v-if="!isRoleOwner"
-      title="Tambah produk baru ?"
-      description="Untuk menambah produk baru mohon hubungi Owner dari Toko ini."
-      type="warning"
-      :closable="true"
-      show-icon
-    />
-
-    <AppTabs
-      class="w-full"
-      :selectedIndex.sync="selectedIndex"
-      :isFull="true"
-      :isScrollable="false"
-      :data="tabs"
-      :onChange="(data) => onChangeTabs(data)"
-    />
-
-    <div class="w-full">
-      <Category @onChange="onChangeCategory" />
-    </div>
-
-    <div class="w-full flex flex-col gap-4">
-      <div v-loading="loading" class="w-full">
-        <AppEmpty v-if="data.length === 0" />
-        <Card
-          :data.sync="data"
-          @onChangeCover="uploadImage"
-          @onDetail="onDetail"
-          @onEdit="onEdit"
-          @onDelete="onDelete"
-          @onChangeProductStatus="onChangeProductStatus"
-          @onChangeVarianStatus="onChangeVarianStatus"
-        />
-      </div>
-      <div class="w-full flex justify-between items-center gap-2">
-        <div class="text-md text-black">
-          Total {{ totalRecord }}
-        </div>
-        <el-pagination
-          background
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-size="limit"
-          :pager-count="5"
-          layout="prev, pager, next"
-          :total="totalRecord"
-        >
-        </el-pagination>
-      </div>
-    </div>
 
     <Form
-      :open-form="openForm"
+      v-if="formClass"
       @uploadImage="uploadImage"
       @removeImage="removeImage"
-      @save="onOpenVisibleConfirmed"
-      @close="onClose"
-    />
+      @onSave="onOpenVisibleConfirmed"
+      @onClose="onClose"
+      @onDelete="onDelete"
+    >
+    </Form>
 
     <AppFileUpload
       v-if="visibleUpdateCover"
@@ -93,7 +38,7 @@
 
     <AppPopupConfirmed
       v-if="visibleConfirmedDelete"
-      :title="'Hapus produk ?'"
+      :title="'Delete this shift ?'"
       @onClickNo="onClickNoDelete"
       @onClickYes="onClickYesDelete"
     />
@@ -111,16 +56,15 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import AppButtonCapsuleSlider from '../../../../modules/AppButtonCapsuleSlider'
 import AppEmpty from '../../../../modules/AppEmpty'
 import AppPopupLoader from '../../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../../modules/AppFileUpload'
 import AppTabs from '../../../../modules/AppTabs'
-import AppHeaderMobile from '../../../../modules/AppHeaderMobile'
 import SearchField from '../../../../modules/SearchField'
-import Category from '../categories/Slider'
-import Form from './Form'
+import Form from './FormPopup'
 import Card from './Card'
 
 const tabs = [
@@ -132,7 +76,7 @@ export default {
   name: 'App',
   metaInfo: {
     title: 'Shop',
-    titleTemplate: '%s | Products',
+    titleTemplate: '%s | Shifts',
     htmlAttrs: {
       lang: 'en',
       amp: true,
@@ -141,57 +85,66 @@ export default {
   data() {
     return {
       tabs: tabs,
-      openForm: false,
+      formClass: false,
       visibleUpdateCover: false,
       visibleAlert: false,
+      visibleQrCode: false,
       titleAlert: 'Gagal memproses data',
       iconAlert: 'fa fa-4x fa-info-circle',
       visibleConfirmed: false,
       visibleConfirmedDelete: false,
       titleConfirmed: 'Simpan data ?',
       currentPage: 0,
-      selectedIndex: 0,
     }
   },
   mounted() {
-    // this.getCategoryData()
-    this.onChangeTabs(0)
+    this.handleFilterSearch()
   },
   components: {
+    AppButtonCapsuleSlider,
     AppEmpty,
     AppPopupLoader,
     AppPopupConfirmed,
     AppPopupAlert,
     AppFileUpload,
     AppTabs,
-    AppHeaderMobile,
     SearchField,
-    Category,
     Form,
     Card,
   },
   computed: {
     ...mapState({
-      filter: (state) => state.storeProduct.filter,
-      form: (state) => state.storeProduct.form,
-      data: (state) => state.storeProduct.data,
-      totalRecord: (state) => state.storeProduct.totalRecord,
-      limit: (state) => state.storeProduct.limit,
-      loading: (state) => state.storeProduct.loading,
-      loadingForm: (state) => state.storeProduct.loadingForm,
-      typeForm: (state) => state.storeProduct.typeForm,
-      formVarian: (state) => state.storeProductDetail.form,
+      filter: (state) => state.storeShift.filter,
+      form: (state) => state.storeShift.form,
+      data: (state) => state.storeShift.data,
+      totalRecord: (state) => state.storeShift.totalRecord,
+      limit: (state) => state.storeShift.limit,
+      loading: (state) => state.storeShift.loading,
+      loadingForm: (state) => state.storeShift.loadingForm,
+      typeForm: (state) => state.storeShift.typeForm,
+      filterEmployee: (state) => state.storeEmployee.filter,
     }),
     typeForm: {
       get() {
-        return this.$store.state.storeProduct.typeForm
+        return this.$store.state.storeShift.typeForm
       },
       set(value) {
-        this.$store.state.storeProduct.typeForm = value
+        this.$store.state.storeShift.typeForm = value
+      },
+    },
+    selectedIndex: {
+      get() {
+        return this.$store.state.storeShift.selectedIndex
+      },
+      set(value) {
+        this.$store.state.storeShift.selectedIndex = value
       },
     },
     shopId() {
       return this.$store.state.storeSelectedShop.selectedData
+    },
+    paramShopId() {
+      return this.$route.params.shopId
     },
     isRoleOwner() {
       let status = false
@@ -200,6 +153,20 @@ export default {
         status = true
       }
       return status
+    },
+    filteredShift() {
+      const allData = this.data.map((item) => {
+        return {
+          id: item.shift.id,
+          label: item.shift.title,
+          status: item.shift.status,
+          icon: 'fa fa-lw fa-clock',
+        }
+      })
+      const activeData = allData.filter((item) => item.status === 'active')
+      const inactiveData = allData.filter((item) => item.status === 'inactive')
+      let data = [...activeData, ...inactiveData]
+      return data
     },
   },
   watch: {
@@ -211,52 +178,37 @@ export default {
   },
   methods: {
     ...mapActions({
-      getproduct: 'storeProduct/getData',
-      setPagination: 'storeProduct/setPagination',
-      resetFormData: 'storeProduct/resetFormData',
-      resetFilter: 'storeProduct/resetFilter',
-      setFormData: 'storeProduct/setFormData',
-      createData: 'storeProduct/createData',
-      updateData: 'storeProduct/updateData',
-      deleteData: 'storeProduct/deleteData',
-      uploadCover: 'storeProduct/uploadCover',
-      setLoadingForm: 'storeProduct/setLoadingForm',
-      updateDataVarian: 'storeProductDetail/updateData',
-      setFormDataVarian: 'storeProductDetail/setFormData',
+      getShift: 'storeShift/getData',
+      setPagination: 'storeShift/setPagination',
+      resetFormData: 'storeShift/resetFormData',
+      resetFilter: 'storeShift/resetFilter',
+      setFormData: 'storeShift/setFormData',
+      createData: 'storeShift/createData',
+      updateData: 'storeShift/updateData',
+      deleteData: 'storeShift/deleteData',
+      uploadCover: 'storeShift/uploadCover',
     }),
     onSearch(data) {
       this.filter.search = data
       this.resetFilter()
       this.getData()
     },
-    onChangeCategory(data) {
-      if (data === 'all') {
-        this.filter.category = ''
-      } else {
-        this.filter.category = data
-      }
-      this.resetFilter()
-      this.getData()
-    },
     onClose() {
-      this.openForm = false
+      this.formClass = false
     },
     onRefresh() {
       this.getData()
     },
-    onChangeTabs(data) {
-      this.selectedIndex = data
-      // this.selectedCategoryIndex = 'all'
-      // this.filter.category = ''
-      switch (this.selectedIndex) {
-        case 0:
-          this.filter.status = 'active'
-          break
-        case 1:
-          this.filter.status = 'inactive'
-          break
+    onChange(data) {
+      if (data === 'all') {
+        this.filterEmployee.shift_id = ''
+      } else {
+        this.filterEmployee.shift_id = data
       }
-      this.handleFilterSearch()
+      if (data !== this.selectedIndex) {
+        this.selectedIndex = data
+      }
+      this.$emit('onChange', data)
     },
 
     // LIST DATA
@@ -264,7 +216,8 @@ export default {
       const token = this.$cookies.get('tokenBearer')
       const shop_id = this.shopId
       if (shop_id) {
-        this.getproduct({ token, shop_id })
+        this.filter.status = ''
+        this.getShift({ token, shop_id: shop_id })
       }
     },
     handleCurrentChange(value) {
@@ -296,11 +249,11 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.openForm = false
+              this.formClass = false
               this.getData()
             } else {
               this.$message({
-                message: 'Gagal menyimpan produk',
+                message: 'Gagal meyimpan shift',
                 type: 'error',
               })
             }
@@ -313,11 +266,11 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.openForm = false
+              this.formClass = false
               this.getData()
             } else {
               this.$message({
-                message: 'Gagal merubah produk',
+                message: 'Gagal merubah shift',
                 type: 'error',
               })
             }
@@ -341,26 +294,29 @@ export default {
 
     // CREATE
     onCreate() {
-      this.openForm = true
+      this.formClass = true
+      this.typeForm = 'create'
       this.resetFormData()
       this.form.shop_id = this.shopId
-      this.typeForm = 'create'
     },
 
     // DETAIL
     onDetail(data) {
-      this.openForm = true
+      this.formClass = true
+      this.typeForm = 'detail'
       this.resetFormData()
       this.setFormData(data)
-      this.typeForm = 'detail'
     },
 
     // EDIT
     onEdit(data) {
-      this.openForm = true
-      this.resetFormData()
-      this.setFormData(data)
-      this.typeForm = 'edit'
+      const find = this.data.find((item) => item.shift.id === data.id)
+      if (find !== undefined) {
+        this.formClass = true
+        this.typeForm = 'edit'
+        this.resetFormData()
+        this.setFormData(find.shift)
+      }
     },
 
     // DELETE
@@ -380,10 +336,11 @@ export default {
       }).then((res) => {
         const status = res.data.status
         if (status === 'ok') {
+          this.formClass = false
           this.getData()
         } else {
           this.visibleAlert = true
-          this.titleAlert = 'Gagal menghapus produk'
+          this.titleAlert = 'Gagal menghapus shift'
         }
       })
     },
@@ -418,7 +375,7 @@ export default {
     },
 
     // STATUS
-    onChangeProductStatus(data) {
+    onChangeStatus(data) {
       this.setFormData(data)
       const token = this.$cookies.get('tokenBearer')
       this.updateData({
@@ -427,37 +384,23 @@ export default {
       }).then((res) => {
         const status = res.data.status
         if (status === 'ok') {
-          this.$message(`Berhasil merubah status produk ${data.name}.`)
+          this.$message(`Berhasil merubah status shift ${data.name}.`)
         } else {
           this.$message({
-            message: `Gagal merubah status produk ${data.name}.`,
+            message: `Gagal merubah status shift ${data.name}.`,
             type: 'error',
           })
         }
       })
     },
-    onChangeVarianStatus(data) {
-      this.setLoadingForm(true)
-      this.setFormDataVarian(data)
-      const token = this.$cookies.get('tokenBearer')
-      this.updateDataVarian({
-        ...this.formVarian,
-        token: token,
-      })
-        .then((res) => {
-          const status = res.data.status
-          if (status === 'ok') {
-            this.$message(`Berhasil merubah status varian ${data.name}.`)
-          } else {
-            this.$message({
-              message: `Gagal merubah status varian ${data.name}.`,
-              type: 'error',
-            })
-          }
-        })
-        .finally(() => {
-          this.setLoadingForm(false)
-        })
+
+    // QR CODE
+    onOpenQrCode(data) {
+      this.visibleQrCode = true
+      this.setFormData(data)
+    },
+    onCloseQrCode() {
+      this.visibleQrCode = false
     },
   },
 }

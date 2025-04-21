@@ -2,7 +2,12 @@
 
 module.exports = {
   "plugins": {
-    "postcss-import": {},
+    "postcss-import": {
+      "plugins": [
+        require('tailwindcss'),
+        require('autoprefixer'),
+      ],
+    },
     "postcss-url": {},
     // to edit target browsers: use "browserslist" field in package.json
     "autoprefixer": {}

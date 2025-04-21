@@ -54,6 +54,7 @@ export default {
     filter: {
       search: '',
       status: 'active',
+      shift_id: '',
     },
     position: {
       limit: 1000,
@@ -271,6 +272,7 @@ export default {
         offset: state.offset,
         search: state.filter.search,
         status: state.filter.status,
+        shift_id: state.filter.shift_id,
         shop_id: data.shop_id,
       }
 

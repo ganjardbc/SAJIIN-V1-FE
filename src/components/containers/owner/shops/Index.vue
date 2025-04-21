@@ -1,125 +1,108 @@
 <template>
-  <div id="App" :class="formClass ? 'content-form' : 'content-form hide'">
-    <div class="left">
-      <div
-        class="display-flex space-between display-mobile margin margin-bottom-15px"
-      >
-        <div class="width width-75 width-mobile display-flex space-between">
-          <h1 class="fonts big black bold">Toko</h1>
-          <div class="display-flex">
-            <button class="btn btn-icon btn-white" @click="onRefresh">
-              <i class="fa fa-lw fa-retweet"></i>
-            </button>
-          </div>
-        </div>
-        <div class="width width-25 width-mobile">
-          <SearchField
-            :placeholder="'Cari toko ..'"
-            :enableResponsive="true"
-            :onChange="(data) => onSearch(data)"
-          />
-        </div>
-      </div>
+  <div id="App" class="p-4 flex flex-col gap-4">
+    <h1 class="text-3xl text-black font-semibold">
+      Toko
+    </h1>
 
-      <div
-        class="display-flex space-between align-center display-mobile margin margin-bottom-15px"
-      >
-        <AppTabs
-          class="width width-300px width-mobile"
-          :selectedIndex.sync="selectedIndex"
-          :isFull="true"
-          :isScrollable="false"
-          :data="tabs"
-          :onChange="(data) => onChangeTabs(data)"
+    <SearchField
+      :placeholder="'Cari toko ..'"
+      :enableResponsive="true"
+      :onChange="(data) => onSearch(data)"
+    />
+
+    <el-alert
+      title="Tambah Toko baru ?"
+      description="Untuk menambah toko baru mohon hubungi Admin Sajiin dan ikuti arahan selanjutnya."
+      type="warning"
+      :closable="true"
+      show-icon
+    >
+    </el-alert>
+
+    <AppTabs
+      class="w-full"
+      :selectedIndex.sync="selectedIndex"
+      :isFull="true"
+      :isScrollable="false"
+      :data="tabs"
+      :onChange="(data) => onChangeTabs(data)"
+    />
+
+    <div class="w-full flex flex-col gap-4">
+      <div v-loading="loading" class="w-full">
+        <AppEmpty v-if="data.length === 0" />
+        <Card
+          :data.sync="data"
+          @onChangeCover="uploadImage"
+          @onDetail="onDetail"
+          @onEdit="onEdit"
+          @onDelete="onDelete"
+          @onManage="onManage"
+          @onChangeStatus="onChangeStatus"
+          @onQrCode="onOpenQrCode"
         />
       </div>
 
-      <el-alert
-        title="Tambah Toko baru ?"
-        description="Untuk menambah toko baru mohon hubungi Admin Sajiin dan ikuti arahan selanjutnya."
-        type="warning"
-        :closable="true"
-        show-icon
-        style="margin-bottom: 15px"
-      >
-      </el-alert>
+      <div class="w-full flex justify-between items-center gap-2">
+        <div class="text-md text-black">
+          Total {{ totalRecord }}
+        </div>
 
-      <div class="width width-100">
-        <div v-loading="loading">
-          <AppEmpty v-if="data.length === 0" />
-          <Card
-            :data.sync="data"
-            @onChangeCover="uploadImage"
-            @onDetail="onDetail"
-            @onEdit="onEdit"
-            @onDelete="onDelete"
-            @onManage="onManage"
-            @onChangeStatus="onChangeStatus"
-            @onQrCode="onOpenQrCode"
-          />
-        </div>
-        <div
-          class="width width-100 display-flex flex-end align-center padding padding-top-15px"
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="limit"
+          :pager-count="5"
+          layout="prev, pager, next"
+          :total="totalRecord"
         >
-          <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
-          <el-pagination
-            background
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="limit"
-            :pager-count="5"
-            layout="prev, pager, next"
-            :total="totalRecord"
-          >
-          </el-pagination>
-        </div>
+        </el-pagination>
       </div>
     </div>
 
-    <div class="right">
-      <Form
-        @uploadImage="uploadImage"
-        @removeImage="removeImage"
-        @onSave="onOpenVisibleConfirmed"
-        @onClose="onClose"
-      >
-      </Form>
+    <Form
+      @uploadImage="uploadImage"
+      @removeImage="removeImage"
+      @onSave="onOpenVisibleConfirmed"
+      @onClose="onClose"
+    >
+    </Form>
 
-      <AppFileUpload
-        v-if="visibleUpdateCover"
-        @onClose="onCloseCover"
-        @onUpload="onUpdateCover"
-      />
+    <AppFileUpload
+      v-if="visibleUpdateCover"
+      @onClose="onCloseCover"
+      @onUpload="onUpdateCover"
+    />
 
-      <AppPopupConfirmed
-        v-if="visibleConfirmed"
-        :title="titleConfirmed"
-        @onClickNo="onClickNo"
-        @onClickYes="onClickYes"
-      />
+    <AppPopupConfirmed
+      v-if="visibleConfirmed"
+      :title="titleConfirmed"
+      @onClickNo="onClickNo"
+      @onClickYes="onClickYes"
+    />
 
-      <AppPopupConfirmed
-        v-if="visibleConfirmedDelete"
-        :title="'Delete this shop ?'"
-        @onClickNo="onClickNoDelete"
-        @onClickYes="onClickYesDelete"
-      />
+    <AppPopupConfirmed
+      v-if="visibleConfirmedDelete"
+      :title="'Delete this shop ?'"
+      @onClickNo="onClickNoDelete"
+      @onClickYes="onClickYesDelete"
+    />
 
-      <AppPopupAlert
-        v-if="visibleAlert"
-        :title="titleAlert"
-        :icon="iconAlert"
-        @onClickOk="onClickOk"
-      />
+    <AppPopupAlert
+      v-if="visibleAlert"
+      :title="titleAlert"
+      :icon="iconAlert"
+      @onClickOk="onClickOk"
+    />
 
-      <AppPopupQrCode
-        :visibility.sync="visibleQrCode"
-        :data="form"
-        @onClose="onCloseQrCode"
-      />
+    <AppPopupQrCode
+      :visibility.sync="visibleQrCode"
+      :data="form"
+      @onClose="onCloseQrCode"
+    />
 
-      <AppPopupLoader v-if="loadingForm" />
-    </div>
+    <AppPopupLoader v-if="loadingForm" />
   </div>
 </template>
 

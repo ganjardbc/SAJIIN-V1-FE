@@ -1,13 +1,12 @@
 <template>
   <div
     id="AppLoader"
-    class="display-flex center align-center"
-    style="width: calc(100% - 40px); margin: auto; padding: 20px"
+    class="w-full flex justify-center items-center p-4"
   >
     <div style="width: 25px">
-      <i class="fa fa-lw fa-spinner fa-spin" />
+      <i class="text-vermillion-500 fa fa-lw fa-spinner fa-spin" />
     </div>
-    <div class="fonts micro bold">
+    <div class="text-xs font-semibld text-black">
       {{ title ? title : 'Mohon Tunggu..' }}
     </div>
   </div>

@@ -1,18 +1,19 @@
 <template>
-  <div id="AppPopupQrCode">
     <AppCardPopup
-      v-show="visibilityQrToko"
+      v-if="visibilityQrToko"
       title="QR Toko"
+      size="xs"
       @onClose="onClose('#component-to-place')"
     >
       <div
-        class="width width-100 content-center"
-        style="max-height: 400px; overflow-y: auto"
+        class="w-full flex flex-col items-center py-4 bg-white rounded-lg border border-gray-200"
       >
         <AppLoader v-if="previewLoader" />
+
+        <!-- Template -->
         <div
           style="
-            position: absolute;
+            position: relative;
             width: auto;
             margin: auto;
             top: 0;
@@ -22,103 +23,108 @@
         >
           <div
             id="component-to-print"
-            style="
-              position: relative;
-              width: 376px;
-              height: 376px;
-              border-width: 1px;
-              border-style: solid;
-              border-color: #f0f0f0;
-            "
+            class="p-4 bg-white flex flex-col gap-4"
           >
-            <div class="display-flex space-between" style="padding: 10px 15px">
+            <div style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            ">
               <!-- <img :src="shopImageThumbnailUrl + data.image" alt="" style="height: 25px;"> -->
-              <div class="fonts fonts-11 semibold black">{{ data.name }}</div>
-              <img :src="logo" alt="" style="height: 25px" />
+              <div
+                class="text-xs font-semibold text-black"
+                style="margin-top: -11px;"
+              >
+                {{ data.name }}
+              </div>
+              <img :src="logo" alt="" style="height: 24px" />
             </div>
-            <div class="width width-100">
-              <div style="padding: 10px 0">
-                <div style="width: 240px; margin: auto">
-                  <div
+
+            <div class="w-full px-2">
+              <div style="width: 240px; margin: auto">
+                <div
+                  style="
+                    width: 100%;
+                    border-width: 4px;
+                    border-style: solid;
+                    border-color: #fb3640;
+                    border-radius: 20px;
+                    margin-bottom: 15px;
+                    overflow: hidden;
+                  "
+                >
+                  <VueQrcode
+                    :value="`${initUrl}visitor/${data.shop_id}`"
                     style="
-                      border-width: 4px;
-                      border-style: solid;
-                      border-color: #fb3640;
+                      width: 100%;
+                      height: 100%;
+                      background-color: #fff;
                       border-radius: 20px;
-                      margin-bottom: 15px;
+                      overflow: hidden;
+                    "
+                  />
+                </div>
+                <div
+                  class="bg-vermillion-500"
+                  style="
+                    position: relative;
+                    width: 100%;
+                    height: 42px;
+                    border-radius: 8px;
+                  "
+                >
+                  <div
+                    class="flex justify-center"
+                    style="
+                      position: absolute;
+                      top: -8px;
+                      left: 0;
+                      width: 100%;
                     "
                   >
                     <div
-                      class="image image-padding"
                       style="
-                        background-color: #fff;
-                        border-radius: 20px;
-                        overflow: hidden;
+                        width: 16px;
+                        height: 16px;
+                        background-color: #fb3640;
+                        transform: rotate(45deg);
                       "
-                    >
-                      <VueQrcode :value="`${initUrl}visitor/${data.shop_id}`" />
-                    </div>
+                    ></div>
                   </div>
                   <div
-                    class="bg-main"
-                    style="
-                      position: relative;
-                      padding: 8px 15px;
-                      border-radius: 8px;
-                    "
+                    class="relative w-full text-xs font-semibold text-white text-center"
+                    style="top: 5px;"
                   >
-                    <div
-                      class="display-flex center"
-                      style="
-                        position: absolute;
-                        top: -8px;
-                        left: 0;
-                        width: 100%;
-                      "
-                    >
-                      <div
-                        style="
-                          width: 20px;
-                          height: 20px;
-                          background-color: #fb3640;
-                          transform: rotate(45deg);
-                        "
-                      ></div>
-                    </div>
-                    <div class="fonts fonts-18px semibold white align-center">
-                      MENU & ORDER
-                    </div>
+                    MENU & ORDER
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Result -->
         <div id="component-to-place"></div>
       </div>
-      <div
-        v-if="!previewLoader"
-        slot="footer"
-        class="padding padding-15px border-top"
-      >
-        <div
-          v-if="data.is_digital_menu_active"
-          class="padding padding-bottom-15px"
-        >
+
+      <template #footer>
+        <div class="w-full flex flex-col gap-4">
           <AppShopLink
+            v-if="!previewLoader && data.is_digital_menu_active"
             :link="`${initUrl}visitor/${data.shop_id}`"
             :disableLabel="true"
           />
+          <el-button
+            class="w-full"
+            type="primary"
+            :disabled="previewLoader"
+            @click="onDownloadCanvas('component-to-place')"
+          >
+            Save As Image
+          </el-button>
         </div>
-        <button
-          class="btn btn-main-reverse with-hover with-border btn-full"
-          @click="onDownloadCanvas('component-to-place')"
-        >
-          Save As Image
-        </button>
-      </div>
+      </template>
     </AppCardPopup>
-  </div>
 </template>
 <script>
 import VueQrcode from 'vue-qrcode'

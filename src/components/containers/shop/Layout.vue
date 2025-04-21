@@ -1,95 +1,72 @@
 <template>
-  <div id="admin" class="mobile-admin">
-    <div class="sidebar mobile-sidebar">
-      <div class="header mobile-hidden">
-        <div class="header-content display-flex center align-center">
-          <router-link
-            :to="{ name: 'shop-home' }"
-            class="width width-90px display-flex align-center"
-          >
-            <img :src="logo" alt="" style="width: 100%" />
-          </router-link>
-        </div>
-      </div>
-      <div class="content with-header">
-        <AppListMenu
-          :data.sync="sidebar"
-          :isSidebarSmall="false"
-          :enableResponsive="true"
-          @onClick="onCloseSidebar"
-        />
-      </div>
-    </div>
-    <div class="main mobile-main">
+  <div
+    class="default-layout"
+    :class="{
+      'collapse': isCollapse,
+    }"
+  >
+    <div class="w-full h-full">
       <div class="header">
-        <div class="header-content-fixed">
-          <div class="header-content-main">
-            <div class="width width-auto">
-              <router-link
-                :to="{ name: 'shop-home' }"
-                class="header-content-main-link"
-              >
-                <img
-                  v-if="storeLogo"
-                  :src="storeLogo"
-                  alt=""
-                  class="header-content-main-logo"
-                />
-                <div v-else class="fonts fonts-12 bold">
-                  {{ dataShop && dataShop.name }}
-                </div>
-              </router-link>
-            </div>
-            <div class="header-content-main-right">
-              <AppCardNotification />
-              <AppCardProfile
-                :data.sync="dataUser"
-                class="margin margin-left-10px"
-              >
-                <div
-                  slot="customMenu"
-                  class="padding margin margin-bottom-15px padding padding-bottom-15px border-bottom"
-                >
-                  <button
-                    v-if="isOwner"
-                    class="btn btn-white btn-align-left btn-full margin margin-bottom-5px"
-                    @click="goBack"
-                  >
-                    <i class="icn icn-left fa fa-store"></i>
-                    Kembali ke Toko
-                    <i
-                      class="icn icn-float-right fonts grey fa fa-lg fa-chevron-right"
-                    ></i>
-                  </button>
-                  <button
-                    class="btn btn-white btn-align-left btn-full"
-                    @click="goProfile"
-                  >
-                    <i class="icn icn-left fa fa-user"></i>
-                    Edit Profil
-                    <i
-                      class="icn icn-float-right fonts grey fa fa-lg fa-chevron-right"
-                    ></i>
-                  </button>
-                </div>
-              </AppCardProfile>
-            </div>
+        <div class="flex-1 flex gap-2 items-center">
+          <div class="menu" @click="onOpenSidebar">
+            <i 
+              class="icon fa-solid"
+              :class="{
+                'fa-bars': isCollapse,
+                'fa-bars-staggered': !isCollapse,
+              }"
+            />
+          </div>
+          <div class="title">
+            {{ getMetaTitle }}
+          </div>
+        </div>
+
+        <router-link
+          :to="{ name: 'shop-home' }"
+          class="logo"
+        >
+          <img :src="logo" alt="" style="width: 100%; height: 100%" />
+        </router-link>
+
+        <div class="flex-1 flex items-center justify-end">
+          <div class="navbar">
+            <router-link :to="{ name: 'shop-home' }" class="menu">
+              <i class="icon fa-solid fa-house" />
+              <span class="label">Home</span>
+            </router-link>
+            <router-link :to="{ name: 'shop-notifications' }" class="menu">
+              <i class="icon fa-solid fa-bell" />
+              <span class="label">Notifikasi</span>
+            </router-link>
+            <router-link :to="{ name: 'shop-profile' }" class="menu">
+              <i class="icon fa-solid fa-user" />
+              <span class="label">Profil</span>
+            </router-link>
           </div>
         </div>
       </div>
-      <div class="main-content">
-        <div class="width width-100">
-          <router-view />
+
+      <div class="content transition-all duration-300">
+        <div class="sidebar transition-all duration-300">
+          <div class="flex flex-col gap-2 p-4">
+            <AppListMenu
+              :data.sync="sidebar"
+              :isCollapse="isCollapse"
+              @onClick="onCloseSidebar"
+            />
+          </div>
         </div>
-        <div class="display-flex center padding padding-20px">
-          <div class="fonts fonts-10 grey align-center">{{ appVersion }}</div>
+
+        <div class="viewer transition-all duration-300">
+          <router-view />
         </div>
       </div>
     </div>
 
-    <AppToast />
+    <!-- <AppToast />
 
-    <AppToastMessage />
+    <AppToastMessage /> -->
 
     <AppPopupLoader v-if="loadingShop" title="Getting Shop Data, Please Wait" />
   </div>
@@ -115,7 +92,7 @@ export default {
     return {
       logo: logo,
       icon: icon,
-      visibleSidebar: false,
+      isCollapse: false,
     }
   },
   components: {
@@ -213,10 +190,11 @@ export default {
     },
 
     onOpenSidebar() {
-      this.visibleSidebar = true
+      this.isCollapse = !this.isCollapse
     },
     onCloseSidebar() {
-      this.visibleSidebar = false
+      // this.isCollapse = false
+      console.log('close sidebar')
     },
     onChangeMenu(data) {
       this.selectedLabel = this.menuShops[data].label
@@ -284,6 +262,7 @@ export default {
       dataShop: (state) => state.storeSelectedShop.form,
       matrixDashboard: (state) => state.storeDashboard.matrix,
       dataCurrent: (state) => state.storeCashBook.dataCurrent,
+      dataAuth: (state) => state.storeAuth.data,
     }),
     ...mapGetters({
       getSelectedData: 'storeSelectedShop/getSelectedData',
@@ -301,6 +280,9 @@ export default {
       return this.getSelectedData
         ? this.shopImageThumbnailUrl + this.getSelectedData.image
         : ''
+    },
+    getMetaTitle() {
+      return this.$route.meta.title || 'Shop'
     },
     getTotalOrder() {
       let total = 0
@@ -332,54 +314,81 @@ export default {
     sidebar() {
       return [
         {
-          icon: 'fa fa-lg fa-database',
-          label: 'TOKO',
+          icon: 'fa fa-lg fa-laptop',
+          label: 'Kasir',
           value: 0,
-          disableMenu: false,
-          menu: [
-            {
-              icon: 'fa fa-lg fa-laptop',
-              label: 'Kasir',
-              value: 0,
-              link: 'shop-cashier',
-              permission: 'cashier',
-            },
-            {
-              icon: 'fa fa-lg fa-list-ul',
-              label: 'Penjualan',
-              value: replaceToMoreValue(this.getTotalOrder),
-              link: 'shop-orders',
-              permission: 'orders',
-            },
-            {
-              icon: 'fa fa-lg fa-cubes',
-              label: 'Produksi',
-              value: 0,
-              link: 'shop-task-lists',
-              permission: 'tasklists',
-            },
-            {
-              icon: 'fa fa-lg fa-coins',
-              label: 'Pembelian',
-              value: 0,
-              link: 'shop-expense',
-              permission: 'expense-list',
-            },
-            {
-              icon: 'fa fa-lg fa-book-open',
-              label: 'Buku Kas',
-              value: replaceToMoreValue(this.getTotalOpenedCashbook),
-              link: 'shop-cash-book',
-              permission: 'cashbooks',
-            },
-            {
-              icon: 'fa fa-lg fa-bars',
-              label: 'Lainnya',
-              value: 0,
-              link: 'shop-more',
-              permission: 'more',
-            },
-          ],
+          link: 'shop-cashier',
+          permission: 'cashier',
+        },
+        {
+          icon: 'fa fa-lg fa-list-ul',
+          label: 'Penjualan',
+          value: replaceToMoreValue(this.getTotalOrder),
+          link: 'shop-orders',
+          permission: 'orders',
+        },
+        {
+          icon: 'fa fa-lg fa-coins',
+          label: 'Pembelian',
+          value: 0,
+          link: 'shop-expense',
+          permission: 'expense-list',
+        },
+        {
+          icon: 'fa fa-lg fa-cubes',
+          label: 'Produksi',
+          value: 0,
+          link: 'shop-task-lists',
+          permission: 'tasklists',
+        },
+        {
+          icon: 'fa fa-lg fa-book-open',
+          label: 'Buku Kas',
+          value: replaceToMoreValue(this.getTotalOpenedCashbook),
+          link: 'shop-cash-book',
+          permission: 'cashbooks',
+        },
+        {
+          icon: 'fa fa-lg fa-box',
+          label: 'Product',
+          value: 0,
+          link: 'shop-products',
+          permission: 'products',
+        },
+        {
+          icon: 'fa fa-lg fa-th-large',
+          label: 'Daftar Meja',
+          value: 0,
+          link: 'shop-tables',
+          permission: 'tables',
+        },
+        {
+          icon: 'fa fa-lg fa-users',
+          label: 'Karyawan',
+          value: 0,
+          link: 'shop-employees',
+          permission: 'employees',
+        },
+        {
+          icon: 'fa fa-lg fa-percent',
+          label: 'Diskon',
+          value: 0,
+          link: 'shop-discounts',
+          permission: 'settings',
+        },
+        {
+          icon: 'fa fa-lg fa-flag',
+          label: 'Platform',
+          value: 0,
+          link: 'shop-platforms',
+          permission: 'settings',
+        },
+        {
+          icon: 'fa fa-lg fa-calendar-alt',
+          label: 'Laporan',
+          value: 0,
+          link: 'shop-reports',
+          permission: 'reports',
         },
       ]
     },

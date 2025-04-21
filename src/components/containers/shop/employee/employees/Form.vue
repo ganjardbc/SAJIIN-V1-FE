@@ -1,37 +1,27 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="!isDetailForm"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
+  <AppSideForm
+    :value="openForm"
+    :title="title"
+    :enableSaveButton="!isDetailForm"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
       <AppTabs
         :selectedIndex.sync="selectedIndex"
         :data="tabs"
         :isFull="true"
         :onChange="(data) => onChangeTabs(data)"
-        class="margin margin-bottom-20px"
       />
-      <div v-if="selectedIndex === 0">
-        <div class="margin margin-bottom-0">
-          <div class="fonts fonts-13 black semibold">Informasi</div>
+
+      <div v-if="selectedIndex === 0" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <div class="text-md text-black font-semibold">Informasi</div>
           <div class="field-group">
             <div class="field-label">Cover</div>
-            <div class="width width-80px">
-              <div class="image image-padding border border-full">
-                <img
-                  v-if="form.image"
-                  :src="getCover"
-                  alt=""
-                  class="post-center"
-                />
-                <i
-                  v-else
-                  class="post-middle-absolute icn fa fa-lg fa-image"
-                ></i>
-              </div>
-            </div>
+            <AppCardAvatar
+              :src="getCover"
+            />
           </div>
           <div class="field-group">
             <div class="field-label">ID Karyawan</div>
@@ -116,9 +106,10 @@
           </div>
         </div>
       </div>
-      <div v-if="selectedIndex === 1">
-        <div class="margin margin-bottom-20px">
-          <div class="fonts fonts-13 black semibold">Posisi</div>
+
+      <div v-if="selectedIndex === 1" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <div class="text-md text-black font-semibold">Posisi</div>
           <div class="field-group">
             <div class="field-label">Pilih Role & Posisi</div>
             <el-select
@@ -143,8 +134,8 @@
             </div>
           </div>
         </div>
-        <div class="margin margin-bottom-0">
-          <div class="fonts fonts-13 black semibold">Shift</div>
+        <div class="flex flex-col gap-2">
+          <div class="text-md text-black font-semibold">Shift</div>
           <div v-if="isRoleOwner" class="field-group">
             <div class="field-label">Pilih Toko</div>
             <el-select
@@ -190,25 +181,16 @@
           </div>
         </div>
       </div>
-      <div v-if="selectedIndex === 2">
-        <div class="margin margin-bottom-0">
-          <div class="fonts fonts-13 black semibold">Pengguna</div>
+
+      <div v-if="selectedIndex === 2" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <div class="text-md text-black font-semibold">Pengguna</div>
           <div class="field-group">
             <div class="field-label">Cover</div>
-            <div class="width width-80px">
-              <div class="image image-padding image-circle border border-full">
-                <img
-                  v-if="form.user_image"
-                  :src="getUserCover"
-                  alt=""
-                  class="post-center"
-                />
-                <i
-                  v-else
-                  class="post-middle-absolute icn fa fa-lg fa-image"
-                ></i>
-              </div>
-            </div>
+            <AppCardAvatar
+              :src="getUserCover"
+              shape="circle"
+            />
           </div>
           <div class="field-group">
             <div class="field-label">Username</div>
@@ -247,11 +229,12 @@
           </div>
         </div>
       </div>
-      <div v-if="selectedIndex === 3">
-        <div class="margin margin-bottom-0">
-          <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+
+      <div v-if="selectedIndex === 3" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <div class="text-md text-black font-semibold">Konfigurasi</div>
           <div class="field-group">
-            <div class="display-flex space-between">
+            <div class="flex items-center justify-between gap-2">
               <div class="field-label">Status</div>
               <el-switch
                 v-model="form.status"
@@ -268,12 +251,13 @@
           </div>
         </div>
       </div>
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import AppCardAvatar from '../../../../modules/AppCardAvatar'
 import AppSideForm from '../../../../modules/AppSideForm'
 import AppImage from '../../../../modules/AppImage'
 import AppTabs from '../../../../modules/AppTabs'
@@ -281,7 +265,7 @@ import AppTabs from '../../../../modules/AppTabs'
 const tabs = [
   { id: 1, label: 'Karyawan', status: 'active' },
   { id: 2, label: 'Posisi', status: '' },
-  { id: 3, label: 'Pengguna', status: '' },
+  { id: 3, label: 'Akun', status: '' },
   { id: 4, label: 'Konfigurasi', status: '' },
 ]
 
@@ -292,6 +276,13 @@ export default {
       selectedIndex: 0,
       tabs: tabs,
     }
+  },
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   mounted() {
     this.selectedIndex = 0
@@ -355,6 +346,7 @@ export default {
     },
   },
   components: {
+    AppCardAvatar,
     AppSideForm,
     AppImage,
     AppTabs,
@@ -398,10 +390,10 @@ export default {
       this.$emit('removeImage', data)
     },
     onSave() {
-      this.$emit('onSave')
+      this.$emit('save')
     },
     onClose() {
-      this.$emit('onClose')
+      this.$emit('close')
     },
   },
 }

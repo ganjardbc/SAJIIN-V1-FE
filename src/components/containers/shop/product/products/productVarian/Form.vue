@@ -1,15 +1,14 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="isButtonApplyEnable"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
-      <div
-        class="margin margin-bottom-20px padding padding-bottom-20px border-bottom"
-      >
-        <div class="fonts fonts-13 black semibold">Informasi</div>
+  <AppSideForm
+    :value="openForm"
+    :title="title"
+    :enableSaveButton="isButtonApplyEnable"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <div class="text-md text-black font-semibold">Informasi</div>
         <div class="field-group">
           <div class="field-label">ID Varian</div>
           <el-input
@@ -66,44 +65,44 @@
       </div>
 
       <!-- <div class="margin margin-bottom-20px padding padding-bottom-20px border-bottom">
-                <div class="fonts fonts-13 black semibold">Discount</div>
-                <div class="field-group">
-                    <div class="field-label">Active</div>
-                    <div class="display-flex space-between">
-                        <div class="fonts micro black">Active discount for this varian ?</div>
-                        <el-switch 
-                            v-model="form.is_discount"
-                            :disabled="isDetailForm"
-                            :active-value="1"
-                            :inactive-value="0"></el-switch>
-                    </div>
-                    <div 
-                        v-if="errorMessage.is_discount" 
-                        class="field-error">
-                        {{ errorMessage.is_discount && errorMessage.is_discount[0] }}
-                    </div>
-                </div>
-                <div class="field-group">
-                    <div class="field-label">Discount</div>
-                    <div class="field-caption">Field discount in precent ({{ form.value_discount ? form.value_discount : '0' }}%)</div>
-                    <el-input-number
-                        placeholder=""
-                        :min="0"
-                        v-model="form.value_discount"
-                        :disabled="!form.is_discount || isDetailForm"
-                        style="width: 100%;"></el-input-number>
-                    <div 
-                        v-if="errorMessage.value_discount" 
-                        class="field-error">
-                        {{ errorMessage.value_discount && errorMessage.value_discount[0] }}
-                    </div>
-                </div>
-            </div> -->
-
-      <div class="margin margin-bottom-0px">
-        <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+        <div class="fonts fonts-13 black semibold">Discount</div>
         <div class="field-group">
-          <div class="display-flex space-between">
+            <div class="field-label">Active</div>
+            <div class="display-flex space-between">
+                <div class="fonts micro black">Active discount for this varian ?</div>
+                <el-switch 
+                    v-model="form.is_discount"
+                    :disabled="isDetailForm"
+                    :active-value="1"
+                    :inactive-value="0"></el-switch>
+            </div>
+            <div 
+                v-if="errorMessage.is_discount" 
+                class="field-error">
+                {{ errorMessage.is_discount && errorMessage.is_discount[0] }}
+            </div>
+        </div>
+        <div class="field-group">
+            <div class="field-label">Discount</div>
+            <div class="field-caption">Field discount in precent ({{ form.value_discount ? form.value_discount : '0' }}%)</div>
+            <el-input-number
+                placeholder=""
+                :min="0"
+                v-model="form.value_discount"
+                :disabled="!form.is_discount || isDetailForm"
+                style="width: 100%;"></el-input-number>
+            <div 
+                v-if="errorMessage.value_discount" 
+                class="field-error">
+                {{ errorMessage.value_discount && errorMessage.value_discount[0] }}
+            </div>
+        </div>
+      </div> -->
+
+      <div class="flex flex-col gap-2">
+        <div class="text-md text-black font-semibold">Konfigurasi</div>
+        <div class="field-group">
+          <div class="flex items-center justify-between gap-2">
             <div class="field-label">Status</div>
             <el-switch
               v-model="form.status"
@@ -119,8 +118,8 @@
           </div>
         </div>
       </div>
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
@@ -134,7 +133,13 @@ export default {
   data() {
     return {}
   },
-  mounted() {},
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   computed: {
     ...mapState({
       form: (state) => state.storeProduct.formDetail,
@@ -190,10 +195,10 @@ export default {
       this.$emit('removeImage', data)
     },
     onSave() {
-      this.$emit('onSave')
+      this.$emit('save')
     },
     onClose() {
-      this.$emit('onClose')
+      this.$emit('close')
     },
   },
 }

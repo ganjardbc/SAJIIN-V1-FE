@@ -1,118 +1,93 @@
 <template>
-  <div id="App">
-    <div class="width width-100">
-      <div
-        class="display-flex space-between align-center"
-        style="padding-bottom: 10px"
-      >
-        <h1 class="fonts big black bold">
-          Penjualan
-        </h1>
-        <button class="btn btn-icon btn-white" @click="onRefresh">
-          <i class="fa fa-lw fa-retweet"></i>
-        </button>
-      </div>
+  <div id="App" class="w-full flex flex-col gap-4 p-4">
+    <div class="w-full flex items-center justify-between">
+      <h1 class="text-3xl text-black font-semibold">
+        Penjualan
+      </h1>
+    </div>
 
-      <div class="width width-100 display-flex space-between display-mobile">
-        <div
-          class="width width-300px width-mobile display-flex space-between"
-          style="padding-bottom: 15px"
-        >
-          <el-input
-            class="margin margin-right-14px margin-mobile-right-none"
-            :placeholder="`Cari transaksi ..`"
-            suffix-icon="el-icon-search"
-            clearable
-            v-model="filter.search"
-            @clear="onClear"
-            @change="onSearch"
-          >
-          </el-input>
-        </div>
-        <div
-          class="width width-400px width-mobile display-flex space-between"
-          style="padding-bottom: 15px"
-        >
-          <el-select
-            v-model="filter.payment_status"
-            @change="handleFilterSearch"
-            clearable
-            placeholder="Select payment"
-            no-data-text="Data Tidak Ditemukan"
-            class="margin margin-right-7px"
-          >
-            <el-option
-              v-for="(item, i) in orderPaymentStatus"
-              :key="i"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-          <cashbook-field
-            :value.sync="filter.cashbook_id"
-            @onChange="handleFilterCashbook"
-            class="margin margin-left-7px"
-          ></cashbook-field>
-        </div>
-      </div>
+    <div class="w-full flex flex-col md:flex-row gap-2 items-center justify-between">
+      <SearchField
+        class="flex-1 w-full"
+        :placeholder="'Cari transaksi ..'"
+        :enableResponsive="true"
+        :onChange="(data) => onSearch(data)"
+      />
 
-      <div class="width width-100" style="padding-bottom: 10px">
-        <AppButtonCapsuleSlider
-          :index.sync="selectedIndex"
-          :disableAll="true"
-          :returnIndex="true"
-          customIcon="fa fa-lw fa-list-ul"
-          :data="tabs"
-          @onChange="onChangeTabs"
-        />
-      </div>
-
-      <div class="width width-100">
-        <div v-loading="loading">
-          <AppEmpty v-if="data.length === 0" />
-          <Card
-            :data.sync="data"
-            @onDetail="onDetail"
-            @onEdit="onEdit"
-            @onDelete="onDelete"
-            @onChangeStatus="onChangeStatus"
-            @onCheckout="onOpenCheckout"
-            @onReceipt="onOpenReceipt"
-          />
-        </div>
-        <div
-          class="width width-100 display-flex flex-end align-center padding padding-top-15px"
+      <div class="flex-1 w-full flex flex-col md:flex-row gap-2 items-center justify-between">
+        <el-select
+          v-model="filter.payment_status"
+          @change="handleFilterSearch"
+          clearable
+          placeholder="Select payment"
+          no-data-text="Data Tidak Ditemukan"
+          class="w-full"
         >
-          <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
-          <el-pagination
-            background
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="limit"
-            :pager-count="5"
-            layout="prev, pager, next"
-            :total="totalRecord"
+          <el-option
+            v-for="(item, i) in orderPaymentStatus"
+            :key="i"
+            :label="item.label"
+            :value="item.value"
           >
-          </el-pagination>
-        </div>
+          </el-option>
+        </el-select>
+        <cashbook-field
+          :value.sync="filter.cashbook_id"
+          class="w-full"
+          @onChange="handleFilterCashbook"
+        ></cashbook-field>
       </div>
     </div>
 
-    <div :class="`content-form ${!visibleFormOrder && 'hide'}`">
-      <div class="right">
-        <DetailOrder
-          @onSave="onOpenVisibleConfirmed"
-          @onClose="onClose"
+    <AppButtonCapsuleSlider
+      :index.sync="selectedIndex"
+      :disableAll="true"
+      :returnIndex="true"
+      customIcon="fa fa-lw fa-list-ul"
+      :data="tabs"
+      @onChange="onChangeTabs"
+    />
+
+    <div class="w-full flex flex-col gap-4">
+      <div v-loading="loading" class="w-full">
+        <AppEmpty v-if="data.length === 0" />
+        <Card
+          :data.sync="data"
+          @onDetail="onDetail"
+          @onEdit="onEdit"
+          @onDelete="onDelete"
           @onChangeStatus="onChangeStatus"
           @onCheckout="onOpenCheckout"
           @onReceipt="onOpenReceipt"
-          @onProduct="onOpenProduct"
-          @onCustomer="onOpenCustomer"
+        />
+      </div>
+      <div class="w-full flex justify-between items-center gap-2">
+        <div class="text-md text-black">
+          Total {{ totalRecord }}
+        </div>
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="limit"
+          :pager-count="5"
+          layout="prev, pager, next"
+          :total="totalRecord"
         >
-        </DetailOrder>
+        </el-pagination>
       </div>
     </div>
+
+    <DetailOrder
+      :open-form="visibleFormOrder"
+      @onSave="onOpenVisibleConfirmed"
+      @onClose="onClose"
+      @onChangeStatus="onChangeStatus"
+      @onCheckout="onOpenCheckout"
+      @onReceipt="onOpenReceipt"
+      @onProduct="onOpenProduct"
+      @onCustomer="onOpenCustomer"
+    />
 
     <div :class="`content-form ${!visibleFormCheckout && 'hide'}`">
       <div class="right">

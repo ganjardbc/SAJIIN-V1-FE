@@ -126,5 +126,7 @@ export default {
 }
 </script>
 <style>
-@import url('https://use.fontawesome.com/releases/v5.15.3/css/all.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
+@import 'element-ui/lib/theme-chalk/index.css';
+@import '../assets/css/app.css';
 </style>

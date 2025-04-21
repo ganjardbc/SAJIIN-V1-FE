@@ -1,10 +1,8 @@
 <template>
-  <AppSideForm
-    :value="openForm"
+  <AppCardPopup
     :title="title"
-    :enableSaveButton="!isDetailForm"
-    @save="onSave"
-    @close="onClose"
+    size="xs"
+    @onClose="onClose"
   >
     <template v-if="isEditForm" #toolbar>
       <el-button size="small" @click="onDelete(form)">
@@ -98,25 +96,29 @@
         </div>
       </div>
     </div>
-  </AppSideForm>
+
+    <template #footer>
+      <el-button
+        class="w-full"
+        type="primary"
+        :disabled="isDetailForm"
+        @click="onSave"
+      >
+        Simpan Data
+      </el-button>
+    </template>
+  </AppCardPopup>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import AppSideForm from '../../../../modules/AppSideForm'
+import AppCardPopup from '../../../../modules/AppCardPopup'
 import AppImage from '../../../../modules/AppImage'
 
 export default {
   name: 'App',
   data() {
     return {}
-  },
-  props: {
-    openForm: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
   },
   computed: {
     ...mapState({
@@ -160,7 +162,7 @@ export default {
     },
   },
   components: {
-    AppSideForm,
+    AppCardPopup,
     AppImage,
   },
   methods: {
@@ -171,13 +173,13 @@ export default {
       this.$emit('removeImage', data)
     },
     onSave() {
-      this.$emit('save')
+      this.$emit('onSave')
     },
     onClose() {
-      this.$emit('close')
+      this.$emit('onClose')
     },
     onDelete(data) {
-      this.$emit('delete', data)
+      this.$emit('onDelete', data)
     },
   },
 }

@@ -1,5 +1,5 @@
 <template>
-  <div id="Auth" class="display-popup-normal bg-white" style="z-index: 1000">
+  <div id="Auth" class="w-full h-screen flex column justify-center items-center">
     <keep-alive>
       <router-view />
     </keep-alive>

@@ -1,98 +1,88 @@
 <template>
-  <div id="App">
-    <AppCardPopup :title="title" height="250px" @onClose="onClose">
-      <div v-if="isEditForm" slot="toolbar" class="margin margin-right-10px">
-        <button class="btn btn-sekunder btn-full" @click="onDelete(form)">
-          Hapus
-        </button>
+  <AppCardPopup
+    :title="title"
+    size="xs"
+    @onClose="onClose"
+  >
+    <template v-if="isEditForm" #toolbar>
+      <el-button size="small" @click="onDelete(form)">
+        Hapus
+      </el-button>
+    </template>
+
+    <div class="flex flex-col gap-2 w-full">
+      <div class="text-md text-black font-semibold">Informasi</div>
+      <div class="field-group">
+        <div class="field-label">Cover</div>
+        <AppCardAvatar
+          :src="getCover"
+          :is-upload="isEditForm"
+          @upload="uploadImage(form)"
+        />
       </div>
-      <div class="margin margin-bottom-20px">
-        <div class="fonts fonts-13 black semibold">Informasi</div>
-        <div class="field-group">
-          <div class="field-label">Cover</div>
-          <div class="width width-80px">
-            <div class="image image-padding border border-full">
-              <img
-                v-if="form.image"
-                :src="getCover"
-                alt=""
-                class="post-center"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-              <button
-                v-if="isEditForm"
-                class="btn btn-sekunder btn-small-icon btn-circle"
-                style="position: absolute; bottom: 5px; right: 5px"
-                @click="uploadImage(form)"
-              >
-                <i
-                  class="post-middle-absolute fonts fonts-11 grey fa fa-lg fa-camera"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="field-group">
-          <div class="field-label">ID Kategori</div>
-          <el-input
-            placeholder=""
-            type="text"
-            v-model="form.category_id"
-            :disabled="true"
-          ></el-input>
-          <div v-if="errorMessage.category_id" class="field-error">
-            {{ errorMessage.category_id && errorMessage.category_id[0] }}
-          </div>
-        </div>
-        <div class="field-group">
-          <div class="field-label">Nama</div>
-          <el-input
-            placeholder=""
-            type="text"
-            v-model="form.name"
-            :disabled="isDetailForm"
-          ></el-input>
-          <div v-if="errorMessage.name" class="field-error">
-            {{ errorMessage.name && errorMessage.name[0] }}
-          </div>
+      <div class="field-group">
+        <div class="field-label">ID Kategori</div>
+        <el-input
+          placeholder=""
+          type="text"
+          v-model="form.category_id"
+          :disabled="true"
+        ></el-input>
+        <div v-if="errorMessage.category_id" class="field-error">
+          {{ errorMessage.category_id && errorMessage.category_id[0] }}
         </div>
       </div>
-      <div class="margin margin-bottom-0">
-        <div class="fonts fonts-13 black semibold">Konfigurasi</div>
-        <div class="field-group">
-          <div class="display-flex space-between">
-            <div class="field-label">Status</div>
-            <el-switch
-              v-model="form.status"
-              :disabled="isDetailForm"
-              :active-value="'active'"
-              :inactive-value="'inactive'"
-              active-text="Aktif"
-              inactive-text="Non-Aktif"
-            ></el-switch>
-          </div>
-          <div v-if="errorMessage.status" class="field-error">
-            {{ errorMessage.status && errorMessage.status[0] }}
-          </div>
-        </div>
-      </div>
-      <div slot="footer" class="padding padding-15px">
-        <button
-          class="btn btn-main btn-full"
+      <div class="field-group">
+        <div class="field-label">Nama</div>
+        <el-input
+          placeholder=""
+          type="text"
+          v-model="form.name"
           :disabled="isDetailForm"
-          @click="onSave"
-        >
-          Simpan Data
-        </button>
+        ></el-input>
+        <div v-if="errorMessage.name" class="field-error">
+          {{ errorMessage.name && errorMessage.name[0] }}
+        </div>
       </div>
-    </AppCardPopup>
-  </div>
+    </div>
+
+    <div class="flex flex-col gap-2 w-full">
+      <div class="text-md text-black font-semibold">Konfigurasi</div>
+      <div class="field-group">
+        <div class="flex justify-between items-center">
+          <div class="field-label">Status</div>
+          <el-switch
+            v-model="form.status"
+            :disabled="isDetailForm"
+            :active-value="'active'"
+            :inactive-value="'inactive'"
+            active-text="Aktif"
+            inactive-text="Non-Aktif"
+          ></el-switch>
+        </div>
+        <div v-if="errorMessage.status" class="field-error">
+          {{ errorMessage.status && errorMessage.status[0] }}
+        </div>
+      </div>
+    </div>
+
+    <template #footer>
+      <el-button
+        class="w-full"
+        type="primary"
+        :disabled="isDetailForm"
+        @click="onSave"
+      >
+        Simpan Data
+      </el-button>
+    </template>
+  </AppCardPopup>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import AppCardPopup from '../../../../modules/AppCardPopup'
-import AppImage from '../../../../modules/AppImage'
+import AppCardAvatar from '../../../../modules/AppCardAvatar'
 
 export default {
   name: 'App',
@@ -143,7 +133,7 @@ export default {
   },
   components: {
     AppCardPopup,
-    AppImage,
+    AppCardAvatar,
   },
   methods: {
     uploadImage(data) {

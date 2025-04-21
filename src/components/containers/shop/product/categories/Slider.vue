@@ -3,7 +3,7 @@
     <AppButtonCapsuleSlider
       v-loading="loading"
       :index.sync="selectedIndex"
-      customAllLabel="Semua Produk"
+      customAllLabel="Semua Kategori"
       customIcon="fa fa-lw fa-box"
       :enableCreateButton="isRoleOwner"
       :enableEditButton="isRoleOwner"

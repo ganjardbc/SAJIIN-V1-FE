@@ -1,34 +1,32 @@
 <template>
   <div id="App">
-    <div v-if="data" class="display-flex flex-start align-center">
-      <span class="margin margin-right-5px">
-        <span class="fonts fonts-10 semibold black">
-          {{ calculateAllDone(data) }} / {{ calculateAll(data) }}
-        </span>
-        <span
-          v-if="calculateAllDone(data) === 0"
-          class="fonts fonts-10 semibold black"
-          >Todo</span
-        >
-        <span v-else class="fonts fonts-10 semibold black">
-          {{
-            calculateAllDone(data) === calculateAll(data)
-              ? 'Selesai'
-              : 'Diproses'
-          }}
-        </span>
+    <div v-if="data" class="flex items-center gap-1">
+      <span class="text-sm text-black font-semibold">
+        {{ calculateAllDone(data) }} / {{ calculateAll(data) }}
+      </span>
+      <span
+        v-if="calculateAllDone(data) === 0"
+        class="text-sm text-black font-semibold"
+        >Todo</span
+      >
+      <span v-else class="text-sm text-black font-semibold">
+        {{
+          calculateAllDone(data) === calculateAll(data)
+            ? 'Selesai'
+            : 'Diproses'
+        }}
       </span>
       <i
         v-if="isStatusDone(data)"
-        class="fonts fonts-11 green fa fa-1x fa-check-circle"
+        class="text-lg text-green-500 fa fa-check-circle"
       ></i>
       <i
         v-else-if="isStatusOnProgress(data)"
-        class="fonts fonts-11 orange fa fa-1x fa-check-circle"
+        class="text-lg text-orange-500 fa fa-check-circle"
       ></i>
       <i
         v-else-if="isStatusEmpty(data)"
-        class="fonts fonts-11 light-grey fa fa-1x fa-check-circle"
+        class="text-lg text-gray-500 fa fa-check-circle"
       ></i>
     </div>
   </div>

@@ -1,56 +1,53 @@
 <template>
-  <div id="App">
+  <div id="App" class="flex flex-col gap-4">
     <div
       v-for="(dt, i) in data"
       :key="i"
-      class="card box-shadow margin margin-top-15px margin-bottom-15px"
+      class="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-4"
     >
-      <div
-        class="display-flex space-between align-center padding padding-bottom-15px margin margin-bottom-15px border-bottom"
-      >
-        <div
-          style="width: calc(100% - 150px)"
-          class="display-flex align-center"
-        >
-          <div class="width width-30px">
-            <i class="fa fa-1x fa-list-ul fonts main-color"></i>
-          </div>
-          <div style="width: calc(100% - 30px)">
-            <div class="fonts fonts-10 semibold overflow-ellipsis">
+      <div class="flex justify-between items-center pb-4 border-b border-gray-200">
+        <div class="flex items-center gap-2">
+          <i class="fa fa-1x fa-list-ul text-vermillion-500"></i>
+          <div class="flex-1 flex flex-col">
+            <div class="text text-xs text-black font-semibold">
               {{ dt.order.order_id }}
             </div>
-            <div class="fonts fonts-10 grey overflow-ellipsis">
+            <div class="text text-xs text-gray-500">
               {{ dt.order.created_at | moment('DD MMMM YYYY') }}
             </div>
           </div>
         </div>
-        <div style="width: 150px" class="display-flex flex-end align-center">
-          <AppCardCapsule
-            :data="dt.order.status"
-            class="margin margin-left-10px"
-          />
-          <el-popover placement="bottom-end" width="180" trigger="click">
-            <div class="width width-100">
+        <div class="flex flex-end items-center gap-2">
+          <AppCardCapsule :data="dt.order.status" />
+          <el-popover placement="bottom-end" class="flex-1" trigger="click">
+            <div class="default-menu">
               <button
                 v-if="dt.order.status !== 'canceled'"
-                class="btn btn-white btn-full btn-align-left"
+                class="menu-item small"
                 @click="onChangeStatus(dt.order, 'canceled')"
               >
-                <i class="icn icn-left fa fa-lw fa-times"></i> Cancel
+                <i class="icon fa fa-lw fa-times"></i>
+                <span class="label text-left">Cancel</span>
               </button>
               <button
                 v-if="
                   dt.order.status === 'done' || dt.order.status === 'canceled'
                 "
-                class="btn btn-white btn-full btn-align-left"
+                class="menu-item small"
                 @click="onChangeStatus(dt.order, 'new-order')"
               >
-                <i class="icn icn-left fa fa-lw fa-history"></i> Re-Open
+                <i class="icon fa fa-lw fa-history"></i>
+                <span class="label text-left">Re-Open</span>
               </button>
             </div>
-            <button slot="reference" class="btn btn-icon btn-circle btn-white">
+            <el-button
+              slot="reference"
+              size="small"
+              circle
+              style="width: 32px; height: 32px;"
+            >
               <i class="fa fa-lw fa-ellipsis-v"></i>
-            </button>
+            </el-button>
           </el-popover>
         </div>
       </div>
@@ -62,85 +59,79 @@
         type="warning"
         :closable="false"
         show-icon
-        style="margin-bottom: 15px"
       >
       </el-alert>
 
-      <div
-        class="display-flex display-mobile padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed"
-      >
+      <div class="flex flex-col gap-2 border-b border-dashed border-gray-200 pb-4">
         <div
           v-if="dt.order.customer_name"
-          class="width width-100 display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px"
+          class="w-full flex justify-between items-center"
         >
-          <div class="fonts fonts-9 normal grey margin margin-bottom-5px">
+          <div class="text-sm text-black">
             Pelanggan
           </div>
-          <div class="fonts fonts-10 semibold black overflow-ellipsis">
+          <div class="text-sm text-black font-semibold truncate text-right">
             {{ dt.order.customer_name || '-' }}
           </div>
         </div>
         <div
           v-if="dt.order.table_name"
-          class="width width-100 display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px"
+          class="w-full flex justify-between items-center"
         >
-          <div class="fonts fonts-9 normal grey margin margin-bottom-5px">
+          <div class="text-sm text-black">
             Meja
           </div>
-          <div class="fonts fonts-10 semibold black overflow-ellipsis">
+          <div class="text-sm text-black font-semibold truncate text-right">
             {{ dt.order.table_name || '-' }}
           </div>
         </div>
-        <div
-          class="width width-100 display-flex column space-between display-row-mobile margin margin-top-5px margin-bottom-5px"
-        >
-          <div class="fonts fonts-9 normal grey margin margin-bottom-5px">
+        <div class="w-full flex justify-between items-center">
+          <div class="text-sm text-black">
             Kasir
           </div>
-          <div class="fonts fonts-10 semibold black overflow-ellipsis">
+          <div class="text-sm text-black font-semibold truncate text-right">
             {{ dt.order.cashier_name || '-' }}
           </div>
         </div>
       </div>
 
-      <div class="width width-100 margin margin-top-5px margin-bottom-10px">
-        <div
-          class="display-flex row space-between display-row-mobile margin margin-bottom-5px"
-        >
-          <div class="fonts fonts-10 semibold black">Total Harga</div>
-          <div class="display-flex align-center">
-            <div class="fonts fonts-10 semibold margin margin-right-10px">
+      <div class="flex flex-col gap-2">
+        <div class="w-full flex justify-between items-center">
+          <div class="text-sm text-black font-semibold">Total Harga</div>
+          <div class="flex items-center gap-2 text-sm text-black font-semibold truncate text-right">
+            <span>
               ({{ dt.order.payment_status ? 'Dibayar' : 'Belum Bayar' }})
-            </div>
-            <div class="fonts fonts-10 semibold overflow-ellipsis">
+            </span>
+            <span>
               {{ format(dt.order.total_price) }}
-            </div>
+            </span>
           </div>
         </div>
         <div
           v-if="dt.order.is_discount"
-          class="display-flex align-center margin margin-top-5px margin-bottom-5px"
+          class="flex items-center justify-between gap-2"
         >
-          <div class="image image-20px border-full">
-            <img
-              v-if="dt.order.discount_image"
-              :src="discountImageThumbnailUrl + dt.order.discount_image"
-              alt=""
-              class="post-center"
-            />
-            <i
-              v-else
-              class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-percentage"
-            ></i>
-          </div>
+          <AppCardAvatar 
+            v-if="dt.order.discount_image"
+            :src="discountImageThumbnailUrl + dt.order.discount_image"
+            :is-upload="false"
+            size="xxsmall"
+            shape="circle"
+          />
+          <AppCardIcon
+            v-else
+            size="xxsmall"
+            icon="fa-percentage"
+            color="text-red-500"
+            shape="circle"
+          />
           <div
-            style="width: calc(100% - 25px)"
-            class="display-flex space-between margin margin-left-5px"
+            class="flex-1 flex items-center justify-between gap-2"
           >
-            <div class="fonts fonts-9 normal grey">
+            <div class="text-xs text-black">
               {{ dt.order.discount_name }}
             </div>
-            <div class="fonts fonts-9 normal grey align-right">
+            <div class="text-xs text-gray-500 text-right font-semibold">
               -{{
                 dt.order.discount_value_type === 'percentage'
                   ? `${dt.order.discount_fee}%`
@@ -157,231 +148,87 @@
         :customTitle="true"
         class="margin margin-bottom-15px"
       >
-        <div slot="title" class="display-flex align-center">
-          <div class="fonts fonts-10 semibold black margin margin-right-5px">
-            Produk
-          </div>
-          <AppCardProgressProduct :data="dt.details" />
-        </div>
-        <div
-          class="width width-100"
-          style="overflow-y: auto; max-height: 400px"
-        >
-          <div
-            v-for="(detail, j) in dt.details"
-            :key="j"
-            style="margin: 15px 4px"
-          >
-            <div class="card bg-white border border-full">
-              <div class="display-flex space-between">
-                <div class="width width-45px margin margin-right-15px">
-                  <div class="image image-padding border-full">
-                    <img
-                      v-if="detail.product_image"
-                      :src="productImageThumbnailUrl + detail.product_image"
-                      alt=""
-                      class="post-center"
-                    />
-                    <i
-                      v-else
-                      class="post-middle-absolute icn fa fa-lg fa-image"
-                    ></i>
-                  </div>
-                </div>
-                <div style="width: calc(100% - 160px)">
-                  <div class="fonts fonts-11 semibold">
-                    {{ detail.product_name }}
-                  </div>
-                  <div
-                    v-if="detail.product_detail"
-                    class="fonts fonts-9 black display-flex align-center padding padding-left-5px"
-                  >
-                    <i
-                      class="fonts fonts-2 fa fa-lw fa-circle margin margin-right-5px"
-                    ></i>
-                    {{ detail.product_detail }}
-                  </div>
-                </div>
-                <div class="width width-100px display-flex flex-end">
-                  <AppCardCapsule :data="detail.status" />
-                </div>
-              </div>
-              <div class="width width-100 padding padding-top-10px">
-                <div v-if="detail.note" class="display-flex space-between">
-                  <div class="fonts fonts-10 normal black">Catatan</div>
-                  <div class="fonts fonts-10 normal black">
-                    {{ detail.note }}
-                  </div>
-                </div>
-                <div class="display-flex space-between">
-                  <div class="fonts fonts-10 normal black">Harga</div>
-                  <div class="display-flex">
-                    <span
-                      v-if="detail.is_discount"
-                      class="fonts fonts-9 grey text-line margin margin-right-5px"
-                      >{{ format(detail.second_price) }}</span
-                    >
-                    <span
-                      class="fonts fonts-10 normal black semibold align-right"
-                      >{{ format(detail.price) }}</span
-                    >
-                  </div>
-                </div>
-                <div
-                  v-if="detail.is_discount"
-                  class="display-flex align-center margin margin-top-5px margin-bottom-5px"
-                >
-                  <div class="image image-20px border-full">
-                    <img
-                      v-if="detail.discount_image"
-                      :src="discountImageThumbnailUrl + detail.discount_image"
-                      alt=""
-                      class="post-center"
-                    />
-                    <i
-                      v-else
-                      class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-percentage"
-                    ></i>
-                  </div>
-                  <div
-                    style="width: calc(100% - 25px)"
-                    class="display-flex space-between margin margin-left-5px"
-                  >
-                    <div class="fonts fonts-9 normal grey">
-                      {{ detail.discount_name }}
-                    </div>
-                    <div class="fonts fonts-9 normal grey align-right">
-                      -{{
-                        detail.discount_value_type === 'percentage'
-                          ? `${detail.discount_fee}%`
-                          : format(detail.discount_price)
-                      }}
-                    </div>
-                  </div>
-                </div>
-                <div
-                  v-if="detail.is_platform"
-                  class="display-flex align-center margin margin-top-5px margin-bottom-5px"
-                >
-                  <div class="image image-20px border-full">
-                    <img
-                      v-if="detail.platform_image"
-                      :src="platformImageThumbnailUrl + detail.platform_image"
-                      alt=""
-                      class="post-center"
-                    />
-                    <i
-                      v-else
-                      class="post-middle-absolute fonts fonts-6 icn fa fa-lw fa-flag"
-                    ></i>
-                  </div>
-                  <div
-                    style="width: calc(100% - 25px)"
-                    class="display-flex space-between margin margin-left-5px"
-                  >
-                    <div class="fonts fonts-9 normal grey">
-                      {{ detail.platform_name }}
-                    </div>
-                    <div class="fonts fonts-9 normal grey align-right">
-                      +{{
-                        detail.platform_currency_type === 'percentage'
-                          ? `${detail.platform_fee}%`
-                          : format(detail.platform_price)
-                      }}
-                    </div>
-                  </div>
-                </div>
-                <div class="display-flex space-between margin margin-top-5px">
-                  <div class="fonts fonts-10 normal black">Jumlah</div>
-                  <div class="fonts fonts-10 normal black semibold align-right">
-                    {{ detail.quantity }} x
-                  </div>
-                </div>
-                <div
-                  class="padding padding-bottom-10px margin margin-bottom-10px border-bottom border-dashed"
-                ></div>
-                <div class="display-flex space-between">
-                  <div class="fonts fonts-10 semibold black">Total</div>
-                  <div class="fonts fonts-10 semibold main-color">
-                    {{ format(detail.subtotal) }}
-                  </div>
-                </div>
-              </div>
+        <template #title>
+          <div class="w-full flex justify-between items-center">
+            <div class="text-sm text-black font-semibold">
+              Produk
             </div>
+            <AppCardProgressProduct :data="dt.details" />
           </div>
-        </div>
+        </template>
+
+        <CardDetail
+          class="w-full py-2"
+          style="overflow-y: auto; max-height: 400px"
+          :data="dt.details"
+        />
       </AppCardCollapse>
 
-      <div class="display-flex flex-end align-center">
-        <div v-if="dt.order.status !== 'canceled' && dt.order.payment_status">
-          <button
-            class="btn btn-main-reverse with-hover margin margin-left-5px"
-            @click="onReceipt(dt)"
+      <div class="flex justify-end items-center gap-1">
+        <el-button
+          v-if="dt.order.status !== 'canceled' && dt.order.payment_status"
+          size="medium"
+          circle
+          @click="onReceipt(dt)"
+        >
+          <i class="fa fa-lw fa-print"></i>
+        </el-button>
+        <el-button
+          v-if="dt.order.status !== 'canceled' && !dt.order.payment_status"
+          size="medium"
+          circle
+          @click="onCheckout(dt)"
+        >
+          <i class="fa fa-lw fa-calculator"></i>
+        </el-button>
+        <div v-if="!isNonFnB" class="flex justify-end items-center gap-2">
+          <el-button
+            v-if="dt.order.status === 'new-order'"
+            size="medium"
+            @click="onChangeStatus(dt.order, 'on-progress')"
           >
-            <i class="fa fa-lw fa-print"></i>
-          </button>
-        </div>
-        <div v-if="dt.order.status !== 'canceled' && !dt.order.payment_status">
-          <button
-            class="btn btn-main-reverse with-hover margin margin-left-5px"
-            @click="onCheckout(dt)"
+            Terima Transaksi
+          </el-button>
+          <el-button
+            v-if="dt.order.status === 'on-progress'"
+            size="medium"
+            :disabled="isButtonOnProgressDisabled(dt)"
+            @click="onChangeStatus(dt.order, 'ready')"
           >
-            <i class="fa fa-lw fa-calculator"></i>
-          </button>
-        </div>
-        <div v-if="!isNonFnB" class="display-flex flex-end align-center">
-          <div v-if="dt.order.status === 'new-order'">
-            <button
-              class="btn btn-sekunder margin margin-left-5px"
-              @click="onChangeStatus(dt.order, 'on-progress')"
-            >
-              Terima Transaksi
-            </button>
-          </div>
-          <div v-if="dt.order.status === 'on-progress'">
-            <button
-              :disabled="isButtonOnProgressDisabled(dt)"
-              class="btn btn-sekunder margin margin-left-5px"
-              @click="onChangeStatus(dt.order, 'ready')"
-            >
-              Siap Diantarkan
-            </button>
-          </div>
-          <div v-if="dt.order.status === 'ready'">
-            <button
-              class="btn btn-sekunder margin margin-left-5px"
-              @click="onChangeStatus(dt.order, 'delivered')"
-            >
-              Diterima Pelanggan
-            </button>
-          </div>
-          <div v-if="dt.order.status === 'delivered'">
-            <button
-              :disabled="!isButtonDoneDisabled(dt)"
-              class="btn btn-green margin margin-left-5px"
-              @click="onChangeStatus(dt.order, 'done')"
-            >
-              Transaksi Selesai
-            </button>
-          </div>
+            Siap Diantarkan
+          </el-button>
+          <el-button
+            v-if="dt.order.status === 'ready'"
+            size="medium"
+            @click="onChangeStatus(dt.order, 'delivered')"
+          >
+            Diterima Pelanggan
+          </el-button>
+          <el-button
+            v-if="dt.order.status === 'delivered'"
+            size="medium"
+            :disabled="!isButtonDoneDisabled(dt)"
+            @click="onChangeStatus(dt.order, 'done')"
+          >
+            Transaksi Selesai
+          </el-button>
         </div>
         <div v-else class="display-flex flex-end align-center">
-          <div v-if="dt.order.status === 'new-order'">
-            <button
-              :disabled="!isButtonDoneDisabledNonFnB(dt)"
-              class="btn btn-green margin margin-left-5px"
-              @click="onChangeStatus(dt.order, 'done')"
-            >
-              Transaksi Selesai
-            </button>
-          </div>
+          <el-button
+            v-if="dt.order.status === 'new-order'"
+            size="medium"
+            :disabled="!isButtonDoneDisabledNonFnB(dt)"
+            @click="onChangeStatus(dt.order, 'done')"
+          >
+            Transaksi Selesai
+          </el-button>
         </div>
-        <button
-          class="btn btn-sekunder margin margin-left-5px"
+        <el-button
+          size="medium"
           @click="onDetail(dt)"
         >
           Detail
-        </button>
+        </el-button>
       </div>
     </div>
   </div>
@@ -392,6 +239,9 @@ import AppCardCapsule from '../../../../modules/AppCardCapsule'
 import AppCardCollapse from '../../../../modules/AppCardCollapse'
 import AppCardCaption from '../../../../modules/AppCardCaption'
 import AppCardProgressProduct from '../../../../modules/AppCardProgressProduct'
+import AppCardAvatar from '../../../../modules/AppCardAvatar'
+import AppCardIcon from '../../../../modules/AppCardIcon'
+import CardDetail from './CardDetail'
 
 export default {
   name: 'App',
@@ -403,6 +253,9 @@ export default {
     AppCardCollapse,
     AppCardCaption,
     AppCardProgressProduct,
+    AppCardAvatar,
+    AppCardIcon,
+    CardDetail,
   },
   computed: {
     ...mapState({

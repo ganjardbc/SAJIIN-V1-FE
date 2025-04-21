@@ -1,9 +1,10 @@
 <template>
-  <div id="CashbookField" class="width width-100">
+  <div id="CashbookField" class="w-full">
     <el-select
       v-model="selectedLabel"
       :placeholder="placeholder"
-      popper-class="cashbook-custom-filter"
+      popper-class="w-full"
+      class="w-full"
       :clearable="true"
       :disabled="disabled"
       @clear="onClear"

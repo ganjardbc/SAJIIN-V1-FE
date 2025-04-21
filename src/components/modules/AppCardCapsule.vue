@@ -1,9 +1,7 @@
 <template>
-  <div id="App">
-    <div :class="`card-capsule ${getColor()}`">
-      {{ label ? label : getLabel() }}
-    </div>
-  </div>
+  <el-tag :size="size" :type="type ? type : getColor" class="rounded-md">
+    {{ label ? label : getLabel }}
+  </el-tag>
 </template>
 <script>
 export default {
@@ -16,64 +14,71 @@ export default {
   props: {
     data: null,
     label: null,
+    type: {
+      type: String,
+    },
+    size: {
+      type: String,
+      default: 'small',
+    },
   },
-  methods: {
+  computed: {
     getColor() {
-      let color = 'normal'
+      let color = 'default'
       switch (this.data) {
         case 'unconfirmed':
-          color = 'normal'
+          color = 'info'
           break
         case 'confirmed':
-          color = 'wip'
+          color = 'warning'
           break
         case 'cooking':
-          color = 'wip'
+          color = 'warning'
           break
         case 'delivered':
-          color = 'wip'
+          color = 'warning'
           break
         case 'on-progress':
-          color = 'wip'
+          color = 'warning'
           break
         case 'todo':
-          color = 'normal'
+          color = 'info'
           break
         case 'to-do':
-          color = 'normal'
+          color = 'info'
           break
         case 'new-order':
-          color = 'normal'
+          color = 'info'
           break
         case 'wip':
-          color = 'wip'
+          color = 'warning'
           break
         case 'ready':
-          color = 'wip'
+          color = 'warning'
           break
         case 'done':
-          color = 'active'
+          color = 'success'
           break
         case 'canceled':
-          color = 'inactive'
+          color = 'danger'
           break
         case 'active':
-          color = 'active'
+          color = 'success'
           break
         case 'inactive':
-          color = 'inactive'
+          color = 'danger'
           break
         case 'paid':
-          color = 'active'
+          color = 'success'
           break
         case 'unpaid':
-          color = 'todo'
+          color = 'info'
           break
         case 'open':
-          color = 'active'
+          color = 'success'
           break
         case 'closed':
-          color = 'inactive'
+          color = 'danger'
           break
       }
       return color

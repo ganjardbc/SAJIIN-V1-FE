@@ -1,66 +1,76 @@
 <template>
-  <div id="App" class="main-content-small">
-    <div
-      class="display-flex space-between align-center padding padding-bottom-5px"
-    >
-      <div class="display-flex align-right">
-        <div class="fonts big black bold">Notifikasi</div>
+  <div id="App" class="w-full flex flex-col">
+    <div class="subnavbar">
+      <div class="flex items-center justify-between lg:px-4 w-full lg:w-sm m-auto">
+        <el-badge :value="totalUnread" :max="99">
+          <div class="text-xl text-black font-semibold">Notifikasi</div>
+        </el-badge>
+        <el-button size="small" circle @click="onReload">
+        <i class="fa fa-lw fa-retweet"></i>
+      </el-button>
+      </div>
+    </div>
+
+    <div v-loading="loading" class="flex flex-col gap-4 p-4 w-full lg:w-sm m-auto">
+      <AppEmpty v-if="data.length === 0" />
+      <div v-else class="flex flex-col gap-2">
         <div
-          class="fonts fonts-11 grey margin margin-left-10px margin-bottom-10px"
+          v-for="(dt, i) in data"
+          :key="i"
+          class="p-4 rounded-lg flex flex-col gap-2 cursor-pointer hover:bg-gray-100"
+          :class="{
+            'bg-gray-100': !dt.is_read,
+          }"
+          @click="onRoute(dt)"
         >
-          {{ totalUnread ? `(${totalUnread})` : '' }}
+          <div class="flex gap-4">
+            <div
+              class="flex items-center justify-center bg-gray-100 rounded-full"
+              :class="{
+                'bg-gray-100': dt.is_read,
+                'bg-vermillion-200': !dt.is_read,
+              }"
+              style="width: 38px; height: 38px"
+            >
+              <i
+                class="text-md fa fa-bell"
+                :class="{
+                  'text-gray-500': dt.is_read,
+                  'text-vermillion-500': !dt.is_read,
+                }"
+              />
+            </div>
+            <div class="flex-1 flex flex-col gap-1">
+              <div class="flex items-center justify-between">
+                <div class="text-xs text-black font-semibold capitalize">
+                  {{ getLabel(dt.type) }}
+                </div>
+                <div class="text-xs text-right text-gray-500">
+                  {{ dt.created_at | moment('from', 'now') }}
+                </div>
+              </div>
+
+              <div class="text-sm text-black font-normal">
+                {{ dt.message }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <button class="btn btn-icon btn-circle btn-white" @click="onReload">
-        <i class="fa fa-lw fa-retweet"></i>
-      </button>
-    </div>
-    <div class="width width-100" style="break-word: unset !important">
-      <div v-loading="loading">
-        <AppEmpty v-if="data.length === 0" />
-        <div v-else class="width width-100" style="width: calc(100% - 2px)">
-          <div
-            v-for="(dt, i) in data"
-            :key="i"
-            :class="`card border-full ${dt.is_read ? 'bg-white' : 'bg-white-grey'}`"
-            style="margin: 5px 0; cursor: pointer"
-            @click="onRoute(dt)"
-          >
-            <div
-              class="display-flex align-center space-between margin margin-bottom-5px"
-            >
-              <div
-                class="fonts fonts-9 semibold black overflow-ellipsis"
-                style="text-transform: capitalize"
-              >
-                {{ getLabel(dt.type) }}
-              </div>
-              <div class="fonts fonts-9 grey">
-                {{ dt.created_at | moment('from', 'now') }}
-              </div>
-            </div>
-            <div class="fonts fonts-9 normal black margin margin-bottom-5px">
-              {{ dt.message }}
-            </div>
-            <div class="fonts fonts-9 grey">{{ dt.target }}</div>
-          </div>
 
-          <div
-            v-if="data.length !== totalRecord"
-            class="display-flex center padding padding-top-10px padding-bottom-10px"
-          >
-            <button class="btn btn-small btn-sekunder" @click="onLoadMore">
-              Load More
-            </button>
-          </div>
-        </div>
+      <div
+        v-if="data.length !== totalRecord"
+        class="flex justify-center items-center"
+      >
+        <el-button @click="onLoadMore">
+          Load More
+        </el-button>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import { replaceToMoreValue } from '@/services/utils'
 import AppEmpty from '@/components/modules/AppEmpty'
 import icon from '@/assets/img/icon.png'
 
@@ -107,9 +117,6 @@ export default {
     },
     paramShopId() {
       return this.$route.params.shopId
-    },
-    getTotalUnread() {
-      return replaceToMoreValue(this.totalUnread)
     },
   },
   methods: {
