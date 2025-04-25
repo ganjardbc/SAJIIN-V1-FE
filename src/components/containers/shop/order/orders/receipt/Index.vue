@@ -1,36 +1,35 @@
 <template>
-  <div id="App">
-    <AppSideForm :title="title" :enableCustomFooter="true" :onClose="onClose">
-      <div slot="toolbar">
-        <button
-          class="btn btn-icon btn-white btn-circle"
-          @click="onDownloadReceipt"
-        >
-          <i class="fa fa-lw fa-download"></i>
-        </button>
-      </div>
+  <AppSideForm
+    :value="openForm"
+    :title="title"
+    :enableCustomFooter="true"
+    @close="onClose"
+  >
+    <template #toolbar>
+      <el-button
+        size="small"
+        circle
+        :disabled="loadingReceipt"
+        @click="onDownloadReceipt"
+      >
+        <i class="fa fa-lw fa-download"></i>
+      </el-button>
+    </template>
 
-      <div class="display-flex align-center">
-        <button
-          v-for="(dt, i) in thermalSizing"
-          :key="i"
-          :class="`card card-status ${selectedIndex === dt.id ? 'active' : 'normal'} border-big-radius margin margin-5px`"
-          @click="onChangeSize(dt)"
-        >
-          {{ dt.sizeThermal.x }}{{ dt.sizeThermal.x !== '100%' ? 'mm' : '' }}
-        </button>
-      </div>
+    <div class="w-full flex flex-col gap-4">
+      <AppTabs
+        class="w-full"
+        :selectedIndex.sync="selectedIndex"
+        :isFull="true"
+        :isScrollable="false"
+        :data="thermalSizing"
+        :onChange="(data) => onChangeSize(data)"
+      />
 
-      <div v-if="loadingReceipt">
-        <AppLoader />
-      </div>
-      <!-- <div v-else id="component-to-print">
-                <ViewPdf v-if="fileUrl !== ''" :src="fileUrl" />
-                <AppEmpty v-else title="NOTA TIDAK DITEMUKAN" />
-            </div> -->
+      <AppLoader v-if="loadingReceipt" />
 
       <div
-        class="width width-100"
+        class="w-full"
         style="
           position: absolute;
           width: auto;
@@ -41,233 +40,222 @@
         "
       >
         <div
+          v-if="selectedData"
           id="component-to-print"
+          class="flex flex-col gap-4"
           :style="`width: ${selectedData.sizeReceipt.x}; margin: auto;`"
         >
-          <div class="padding padding-10px">
-            <div class="width width-100 margin margin-bottom-5px">
-              <!-- <div class="width width-60px width-center">
-                                <div class="image image-padding bg-white">
-                                    <img 
-                                        v-if="form.shop_image" 
-                                        :src="`${shopImageThumbnailUrl}${form.shop_image}?not-from-cache-please`" 
-                                        :alt="form.shop && form.shop.name">
-                                    <i v-else class="post-middle-absolute fa fa-lg fa-store" />
-                                </div>
-                            </div> -->
-              <div
-                class="fonts fonts-11 semibold align-center margin margin-top-7px margin-bottom-2px"
-              >
-                {{ form.shop && form.shop.name }}
-              </div>
-              <div class="fonts fonts-9 normal align-center">
-                {{ form.shop && form.shop.location }}
-              </div>
-              <div
-                v-if="form.shop && form.shop.phone"
-                class="fonts fonts-9 normal align-center"
-              >
-                {{ form.shop && form.shop.phone }}
-              </div>
+          <div class="w-full flex flex-col">
+            <div class="text-sm text-black font-semibold text-center">
+              {{ form.shop && form.shop.name }}
             </div>
-            <div class="margin margin-top-7px margin-bottom-7px">
-              <div class="display-flex space-between">
-                <div style="width: 75px">
-                  <div class="fonts fonts-9">ID Transaksi</div>
-                </div>
-                <div style="width: calc(100% - 75px)">
-                  <div class="fonts fonts-9">: {{ form.order_id }}</div>
-                </div>
-              </div>
-              <div class="display-flex space-between">
-                <div style="width: 75px">
-                  <div class="fonts fonts-9">Tanggal</div>
-                </div>
-                <div style="width: calc(100% - 75px)">
-                  <div class="fonts fonts-9">
-                    : {{ form.created_at | moment('DD/MM/YYYY') }}
-                  </div>
-                </div>
-              </div>
-              <div v-if="form.cashier_name" class="display-flex space-between">
-                <div style="width: 75px">
-                  <div class="fonts fonts-9">Kasir</div>
-                </div>
-                <div style="width: calc(100% - 75px)">
-                  <div class="fonts fonts-9">
-                    : {{ form.cashier_name || '-' }}
-                  </div>
-                </div>
-              </div>
-              <div v-if="form.customer_name" class="display-flex space-between">
-                <div style="width: 75px">
-                  <div class="fonts fonts-9">Pelanggan</div>
-                </div>
-                <div style="width: calc(100% - 75px)">
-                  <div class="fonts fonts-9">
-                    : {{ form.customer_name || '-' }}
-                  </div>
-                </div>
-              </div>
-              <div v-if="form.table_name" class="display-flex space-between">
-                <div style="width: 75px">
-                  <div class="fonts fonts-9">Meja</div>
-                </div>
-                <div style="width: calc(100% - 75px)">
-                  <div class="fonts fonts-9">
-                    : {{ form.table_name || '-' }}
-                  </div>
-                </div>
-              </div>
-              <div v-if="form.platform_name" class="display-flex space-between">
-                <div style="width: 75px">
-                  <div class="fonts fonts-9">Platform</div>
-                </div>
-                <div style="width: calc(100% - 75px)">
-                  <div class="fonts fonts-9">
-                    : {{ form.platform_name || '-' }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="width width-100 border-bottom"></div>
-            <div class="margin margin-top-7px margin-bottom-7px">
-              <div class="display-flex space-between">
-                <div style="width: calc(100% - 110px)">
-                  <span class="fonts fonts-9 black semibold">Produk</span>
-                </div>
-                <div style="width: 30px">
-                  <span class="fonts fonts-9 black semibold">Qty</span>
-                </div>
-                <div style="width: 80px">
-                  <span class="fonts fonts-9 black semibold">Total</span>
-                </div>
-              </div>
-
-              <div
-                v-for="(dt, index) in form.details"
-                :key="index"
-                class="width width-100"
-              >
-                <div :class="`display-flex space-between`">
-                  <div style="width: calc(100% - 110px)">
-                    <div class="fonts fonts-9 black">
-                      {{ dt.product_name }}
-                      {{ dt.product_detail ? `- ${dt.product_detail}` : '' }}
-                    </div>
-                    <div class="fonts fonts-8 black">
-                      {{ format(dt.price) }}
-                    </div>
-                  </div>
-                  <div style="width: 30px">
-                    <span class="fonts fonts-9 black">{{ dt.quantity }}</span>
-                  </div>
-                  <div style="width: 80px">
-                    <span class="fonts fonts-9 black">{{
-                      format(dt.subtotal)
-                    }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="width width-100 border-bottom"></div>
-            <div class="margin margin-top-7px margin-bottom-7px">
-              <div class="display-flex flex-end">
-                <div style="width: calc(100% - 80px)">
-                  <div class="fonts fonts-9 black">Total</div>
-                </div>
-                <div style="width: 80px">
-                  <div class="fonts fonts-9 black">
-                    {{ format(form.total_price) }}
-                  </div>
-                </div>
-              </div>
+            <div class="text-xs text-black text-center">
+              {{ form.shop && form.shop.location }}
             </div>
             <div
-              v-if="isThereDiscountProduct || isThereDiscountTransaction"
-              class="width width-100 border-bottom"
-            ></div>
-            <div
-              v-if="isThereDiscountProduct || isThereDiscountTransaction"
-              class="display-flex flex-end padding padding-top-5px padding-bottom-5px"
+              v-if="form.shop && form.shop.phone"
+              class="text-xs text-black text-center"
             >
-              <div style="width: calc(100% - 80px)">
-                <div class="fonts fonts-9 black">Diskon</div>
+              {{ form.shop && form.shop.phone }}
+            </div>
+          </div>
+
+          <div class="w-full flex flex-col border-b border-gray-200 pb-4">
+            <div class="flex justify-between items-center gap-4">
+              <div style="width: 75px">
+                <div class="text-xs text-black">ID Transaksi</div>
+              </div>
+              <div style="width: calc(100% - 75px)">
+                <div class="text-xs text-black">: {{ form.order_id }}</div>
+              </div>
+            </div>
+            <div class="flex justify-between items-center gap-4">
+              <div style="width: 75px">
+                <div class="text-xs text-black">Tanggal</div>
+              </div>
+              <div style="width: calc(100% - 75px)">
+                <div class="text-xs text-black">
+                  : {{ form.created_at | moment('DD/MM/YYYY') }}
+                </div>
+              </div>
+            </div>
+            <div v-if="form.cashier_name" class="flex justify-between items-center gap-4">
+              <div style="width: 75px">
+                <div class="text-xs text-black">Kasir</div>
+              </div>
+              <div style="width: calc(100% - 75px)">
+                <div class="text-xs text-black">
+                  : {{ form.cashier_name || '-' }}
+                </div>
+              </div>
+            </div>
+            <div v-if="form.customer_name" class="flex justify-between items-center gap-4">
+              <div style="width: 75px">
+                <div class="text-xs text-black">Pelanggan</div>
+              </div>
+              <div style="width: calc(100% - 75px)">
+                <div class="text-xs text-black">
+                  : {{ form.customer_name || '-' }}
+                </div>
+              </div>
+            </div>
+            <div v-if="form.table_name" class="flex justify-between items-center gap-4">
+              <div style="width: 75px">
+                <div class="text-xs text-black">Meja</div>
+              </div>
+              <div style="width: calc(100% - 75px)">
+                <div class="text-xs text-black">
+                  : {{ form.table_name || '-' }}
+                </div>
+              </div>
+            </div>
+            <div v-if="form.platform_name" class="flex justify-between items-center gap-4">
+              <div style="width: 75px">
+                <div class="text-xs text-black">Platform</div>
+              </div>
+              <div style="width: calc(100% - 75px)">
+                <div class="text-xs text-black">
+                  : {{ form.platform_name || '-' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full flex flex-col gap-2 border-b border-gray-200 pb-4">
+            <div class="w-full flex justify-between items-center">
+              <div style="width: calc(100% - 110px)">
+                <span class="text-xs tet-black font-semibold">Produk</span>
+              </div>
+              <div style="width: 30px">
+                <span class="text-xs tet-black font-semibold">Qty</span>
               </div>
               <div style="width: 80px">
-                <div class="fonts fonts-9 black">
-                  {{ format(totalDiscount) }}
-                </div>
-              </div>
-            </div>
-            <div class="width width-100 border-bottom"></div>
-            <div class="margin margin-top-7px margin-bottom-7px">
-              <div class="display-flex flex-end">
-                <div style="width: calc(100% - 80px)">
-                  <div class="fonts fonts-9 black">Bayar</div>
-                </div>
-                <div style="width: 80px">
-                  <div class="fonts fonts-9 black">
-                    {{ format(form.bills_price) }}
-                  </div>
-                </div>
-              </div>
-              <div class="display-flex flex-end">
-                <div style="width: calc(100% - 80px)">
-                  <div class="fonts fonts-9 black">Kembali</div>
-                </div>
-                <div style="width: 80px">
-                  <div class="fonts fonts-9 black">
-                    {{ format(form.change_price) }}
-                  </div>
-                </div>
+                <span class="text-xs tet-black font-semibold">Total</span>
               </div>
             </div>
 
-            <div class="margin margin-top-10px">
-              <div class="fonts fonts-8 normal align-center">
-                Scan Untuk Cek Transaksi
+            <div
+              v-for="(dt, index) in form.details"
+              :key="index"
+              class="w-full flex justify-between items-center"
+            >
+              <div style="width: calc(100% - 110px)">
+                <div class="text-xs tet-black">
+                  {{ dt.product_name }}
+                  {{ dt.product_detail ? `- ${dt.product_detail}` : '' }}
+                </div>
+                <div class="text-xs tet-black">
+                  {{ format(dt.price) }}
+                </div>
               </div>
-              <div class="width width-150px width-center">
-                <VueQrcode
-                  :value="`${initUrl}visitor/${form.shop && form.shop.shop_id}/order/${form.order_id}`"
-                  errorCorrectionLevel="L"
-                  :width="150"
-                />
+              <div style="width: 30px">
+                <span class="text-xs tet-black">{{ dt.quantity }}</span>
               </div>
+              <div style="width: 80px">
+                <span class="text-xs tet-black">{{
+                  format(dt.subtotal)
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full flex justify-between items-center border-b border-gray-200 pb-4">
+            <div style="width: calc(100% - 80px)">
+              <div class="text-xs tet-black">Total</div>
+            </div>
+            <div style="width: 80px">
+              <div class="text-xs tet-black">
+                {{ format(form.total_price) }}
+              </div>
+            </div>
+          </div>
+
+          <div
+            v-if="isThereDiscountProduct || isThereDiscountTransaction"
+            class="w-full flex justify-between items-center border-b border-gray-200 pb-4"
+          >
+            <div style="width: calc(100% - 80px)">
+              <div class="text-xs tet-black">Diskon</div>
+            </div>
+            <div style="width: 80px">
+              <div class="text-xs tet-black">
+                {{ format(totalDiscount) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full flex flex-col gap-2 border-b border-gray-200 pb-4">
+            <div class="w-full flex justify-between items-center">
+              <div style="width: calc(100% - 80px)">
+                <div class="text-xs tet-black">Bayar</div>
+              </div>
+              <div style="width: 80px">
+                <div class="text-xs tet-black">
+                  {{ format(form.bills_price) }}
+                </div>
+              </div>
+            </div>
+            <div class="w-full flex justify-between items-center">
+              <div style="width: calc(100% - 80px)">
+                <div class="text-xs tet-black">Kembali</div>
+              </div>
+              <div style="width: 80px">
+                <div class="text-xs tet-black">
+                  {{ format(form.change_price) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full flex flex-col justify-center items-center gap-2">
+            <div class="text-xs tet-black text-center">
+              Scan Untuk Cek Transaksi
+            </div>
+            <div style="width: 150px">
+              <VueQrcode
+                :value="`${initUrl}visitor/${form.shop && form.shop.shop_id}/order/${form.order_id}`"
+                errorCorrectionLevel="L"
+                :width="150"
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div class="width width-100 content-center" id="component-to-place"></div>
+      <div
+        id="component-to-place"
+        class="w-full flex justify-center"
+      />
+    </div>
 
-      <div slot="footer">
-        <div class="right-form-footer">
-          <button
-            class="btn btn-main btn-full"
-            :disabled="loadingReceipt"
-            @click="onDownloadCanvas('component-to-place')"
-          >
-            Save As Image
-          </button>
-          <button
-            v-if="isBluetoothSupported"
-            class="btn btn-sekunder btn-full margin margin-top-15px"
-            @click="onPrintToThermal"
-          >
-            Print Nota
-          </button>
-        </div>
+    <template #footer>
+      <div class="w-full flex flex-col gap-4">
+        <el-button
+          class="w-full"
+          :disabled="loadingReceipt"
+          @click="onDownloadCanvas('component-to-place')"
+        >
+          Save As Image
+        </el-button>
+        <el-button
+          v-if="isBluetoothSupported"
+          type="primary"
+          class="w-full"
+          style="margin-left: 0"
+          :disabled="loadingReceipt"
+          @click="onPrintToThermal"
+        >
+          Print Nota
+        </el-button>
       </div>
-    </AppSideForm>
-
+    </template>
+    
     <PrintReceipt
       v-if="visiblePrintReceipt"
       @onPrint="onPrintThermal"
       @onClose="visiblePrintReceipt = false"
     />
-  </div>
+  </AppSideForm>
 </template>
 <script>
 import m from 'moment'
@@ -281,6 +269,7 @@ import AppCardCapsule from '../../../../../modules/AppCardCapsule'
 import AppCardPriceSuggestion from '../../../../../modules/AppCardPriceSuggestion'
 import AppLoader from '../../../../../modules/AppLoader'
 import AppEmpty from '../../../../../modules/AppEmpty'
+import AppTabs from '../../../../../modules/AppTabs'
 import PrintReceipt from './PrintReceipt'
 import printStyles from './styles'
 import CMD from './markdown'
@@ -289,16 +278,19 @@ import { replaceString, formatCurrency } from '@/services/utils'
 const thermalSizing = [
   {
     id: 1,
+    label: '80mm',
     sizeThermal: { x: '80', y: '200' },
     sizeReceipt: { x: '302.36px', y: '755.90px' },
   },
   {
     id: 2,
+    label: '72mm',
     sizeThermal: { x: '72', y: '200' },
     sizeReceipt: { x: '272.13px', y: '755.90px' },
   },
   {
     id: 3,
+    label: '58mm',
     sizeThermal: { x: '51', y: '200' },
     sizeReceipt: { x: '192.755px', y: '755.90px' },
   },
@@ -310,7 +302,7 @@ export default {
     return {
       title: 'Nota Transaksi',
       visiblePrintReceipt: false,
-      selectedIndex: 1,
+      selectedIndex: 0,
       selectedData: thermalSizing[0],
       thermalSizing: thermalSizing,
       printObj: {
@@ -325,6 +317,13 @@ export default {
       },
     }
   },
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   components: {
     VueQrcode,
     AppSideForm,
@@ -332,6 +331,7 @@ export default {
     AppCardPriceSuggestion,
     AppLoader,
     AppEmpty,
+    AppTabs,
     PrintReceipt,
     ViewPdf,
   },
@@ -663,8 +663,8 @@ export default {
       this.$emit('onClose')
     },
     onChangeSize(value) {
-      this.selectedIndex = value.id
-      this.selectedData = value
+      const dataThermal = this.thermalSizing[value] || this.thermalSizing[0]
+      this.selectedData = dataThermal
       // HIDDEN TEMPORARY
       // this.onViewDownloadReceipt()
       this.onSetCanvas()

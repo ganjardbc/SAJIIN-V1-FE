@@ -1,86 +1,78 @@
 <template>
-  <div id="App">
-    <div class="card no-padding border-full">
-      <div class="padding padding-15px">
-        <div class="display-flex">
-          <div class="width width-65px">
-            <div class="image image-50px border-full">
-              <img
-                v-if="data.image"
-                :src="productImageThumbnailUrl + data.image"
-                alt=""
-                class="post-center"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-            </div>
+  <div class="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-4">
+    <div class="flex flex-col md:flex-row justify-between gap-4">
+      <AppCardAvatar
+        :src="`${productImageThumbnailUrl}${data.image}`"
+        size="small"
+      />
+      <div class="flex-1 flex flex-col gap-2">
+        <div class="w-full flex flex-col gap-1">
+          <div class="text-sm text-black font-semibold">
+            {{ data.name }}
           </div>
-          <div style="width: calc(100% - 65px)">
-            <div class="fonts fonts-11 semibold">{{ data.name }}</div>
-            <div class="fonts fonts-9 grey">
-              {{
-                indexDetail
-                  ? format(varianPrice(indexDetail))
-                  : data.price
-                    ? format(data.price)
-                    : ''
-              }}
-            </div>
-          </div>
-        </div>
-        <div class="width width-100">
-          <div class="field-group">
-            <div class="display-flex space-between align-center">
-              <div class="field-label">Varian</div>
-              <div class="fonts fonts-10 normal">
-                {{ detailProduct.length }} Item
-              </div>
-            </div>
-            <el-select
-              v-model="indexDetail"
-              placeholder="Pilih satu varian"
-              no-data-text="Data Tidak Ditemukan"
-              :disabled="data.status === 'inactive'"
-              clearable
-            >
-              <el-option
-                v-for="item in detailProduct"
-                :key="item.id"
-                :label="`${item.name} : ${format(item.price)}`"
-                :value="item.id"
-                style="height: auto; padding: 7px 20px"
-              >
-                <div
-                  class="display-flex space-between margin margin-bottom-7px"
-                >
-                  <div class="fonts fonts-10 grey">{{ item.name }}</div>
-                  <!-- <div v-if="item.is_discount" class="fonts fonts-10 red semibold">-{{ item.value_discount }}%</div> -->
-                </div>
-                <div class="display-flex flex-start">
-                  <div class="fonts fonts-10 black semibold">
-                    {{ format(item.price) }}
-                  </div>
-                  <!-- <div v-if="item.is_discount" class="fonts fonts-10 grey text-line margin margin-left-5px">{{ format(item.second_price) }}</div> -->
-                </div>
-              </el-option>
-            </el-select>
-          </div>
-          <div class="width width-100 padding padding-top-5px">
-            <button
-              class="btn btn-main-reverse with-border btn-full"
-              :disabled="isButtonEnable(data)"
-              @click="addToCart(data)"
-            >
-              <i class="icn icn-left fa fa-lw fa-cart-plus"></i> Tambah Produk
-            </button>
-          </div>
+          <AppCardCaption
+            v-if="data.description"
+            icon="fa fa-lg fa-info-circle"
+            :caption="data.description"
+          />
+          <AppCardCaption
+            v-if="data.price"
+            icon="fa fa-lg fa-calculator"
+            :caption="format(data.price)"
+          />
         </div>
       </div>
+    </div>
+
+    <div class="w-full flex flex-col gap-4">
+      <div class="field-group">
+        <div class="flex justify-between items-center">
+          <div class="field-label">Varian</div>
+          <div class="field-label font-semibold">
+            {{ detailProduct.length }} Item
+          </div>
+        </div>
+        <el-select
+          v-model="indexDetail"
+          placeholder="Pilih satu varian"
+          no-data-text="Data Tidak Ditemukan"
+          :disabled="data.status === 'inactive'"
+          clearable
+        >
+          <el-option
+            v-for="item in detailProduct"
+            :key="item.id"
+            :label="`${item.name} : ${format(item.price)}`"
+            :value="item.id"
+            class="flex flex-col px-4 py-2"
+            style="height: auto;"
+          >
+            <div class="text-sm text-gray-500" style="line-height: 1.5">
+              {{ item.name }}
+            </div>
+            <div class="text-sm text-black font-semibold" style="line-height: 1.5">
+              {{ format(item.price) }}
+            </div>
+          </el-option>
+        </el-select>
+      </div>
+
+      <el-button
+        class="w-full"
+        :disabled="isButtonEnable(data)"
+        @click="addToCart(data)"
+      >
+        <i class="mr-2 fa fa-cart-plus"></i>
+        Tambah Produk
+      </el-button>
     </div>
   </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
 import AppCardCapsule from '../../../../../../modules/AppCardCapsule'
+import AppCardAvatar from '../../../../../../modules/AppCardAvatar'
+import AppCardCaption from '../../../../../../modules/AppCardCaption'
 
 export default {
   data() {
@@ -90,6 +82,8 @@ export default {
   },
   components: {
     AppCardCapsule,
+    AppCardAvatar,
+    AppCardCaption,
   },
   props: {
     data: null,

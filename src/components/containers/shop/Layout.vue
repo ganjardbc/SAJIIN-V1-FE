@@ -31,7 +31,7 @@
 
         <div class="flex-1 flex items-center justify-end">
           <div class="navbar">
-            <router-link :to="{ name: 'shop-home' }" class="menu">
+            <router-link :to="{ name: 'shop-home' }" class="menu mobile-only">
               <i class="icon fa-solid fa-house" />
               <span class="label">Home</span>
             </router-link>

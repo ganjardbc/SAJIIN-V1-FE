@@ -164,65 +164,70 @@
         />
       </AppCardCollapse>
 
-      <div class="flex justify-end items-center gap-1">
+      <div class="flex justify-end items-center">
+        <!-- DEFAULT -->
         <el-button
           v-if="dt.order.status !== 'canceled' && dt.order.payment_status"
           size="medium"
           circle
+          style="width: 36px; height: 36px;"
           @click="onReceipt(dt)"
         >
-          <i class="fa fa-lw fa-print"></i>
+          <i class="fa fa-print"></i>
         </el-button>
         <el-button
-          v-if="dt.order.status !== 'canceled' && !dt.order.payment_status"
+          v-else
           size="medium"
           circle
+          style="width: 36px; height: 36px;"
           @click="onCheckout(dt)"
         >
-          <i class="fa fa-lw fa-calculator"></i>
+          <i class="fa fa-calculator"></i>
         </el-button>
-        <div v-if="!isNonFnB" class="flex justify-end items-center gap-2">
-          <el-button
-            v-if="dt.order.status === 'new-order'"
-            size="medium"
-            @click="onChangeStatus(dt.order, 'on-progress')"
-          >
-            Terima Transaksi
-          </el-button>
-          <el-button
-            v-if="dt.order.status === 'on-progress'"
-            size="medium"
-            :disabled="isButtonOnProgressDisabled(dt)"
-            @click="onChangeStatus(dt.order, 'ready')"
-          >
-            Siap Diantarkan
-          </el-button>
-          <el-button
-            v-if="dt.order.status === 'ready'"
-            size="medium"
-            @click="onChangeStatus(dt.order, 'delivered')"
-          >
-            Diterima Pelanggan
-          </el-button>
-          <el-button
-            v-if="dt.order.status === 'delivered'"
-            size="medium"
-            :disabled="!isButtonDoneDisabled(dt)"
-            @click="onChangeStatus(dt.order, 'done')"
-          >
-            Transaksi Selesai
-          </el-button>
-        </div>
-        <div v-else class="display-flex flex-end align-center">
-          <el-button
-            v-if="dt.order.status === 'new-order'"
-            size="medium"
-            :disabled="!isButtonDoneDisabledNonFnB(dt)"
-            @click="onChangeStatus(dt.order, 'done')"
-          >
-            Transaksi Selesai
-          </el-button>
-        </div>
+
+        <!-- NON FNB -->
+        <el-button
+          v-if="!isNonFnB && dt.order.status === 'new-order'"
+          size="medium"
+          @click="onChangeStatus(dt.order, 'on-progress')"
+        >
+          Terima Transaksi
+        </el-button>
+        <el-button
+          v-if="!isNonFnB && dt.order.status === 'on-progress'"
+          size="medium"
+          :disabled="isButtonOnProgressDisabled(dt)"
+          @click="onChangeStatus(dt.order, 'ready')"
+        >
+          Siap Diantarkan
+        </el-button>
+        <el-button
+          v-if="!isNonFnB && dt.order.status === 'ready'"
+          size="medium"
+          @click="onChangeStatus(dt.order, 'delivered')"
+        >
+          Diterima Pelanggan
+        </el-button>
+        <el-button
+          v-if="!isNonFnB && dt.order.status === 'delivered'"
+          size="medium"
+          :disabled="!isButtonDoneDisabled(dt)"
+          @click="onChangeStatus(dt.order, 'done')"
+        >
+          Transaksi Selesai
+        </el-button>
+
+        <!-- FNB -->
+        <el-button
+          v-if="isNonFnB && dt.order.status === 'new-order'"
+          size="medium"
+          :disabled="!isButtonDoneDisabledNonFnB(dt)"
+          @click="onChangeStatus(dt.order, 'done')"
+        >
+          Transaksi Selesai
+        </el-button>
+
+        <!-- DEFAULT -->
         <el-button
           size="medium"
           @click="onDetail(dt)"

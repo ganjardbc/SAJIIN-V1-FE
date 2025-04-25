@@ -126,10 +126,18 @@
             </div>
             <div class="flex items-center justify-between gap-2">
               <div class="text-sm text-black">Metode</div>
-              <div v-if="form.payment_id" class="flex items-center gap-2">
+              <div v-if="form.payment && form.payment_id" class="flex items-center gap-2">
                 <AppCardAvatar
+                  v-if="form.payment.image"
                   :src="`${paymentImageThumbnailUrl}${form.payment.image}`"
                   size="xxsmall"
+                  shape="circle"
+                />
+                <AppCardIcon 
+                  v-else
+                  size="xxsmall"
+                  icon="fa-credit-card"
+                  color="text-vermillion-500"
                   shape="circle"
                 />
                 <div class="text-sm text-black font-semibold text-right">

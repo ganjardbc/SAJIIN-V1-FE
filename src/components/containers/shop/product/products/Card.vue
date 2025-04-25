@@ -62,9 +62,7 @@
           :is-upload="isRoleOwner"
           @upload="onChangeCover(dt)"
         />
-        <div
-          class="flex-1 flex flex-col gap-2"
-        >
+        <div class="flex-1 flex flex-col gap-2">
           <div class="w-full flex flex-col gap-1">
             <div class="text-sm text-black font-semibold">
               {{ dt.name }}

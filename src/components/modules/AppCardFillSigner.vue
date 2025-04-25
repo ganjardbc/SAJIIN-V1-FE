@@ -1,8 +1,12 @@
 <template>
   <div
-    :class="`padding padding-x-2px ${background} border-small-radius margin margin-right-5px`"
+    class="px-2 py-1 flex justify-center items-center rounded-md"
+    :class="background"
   >
-    <div :class="`fonts fonts-8 semibold ${color} margin margin-y-5px`">
+    <div
+      class="text-xs font-semibold"
+      :class="color"
+    >
       {{ label }}
     </div>
   </div>

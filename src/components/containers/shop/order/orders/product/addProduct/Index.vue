@@ -1,63 +1,61 @@
 <template>
-  <div id="App">
-    <AppCardPopup title="Pilih Produk" @onClose="onClose">
-      <div class="width width-100">
-        <div
-          class="width width-100 display-flex space-between margin margin-bottom-10px"
-        >
-          <div style="width: calc(100% - 50px)">
-            <SearchField
-              :placeholder="'Cari produk ..'"
-              :enableResponsive="true"
-              :onChange="(data) => onSearch(data)"
-            />
-          </div>
-          <button class="btn btn-icon btn-white" @click="onRefresh">
-            <i class="fa fa-lw fa-retweet"></i>
-          </button>
-        </div>
-        <div class="width width-100">
-          <CardCategory :data="dataCategory" @onChange="onCategory" />
-        </div>
-        <div v-loading="loading" class="width width-100">
-          <AppEmpty v-if="data.length === 0" />
-          <div
-            v-for="(dt, i) in data"
-            :key="i"
-            class="margin margin-top-15px margin-bottom-15px"
-          >
-            <Card :data="dt" @addToCart="onClose" />
-          </div>
-        </div>
-        <div class="width width-100 display-flex flex-end align-center">
-          <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
-          <el-pagination
-            background
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="limit"
-            :pager-count="5"
-            layout="prev, pager, next"
-            :total="totalRecord"
-          >
-          </el-pagination>
-        </div>
+  <AppCardPopup title="Pilih Produk" @onClose="onClose">
+    <div class="w-full flex flex-col gap-4">
+      <SearchField
+        :placeholder="'Cari produk ..'"
+        :enableResponsive="true"
+        :onChange="(data) => onSearch(data)"
+      />
+
+      <AppButtonCapsuleSlider
+        :index.sync="selectedIndex"
+        customAllLabel="Semua Kategori"
+        customIcon="fa fa-lw fa-box"
+        :data="filteredCateogry"
+        @onChange="onCategory"
+      />
+
+      <div v-loading="loading" class="w-full flex flex-col gap-4">
+        <AppEmpty v-if="data.length === 0" />
+        <Card
+          v-for="(dt, i) in data"
+          :key="i"
+          :data="dt"
+          @addToCart="onClose"
+        />
       </div>
-    </AppCardPopup>
-  </div>
+
+      <div class="w-full flex justify-between items-center gap-2">
+        <div class="text-md text-black">
+          Total {{ totalRecord }}
+        </div>
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="limit"
+          :pager-count="5"
+          layout="prev, pager, next"
+          :total="totalRecord"
+        >
+        </el-pagination>
+      </div>
+    </div>
+  </AppCardPopup>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
 import SearchField from '../../../../../../modules/SearchField'
 import AppEmpty from '../../../../../../modules/AppEmpty'
 import AppCardPopup from '../../../../../../modules/AppCardPopup'
+import AppButtonCapsuleSlider from '../../../../../../modules/AppButtonCapsuleSlider'
 import Card from './Card'
-import CardCategory from './CardCategory'
 
 export default {
   data() {
     return {
       currentPage: 1,
+      selectedIndex: 'all',
     }
   },
   mounted() {
@@ -69,8 +67,8 @@ export default {
     SearchField,
     AppEmpty,
     AppCardPopup,
+    AppButtonCapsuleSlider,
     Card,
-    CardCategory,
   },
   computed: {
     ...mapState({
@@ -84,6 +82,21 @@ export default {
     }),
     shopId() {
       return this.$store.state.storeSelectedShop.selectedData
+    },
+    filteredCateogry() {
+      const allData = this.dataCategory.map((item) => {
+        return {
+          id: item.id,
+          label: item.name,
+          image: item.image ? this.categoryImageThumbnailUrl + item.image : '',
+          status: item.status,
+          icon: 'fa fa-lw fa-box',
+        }
+      })
+      const activeData = allData.filter((item) => item.status === 'active')
+      const inactiveData = allData.filter((item) => item.status === 'inactive')
+
+      return [...activeData, ...inactiveData]
     },
   },
   watch: {
@@ -108,6 +121,9 @@ export default {
       const token = this.$cookies.get('tokenBearer')
       const shop_id = this.shopId
       if (shop_id) {
+        this.filter.category = this.selectedIndex === 'all' 
+          ? null 
+          : this.selectedIndex
         this.getDataProduct({ token, shop_id })
       }
     },
@@ -136,7 +152,7 @@ export default {
       }
     },
     onCategory(data) {
-      this.filter.category = data
+      this.selectedIndex = data
       this.resetFilterProduct()
       this.getProduct()
     },

@@ -89,41 +89,31 @@
       @onCustomer="onOpenCustomer"
     />
 
-    <div :class="`content-form ${!visibleFormCheckout && 'hide'}`">
-      <div class="right">
-        <FormCheckout
-          @onSave="onSaveCheckout"
-          @onClose="onCloseCheckout"
-          @onCreateOrder="onOpenVisibleConfirmed"
-        >
-        </FormCheckout>
-      </div>
-    </div>
+    <FormCustomer
+      :open-form="visibleFormCustomer"
+      @onSave="onSaveCustomer"
+      @onClose="onCloseCustomer"
+    />
 
-    <div :class="`content-form ${!visibleFormReceipt && 'hide'}`">
-      <div class="right">
-        <FormReceipt
-          @onSave="onOpenReceipt"
-          @onClose="onCloseReceipt"
-          @onPrint="onPrintReceipt"
-        >
-        </FormReceipt>
-      </div>
-    </div>
+    <FormProduct
+      :open-form="visibleFormProduct"
+      @onSave="onSaveProduct"
+      @onClose="onCloseProduct"
+    />
 
-    <div :class="`content-form ${!visibleFormCustomer && 'hide'}`">
-      <div class="right">
-        <FormCustomer @onSave="onSaveCustomer" @onClose="onCloseCustomer">
-        </FormCustomer>
-      </div>
-    </div>
+    <FormReceipt
+      :open-form="visibleFormReceipt"
+      @onSave="onOpenReceipt"
+      @onClose="onCloseReceipt"
+      @onPrint="onPrintReceipt"
+    />
 
-    <div :class="`content-form ${!visibleFormProduct && 'hide'}`">
-      <div class="right">
-        <FormProduct @onSave="onSaveProduct" @onClose="onCloseProduct">
-        </FormProduct>
-      </div>
-    </div>
+    <FormCheckout
+      :open-form="visibleFormCheckout"
+      @onSave="onSaveCheckout"
+      @onClose="onCloseCheckout"
+      @onCreateOrder="onOpenVisibleConfirmed"
+    />
 
     <AppPopupConfirmed
       v-if="visibleConfirmed"
