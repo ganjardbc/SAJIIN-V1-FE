@@ -2,7 +2,7 @@
   <div id="App" class="flex flex-col gap-4 p-4">
     <div class="relative bg-gray-100 rounded-xl p-4 flex flex-col gap-4">
       <div class="flex flex-col xl:flex-row gap-4">
-        <div class="flex-1 flex flex-col lg:flex-row justify-center items-center lg:items-start gap-4">
+        <div v-if="dataShop" class="flex-1 flex flex-col lg:flex-row justify-center items-center lg:items-start gap-4">
           <AppCardAvatar
             :src="`${shopImageThumbnailUrl}${dataShop.image}`"
             size="large"
@@ -27,7 +27,7 @@
           </div>
         </div>
 
-        <div class="flex-1 flex flex-col gap-4">
+        <!-- <div class="flex-1 flex flex-col gap-4">
           <div
             v-if="dataEmployee"
             class="bg-white rounded-lg shadow-md p-3 flex gap-3 items-center"
@@ -51,7 +51,7 @@
                 {{ dataUser && dataUser.role_name }} | Shift 1
               </div>
             </div>
-            <el-button size="medium" circle>
+            <el-button size="medium" circle @click="$router.push({ name: 'shop-profile' })">
               <i class="fa fa-edit"></i>
             </el-button>
           </div>
@@ -70,11 +70,14 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 
-    <div class="relative flex-1 flex flex-col md:flex-row gap-4 bg-white rounded-xl shadow-md p-4">
+    <div
+      v-if="isCanViewCashbook && currentCashbook"
+      class="relative flex-1 flex flex-col md:flex-row gap-4 bg-white rounded-xl shadow-md p-4"
+    >
       <div class="flex-1 flex flex-col md:flex-row justify-between items-center gap-4">
         <div class="flex-1 w-full flex items-center gap-4">
           <div style="width: 48px; height: 48px" class="flex items-center justify-center bg-vermillion-100 rounded-full">
@@ -86,11 +89,16 @@
               <div class="text-xs lg:text-sm text-gray-700 font-semibold truncate">
                 Buku Kas
               </div>
-              <i class="fa fa-external-link text-md text-gray-500 cursor-pointer"></i>
+              <i
+                class="fa fa-external-link text-md text-gray-500 cursor-pointer"
+                @click="$router.push({ name: 'shop-cash-book', query: { search: currentCashbook.cashbook_id } })"
+              />
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs md:text-md text-gray-500">Tanggal</span>
-              <span class="text-xs md:text-md text-black font-semibold">24 November 2025</span>
+              <span class="text-xs md:text-md text-black font-semibold">
+                {{ currentCashbook.cash_date | moment('DD MMMM YYYY') }}
+              </span>
             </div>
           </div>
         </div>
@@ -99,11 +107,15 @@
           <div class="w-full md:w-auto grid grid-cols-2 gap-4 p-4 bg-gray-100 rounded-xl">
             <div class="flex-1 flex items-center gap-2">
               <i class="text-md text-green-500 fa fa-arrow-up"></i>
-              <span class="text-md md:text-lg text-black font-semibold">Rp. 1.000.000</span>
+              <span class="text-md md:text-lg text-black font-semibold">
+                {{ format(currentCashbook.cash_in || 0) }}
+              </span>
             </div>
             <div class="flex-1 flex items-center gap-2">
               <i class="text-md text-red-500 fa fa-arrow-down"></i>
-              <span class="text-md md:text-lg text-black font-semibold">Rp. 500.000</span>
+              <span class="text-md md:text-lg text-black font-semibold">
+                {{ format(currentCashbook.cash_out || 0) }}
+              </span>
             </div>
           </div>
         </div>
@@ -128,7 +140,10 @@
             ]"
           />
         </div>
-        <div class="text-3xl lg:text-5xl text-black font-semibold">
+        <div
+          class="text-3xl lg:text-5xl text-black font-semibold"
+          :class="statistic.color"
+        >
           {{ statistic.value }}
         </div>
         <div class="flex items-center gap-1">
@@ -171,40 +186,6 @@ export default {
   },
   data() {
     return {
-      listOfStatistic: [
-        {
-          title: 'Total Pesanan',
-          value: 122,
-          icon: 'fa fa-shopping-cart',
-          color: 'text-blue-500',
-          percentage: 15,
-          status: 'down',
-        },
-        {
-          title: 'Sedang Disiapkan',
-          value: 24,
-          icon: 'fa fa-clock',
-          color: 'text-yellow-500',
-          percentage: 10,
-          status: 'up',
-        },
-        {
-          title: 'Sudah Selesai',
-          value: 55,
-          icon: 'fa fa-check-circle',
-          color: 'text-green-500',
-          percentage: 5,
-          status: 'up',
-        },
-        {
-          title: 'Dibatalkan',
-          value: 3,
-          icon: 'fa fa-times-circle',
-          color: 'text-red-500',
-          percentage: 20,
-          status: 'down',
-        },
-      ],
       listOfEmployee: [
         {
           name: 'Employee 1',
@@ -225,18 +206,54 @@ export default {
   },
   computed: {
     ...mapState({
-      dataShop: (state) => state.storeSelectedShop.form,
-      dataAuth: (state) => state.storeAuth.data,
+      dataUser: (state) => state.storeAuth.user,
+      // dataEmployee: (state) => state.storeAuth.employee,
+      dataShop: (state) => state.storeShop.form,
+      matrix: (state) => state.storeDashboard.matrix,
+      cashbook: (state) => state.storeCashBook.dataCurrent,
     }),
-    dataUser() {
-      return this.dataAuth && this.dataAuth.user
-        ? this.dataAuth.user
-        : null
+    isCanViewCashbook() {
+      const whiteList = ['owner', 'admin', 'cashier']
+      return this.dataUser && whiteList.includes(this.dataUser.role_name)
     },
-    dataEmployee() {
-      return this.dataAuth && this.dataAuth.employee
-        ? this.dataAuth.employee
-        : null
+    currentCashbook() {
+      return this.cashbook && this.cashbook.current_cashbook
+    },
+    listOfStatistic() {
+      return [
+        {
+          title: 'Total Pesanan',
+          value: this.matrix.allOrder || 0,
+          icon: 'fa fa-shopping-cart',
+          color: 'text-blue-500',
+          percentage: 0,
+          status: 'up',
+        },
+        {
+          title: 'Sedang Disiapkan',
+          value: this.matrix.onProgress || 0,
+          icon: 'fa fa-clock',
+          color: 'text-yellow-500',
+          percentage: 0,
+          status: 'up',
+        },
+        {
+          title: 'Sudah Selesai',
+          value: this.matrix.done || 0,
+          icon: 'fa fa-check-circle',
+          color: 'text-green-500',
+          percentage: 0,
+          status: 'up',
+        },
+        {
+          title: 'Dibatalkan',
+          value: this.matrix.canceled || 0,
+          icon: 'fa fa-times-circle',
+          color: 'text-red-500',
+          percentage: 0,
+          status: 'up',
+        },
+      ]
     },
   },
   components: {

@@ -1,91 +1,27 @@
 <template>
-  <div id="App" class="w-full">
-    <div class="w-full flex flex-col gap-4 p-4">
-      <div class="w-full flex items-center justify-between">
-        <h1 class="text-3xl text-black font-semibold">
-          Diskon
-        </h1>
-        <el-button
-          v-if="isRoleOwner"
-          type="primary"
-          @click="onCreate"
-        >
-          <i class="fa fa-lw fa-plus mr-2" /> Tambah Diskon
-        </el-button>
-      </div>
-
-      <div class="w-full flex flex-col md:flex-row gap-2 items-center justify-between">
-        <SearchField
-          class="flex-1 w-full"
-          placeholder="Cari diskon .."
-          :enableResponsive="true"
-          :onChange="(data) => onSearch(data)"
-        />
-
-        <el-select
-          v-model="filter.status"
-          @change="handleFilterSearch"
-          clearable
-          placeholder="Select status"
-          no-data-text="Data Tidak Ditemukan"
-          class="w-full md:w-xxs"
-        >
-          <el-option
-            v-for="(item, i) in statusOptions"
-            :key="i"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </div>
-
-      <el-alert
-        v-if="!isRoleOwner"
-        title="Tambah Diskon Baru ?"
-        description="Untuk menambah diskon baru mohon hubungi Owner dari Toko ini."
-        type="warning"
-        :closable="true"
-        show-icon
-      />
-
-      <div class="w-full flex flex-col gap-4">
-        <div v-loading="loading" class="w-full">
-          <AppEmpty v-if="data.length === 0" />
-          <Card
-            :data.sync="data"
-            @onChangeCover="uploadImage"
-            @onDetail="onDetail"
-            @onEdit="onEdit"
-            @onDelete="onDelete"
-            @onChangeStatus="onChangeStatus"
-          />
-        </div>
-        <div class="w-full flex justify-between items-center gap-2">
-          <div class="text-md text-black">
-            Total {{ totalRecord }}
-          </div>
-          <el-pagination
-            background
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="limit"
-            :pager-count="5"
-            layout="prev, pager, next"
-            :total="totalRecord"
-          >
-          </el-pagination>
-        </div>
-      </div>
-    </div>
+  <div id="App">
+    <AppButtonCapsuleSlider
+      v-loading="loading"
+      :index.sync="selectedIndex"
+      customAllLabel="Semua Kategori"
+      customIcon="fa fa-lw fa-box"
+      :enableCreateButton="isRoleOwner"
+      :enableEditButton="isRoleOwner"
+      :data="filteredCateogry"
+      @onChange="onChange"
+      @onCreate="onCreate"
+      @onEdit="onEdit"
+    />
 
     <Form
-      :open-form="openForm"
+      v-if="formClass"
       @uploadImage="uploadImage"
       @removeImage="removeImage"
-      @save="onOpenVisibleConfirmed"
-      @close="onClose"
-    />
+      @onSave="onOpenVisibleConfirmed"
+      @onDelete="onDelete"
+      @onClose="onClose"
+    >
+    </Form>
 
     <AppFileUpload
       v-if="visibleUpdateCover"
@@ -102,7 +38,7 @@
 
     <AppPopupConfirmed
       v-if="visibleConfirmedDelete"
-      :title="'Hapus data platform ?'"
+      :title="'Hapus kategori ?'"
       @onClickNo="onClickNoDelete"
       @onClickYes="onClickYesDelete"
     />
@@ -114,27 +50,40 @@
       @onClickOk="onClickOk"
     />
 
+    <AppPopupQrCode
+      v-if="visibleQrCode"
+      :code="`${initUrl}visitor/${paramShopId}/${form.table_id}`"
+      @onClose="onCloseQrCode"
+    />
+
     <AppPopupLoader v-if="loadingForm" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import AppEmpty from '../../../modules/AppEmpty'
-import AppHeaderMobile from '../../../modules/AppHeaderMobile'
-import AppPopupLoader from '../../../modules/AppPopupLoader'
-import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
-import AppPopupAlert from '../../../modules/AppPopupAlert'
-import AppFileUpload from '../../../modules/AppFileUpload'
-import SearchField from '../../../modules/SearchField'
-import Form from './Form'
+import AppEmpty from '../../../../modules/AppEmpty'
+import AppPopupLoader from '../../../../modules/AppPopupLoader'
+import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
+import AppPopupAlert from '../../../../modules/AppPopupAlert'
+import AppFileUpload from '../../../../modules/AppFileUpload'
+import AppPopupQrCode from '../../../../modules/AppPopupQrCode'
+import AppTabs from '../../../../modules/AppTabs'
+import AppButtonCapsuleSlider from '../../../../modules/AppButtonCapsuleSlider'
+import SearchField from '../../../../modules/SearchField'
+import Form from './FormPopup'
 import Card from './Card'
+
+const tabs = [
+  { id: 1, label: 'Aktif', status: 'active' },
+  { id: 2, label: 'Non-Aktif', status: '' },
+]
 
 export default {
   name: 'App',
   metaInfo: {
     title: 'Shop',
-    titleTemplate: '%s | Tables',
+    titleTemplate: '%s | Kategori',
     htmlAttrs: {
       lang: 'en',
       amp: true,
@@ -142,13 +91,11 @@ export default {
   },
   data() {
     return {
-      statusOptions: [
-        { label: 'Status Aktif', value: 'active' },
-        { label: 'Status Non Aktif', value: 'inactive' },
-      ],
-      openForm: false,
+      tabs: tabs,
+      formClass: false,
       visibleUpdateCover: false,
       visibleAlert: false,
+      visibleQrCode: false,
       titleAlert: 'Gagal memproses data',
       iconAlert: 'fa fa-4x fa-info-circle',
       visibleConfirmed: false,
@@ -157,37 +104,45 @@ export default {
       currentPage: 0,
     }
   },
-  mounted() {
-    this.getData()
-  },
   components: {
     AppEmpty,
-    AppHeaderMobile,
     AppPopupLoader,
     AppPopupConfirmed,
     AppPopupAlert,
     AppFileUpload,
+    AppPopupQrCode,
+    AppTabs,
+    AppButtonCapsuleSlider,
     SearchField,
     Form,
     Card,
   },
   computed: {
     ...mapState({
-      filter: (state) => state.storeDiscount.filter,
-      form: (state) => state.storeDiscount.form,
-      data: (state) => state.storeDiscount.data,
-      totalRecord: (state) => state.storeDiscount.totalRecord,
-      limit: (state) => state.storeDiscount.limit,
-      loading: (state) => state.storeDiscount.loading,
-      loadingForm: (state) => state.storeDiscount.loadingForm,
-      typeForm: (state) => state.storeDiscount.typeForm,
+      filter: (state) => state.storeExpenseType.filter,
+      form: (state) => state.storeExpenseType.form,
+      data: (state) => state.storeExpenseType.data,
+      totalRecord: (state) => state.storeExpenseType.totalRecord,
+      limit: (state) => state.storeExpenseType.limit,
+      loading: (state) => state.storeExpenseType.loading,
+      loadingForm: (state) => state.storeExpenseType.loadingForm,
+      typeForm: (state) => state.storeExpenseType.typeForm,
+      filterExpense: (state) => state.storeExpenseList.filter,
     }),
     typeForm: {
       get() {
-        return this.$store.state.storeDiscount.typeForm
+        return this.$store.state.storeExpenseType.typeForm
       },
       set(value) {
-        this.$store.state.storeDiscount.typeForm = value
+        this.$store.state.storeExpenseType.typeForm = value
+      },
+    },
+    selectedIndex: {
+      get() {
+        return this.$store.state.storeExpenseType.selectedIndex
+      },
+      set(value) {
+        this.$store.state.storeExpenseType.selectedIndex = value
       },
     },
     shopId() {
@@ -204,6 +159,23 @@ export default {
       }
       return status
     },
+    filteredCateogry() {
+      const allData = this.data.map((item) => {
+        return {
+          id: item.id,
+          label: item.name,
+          image: item.image ? this.expenseTypeImageThumbnailUrl + item.image : '',
+          status: item.status,
+          icon: 'fa fa-lw fa-box',
+        }
+      })
+      const activeData = allData.filter((item) => item.status === 'active')
+      const inactiveData = allData.filter((item) => item.status === 'inactive')
+      return [...activeData, ...inactiveData]
+    },
+  },
+  mounted() {
+    this.getData()
   },
   watch: {
     shopId(prevProps, nextProps) {
@@ -214,26 +186,34 @@ export default {
   },
   methods: {
     ...mapActions({
-      getPlatform: 'storeDiscount/getData',
-      setPagination: 'storeDiscount/setPagination',
-      resetFormData: 'storeDiscount/resetFormData',
-      resetFilter: 'storeDiscount/resetFilter',
-      setFormData: 'storeDiscount/setFormData',
-      createData: 'storeDiscount/createData',
-      updateData: 'storeDiscount/updateData',
-      deleteData: 'storeDiscount/deleteData',
-      uploadCover: 'storeDiscount/uploadCover',
+      getExpenseType: 'storeExpenseType/getData',
+      setPagination: 'storeExpenseType/setPagination',
+      resetFormData: 'storeExpenseType/resetFormData',
+      resetFilter: 'storeExpenseType/resetFilter',
+      setFormData: 'storeExpenseType/setFormData',
+      createData: 'storeExpenseType/createData',
+      updateData: 'storeExpenseType/updateData',
+      deleteData: 'storeExpenseType/deleteData',
+      uploadCover: 'storeExpenseType/uploadCover',
     }),
+    onChange(data) {
+      if (data === 'all') {
+        this.filterExpense.expense_type_id = ''
+      } else {
+        this.filterExpense.expense_type_id = data
+      }
+      if (data !== this.selectedIndex) {
+        this.selectedIndex = data
+      }
+      this.$emit('onChange', data)
+    },
     onSearch(data) {
       this.filter.search = data
       this.resetFilter()
       this.getData()
     },
     onClose() {
-      this.openForm = false
-    },
-    onRefresh() {
-      this.getData()
+      this.formClass = false
     },
 
     // LIST DATA
@@ -241,7 +221,7 @@ export default {
       const token = this.$cookies.get('tokenBearer')
       const shop_id = this.shopId
       if (shop_id) {
-        this.getPlatform({ token, shop_id })
+        this.getExpenseType({ token, shop_id })
       }
     },
     handleCurrentChange(value) {
@@ -273,11 +253,11 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.openForm = false
+              this.formClass = false
               this.getData()
             } else {
               this.$message({
-                message: 'Gagal menyimpan data platform',
+                message: 'Gagal menyimpan kategori',
                 type: 'error',
               })
             }
@@ -290,11 +270,11 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.openForm = false
+              this.formClass = false
               this.getData()
             } else {
               this.$message({
-                message: 'Gagal merubah data platform',
+                message: 'Gagal merubah kategori',
                 type: 'error',
               })
             }
@@ -308,7 +288,7 @@ export default {
       this.visibleConfirmed = true
       switch (this.typeForm) {
         case 'create':
-          this.titleConfirmed = 'Simpan data?'
+          this.titleConfirmed = 'Simpan data ?'
           break
         case 'edit':
           this.titleConfirmed = 'Simpan perubahan ?'
@@ -318,7 +298,7 @@ export default {
 
     // CREATE
     onCreate() {
-      this.openForm = true
+      this.formClass = true
       this.typeForm = 'create'
       this.resetFormData()
       this.form.shop_id = this.shopId
@@ -326,7 +306,7 @@ export default {
 
     // DETAIL
     onDetail(data) {
-      this.openForm = true
+      this.formClass = true
       this.typeForm = 'detail'
       this.resetFormData()
       this.setFormData(data)
@@ -334,10 +314,13 @@ export default {
 
     // EDIT
     onEdit(data) {
-      this.openForm = true
-      this.typeForm = 'edit'
-      this.resetFormData()
-      this.setFormData(data)
+      const find = this.data.find((item) => item.id === data.id)
+      if (find !== undefined) {
+        this.formClass = true
+        this.typeForm = 'edit'
+        this.resetFormData()
+        this.setFormData(find)
+      }
     },
 
     // DELETE
@@ -360,7 +343,7 @@ export default {
           this.getData()
         } else {
           this.visibleAlert = true
-          this.titleAlert = 'Gagal menghapus platform'
+          this.titleAlert = 'Gagal menghapus kategori'
         }
       })
     },
@@ -404,11 +387,24 @@ export default {
       }).then((res) => {
         const status = res.data.status
         if (status === 'ok') {
-          this.$message(`Berhasil merubah status platform ${data.name}.`)
+          this.$message(
+            `Berhasil merubah status kategori ${data.expense_type_id}.`
+          )
         } else {
-          this.$message(`Gagal merubah status platform ${data.name}.`)
+          this.$message(
+            `Gagal merubah status kategori ${data.expense_type_id}.`
+          )
         }
       })
+    },
+
+    // QR CODE
+    onOpenQrCode(data) {
+      this.visibleQrCode = true
+      this.setFormData(data)
+    },
+    onCloseQrCode() {
+      this.visibleQrCode = false
     },
   },
 }

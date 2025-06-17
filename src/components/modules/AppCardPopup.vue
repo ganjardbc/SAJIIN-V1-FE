@@ -59,7 +59,7 @@ export default {
     },
     size: {
       type: String,
-      default: 'md', // default size 
+      default: 'sm', // default size 
     },
     sizeResp: {
       type: String,

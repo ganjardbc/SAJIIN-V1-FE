@@ -1,30 +1,38 @@
 <template>
-  <AppSideForm
-    :value="openForm"
+  <AppCardPopup
     :title="title"
-    :enableSaveButton="!isDetailForm"
-    @save="onSave"
-    @close="onClose"
+    size="xs"
+    @onClose="onClose"
   >
-    <div class="flex flex-col gap-4">
-      <div class="flex flex-col gap-2">
+    <template v-if="isEditForm" #toolbar>
+      <el-button size="small" @click="onDelete(form)">
+        Hapus
+      </el-button>
+    </template>
+
+    <div class="flex flex-col gap-4 w-full">
+      <div class="flex flex-col gap-2 w-full">
         <div class="text-md text-black font-semibold">Informasi</div>
         <div class="field-group">
           <div class="field-label">Cover</div>
           <AppCardAvatar
             :src="getCover"
+            :is-upload="isEditForm"
+            @upload="uploadImage(form)"
           />
         </div>
         <div class="field-group">
-          <div class="field-label">ID Meja</div>
+          <div class="field-label">ID Kategori</div>
           <el-input
             placeholder=""
             type="text"
-            v-model="form.table_id"
+            v-model="form.expense_type_id"
             :disabled="true"
           ></el-input>
-          <div v-if="errorMessage.table_id" class="field-error">
-            {{ errorMessage.table_id && errorMessage.table_id[0] }}
+          <div v-if="errorMessage.expense_type_id" class="field-error">
+            {{
+              errorMessage.expense_type_id && errorMessage.expense_type_id[0]
+            }}
           </div>
         </div>
         <div class="field-group">
@@ -40,19 +48,7 @@
           </div>
         </div>
         <div class="field-group">
-          <div class="field-label">Kode (optional)</div>
-          <el-input
-            placeholder=""
-            type="text"
-            v-model="form.code"
-            :disabled="isDetailForm"
-          ></el-input>
-          <div v-if="errorMessage.code" class="field-error">
-            {{ errorMessage.code && errorMessage.code[0] }}
-          </div>
-        </div>
-        <div class="field-group">
-          <div class="field-label">Keterangan (optional)</div>
+          <div class="field-label">Keterangan (opsional)</div>
           <el-input
             placeholder=""
             type="textarea"
@@ -66,10 +62,10 @@
         </div>
       </div>
 
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-2 w-full">
         <div class="text-md text-black font-semibold">Konfigurasi</div>
         <div class="field-group">
-          <div class="flex items-center justify-between gap-2">
+          <div class="flex justify-between items-center">
             <div class="field-label">Status</div>
             <el-switch
               v-model="form.status"
@@ -86,33 +82,37 @@
         </div>
       </div>
     </div>
-  </AppSideForm>
+    
+    <template #footer>
+      <el-button
+        class="w-full"
+        type="primary"
+        :disabled="isDetailForm"
+        @click="onSave"
+      >
+        Simpan Data
+      </el-button>
+    </template>
+  </AppCardPopup>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import AppCardAvatar from '../../../modules/AppCardAvatar'
-import AppSideForm from '../../../modules/AppSideForm'
-import AppImage from '../../../modules/AppImage'
+import AppCardPopup from '../../../../modules/AppCardPopup'
+import AppCardAvatar from '../../../../modules/AppCardAvatar'
 
 export default {
   name: 'App',
   data() {
     return {}
   },
-  props: {
-    openForm: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-  },
+  mounted() {},
   computed: {
     ...mapState({
-      form: (state) => state.storeTable.form,
-      errorMessage: (state) => state.storeTable.errorMessage,
-      dayLists: (state) => state.storeTable.dayLists,
-      typeForm: (state) => state.storeTable.typeForm,
+      form: (state) => state.storeExpenseType.form,
+      errorMessage: (state) => state.storeExpenseType.errorMessage,
+      dayLists: (state) => state.storeExpenseType.dayLists,
+      typeForm: (state) => state.storeExpenseType.typeForm,
     }),
     isDetailForm() {
       let status = false
@@ -121,31 +121,37 @@ export default {
       }
       return status
     },
+    isEditForm() {
+      let status = false
+      if (this.typeForm === 'edit') {
+        status = true
+      }
+      return status
+    },
     getCover() {
       return this.form.image
-        ? this.tableImageThumbnailUrl + this.form.image
+        ? this.expenseTypeImageThumbnailUrl + this.form.image
         : ''
     },
     title() {
       let currentTitle = ''
       switch (this.typeForm) {
         case 'create':
-          currentTitle = 'Tambah Meja'
+          currentTitle = 'Tambah Kategori'
           break
         case 'detail':
-          currentTitle = 'Detail Meja'
+          currentTitle = 'Detail Kategori'
           break
         case 'edit':
-          currentTitle = 'Edit Meja'
+          currentTitle = 'Edit Kategori'
           break
       }
       return currentTitle
     },
   },
   components: {
+    AppCardPopup,
     AppCardAvatar,
-    AppSideForm,
-    AppImage,
   },
   methods: {
     uploadImage(data) {
@@ -155,10 +161,13 @@ export default {
       this.$emit('removeImage', data)
     },
     onSave() {
-      this.$emit('save')
+      this.$emit('onSave')
     },
     onClose() {
-      this.$emit('close')
+      this.$emit('onClose')
+    },
+    onDelete(data) {
+      this.$emit('onDelete', data)
     },
   },
 }

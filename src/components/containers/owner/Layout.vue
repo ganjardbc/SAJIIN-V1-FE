@@ -17,8 +17,8 @@
       </div>
     </div>
 
-    <div class="content w-full overflow-y-auto">
-      <div class="w-full md:w-lg m-auto">
+    <div class="content justify-center w-full overflow-y-auto">
+      <div class="w-full md:w-lg">
         <router-view />
       </div>
     </div>

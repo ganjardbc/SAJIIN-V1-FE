@@ -59,6 +59,8 @@
             <el-avatar
               v-if="dt.image"
               size="small"
+              fit="contain"
+              class="flex justify-center items-center"
               :src="dt.image"
             />
             <i

@@ -1,129 +1,121 @@
 <template>
-  <div id="App">
+  <div id="App" class="w-full flex flex-col gap-4 border-b border-gray-200 pb-4">
     <div
       v-for="(dt, index) in data"
       :key="index"
-      class="margin margin-bottom-15px"
+      class="w-full flex flex-col gap-4 p-4 rounded-lg border border-gray-200 bg-white"
     >
-      <div class="card bg-white box-shadow">
-        <div class="display-flex">
-          <div class="width width-50px">
-            <div class="image image-40px border-full">
-              <img
-                v-if="dt.product_image"
-                :src="productImageThumbnailUrl + dt.product_image"
-                alt=""
-                class="post-center"
-                style="width: 100%"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lw fa-image"></i>
-            </div>
+      <div class="w-full flex gap-4">
+        <AppCardAvatar
+          :src="`${productImageThumbnailUrl}${dt.product_image}`"
+          size="small"
+        />
+        <div class="flex-1">
+          <div class="text-sm text-black font-semibold">
+            {{ dt.product_name }}
           </div>
-          <div style="width: calc(100% - 50px)">
-            <div class="width width-100">
-              <div class="fonts fonts-10 black semibold">
-                {{ dt.product_name }}
-              </div>
-              <div
-                v-if="dt.product_detail"
-                class="fonts fonts-9 black display-flex align-center padding padding-left-5px"
-              >
-                <i
-                  class="fonts fonts-2 fa fa-lw fa-circle margin margin-right-5px"
-                ></i>
-                {{ dt.product_detail }}
-              </div>
-            </div>
+          <div
+            v-if="dt.product_detail"
+            class="text-xs text-gray-500"
+          >
+            {{ dt.product_detail }}
           </div>
         </div>
-        <div class="display-flex space-between margin margin-top-10px">
-          <div class="display-flex align-center">
-            <span class="fonts fonts-10 semibold black">{{
-              format(dt.price)
-            }}</span>
+      </div>
+
+      <div class="w-full flex flex-col gap-2">
+        <div class="w-full flex justify-between items-center">
+          <div class="flex gap-1 items-center">
+            <span class="text-sm text-black">
+              {{
+                format(dt.price)
+              }}
+            </span>
             <span
               v-if="dt.is_discount || dt.is_platform"
-              class="fonts fonts-9 grey text-line margin margin-left-5px"
+              class="text-xs text-gray-500 line-through"
               >{{ format(dt.second_price) }}</span
             >
           </div>
-          <div class="fonts fonts-10 semibold red align-right">
+          <div class="text-sm text-vermillion-500 font-semibold text-right">
             {{ format(dt.subtotal) }}
           </div>
         </div>
+
         <div
           v-if="dt.is_discount || dt.is_platform"
-          class="display-flex align-center margin margin-top-5px"
+          class="flex gap-2"
         >
           <AppCardFillSigner
             v-if="dt.is_discount"
             :label="`
-                            -${
-                              dt.discount_value_type === 'percentage'
-                                ? `${dt.discount_fee}%`
-                                : format(dt.discount_price)
-                            }`"
-            background="bg-orange"
-            color="white"
+              -${
+                dt.discount_value_type === 'percentage'
+                  ? `${dt.discount_fee}%`
+                  : format(dt.discount_price)
+              }
+            `"
+            background="bg-orange-100"
+            color="text-orange-500"
           />
           <AppCardFillSigner
             v-if="dt.is_platform"
             :label="`
-                            +${
-                              dt.platform_currency_type === 'percentage'
-                                ? `${dt.platform_fee}%`
-                                : format(dt.platform_price)
-                            }`"
-            background="bg-green"
-            color="white"
+              +${
+                dt.platform_currency_type === 'percentage'
+                  ? `${dt.platform_fee}%`
+                  : format(dt.platform_price)
+              }
+            `"
+            background="bg-green-100"
+            color="text-green-500"
           />
         </div>
-        <div class="display-flex space-between display-mobile align-center">
-          <div
-            class="width width-180px width-mobile display-flex margin margin-top-10px"
+
+        <div class="w-full flex gap-2">
+          <el-button
+            size="small"
+            circle
+            style="width: 32px; height: 32px"
+            @click="onDelete(index)"
           >
-            <button
-              :class="`btn btn-icon btn-sekunder`"
-              style="margin-right: 5px"
-              @click="onDelete(index)"
-            >
-              <i class="far fa-lw fa-trash-alt"></i>
-            </button>
-            <div style="width: calc(100% - 45px)">
-              <el-input
-                placeholder="Tulis catatan"
-                type="text"
-                v-model="dt.note"
-              ></el-input>
-            </div>
-          </div>
-          <div class="width width-110px width-mobile margin margin-top-10px">
-            <el-input-number
-              v-model="dt.quantity"
-              @change="(data) => onTotal(data, index)"
-              :min="1"
-              :max="100"
-              style="width: 100%"
-            ></el-input-number>
-          </div>
-        </div>
-        <div class="width width-100 margin margin-top-10px">
-          <FieldDiscount
-            :value="dt.discount_id"
-            :smallField="true"
-            :disabledSelection="true"
-            label="Diskon Produk"
-            discountType="product"
-            @onChange="(data) => onChangeDiscount(data, dt)"
-            @onClear="onClearDiscount(dt)"
+            <i class="far fa-lw fa-trash-alt"></i>
+          </el-button>
+
+          <el-input
+            v-model="dt.note"
+            placeholder="Tulis catatan"
+            type="text"
+            size="small"
+            class="flex-1"
+          />
+
+          <el-input-number
+            v-model="dt.quantity"
+            :min="1"
+            :max="100"
+            size="small"
+            style="width: 110px;"
+            @change="(data) => onTotal(data, index)"
           />
         </div>
+
+        <FieldDiscount
+          :value="dt.discount_id"
+          :smallField="true"
+          :disabledSelection="true"
+          label="Diskon Produk"
+          discountType="product"
+          @onChange="(data) => onChangeDiscount(data, dt)"
+          @onClear="onClearDiscount(dt)"
+        />
       </div>
     </div>
   </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import AppCardAvatar from '../../../../modules/AppCardAvatar'
 import AddQtyField from '../../../../modules/AddQtyField'
 import AppCardFillSigner from '../../../../modules/AppCardFillSigner'
 import FieldDiscount from '../../discounts/Field'
@@ -134,6 +126,7 @@ export default {
     data: null,
   },
   components: {
+    AppCardAvatar,
     AddQtyField,
     AppCardFillSigner,
     FieldDiscount,

@@ -197,7 +197,7 @@ export default {
       loading: (state) => state.storePayment.field.loading,
     }),
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     selectedData() {
       return this.data.find((item) => item.id === this.selectedID)

@@ -8,8 +8,8 @@ import CashBook from '@/components/containers/shop/cashBook/Index'
 import OrderHome from '@/components/containers/shop/order/Index'
 import Orders from '@/components/containers/shop/order/orders/Index'
 import TaskLists from '@/components/containers/shop/order/taskLists/Index'
-import ExpenseHome from '@/components/containers/shop/expense/Index'
-import ExpenseType from '@/components/containers/shop/expense/expenseType/Index'
+// import ExpenseHome from '@/components/containers/shop/expense/Index'
+// import ExpenseType from '@/components/containers/shop/expense/expenseType/Index'
 import ExpenseList from '@/components/containers/shop/expense/expenseList/Index'
 import ProductHome from '@/components/containers/shop/product/Index'
 import Products from '@/components/containers/shop/product/products/Index'
@@ -85,18 +85,18 @@ const routes = {
     {
       name: 'shop-expense',
       path: 'expense',
-      component: ExpenseHome,
-    },
-    {
-      name: 'shop-expense-type',
-      path: 'expense-type',
-      component: ExpenseType,
-    },
-    {
-      name: 'shop-expense-list',
-      path: 'expense-list',
       component: ExpenseList,
     },
+    // {
+    //   name: 'shop-expense-type',
+    //   path: 'expense-type',
+    //   component: ExpenseType,
+    // },
+    // {
+    //   name: 'shop-expense-list',
+    //   path: 'expense-list',
+    //   component: ExpenseList,
+    // },
     {
       name: 'shop-product',
       path: 'product',

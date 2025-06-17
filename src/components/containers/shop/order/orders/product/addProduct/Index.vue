@@ -81,7 +81,7 @@ export default {
       dataCategory: (state) => state.storeOrders.category.data,
     }),
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     filteredCateogry() {
       const allData = this.dataCategory.map((item) => {

@@ -18,18 +18,18 @@
             />
           </div>
           <div class="title">
-            {{ getMetaTitle }}
+            {{ metaTitle }}
           </div>
         </div>
 
         <router-link
-          :to="{ name: 'shop-home' }"
+          :to="{ name: 'shop-home', params: { shopId: shopId } }"
           class="logo"
         >
           <img :src="logo" alt="" style="width: 100%; height: 100%" />
         </router-link>
 
-        <div class="flex-1 flex items-center justify-end">
+        <div class="flex-1 flex items-center justify-end gap-2">
           <div class="navbar">
             <router-link :to="{ name: 'shop-home' }" class="menu mobile-only">
               <i class="icon fa-solid fa-house" />
@@ -44,15 +44,79 @@
               <span class="label">Profil</span>
             </router-link>
           </div>
+          <div class="divider desktop-only" />
+          <div class="flex flex-end items-center gap-2">
+            <el-popover placement="bottom-end" class="flex-1" trigger="click" width="360">
+              <div
+                class="flex flex-col gap-2"
+                v-loading="loadingShop"
+              >
+                <div class="text-sm text-black font-semibold">
+                  Daftar Toko
+                </div>
+                <div
+                  v-if="dataShop.length > 0"
+                  class="flex flex-col gap-2 overflow-y-auto"
+                  style="max-height: 360px"
+                >
+                  <div
+                    v-for="(item, index) in dataShop"
+                    :key="index"
+                    class="flex items-center gap-3 p-3 rounded-md bg-white hover:bg-gray-100 border border-gray-200 cursor-pointer"
+                    :class="{
+                      'bg-vermillion-50 hover:bg-vermillion-100': isShopSelected(item.shop.id),
+                      'border-vermillion-200': isShopSelected(item.shop.id),
+                    }"
+                    @click="goShop(item.shop.shop_id)"
+                  >
+                    <AppCardAvatar
+                      :src="`${shopImageThumbnailUrl}${item.shop.image}`"
+                      size="small"
+                      fit="contain"
+                    />
+                    <div class="flex-1 flex flex-col gap-1">
+                      <div class="text-sm text-black font-semibold">
+                        {{ item.shop.name }}
+                      </div>
+                      <div class="text-xs text-gray-500">
+                        {{ item.shop.location }}
+                      </div>
+                    </div>
+                    <AppCardCapsule
+                      v-if="isShopSelected(item.shop.id)"
+                      type="success"
+                      label="Aktif"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div slot="reference" class="menu">
+                <i  class="icon fa-solid fa-store" />
+              </div>
+            </el-popover>
+          </div>
         </div>
       </div>
 
       <div class="content transition-all duration-300">
         <div class="sidebar transition-all duration-300">
-          <div class="flex flex-col gap-2 p-4">
+          <div class="header mobile-only">
+            <div class="flex-1 text-lg text-black font-semibold">
+              Menu
+            </div>
+            <el-button
+              size="large"
+              circle
+              class="border-none"
+              @click="onOpenSidebar"
+            >
+              <i class="fa fa-lg fa-times" />
+            </el-button>
+          </div>
+
+          <div class="flex flex-col gap-4 p-4">
             <AppListMenu
               :data.sync="sidebar"
-              :isCollapse="isCollapse"
               @onClick="onCloseSidebar"
             />
           </div>
@@ -64,27 +128,28 @@
       </div>
     </div>
 
-    <!-- <AppToast />
+    <!-- <AppToast /> -->
 
-    <AppToastMessage /> -->
+    <!-- <AppToastMessage /> -->
 
-    <AppPopupLoader v-if="loadingShop" title="Getting Shop Data, Please Wait" />
+    <AppPopupLoader
+      v-if="loadingFormShop"
+      title="Loading Shop Data..."
+    />
   </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
-import { replaceToMoreValue } from '@/services/utils'
-import VueLoadImage from 'vue-load-image'
 import logo from '@/assets/img/logo.png'
 import icon from '@/assets/img/icon.png'
 import notifSoundOne from '@/assets/sounds/notifications-1.wav'
 import AppListMenu from '../../modules/AppListMenu'
 import AppToast from '../../modules/AppToast'
 import AppToastMessage from '../../modules/AppToastMessage'
-import AppCardNotification from '../../modules/AppCardNotification'
-import AppCardProfile from '../../modules/AppCardProfile'
 import AppPopupLoader from '../../modules/AppPopupLoader'
+import AppCardAvatar from '../../modules/AppCardAvatar'
+import AppCardCapsule from '../../modules/AppCardCapsule'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'admin',
@@ -96,27 +161,120 @@ export default {
     }
   },
   components: {
-    VueLoadImage,
-    AppCardNotification,
-    AppCardProfile,
     AppPopupLoader,
     AppToastMessage,
     AppToast,
     AppListMenu,
+    AppCardAvatar,
+    AppCardCapsule,
   },
   methods: {
     ...mapActions({
       // new store
+      removeData: 'storeAuth/removeData',
       getUserData: 'storeAuth/getUserData',
-      setShop: 'storeSelectedShop/setSelectedData',
-      getShop: 'storeSelectedShop/getByID',
       getCashBook: 'storeCashBook/getCurrent',
-      resetCashBook: 'storeCashBook/restDataCurrent',
+      // resetCashBook: 'storeCashBook/restDataCurrent',
+      getShopAll: 'storeShop/getData',
+      getShopById: 'storeShop/getByID',
+      getMatrix: 'storeDashboard/getMatrix',
 
       // old store
       setToast: 'toast/setToast',
       setMultipleToast: 'toastmessage/setMultipleToast',
     }),
+    getShopAllData() {
+      const token = this.$cookies.get('tokenBearer')
+      this.filterShop.status = 'active'
+      this.getShopAll({ token })
+        .catch((e) => {
+          console.error(e)
+          this.setToast({
+            type: 'error',
+            message: 'Gagal mendapatkan data toko.',
+          })
+        })
+    },
+    getShopByIdData() {
+      const token = this.$cookies.get('tokenBearer')
+      this.getShopById({ token, shop_id: this.shopId })
+        .then((res) => {
+          if (res && res.data && res.data.data) {
+            this.getMatrixData(res.data.data.id)
+            this.getCashBookData(res.data.data.id)
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+          this.setToast({
+            type: 'error',
+            message: 'Gagal mendapatkan data toko.',
+          })
+        })
+    },
+    getMatrixData(shop_id) {
+      const token = this.$cookies.get('tokenBearer')
+      this.getMatrix({ token, shop_id })
+        .catch((e) => {
+          console.error(e)
+          this.setToast({
+            type: 'error',
+            message: 'Gagal mendapatkan data matriks.',
+          })
+        })
+    },
+    getCashBookData(shop_id) {
+      const token = this.$cookies.get('tokenBearer')
+      this.getCashBook({ token, shop_id })
+        .catch((e) => {
+          console.error(e)
+          this.setToast({
+            type: 'error',
+            message: 'Gagal mendapatkan data buku kas.',
+          })
+        })
+    },
+    goProfile() {
+      this.$router.push({ name: 'shop-profile' })
+    },
+    goShop(value) {
+      this.$router.push({ name: 'shop-home', params: { shopId: value } })
+    },
+    onOpenSidebar() {
+      this.isCollapse = !this.isCollapse
+    },
+    onCloseSidebar() {
+      // this.isCollapse = false
+      console.log('onCloseSidebar')
+    },
+    isShopSelected(value) {
+      const shop = this.selectedShop
+      if (shop && shop.id === value) {
+        return true
+      }
+      return false
+    },
+    userData() {
+      const token = this.$cookies.get('tokenBearer')
+      this.getUserData(token)
+        .catch(() => {
+          this.removeData()
+          this.$router.replace({ name: 'login' })
+        })
+    },
+    addShopSocket() {
+      const data = this.selectedShop
+
+      if (!data || !data.id) return
+
+      const payload = {
+        id: data.id,
+        shopId: data.shop_id,
+        name: data.name,
+        image: data.image,
+      }
+      this.$socket.emit('addShop', payload)
+    },
     playNotif(enablePlay) {
       const audio = new Audio(notifSoundOne)
       audio.muted = !enablePlay
@@ -138,180 +296,30 @@ export default {
         })
       })
     },
-    goProfile() {
-      this.$router.push({ name: 'shop-profile' })
-    },
-    goBack() {
-      const role = this.dataUser.role_name
-      this.$router.push({
-        name: role === 'admin' ? 'admin-shops' : 'owner-home',
-      })
-    },
-    setShopData() {
-      const shop = this.dataShop
-      this.$cookies.set('shop', shop)
-      this.setShop(shop && shop.id)
-    },
-    getShopData() {
-      const token = this.$cookies.get('tokenBearer')
-      const shop_id = this.$route.params.shopId
-      this.getShop({ token, shop_id }).then((res) => {
-        const status = res.data.status
-        if (status === 'ok') {
-          this.setShopData()
-          this.getDataCashBook()
-          this.addShopSocket()
-        } else {
-          this.$message({
-            message: 'Failed getting shop',
-            type: 'error',
-          })
-        }
-      })
-    },
-    getDataCashBook() {
-      const token = this.$cookies.get('tokenBearer')
-      const shop_id = this.dataShop.id
-      const today = new Date()
-      if (shop_id) {
-        this.resetCashBook()
-        this.getCashBook({ token, today: today, shop_id: shop_id }).then(
-          (res) => {
-            const status = res.data.status
-            if (status !== 'ok') {
-              this.$message({
-                message: 'Failed getting cash book',
-                type: 'error',
-              })
-            }
-          }
-        )
-      }
-    },
-
-    onOpenSidebar() {
-      this.isCollapse = !this.isCollapse
-    },
-    onCloseSidebar() {
-      // this.isCollapse = false
-      console.log('close sidebar')
-    },
-    onChangeMenu(data) {
-      this.selectedLabel = this.menuShops[data].label
-    },
-    makeToast(title, subtitle) {
-      const time = new Date().getTime()
-      const payload = {
-        visible: true,
-        title: title,
-        subtitle: subtitle,
-      }
-      this.setToast(payload)
-    },
-    makeMultipleToast(title, subtitle) {
-      const time = new Date().getTime()
-      const payload = {
-        id: time,
-        visible: true,
-        title: title,
-        subtitle: subtitle,
-      }
-      this.setMultipleToast(payload)
-    },
-    userData() {
-      const token = this.$cookies.get('tokenBearer')
-      this.getUserData(token)
-        .then((res) => {
-          const data = res.data.data
-
-          this.$cookies.set('user', data.user)
-          this.$cookies.set('role', data.role)
-          this.$cookies.set('shop', data.shop)
-          this.$cookies.set('employee', data.employee)
-          this.$cookies.set('permissions', JSON.stringify(data.permissions))
-        })
-        .catch(() => {
-          this.$cookies.remove('token')
-          this.$cookies.remove('tokenBearer')
-          this.$cookies.remove('user')
-          this.$cookies.remove('role')
-          this.$cookies.remove('shop')
-          this.$cookies.remove('employee')
-          this.$cookies.remove('permissions')
-          this.$cookies.remove('thermalStatus')
-          this.$cookies.remove('thermalUrl')
-
-          this.$router.replace({ name: 'login' })
-        })
-    },
-    addShopSocket() {
-      const data = this.dataShop
-      const payload = {
-        id: data.id,
-        shopId: data.shop_id,
-        name: data.name,
-        image: data.image,
-      }
-      this.$socket.emit('addShop', payload)
-    },
   },
   computed: {
     ...mapState({
-      data: (state) => state.storeAuth.data,
-      loadingShop: (state) => state.storeSelectedShop.loading,
-      dataShop: (state) => state.storeSelectedShop.form,
-      matrixDashboard: (state) => state.storeDashboard.matrix,
-      dataCurrent: (state) => state.storeCashBook.dataCurrent,
-      dataAuth: (state) => state.storeAuth.data,
-    }),
-    ...mapGetters({
-      getSelectedData: 'storeSelectedShop/getSelectedData',
+      dataShop: (state) => state.storeShop.data,
+      filterShop: (state) => state.storeShop.filter,
+      loadingShop: (state) => state.storeShop.loading,
+      loadingFormShop: (state) => state.storeShop.loadingForm,
+      selectedShop: (state) => state.storeShop.form,
+      matrix: (state) => state.storeDashboard.matrix,
+      cashbook: (state) => state.storeCashBook.dataCurrent,
     }),
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$route.params.shopId
     },
-    dataUser() {
-      return this.data && this.data.user
-    },
-    isOwner() {
-      return this.dataUser.role_name === 'owner'
-    },
-    storeLogo() {
-      return this.getSelectedData
-        ? this.shopImageThumbnailUrl + this.getSelectedData.image
-        : ''
-    },
-    getMetaTitle() {
+    metaTitle() {
       return this.$route.meta.title || 'Shop'
     },
-    getTotalOrder() {
-      let total = 0
-      if (
-        this.matrixDashboard.newOrder > 0 ||
-        this.matrixDashboard.onProgress > 0 ||
-        this.matrixDashboard.ready > 0 ||
-        this.matrixDashboard.delivered > 0
-      ) {
-        total =
-          this.matrixDashboard.newOrder +
-          this.matrixDashboard.onProgress +
-          this.matrixDashboard.ready +
-          this.matrixDashboard.delivered
-      }
-      return total
-    },
-    getTotalOpenedCashbook() {
-      return (
-        this.dataCurrent &&
-        this.dataCurrent.opened_cashbook &&
-        this.dataCurrent.opened_cashbook.length
-      )
-    },
-    getAllTotalSidebar() {
-      const total = this.getTotalOrder + this.getTotalOpenedCashbook
-      return replaceToMoreValue(total)
-    },
     sidebar() {
+      const totaLlOrder = this.matrix.newOrder + 
+        this.matrix.onProgress + 
+        this.matrix.ready + 
+        this.matrix.delivered
+      const totalCashbook = this.cashbook ? this.cashbook.opened_cashbook.length : 0
+
       return [
         {
           icon: 'fa fa-lg fa-laptop',
@@ -323,7 +331,7 @@ export default {
         {
           icon: 'fa fa-lg fa-list-ul',
           label: 'Penjualan',
-          value: replaceToMoreValue(this.getTotalOrder),
+          value: totaLlOrder || 0,
           link: 'shop-orders',
           permission: 'orders',
         },
@@ -344,7 +352,7 @@ export default {
         {
           icon: 'fa fa-lg fa-book-open',
           label: 'Buku Kas',
-          value: replaceToMoreValue(this.getTotalOpenedCashbook),
+          value: totalCashbook || 0,
           link: 'shop-cash-book',
           permission: 'cashbooks',
         },
@@ -374,14 +382,14 @@ export default {
           label: 'Diskon',
           value: 0,
           link: 'shop-discounts',
-          permission: 'settings',
+          permission: 'products',
         },
         {
           icon: 'fa fa-lg fa-flag',
           label: 'Platform',
           value: 0,
           link: 'shop-platforms',
-          permission: 'settings',
+          permission: 'products',
         },
         {
           icon: 'fa fa-lg fa-calendar-alt',
@@ -393,6 +401,14 @@ export default {
       ]
     },
   },
+  watch: {
+    shopId(value, oldValue) {
+      if (value === oldValue) return
+
+      this.getShopByIdData()
+      this.addShopSocket()
+    },
+  },
   beforeMount() {
     if (!this.$cookies.get('token')) {
       this.$router.push({ name: 'login' })
@@ -401,8 +417,9 @@ export default {
       this.userData()
     }
   },
-  mounted() {
-    this.getShopData()
+  created() {
+    this.getShopAllData()
+    this.getShopByIdData()
     this.playNotif(false)
   },
   sockets: {

@@ -2,7 +2,7 @@
   <div id="CashierCashBookForm">
     <AppCardPopup title="Tambah Buku Kas" @onClose="onClose">
       <div v-loading="loadingForm">
-        <div class="margin margin-bottom-20px">
+        <div class="w-full flex flex-col gap-4">
           <div class="field-group">
             <div class="field-label">ID Buku Kas</div>
             <el-input
@@ -47,8 +47,10 @@
           </div>
           <div class="field-group">
             <div class="field-label">Status</div>
-            <div class="display-flex space-between">
-              <div class="fonts micro black">Ubah kas status</div>
+            <div class="flex justify-between items-center">
+              <div class="text-md text-black font-semibold">
+                Ubah kas status
+              </div>
               <el-switch
                 v-model="form.cash_status"
                 active-color="#38c172"
@@ -64,17 +66,19 @@
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="width width-100">
-          <button
-            class="btn btn-main btn-full"
+      <template #footer>
+        <div class="w-full flex justify-end">
+          <el-button
+            type="primary"
             :disabled="!isCanSave"
             @click="onSave"
           >
             Simpan Data
-          </button>
+          </el-button>
         </div>
-      </div>
+      </template>
     </AppCardPopup>
   </div>
 </template>

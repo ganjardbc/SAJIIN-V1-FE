@@ -132,7 +132,7 @@ export default {
       },
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     paramShopId() {
       return this.$route.params.shopId

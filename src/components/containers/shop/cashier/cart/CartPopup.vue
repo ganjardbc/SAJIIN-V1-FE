@@ -1,38 +1,38 @@
 <template>
-  <div id="App">
-    <div class="card-check-out-fixed">
-      <div class="card small-padding box-shadow bg-white">
-        <div class="display-flex align-center">
-          <div style="width: 50px">
-            <button
-              class="btn btn-icon btn-circle btn-white-grey"
-              @click="onClick"
+  <div id="CartPopup" class="cart-popup">
+    <div class="bg-white w-full p-4 shadow-lg rounded-lg">
+      <div class="flex justify-between items-center">
+        <div style="width: 50px">
+          <div
+            class="relative bg-vermillion-100 rounded-lg flex flex-col justify-center items-center"
+            style="width: 40px; height: 40px;"
+          >
+            <i
+              class="icn fa fa-lw fa-shopping-cart text-sm text-vermillion-500"
+            ></i>
+          </div>
+        </div>
+        <div style="width: calc(100% - 90px)">
+          <div class="text-xs text-gray-500">Keranjang</div>
+          <div class="display-flex">
+            <span class="text-sm text-gray-900 font-semibold"
+              >{{ orderQuantity }} Produk</span
             >
-              <i
-                class="post-top icn fa fa-lw fa-shopping-cart fonts main-color"
-              ></i>
-              <span v-if="orderQuantity" class="notif">{{
-                orderQuantity
-              }}</span>
-            </button>
+            <span class="text-sm text-gray-900" style="margin: 0 3px">|</span>
+            <span class="text-sm text-gray-900 font-semibold">{{
+              format(orderPrice)
+            }}</span>
           </div>
-          <div style="width: calc(100% - 90px)">
-            <div class="fonts fonts-10 black">Keranjang</div>
-            <div class="display-flex">
-              <span class="fonts fonts-10 semibold black"
-                >{{ orderQuantity }} Produk</span
-              >
-              <span class="fonts black" style="margin: 0 3px">|</span>
-              <span class="fonts fonts-10 black semibold">{{
-                format(orderPrice)
-              }}</span>
-            </div>
-          </div>
-          <div style="width: 40px">
-            <button class="btn btn-icon btn-circle btn-white" @click="onClick">
-              <i class="fa fa-lw fa-arrow-right"></i>
-            </button>
-          </div>
+        </div>
+        <div style="width: 40px">
+          <el-button
+            size="medium"
+            circle
+            style="width: 40px; height: 40px;"
+            @click="onClick"
+          >
+            <i class="fa fa-lw fa-arrow-right"></i>
+          </el-button>
         </div>
       </div>
     </div>
@@ -42,7 +42,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'App',
+  name: 'CartPopup',
   computed: {
     ...mapState({
       form: (state) => state.storeCashier.form,

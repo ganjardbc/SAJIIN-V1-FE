@@ -152,7 +152,7 @@ export default {
         })
     },
     getByID({ commit, state }, data) {
-      commit('SET_LOADING', true)
+      commit('SET_LOADING_FORM', true)
 
       const params = {
         shop_id: data.shop_id,
@@ -163,15 +163,14 @@ export default {
           headers: { Authorization: data.token },
         })
         .then((res) => {
-          const payload = res.data.data
-          commit('SET_FORM_DATA', payload.shop)
+          commit('SET_FORM_DATA', res.data.data)
           return res
         })
         .catch((e) => {
           console.log('error', e)
         })
         .finally(() => {
-          commit('SET_LOADING', false)
+          commit('SET_LOADING_FORM', false)
         })
     },
     createData({ commit, state }, data) {

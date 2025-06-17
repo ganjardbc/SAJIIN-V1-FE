@@ -1,49 +1,48 @@
 <template>
-  <div
-    id="App"
-    class="display-grid grid-item-2 grid-item-mobile-large-1"
-  >
-    <div v-for="(item, i) in data" :key="i" :class="`${column}`">
-      <div class="card bg-white box-shadow">
-        <div class="width width-100 display-flex flex-column">
-          <div class="image image-50px border-full">
-            <img
-              v-if="item.image"
-              :src="productImageThumbnailUrl + item.image"
-              alt=""
-              class="post-center"
-            />
-            <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-          </div>
-          <div style="width: calc(100% - 65px); margin-left: 15px;">
-            <div class="fonts fonts-11 semibold">
-              {{ item.name }}
-            </div>
-            <div class="display-flex space-between">
-              <div v-if="item.price" class="fonts fonts-10 grey">
-                {{ format(item.price) }}
-              </div>
-              <div
-                v-if="item.details && item.details.length > 0"
-                class="fonts fonts-10 grey"
-              >
-                {{ item.details.length }} Varian
-              </div>
-            </div>
-          </div>
-        </div>
+  <div id="App" class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div
+      v-for="(item, i) in data"
+      :key="i"
+      class="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-4"
+    >
+      <div
+        class="w-full rounded-lg border border-gray-200"
+        :style="{
+          paddingBottom: '100%',
+          backgroundImage: `url(${productImageThumbnailUrl}${item.image})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }"
+      />
 
-        <div class="width width-100 padding padding-top-15px">
-          <button
-            class="btn btn-main-reverse with-border with-hover btn-full"
-            :disabled="isButtonEnable(item)"
-            @click="openPopupCart(item)"
+      <div class="w-full flex flex-col gap-1">
+        <div class="text-sm text-black font-semibold">
+          {{ item.name }}
+        </div>
+        <div class="w-full flex justify-between items-center">
+          <div
+            v-if="item.price"
+            class="text-xs text-gray-500"
           >
-            <i class="icn icn-left fa fa-lw fa-plus"></i>
-            Keranjang
-          </button>
+            {{ format(item.price) }}
+          </div>
+          <div
+            v-if="item.details && item.details.length > 0"
+            class="text-xs text-gray-500 text-right"
+          >
+            {{ item.details.length }} Varian
+          </div>
         </div>
       </div>
+
+      <el-button
+        class="w-full"
+        :disabled="isButtonEnable(item)"
+        @click="openPopupCart(item)"
+      >
+        <i class="mr-2 fa fa-plus"></i>
+        Keranjang
+      </el-button>
     </div>
 
     <AddCartPopup
@@ -73,10 +72,6 @@ export default {
   },
   props: {
     data: null,
-    column: {
-      default: 'width width-100',
-      required: false,
-    },
   },
   computed: {
     detailProduct() {

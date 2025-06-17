@@ -1,7 +1,7 @@
 <template>
   <div id="App" class="w-full flex flex-col">
     <div class="flex flex-col gap-4 p-4 w-full lg:w-sm m-auto">
-      <div class="flex-1 flex flex-col lg:flex-row justify-center items-center lg:items-start gap-4">
+      <div v-if="dataUser" class="flex-1 flex flex-col lg:flex-row justify-center items-center lg:items-start gap-4">
         <AppCardAvatar
           :src="`${adminImageThumbnailUrl}${dataUser.image}`"
           size="large"
@@ -129,23 +129,13 @@ export default {
   },
   computed: {
     ...mapState({
-      dataShop: (state) => state.storeSelectedShop.form,
-      dataAuth: (state) => state.storeAuth.data,
+      dataUser: (state) => state.storeAuth.user,
+      dataEmployee: (state) => state.storeAuth.employee,
     }),
-    dataUser() {
-      return this.dataAuth && this.dataAuth.user
-        ? this.dataAuth.user
-        : null
-    },
-    dataEmployee() {
-      return this.dataAuth && this.dataAuth.employee
-        ? this.dataAuth.employee
-        : null
-    },
   },
   methods: {
     ...mapActions({
-      logout: 'storeProfile/logout',
+      logout: 'storeAuth/logout',
     }),
 
     // LOGOUT
@@ -162,16 +152,6 @@ export default {
       this.logout(token)
         .then((res) => {
           if (res.data.status === 'ok') {
-            this.$cookies.remove('token')
-            this.$cookies.remove('tokenBearer')
-            this.$cookies.remove('user')
-            this.$cookies.remove('role')
-            this.$cookies.remove('shop')
-            this.$cookies.remove('employee')
-            this.$cookies.remove('permissions')
-            this.$cookies.remove('thermalStatus')
-            this.$cookies.remove('thermalUrl')
-
             this.$router.push({ name: 'login' })
           }
         })

@@ -1,83 +1,84 @@
 <template>
-  <div id="App">
-    <div class="right-form-body">
-      <div class="width width-100">
+  <div id="App" class="w-full flex flex-col">
+    <div class="w-full flex flex-col gap-4 p-4">
+      <div class="w-full flex flex-col gap-4">
         <AppEmpty v-if="!isThereDetails" title="KERANJANG KOSONG" />
         <CardProduct :data.sync="details" />
+      </div>
 
-        <div
-          v-if="isThereDetails"
-          class="padding padding-bottom-15px margin margin-bottom-30px border-bottom"
-        ></div>
-
-        <div v-if="isThereDetails" class="card box-shadow bg-white">
-          <div class="field-group padding padding-top-0px">
-            <div class="field-label">Pelanggan</div>
-            <el-input
-              :placeholder="`Nama Pelanggan ${isNonFnB ? '(opsional)' : ''}`"
-              type="text"
-              :disabled="!isThereDetails"
-              v-model="form.customer_name"
-              clearable
-            ></el-input>
-          </div>
-          <FieldTable
-            v-if="!isNonFnB"
-            class="margin margin-bottom-15px"
-            :value="form.table_id"
-            :smallField="true"
-            @onChange="onChangeTable"
-            @onClear="onClearTable"
-          />
-          <FieldPlatform
-            :value="form.platform_id"
-            :smallField="true"
-            @onChange="onChangePlatform"
-            @onClear="onClearPlatform"
-          />
+      <div
+        v-if="isThereDetails"
+        class="w-full flex flex-col gap-2 p-4 rounded-lg border border-gray-200 bg-white"
+      >
+        <div class="field-group">
+          <div class="field-label">Pelanggan</div>
+          <el-input
+            :placeholder="`Nama Pelanggan ${isNonFnB ? '(opsional)' : ''}`"
+            type="text"
+            :disabled="!isThereDetails"
+            v-model="form.customer_name"
+            clearable
+          ></el-input>
         </div>
+
+        <FieldTable
+          v-if="!isNonFnB"
+          class="margin margin-bottom-15px"
+          :value="form.table_id"
+          :smallField="true"
+          @onChange="onChangeTable"
+          @onClear="onClearTable"
+        />
+
+        <FieldPlatform
+          :value="form.platform_id"
+          :smallField="true"
+          @onChange="onChangePlatform"
+          @onClear="onClearPlatform"
+        />
       </div>
     </div>
-    <div class="right-form-footer bg-white">
-      <div class="card bg-white box-shadow margin margin-bottom-20px">
-        <div class="display-flex space-between">
-          <div class="fonts fonts-10 semibold black">
+
+    <div class="w-full p-4 bg-white sticky bottom-0 flex flex-col gap-4 z-10 border-t border-dashed-200">
+      <div class="w-full flex flex-col gap-1">
+        <div class="w-full flex justify-between items-center">
+          <div class="text-sm text-black font-semibold">
             Total ({{ orderQuantity }} produk)
           </div>
-          <div class="fonts fonts-10 semibold main-color">
+          <div class="text-sm text-vermillion-500 font-semibold text-right">
             {{ format(orderPrice) }}
           </div>
         </div>
-        <div class="display-flex align-center space-between">
-          <div class="fonts fonts-9 normal grey">Diskon</div>
-          <div class="fonts fonts-9 normal grey align-right">
+        <div class="w-full flex justify-between items-center">
+          <div class="text-xs text-gray-500">Diskon</div>
+          <div class="text-xs text-gray-500 text-right">
             {{ format(totalDiscount) }}
           </div>
         </div>
-        <div class="display-flex align-center space-between">
-          <div class="fonts fonts-9 normal grey">Platform</div>
-          <div class="fonts fonts-9 normal grey align-right">
+        <div class="w-full flex justify-between items-center">
+          <div class="text-xs text-gray-500">Platform</div>
+          <div class="text-xs text-gray-500 text-right">
             {{ format(totalPlatform) }}
           </div>
         </div>
       </div>
 
-      <div class="width width-100 display-flex">
-        <button
-          class="btn btn-main btn-full"
+      <div class="w-full flex gap-1">
+        <el-button
+          class="w-full"
           :disabled="isButtonEnable"
           @click="onCreateOrder"
         >
           Buat Pesanan
-        </button>
-        <div class="width width-20px"></div>
-        <button
-          class="btn btn-sekunder btn-full"
+        </el-button>
+        <el-button
+          class="w-full"
+          type="primary"
           :disabled="isButtonEnable"
           @click="onCheckOut"
         >
           Pembayaran
-        </button>
+        </el-button>
       </div>
     </div>
   </div>

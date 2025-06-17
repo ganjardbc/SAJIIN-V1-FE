@@ -1,47 +1,34 @@
 <template>
-  <div id="App" :class="formClass ? 'content-form' : 'content-form hide'">
-    <div class="left">
-      <div
-        class="display-flex space-between display-mobile margin margin-bottom-15px"
-      >
-        <div class="width width-75 width-mobile display-flex space-between">
-          <h1 class="fonts big black bold">Pembelian</h1>
-          <div class="display-flex">
-            <button class="btn btn-icon btn-white" @click="onRefresh">
-              <i class="fa fa-lw fa-retweet"></i>
-            </button>
-            <button class="btn btn-icon btn-white" @click="onCreate">
-              <i class="fa fa-lw fa-plus" />
-            </button>
-          </div>
-        </div>
-        <div class="width width-25 width-mobile">
-          <SearchField
-            :placeholder="'Cari transaksi ..'"
-            :enableResponsive="true"
-            :onChange="(data) => onSearch(data)"
-          />
-        </div>
+  <div id="App" class="w-full">
+    <div class="w-full flex flex-col gap-4 p-4">
+      <div class="w-full flex items-center justify-between">
+        <h1 class="text-3xl text-black font-semibold">
+          Pembelian
+        </h1>
+        <el-button type="primary" @click="onCreate">
+          <i class="fa fa-lw fa-plus mr-2" /> Tambah Pembelian
+        </el-button>
       </div>
 
-      <div
-        class="display-flex row-reverse space-between align-center display-mobile"
-      >
-        <div
-          class="width width-350px width-mobile display-flex space-between"
-          style="padding-bottom: 15px"
-        >
+      <div class="w-full flex flex-col md:flex-row gap-2 items-center justify-between">
+        <SearchField
+          class="flex-1 w-full"
+          :placeholder="'Cari transaksi ..'"
+          :enableResponsive="true"
+          :onChange="(data) => onSearch(data)"
+        />
+
+        <div class="w-full md:w-xs flex flex-col md:flex-row gap-2 items-center justify-between">
           <el-select
-            v-model="filter.expense_type_id"
+            v-model="filter.status"
             @change="handleFilterSearch"
-            :loading="loadingExpenseType"
             clearable
-            placeholder="Select expense type"
+            placeholder="Select status"
             no-data-text="Data Tidak Ditemukan"
-            style="width: calc(50% - 7.5px)"
+            class="w-full"
           >
             <el-option
-              v-for="(item, i) in dataExpenseType"
+              v-for="(item, i) in statusOptions"
               :key="i"
               :label="item.label"
               :value="item.value"
@@ -50,26 +37,18 @@
           </el-select>
           <cashbook-field
             :value.sync="filter.cashbook_id"
+            class="w-full"
             @onChange="handleFilterCashbook"
-            style="width: calc(50% - 7.5px)"
           ></cashbook-field>
-        </div>
-        <div
-          class="width width-300px width-mobile"
-          style="padding-bottom: 15px"
-        >
-          <AppTabs
-            :selectedIndex.sync="selectedIndex"
-            :isFull="true"
-            :isScrollable="false"
-            :data="tabs"
-            :onChange="(data) => onChangeTabs(data)"
-          />
         </div>
       </div>
 
-      <div class="width width-100">
-        <div v-loading="loading">
+      <div class="w-full">
+        <ExpenseType @onChange="onChangeType" />
+      </div>
+
+      <div class="w-full flex flex-col gap-4">
+        <div v-loading="loading" class="w-full">
           <AppEmpty v-if="data.length === 0" />
           <Card
             :data.sync="data"
@@ -81,10 +60,10 @@
             @onQrCode="onOpenQrCode"
           />
         </div>
-        <div
-          class="width width-100 display-flex flex-end align-center padding padding-top-15px"
-        >
-          <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="text-md text-black">
+            Total {{ totalRecord }}
+          </div>
           <el-pagination
             background
             @current-change="handleCurrentChange"
@@ -99,50 +78,49 @@
       </div>
     </div>
 
-    <div class="right">
-      <Form
-        @uploadImage="uploadImage"
-        @removeImage="removeImage"
-        @onSave="onOpenVisibleConfirmed"
-        @onClose="onClose"
-      >
-      </Form>
+    <Form
+      :open-form="formClass"
+      @uploadImage="uploadImage"
+      @removeImage="removeImage"
+      @onSave="onOpenVisibleConfirmed"
+      @onClose="onClose"
+    >
+    </Form>
 
-      <AppFileUpload
-        v-if="visibleUpdateCover"
-        @onClose="onCloseCover"
-        @onUpload="onUpdateCover"
-      />
+    <AppFileUpload
+      v-if="visibleUpdateCover"
+      @onClose="onCloseCover"
+      @onUpload="onUpdateCover"
+    />
 
-      <AppPopupConfirmed
-        v-if="visibleConfirmed"
-        :title="titleConfirmed"
-        @onClickNo="onClickNo"
-        @onClickYes="onClickYes"
-      />
+    <AppPopupConfirmed
+      v-if="visibleConfirmed"
+      :title="titleConfirmed"
+      @onClickNo="onClickNo"
+      @onClickYes="onClickYes"
+    />
 
-      <AppPopupConfirmed
-        v-if="visibleConfirmedDelete"
-        :title="'Hapus transaksi ?'"
-        @onClickNo="onClickNoDelete"
-        @onClickYes="onClickYesDelete"
-      />
+    <AppPopupConfirmed
+      v-if="visibleConfirmedDelete"
+      :title="'Hapus transaksi ?'"
+      @onClickNo="onClickNoDelete"
+      @onClickYes="onClickYesDelete"
+    />
 
-      <AppPopupAlert
-        v-if="visibleAlert"
-        :title="titleAlert"
-        :icon="iconAlert"
-        @onClickOk="onClickOk"
-      />
+    <AppPopupAlert
+      v-if="visibleAlert"
+      :title="titleAlert"
+      :icon="iconAlert"
+      @onClickOk="onClickOk"
+    />
 
-      <AppPopupQrCode
-        v-if="visibleQrCode"
-        :code="`${initUrl}visitor/${paramShopId}/${form.table_id}`"
-        @onClose="onCloseQrCode"
-      />
+    <AppPopupQrCode
+      v-if="visibleQrCode"
+      :code="`${initUrl}visitor/${paramShopId}/${form.table_id}`"
+      @onClose="onCloseQrCode"
+    />
 
-      <AppPopupLoader v-if="loadingForm" />
-    </div>
+    <AppPopupLoader v-if="loadingForm" />
   </div>
 </template>
 
@@ -154,16 +132,11 @@ import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../../modules/AppFileUpload'
 import AppPopupQrCode from '../../../../modules/AppPopupQrCode'
-import AppTabs from '../../../../modules/AppTabs'
 import SearchField from '../../../../modules/SearchField'
 import CashbookField from '../../cashBook/Field'
+import ExpenseType from '../expenseType/Slider'
 import Form from './Form'
 import Card from './Card'
-
-const tabs = [
-  { id: 1, label: 'Aktif', status: 'active' },
-  { id: 2, label: 'Non-Aktif', status: '' },
-]
 
 export default {
   name: 'App',
@@ -177,7 +150,10 @@ export default {
   },
   data() {
     return {
-      tabs: tabs,
+      statusOptions: [
+        { label: 'Status Aktif', value: 'active' },
+        { label: 'Status Non Aktif', value: 'inactive' },
+      ],
       formClass: false,
       visibleUpdateCover: false,
       visibleAlert: false,
@@ -188,13 +164,11 @@ export default {
       visibleConfirmedDelete: false,
       titleConfirmed: 'Simpan data ?',
       currentPage: 0,
-      selectedIndex: 0,
     }
   },
   mounted() {
     this.getPaymentData()
-    this.getExpenseTypeData()
-    this.onChangeTabs(0)
+    this.getData()
   },
   components: {
     AppEmpty,
@@ -203,9 +177,9 @@ export default {
     AppPopupAlert,
     AppFileUpload,
     AppPopupQrCode,
-    AppTabs,
     SearchField,
     CashbookField,
+    ExpenseType,
     Form,
     Card,
   },
@@ -219,8 +193,8 @@ export default {
       loading: (state) => state.storeExpenseList.loading,
       loadingForm: (state) => state.storeExpenseList.loadingForm,
       typeForm: (state) => state.storeExpenseList.typeForm,
-      dataExpenseType: (state) => state.storeExpenseList.expenseType.data,
-      loadingExpenseType: (state) => state.storeExpenseList.expenseType.loading,
+      // dataExpenseType: (state) => state.storeExpenseList.expenseType.data,
+      // loadingExpenseType: (state) => state.storeExpenseList.expenseType.loading,
     }),
     typeForm: {
       get() {
@@ -231,7 +205,7 @@ export default {
       },
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     paramShopId() {
       return this.$route.params.shopId
@@ -241,7 +215,7 @@ export default {
     shopId(prevProps, nextProps) {
       if (prevProps !== nextProps) {
         this.getPaymentData()
-        this.getExpenseTypeData()
+        // this.getExpenseTypeData()
         this.getData()
       }
     },
@@ -249,7 +223,7 @@ export default {
   methods: {
     ...mapActions({
       getDataExpenseList: 'storeExpenseList/getData',
-      getDataExpenseType: 'storeExpenseList/getDataExpenseType',
+      // getDataExpenseType: 'storeExpenseList/getDataExpenseType',
       getDataPayment: 'storeExpenseList/getDataPayment',
       setPagination: 'storeExpenseList/setPagination',
       resetFormData: 'storeExpenseList/resetFormData',
@@ -265,23 +239,20 @@ export default {
       this.resetFilter()
       this.getData()
     },
+    onChangeType(data) {
+      if (data === 'all') {
+        this.filter.expense_type_id = ''
+      } else {
+        this.filter.expense_type_id = data
+      }
+      this.resetFilter()
+      this.getData()
+    },
     onClose() {
       this.formClass = false
     },
     onRefresh() {
       this.getData()
-    },
-    onChangeTabs(data) {
-      this.selectedIndex = data
-      switch (this.selectedIndex) {
-        case 0:
-          this.filter.status = 'active'
-          break
-        case 1:
-          this.filter.status = 'inactive'
-          break
-      }
-      this.handleFilterSearch()
     },
 
     // LIST DATA
@@ -290,16 +261,6 @@ export default {
       const shop_id = this.shopId
       if (shop_id) {
         this.getDataPayment({
-          token,
-          shop_id: shop_id,
-        })
-      }
-    },
-    getExpenseTypeData() {
-      const token = this.$cookies.get('tokenBearer')
-      const shop_id = this.shopId
-      if (shop_id) {
-        this.getDataExpenseType({
           token,
           shop_id: shop_id,
         })

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex flex-col gap-4">
+  <div class="w-full grid grid-cols-1 gap-4">
     <div
       v-for="(dt, i) in data"
       :key="i"

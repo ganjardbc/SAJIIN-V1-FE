@@ -42,7 +42,7 @@
               :status="dt.is_read ? 'active' : ''"
               :onChange="(data) => onChangeStatus(data, dt.id)"
               :data="bizparCapsule"
-              style="margin-left: 10px; capitalize;"
+              style="margin-left: 10px; capitalize"
             />
           </div>
         </div>
@@ -54,7 +54,7 @@
         <button
           v-if="visibleLoadMore"
           class="btn btn-sekunder"
-          style="margin-top: 10px; margin-bottom: 20px"
+          :style="{ marginTop: '10px', marginBottom: '20px' }"
           @click="getData(limit, offset)"
         >
           Load More

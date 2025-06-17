@@ -1,80 +1,88 @@
 <template>
-  <div id="App" class="w-full flex flex-col gap-4 p-4">
-    <div class="w-full flex items-center justify-between">
-      <h1 class="text-3xl text-black font-semibold">
-        Penjualan
-      </h1>
-    </div>
+  <div id="App" class="w-full">
+    <div class="w-full flex flex-col gap-4 p-4">
+      <div class="w-full flex items-center justify-between">
+        <h1 class="text-3xl text-black font-semibold">
+          Penjualan
+        </h1>
 
-    <div class="w-full flex flex-col md:flex-row gap-2 items-center justify-between">
-      <SearchField
-        class="flex-1 w-full"
-        :placeholder="'Cari transaksi ..'"
-        :enableResponsive="true"
-        :onChange="(data) => onSearch(data)"
+        <el-button type="primary">
+          <i class="fa fa-lw fa-plus"></i>
+          Tambah Transaksi
+        </el-button>
+      </div>
+
+      <div class="w-full flex flex-col md:flex-row gap-2 items-center justify-between">
+        <SearchField
+          :search-value="filter.search"
+          class="flex-1 w-full"
+          :placeholder="'Cari transaksi ..'"
+          :enableResponsive="true"
+          :onChange="(data) => onSearch(data)"
+        />
+
+        <div class="w-full md:w-xs flex flex-col md:flex-row gap-2 items-center justify-between">
+          <el-select
+            v-model="filter.payment_status"
+            @change="handleFilterSearch"
+            clearable
+            placeholder="Select payment"
+            no-data-text="Data Tidak Ditemukan"
+            class="w-full"
+          >
+            <el-option
+              v-for="(item, i) in orderPaymentStatus"
+              :key="i"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+          <cashbook-field
+            :value.sync="filter.cashbook_id"
+            class="w-full"
+            @onChange="handleFilterCashbook"
+          ></cashbook-field>
+        </div>
+      </div>
+
+      <AppButtonCapsuleSlider
+        :index.sync="selectedIndex"
+        :disableAll="true"
+        :returnIndex="true"
+        customIcon="fa fa-lw fa-list-ul"
+        :data="tabs"
+        @onChange="onChangeTabs"
       />
 
-      <div class="flex-1 w-full flex flex-col md:flex-row gap-2 items-center justify-between">
-        <el-select
-          v-model="filter.payment_status"
-          @change="handleFilterSearch"
-          clearable
-          placeholder="Select payment"
-          no-data-text="Data Tidak Ditemukan"
-          class="w-full"
-        >
-          <el-option
-            v-for="(item, i) in orderPaymentStatus"
-            :key="i"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-        <cashbook-field
-          :value.sync="filter.cashbook_id"
-          class="w-full"
-          @onChange="handleFilterCashbook"
-        ></cashbook-field>
-      </div>
-    </div>
-
-    <AppButtonCapsuleSlider
-      :index.sync="selectedIndex"
-      :disableAll="true"
-      :returnIndex="true"
-      customIcon="fa fa-lw fa-list-ul"
-      :data="tabs"
-      @onChange="onChangeTabs"
-    />
-
-    <div class="w-full flex flex-col gap-4">
-      <div v-loading="loading" class="w-full">
-        <AppEmpty v-if="data.length === 0" />
-        <Card
-          :data.sync="data"
-          @onDetail="onDetail"
-          @onEdit="onEdit"
-          @onDelete="onDelete"
-          @onChangeStatus="onChangeStatus"
-          @onCheckout="onOpenCheckout"
-          @onReceipt="onOpenReceipt"
-        />
-      </div>
-      <div class="w-full flex justify-between items-center gap-2">
-        <div class="text-md text-black">
-          Total {{ totalRecord }}
+      <div class="w-full flex flex-col gap-4">
+        <div v-loading="loading" class="w-full">
+          <AppEmpty v-if="data.length === 0" />
+          <Card
+            :data.sync="data"
+            @onDetail="onDetail"
+            @onEdit="onEdit"
+            @onDelete="onDelete"
+            @onChangeStatus="onChangeStatus"
+            @onCheckout="onOpenCheckout"
+            @onReceipt="onOpenReceipt"
+          />
         </div>
-        <el-pagination
-          background
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-size="limit"
-          :pager-count="5"
-          layout="prev, pager, next"
-          :total="totalRecord"
-        >
-        </el-pagination>
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="text-md text-black">
+            Total {{ totalRecord }}
+          </div>
+          <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="limit"
+            :pager-count="5"
+            layout="prev, pager, next"
+            :total="totalRecord"
+          >
+          </el-pagination>
+        </div>
       </div>
     </div>
 
@@ -256,10 +264,10 @@ export default {
       },
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     paramShopId() {
-      const shop = this.$cookies.get('shop')
+      const shop = this.$store.state.storeShop.form
       return shop.shop_id
     },
     paramOrderId() {

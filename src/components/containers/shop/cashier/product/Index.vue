@@ -1,30 +1,31 @@
 <template>
-  <div id="App">
-    <div class="display-flex row-reverse align-center display-mobile">
-      <SearchField
-        class="width width-30 width-mobile"
-        :placeholder="'Cari produk ..'"
-        :enableResponsive="true"
-        :onChange="(data) => onSearch(data)"
-      />
-      <AppButtonCapsuleSlider
-        class="width width-70 width-mobile"
-        :index.sync="selectedIndex"
-        customAllLabel="Semua Produk"
-        customIcon="fa fa-lw fa-box"
-        :data="filteredCateogry"
-        @onChange="onCategory"
-      />
-    </div>
-    <div class="width width-100 padding padding-top-10px">
-      <div v-loading="loadingProduct">
+  <div id="App" class="w-full flex flex-col gap-4">
+    <SearchField
+      class="w-full"
+      :placeholder="'Cari produk ..'"
+      :enableResponsive="true"
+      :onChange="(data) => onSearch(data)"
+    />
+
+    <AppButtonCapsuleSlider
+      class="w-full"
+      :index.sync="selectedIndex"
+      customAllLabel="Semua Produk"
+      customIcon="fa fa-lw fa-box"
+      :data="filteredCateogry"
+      @onChange="onCategory"
+    />
+
+    <div class="w-full flex flex-col gap-4">
+      <div v-loading="loadingProduct" class="w-full">
         <AppEmpty v-if="dataProduct.length === 0" />
         <CardProduct :data.sync="dataProduct" :column="column" />
       </div>
-      <div
-        class="width width-100 display-flex flex-end align-center padding padding-top-15px"
-      >
-        <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
+
+      <div class="w-full flex justify-between items-center gap-2">
+        <div class="text-md text-black">
+          Total {{ totalRecord }}
+        </div>
         <el-pagination
           background
           @current-change="handleCurrentChange"
@@ -89,7 +90,7 @@ export default {
       },
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     filteredCateogry() {
       return this.dataCategory.map((item) => {

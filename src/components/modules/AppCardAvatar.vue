@@ -4,13 +4,16 @@
     :style="{
       width: avatarSize.width,
       height: avatarSize.height,
-    }">
+    }"
+  >
     <el-avatar
       :src="src"
-      class="w-full h-full bg-white shadow-lg flex justify-center items-center"
+      class="relative w-full h-full bg-white shadow-lg flex justify-center items-center"
+      :class="customClass"
       :shape="shape"
       :fit="fit"
     />
+
     <el-button
       v-if="isUpload"
       size="small"
@@ -28,11 +31,23 @@
         class="text-gray-700 fa-lw fa fa-camera"
       />
     </el-button>
+
+    <AppCardCapsule
+      v-if="status"
+      :data="status"
+      size="small"
+      class="w-full text-center mt-2"
+    />
   </div>
 </template>
 <script>
+import AppCardCapsule from './AppCardCapsule'
+
 export default {
   name: 'AppCardAvatar',
+  components: {
+    AppCardCapsule,
+  },
   props: {
     src: {
       type: String,
@@ -54,6 +69,14 @@ export default {
       type: String,
       default: 'cover',
     },
+    status: {
+      type: String,
+      default: '',
+    },
+    customClass: {
+      type: String,
+      default: '',
+    },
   },
   computed: {
     avatarSize() {
@@ -61,6 +84,14 @@ export default {
       let height = '94px';
 
       switch (this.size) {
+        case 'xxlarge':
+          width = '256px';
+          height = '256px';
+          break;
+        case 'xlarge':
+          width = '192px';
+          height = '192px';
+          break;
         case 'large':
           width = '128px';
           height = '128px';

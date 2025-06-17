@@ -1,5 +1,5 @@
 <template>
-  <div id="Auth" class="w-full h-screen flex column justify-center items-center">
+  <div id="Auth" class="w-full h-screen bg-gray-100 flex column justify-center items-center">
     <keep-alive>
       <router-view />
     </keep-alive>
@@ -9,16 +9,10 @@
 export default {
   beforeMount: function () {
     if (this.$cookies.get('token')) {
-      const user = this.$cookies.get('user')
-      const shop = this.$cookies.get('shop')
-
-      if (user.role_name === 'admin') {
+      if (this.$cookies.get('role').role_name === 'admin') {
         this.$router.replace({ name: 'admin-home' })
-      } else if (user.role_name === 'owner') {
-        this.$router.replace({ name: 'owner-home' })
       } else {
-        this.$store.state.storeSelectedShop.selectedData = shop.id
-        this.$router.replace({ name: 'shop-home', params: { shopId: shop.shop_id } })
+        this.$router.replace({ name: 'select-shop' })
       }
     }
   },

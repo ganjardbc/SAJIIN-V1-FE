@@ -1,13 +1,9 @@
 <template>
-  <ul
-    class="default-menu"
-    :class="{
-      'collapse': isCollapse,
-    }"
-  >
+  <ul class="default-menu">
     <li
       v-for="(parent, index) in dataSideBar"
       :key="index"
+      @click="onClick"
     >
       <router-link
         :to="{ name: parent.link }"
@@ -24,6 +20,7 @@
           v-if="parent.value"
           :label="parent.value"
           size="small"
+          class="counter"
         />
       </router-link>
     </li>
@@ -39,6 +36,12 @@ export default {
     return {
       sidebar: [],
     }
+  },
+  props: {
+    data: {
+      type: [Array, String],
+      required: true,
+    },
   },
   components: {
     AppListSubMenu,
@@ -83,16 +86,6 @@ export default {
           }
         })
       return menu
-    },
-  },
-  props: {
-    isCollapse: {
-      type: Boolean,
-      required: false,
-    },
-    data: {
-      type: [Array, String],
-      required: true,
     },
   },
 }

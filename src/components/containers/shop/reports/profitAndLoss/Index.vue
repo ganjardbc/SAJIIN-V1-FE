@@ -169,7 +169,7 @@ export default {
       return this.orderList && this.orderList.length > 0
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
   },
   mounted() {

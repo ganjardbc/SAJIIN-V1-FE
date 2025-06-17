@@ -1,68 +1,82 @@
 <template>
-  <div id="App" class="w-full flex flex-col gap-4 p-4">
-    <div class="w-full flex items-center justify-between">
-      <h1 class="text-3xl text-black font-semibold">
-        Meja
-      </h1>
-      <el-button
-        v-if="isRoleOwner"
-        @click="onCreate"
-      >
-        <i class="fa fa-lw fa-plus mr-2" /> Tambah Meja
-      </el-button>
-    </div>
-
-    <SearchField
-      :placeholder="'Cari meja ..'"
-      :enableResponsive="true"
-      :onChange="(data) => onSearch(data)"
-    />
-
-    <el-alert
-      v-if="!isRoleOwner"
-      title="Tambah Meja Baru ?"
-      description="Untuk menambahkan meja baru mohon hubungi Owner dari Toko ini."
-      type="warning"
-      :closable="true"
-      show-icon
-    />
-
-    <AppTabs
-      class="w-full"
-      :selectedIndex.sync="selectedIndex"
-      :isFull="true"
-      :isScrollable="false"
-      :data="tabs"
-      :onChange="(data) => onChangeTabs(data)"
-    />
-
-    <div class="w-full flex flex-col gap-4">
-      <div v-loading="loading" class="w-full">
-        <AppEmpty v-if="data.length === 0" />
-        <Card
-          :data.sync="data"
-          @onChangeCover="uploadImage"
-          @onDetail="onDetail"
-          @onEdit="onEdit"
-          @onDelete="onDelete"
-          @onChangeStatus="onChangeStatus"
-          @onQrCode="onOpenQrCode"
-        />
-      </div>
-      <div class="w-full flex justify-between items-center gap-2">
-        <div class="text-md text-black">
-          Total {{ totalRecord }}
-        </div>
-        <el-pagination
-          background
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-size="limit"
-          :pager-count="5"
-          layout="prev, pager, next"
-          :total="totalRecord"
+  <div id="App" class="w-full">
+    <div class="w-full flex flex-col gap-4 p-4">
+      <div class="w-full flex items-center justify-between">
+        <h1 class="text-3xl text-black font-semibold">
+          Meja
+        </h1>
+        <el-button
+          v-if="isRoleOwner"
+          type="primary"
+          @click="onCreate"
         >
-        </el-pagination>
+          <i class="fa fa-lw fa-plus mr-2" /> Tambah Meja
+        </el-button>
+      </div>
+
+      <div class="w-full flex flex-col md:flex-row gap-2 items-center justify-between">
+        <SearchField
+          class="flex-1 w-full"
+          placeholder="Cari meja .."
+          :enableResponsive="true"
+          :onChange="(data) => onSearch(data)"
+        />
+
+        <el-select
+          v-model="filter.status"
+          @change="handleFilterSearch"
+          clearable
+          placeholder="Select status"
+          no-data-text="Data Tidak Ditemukan"
+          class="w-full md:w-xxs"
+        >
+          <el-option
+            v-for="(item, i) in statusOptions"
+            :key="i"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </div>
+
+      <el-alert
+        v-if="!isRoleOwner"
+        title="Tambah Meja Baru ?"
+        description="Untuk menambahkan meja baru mohon hubungi Owner dari Toko ini."
+        type="warning"
+        :closable="true"
+        show-icon
+      />
+
+      <div class="w-full flex flex-col gap-4">
+        <div v-loading="loading" class="w-full">
+          <AppEmpty v-if="data.length === 0" />
+          <Card
+            :data.sync="data"
+            @onChangeCover="uploadImage"
+            @onDetail="onDetail"
+            @onEdit="onEdit"
+            @onDelete="onDelete"
+            @onChangeStatus="onChangeStatus"
+            @onQrCode="onOpenQrCode"
+          />
+        </div>
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="text-md text-black">
+            Total {{ totalRecord }}
+          </div>
+          <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="limit"
+            :pager-count="5"
+            layout="prev, pager, next"
+            :total="totalRecord"
+          >
+          </el-pagination>
+        </div>
       </div>
     </div>
 
@@ -119,15 +133,9 @@ import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../modules/AppFileUpload'
 import AppPopupQrCode from '../../../modules/AppPopupQrCode'
-import AppTabs from '../../../modules/AppTabs'
 import SearchField from '../../../modules/SearchField'
 import Form from './Form'
 import Card from './Card'
-
-const tabs = [
-  { id: 1, label: 'Aktif', status: 'active' },
-  { id: 2, label: 'Non-Aktif', status: '' },
-]
 
 export default {
   name: 'App',
@@ -141,7 +149,10 @@ export default {
   },
   data() {
     return {
-      tabs: tabs,
+      statusOptions: [
+        { label: 'Status Aktif', value: 'active' },
+        { label: 'Status Non Aktif', value: 'inactive' },
+      ],
       openForm: false,
       visibleUpdateCover: false,
       visibleAlert: false,
@@ -152,11 +163,10 @@ export default {
       visibleConfirmedDelete: false,
       titleConfirmed: 'Simpan data ?',
       currentPage: 0,
-      selectedIndex: 0,
     }
   },
   mounted() {
-    this.onChangeTabs(0)
+    this.getData()
   },
   components: {
     AppEmpty,
@@ -165,7 +175,6 @@ export default {
     AppPopupAlert,
     AppFileUpload,
     AppPopupQrCode,
-    AppTabs,
     SearchField,
     Form,
     Card,
@@ -190,7 +199,7 @@ export default {
       },
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     paramShopId() {
       return this.$route.params.shopId
@@ -233,18 +242,6 @@ export default {
     },
     onRefresh() {
       this.getData()
-    },
-    onChangeTabs(data) {
-      this.selectedIndex = data
-      switch (this.selectedIndex) {
-        case 0:
-          this.filter.status = 'active'
-          break
-        case 1:
-          this.filter.status = 'inactive'
-          break
-      }
-      this.handleFilterSearch()
     },
 
     // LIST DATA

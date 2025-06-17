@@ -1,26 +1,35 @@
 <template>
-  <div id="App" class="flex flex-col gap-4">
+  <div id="App" class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <div
       v-for="(dt, i) in data"
       :key="i"
       class="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-4"
+      :class="{
+        'border-2 border-orange-300': isOnProgress(dt),
+        'border-2 border-blue-300': isNewOrder(dt),
+      }"
     >
       <div class="flex justify-between items-center pb-4 border-b border-gray-200">
-        <div class="flex items-center gap-2">
-          <i class="fa fa-1x fa-list-ul text-vermillion-500"></i>
-          <div class="flex-1 flex flex-col">
-            <div class="text text-xs text-black font-semibold">
-              {{ dt.order.order_id }}
-            </div>
-            <div class="text text-xs text-gray-500">
-              {{ dt.order.created_at | moment('DD MMMM YYYY') }}
-            </div>
+        <div class="flex-1 flex flex-col">
+          <div class="text text-xs text-black font-semibold">
+            {{ dt.order.order_id }}
+          </div>
+          <div class="text text-xs text-gray-500">
+            {{ dt.order.created_at | moment('DD MMMM YYYY') }}
           </div>
         </div>
         <div class="flex flex-end items-center gap-2">
           <AppCardCapsule :data="dt.order.status" />
           <el-popover placement="bottom-end" class="flex-1" trigger="click">
             <div class="default-menu">
+              <button
+                v-if="dt.order.status !== 'canceled'"
+                class="menu-item small"
+                @click="onDetail(dt)"
+              >
+                <i class="icon fa fa-lw fa-align-right"></i>
+                <span class="label text-left">Detail</span>
+              </button>
               <button
                 v-if="dt.order.status !== 'canceled'"
                 class="menu-item small"
@@ -59,14 +68,10 @@
         type="warning"
         :closable="false"
         show-icon
-      >
-      </el-alert>
+      />
 
-      <div class="flex flex-col gap-2 border-b border-dashed border-gray-200 pb-4">
-        <div
-          v-if="dt.order.customer_name"
-          class="w-full flex justify-between items-center"
-        >
+      <div class="flex flex-col gap-1">
+        <div class="w-full flex justify-between items-center">
           <div class="text-sm text-black">
             Pelanggan
           </div>
@@ -74,10 +79,7 @@
             {{ dt.order.customer_name || '-' }}
           </div>
         </div>
-        <div
-          v-if="dt.order.table_name"
-          class="w-full flex justify-between items-center"
-        >
+        <div class="w-full flex justify-between items-center">
           <div class="text-sm text-black">
             Meja
           </div>
@@ -95,16 +97,45 @@
         </div>
       </div>
 
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col py-4 gap-4 border-t border-b border-gray-200">
         <div class="w-full flex justify-between items-center">
-          <div class="text-sm text-black font-semibold">Total Harga</div>
+          <div class="text-sm text-black font-semibold">
+            Produk
+          </div>
+          <AppCardProgressProduct :data="dt.details" />
+        </div>
+
+        <CardDetail
+          v-if="dt.details.length > 0"
+          class="w-full"
+          :data="dt.details"
+          :max="1"
+        />
+
+        <el-button
+          class="mx-auto rounded-full border-none"
+          size="small"
+          type="info"
+          plain
+          @click="onDetail(dt)"
+        >
+          <span v-if="dt.details.length > 1">
+            +{{ dt.details.length - 1 }} Produk Lainnya
+          </span>
+          <span v-else>
+            Lihat Produk
+          </span>
+        </el-button>
+      </div>
+
+      <div class="flex flex-col gap-2 border-b border-dashed border-gray-200 pb-4">
+        <div class="w-full flex justify-between items-center">
+          <div class="text-sm text-black">Total Harga</div>
           <div class="flex items-center gap-2 text-sm text-black font-semibold truncate text-right">
-            <span>
+            <span class="text-xs text-gray-500 font-normal">
               ({{ dt.order.payment_status ? 'Dibayar' : 'Belum Bayar' }})
             </span>
-            <span>
-              {{ format(dt.order.total_price) }}
-            </span>
+            {{ format(dt.order.total_price) }}
           </div>
         </div>
         <div
@@ -142,28 +173,6 @@
         </div>
       </div>
 
-      <AppCardCollapse
-        v-if="dt.details.length > 0"
-        :title="`Detail Produk`"
-        :customTitle="true"
-        class="margin margin-bottom-15px"
-      >
-        <template #title>
-          <div class="w-full flex justify-between items-center">
-            <div class="text-sm text-black font-semibold">
-              Produk
-            </div>
-            <AppCardProgressProduct :data="dt.details" />
-          </div>
-        </template>
-
-        <CardDetail
-          class="w-full py-2"
-          style="overflow-y: auto; max-height: 400px"
-          :data="dt.details"
-        />
-      </AppCardCollapse>
-
       <div class="flex justify-end items-center">
         <!-- DEFAULT -->
         <el-button
@@ -185,10 +194,20 @@
           <i class="fa fa-calculator"></i>
         </el-button>
 
+        <el-button
+          v-if="dt.order.status === 'done' || dt.order.status === 'canceled'"
+          size="medium"
+          class="flex-1 w-full"
+          @click="onChangeStatus(dt.order, 'new-order')"
+        >
+          Re-Open
+        </el-button>
+
         <!-- NON FNB -->
         <el-button
           v-if="!isNonFnB && dt.order.status === 'new-order'"
           size="medium"
+          class="flex-1 w-full"
           @click="onChangeStatus(dt.order, 'on-progress')"
         >
           Terima Transaksi
@@ -196,6 +215,7 @@
         <el-button
           v-if="!isNonFnB && dt.order.status === 'on-progress'"
           size="medium"
+          class="flex-1 w-full"
           :disabled="isButtonOnProgressDisabled(dt)"
           @click="onChangeStatus(dt.order, 'ready')"
         >
@@ -204,6 +224,7 @@
         <el-button
           v-if="!isNonFnB && dt.order.status === 'ready'"
           size="medium"
+          class="flex-1 w-full"
           @click="onChangeStatus(dt.order, 'delivered')"
         >
           Diterima Pelanggan
@@ -211,6 +232,7 @@
         <el-button
           v-if="!isNonFnB && dt.order.status === 'delivered'"
           size="medium"
+          class="flex-1 w-full"
           :disabled="!isButtonDoneDisabled(dt)"
           @click="onChangeStatus(dt.order, 'done')"
         >
@@ -221,18 +243,11 @@
         <el-button
           v-if="isNonFnB && dt.order.status === 'new-order'"
           size="medium"
+          class="flex-1 w-full"
           :disabled="!isButtonDoneDisabledNonFnB(dt)"
           @click="onChangeStatus(dt.order, 'done')"
         >
           Transaksi Selesai
-        </el-button>
-
-        <!-- DEFAULT -->
-        <el-button
-          size="medium"
-          @click="onDetail(dt)"
-        >
-          Detail
         </el-button>
       </div>
     </div>
@@ -241,7 +256,6 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import AppCardCapsule from '../../../../modules/AppCardCapsule'
-import AppCardCollapse from '../../../../modules/AppCardCollapse'
 import AppCardCaption from '../../../../modules/AppCardCaption'
 import AppCardProgressProduct from '../../../../modules/AppCardProgressProduct'
 import AppCardAvatar from '../../../../modules/AppCardAvatar'
@@ -255,7 +269,6 @@ export default {
   },
   components: {
     AppCardCapsule,
-    AppCardCollapse,
     AppCardCaption,
     AppCardProgressProduct,
     AppCardAvatar,
@@ -284,6 +297,15 @@ export default {
     },
     isButtonDoneDisabledNonFnB(data) {
       return data.order.payment_status && data.order.status === 'new-order'
+    },
+    isNewOrder(data) {
+      return data.order.status === 'new-order'
+    },
+    isOnProgress(data) {
+      return data.order.status === 'on-progress' ||
+        data.order.status === 'ready' ||
+        data.order.status === 'ready' ||
+        data.order.status === 'delivered'
     },
 
     // COVER

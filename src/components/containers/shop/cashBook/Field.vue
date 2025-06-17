@@ -115,7 +115,7 @@ export default {
       loading: (state) => state.storeCashBook.customFilter.loading,
     }),
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
   },
   props: {

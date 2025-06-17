@@ -27,6 +27,7 @@
               v-model="form.username"
               :disabled="loading"
               rounded
+              @keyup.enter.native="submit"
             >
               <i slot="prefix" class="el-input__icon el-icon-user"></i>
             </el-input>
@@ -44,6 +45,7 @@
               :disabled="loading"
               show-password
               rounded
+              @keyup.enter.native="submit"
             >
               <i slot="prefix" class="el-input__icon el-icon-lock"></i>
             </el-input>
@@ -91,8 +93,6 @@ export default {
     }
   },
 
-  mounted() {},
-
   computed: {
     ...mapState({
       form: (state) => state.storeAuth.form,
@@ -115,24 +115,11 @@ export default {
 
     async submit() {
       const res = await this.login(this.form)
-      if (res.data.status === 'ok') {
-        const data = res.data.data
-
-        this.$cookies.set('token', data.token)
-        this.$cookies.set('tokenBearer', `Bearer ${data.token}`)
-        this.$cookies.set('user', data.user)
-        this.$cookies.set('role', data.role)
-        this.$cookies.set('shop', data.shop)
-        this.$cookies.set('employee', data.employee)
-        this.$cookies.set('permissions', JSON.stringify(data.permissions))
-
-        if (data.user.role_name === 'admin') {
+      if (res.status === 'ok') {
+        if (res.roleName === 'admin') {
           this.$router.replace({ name: 'admin-home' })
-        } else if (data.user.role_name === 'owner') {
-          this.$router.replace({ name: 'owner-home' })
         } else {
-          this.$store.state.storeSelectedShop.selectedData = data.shop.id
-          this.$router.replace({ name: 'shop-home', params: { shopId: data.shop.shop_id } })
+          this.$router.replace({ name: 'select-shop' })
         }
       }
     },

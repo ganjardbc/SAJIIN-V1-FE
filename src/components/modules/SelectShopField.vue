@@ -31,7 +31,7 @@ export default {
     }),
     selectedData: {
       get() {
-        return this.$store.state.storeSelectedShop.selectedData
+        return this.$store.state.storeShop.form.id
       },
       set(value) {
         const shop_id = this.$route.params.shopId

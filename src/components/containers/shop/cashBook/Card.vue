@@ -6,15 +6,12 @@
       class="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-4"
     >
       <div class="flex justify-between items-center pb-4 border-b border-gray-200">
-        <div class="flex items-center gap-2">
-          <i class="fa fa-1x fa-book-open text-vermillion-500"></i>
-          <div class="flex-1 flex flex-col">
-            <div class="text text-xs text-black font-semibold">
-              {{ dt.cashbook.cashbook_id }}
-            </div>
-            <div class="text text-xs text-gray-500">
-              {{ dt.cashbook.created_at | moment('DD MMMM YYYY') }}
-            </div>
+        <div class="flex-1 flex flex-col">
+          <div class="text text-xs text-black font-semibold">
+            {{ dt.cashbook.cashbook_id }}
+          </div>
+          <div class="text text-xs text-gray-500">
+            {{ dt.cashbook.created_at | moment('DD MMMM YYYY') }}
           </div>
         </div>
         <div class="flex flex-end items-center gap-2">

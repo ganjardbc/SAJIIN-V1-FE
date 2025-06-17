@@ -383,7 +383,7 @@ export default {
       grandTotalExpense: (state) => state.storeReports.expense.grandTotal,
     }),
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
   },
   components: {
@@ -413,20 +413,9 @@ export default {
       return status
     },
     onRoute(data) {
-      let path = 'shop-orders'
-      const roleName = this.$cookies.get('user')
-        ? this.$cookies.get('user').role_name
-        : ''
-
-      if (roleName === 'owner') {
-        path = 'shop-orders'
-      } else {
-        path = 'employee-orders'
-      }
-
       this.$router
         .push({
-          name: path,
+          name: 'shop-orders',
           query: {
             search: data.order_id,
           },

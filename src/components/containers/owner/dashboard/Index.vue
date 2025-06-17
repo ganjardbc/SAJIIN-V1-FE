@@ -105,7 +105,7 @@ export default {
       getMatrix: 'storeDashboard/getMatrix',
     }),
     getDashboard() {
-      const shop = this.$cookies.get('shop')
+      const shop = this.$store.state.storeShop.form
       const payload = {
         token: this.$cookies.get('tokenBearer'),
         shop_id: shop.id,
@@ -113,7 +113,7 @@ export default {
       this.getData(payload)
     },
     getDashboardMatrix() {
-      const shop = this.$cookies.get('shop')
+      const shop = this.$store.state.storeShop.form
       const payload = {
         token: this.$cookies.get('tokenBearer'),
         shop_id: shop.id,
