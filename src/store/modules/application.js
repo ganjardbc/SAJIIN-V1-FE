@@ -4,6 +4,7 @@ export default {
   state: {
     isBluetoothSupported: false,
     updateApplication: false,
+    deviceType: 'desktop', // 'desktop', 'tablet' or 'mobile'
   },
 
   getters: {},
@@ -15,6 +16,9 @@ export default {
     SET_BLUETOOTH_SUPPORTED(state, value) {
       state.isBluetoothSupported = value
     },
+    SET_DEVICE_TYPE(state, value) {
+      state.deviceType = value
+    },
   },
 
   actions: {
@@ -23,6 +27,9 @@ export default {
     },
     setBluetoothSupported({ commit }, data) {
       commit('SET_BLUETOOTH_SUPPORTED', data)
+    },
+    setDeviceType({ commit }, data) {
+      commit('SET_DEVICE_TYPE', data)
     },
   },
 }

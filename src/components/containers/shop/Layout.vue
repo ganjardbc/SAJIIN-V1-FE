@@ -2,20 +2,32 @@
   <div
     class="default-layout"
     :class="{
-      'collapse': isCollapse,
+      'collapse': isCollapseDesktop,
+      'mobile-collapse': isCollapseMobile,
     }"
   >
     <div class="w-full h-full">
       <div class="header">
         <div class="flex-1 flex gap-2 items-center">
           <div class="menu" @click="onOpenSidebar">
-            <i 
-              class="icon fa-solid"
-              :class="{
-                'fa-bars': isCollapse,
-                'fa-bars-staggered': !isCollapse,
-              }"
-            />
+            <el-badge
+              :hidden="!isThereCounterMenu"
+              is-dot
+            >
+              <i 
+                class="icon fa-solid"
+                :class="deviceType === 'mobile' 
+                  ? {
+                    'fa-bars': !isCollapseMobile,
+                    'fa-bars-staggered': isCollapseMobile,
+                  }
+                  : {
+                    'fa-bars': !isCollapseDesktop,
+                    'fa-bars-staggered': isCollapseDesktop,
+                  }
+                "
+              />
+            </el-badge>
           </div>
           <div class="title">
             {{ metaTitle }}
@@ -36,7 +48,12 @@
               <span class="label">Home</span>
             </router-link>
             <router-link :to="{ name: 'shop-notifications' }" class="menu">
-              <i class="icon fa-solid fa-bell" />
+              <el-badge
+                :hidden="totalUnread === 0"
+                is-dot
+              >
+                <i class="icon fa-solid fa-bell" />
+              </el-badge>
               <span class="label">Notifikasi</span>
             </router-link>
             <router-link :to="{ name: 'shop-profile' }" class="menu">
@@ -100,7 +117,7 @@
 
       <div class="content transition-all duration-300">
         <div class="sidebar transition-all duration-300">
-          <div class="header mobile-only">
+          <div class="header mobile-only z-10 bg-white">
             <div class="flex-1 text-lg text-black font-semibold">
               Menu
             </div>
@@ -117,7 +134,7 @@
           <div class="flex flex-col gap-4 p-4">
             <AppListMenu
               :data.sync="sidebar"
-              @onClick="onCloseSidebar"
+              @onClick="onMenuSidebar"
             />
           </div>
         </div>
@@ -127,10 +144,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <AppToast /> -->
-
-    <!-- <AppToastMessage /> -->
 
     <AppPopupLoader
       v-if="loadingFormShop"
@@ -144,8 +157,6 @@ import logo from '@/assets/img/logo.png'
 import icon from '@/assets/img/icon.png'
 import notifSoundOne from '@/assets/sounds/notifications-1.wav'
 import AppListMenu from '../../modules/AppListMenu'
-import AppToast from '../../modules/AppToast'
-import AppToastMessage from '../../modules/AppToastMessage'
 import AppPopupLoader from '../../modules/AppPopupLoader'
 import AppCardAvatar from '../../modules/AppCardAvatar'
 import AppCardCapsule from '../../modules/AppCardCapsule'
@@ -157,13 +168,12 @@ export default {
     return {
       logo: logo,
       icon: icon,
-      isCollapse: false,
+      isCollapseDesktop: true,
+      isCollapseMobile: false,
     }
   },
   components: {
     AppPopupLoader,
-    AppToastMessage,
-    AppToast,
     AppListMenu,
     AppCardAvatar,
     AppCardCapsule,
@@ -174,10 +184,10 @@ export default {
       removeData: 'storeAuth/removeData',
       getUserData: 'storeAuth/getUserData',
       getCashBook: 'storeCashBook/getCurrent',
-      // resetCashBook: 'storeCashBook/restDataCurrent',
       getShopAll: 'storeShop/getData',
       getShopById: 'storeShop/getByID',
       getMatrix: 'storeDashboard/getMatrix',
+      getNotification: 'storeNotification/getData',
 
       // old store
       setToast: 'toast/setToast',
@@ -202,6 +212,7 @@ export default {
           if (res && res.data && res.data.data) {
             this.getMatrixData(res.data.data.id)
             this.getCashBookData(res.data.data.id)
+            this.getNotificationData(res.data.data.id)
           }
         })
         .catch((e) => {
@@ -234,6 +245,17 @@ export default {
           })
         })
     },
+    getNotificationData(shop_id) {
+      const token = this.$cookies.get('tokenBearer')
+      this.getNotification({ token, shop_id })
+        .catch((e) => {
+          console.error(e)
+          this.setToast({
+            type: 'error',
+            message: 'Gagal mendapatkan notifikasi.',
+          })
+        })
+    },
     goProfile() {
       this.$router.push({ name: 'shop-profile' })
     },
@@ -241,11 +263,18 @@ export default {
       this.$router.push({ name: 'shop-home', params: { shopId: value } })
     },
     onOpenSidebar() {
-      this.isCollapse = !this.isCollapse
+      if (this.deviceType === 'mobile') {
+        this.isCollapseDesktop = false
+        this.isCollapseMobile = !this.isCollapseMobile
+      } else {
+        this.isCollapseDesktop = !this.isCollapseDesktop
+        this.isCollapseMobile = false
+      }
     },
-    onCloseSidebar() {
-      // this.isCollapse = false
-      console.log('onCloseSidebar')
+    onMenuSidebar() {
+      if (this.deviceType === 'mobile') {
+        this.isCollapseMobile = false
+      }
     },
     isShopSelected(value) {
       const shop = this.selectedShop
@@ -299,6 +328,7 @@ export default {
   },
   computed: {
     ...mapState({
+      deviceType: (state) => state.application.deviceType,
       dataShop: (state) => state.storeShop.data,
       filterShop: (state) => state.storeShop.filter,
       loadingShop: (state) => state.storeShop.loading,
@@ -306,6 +336,7 @@ export default {
       selectedShop: (state) => state.storeShop.form,
       matrix: (state) => state.storeDashboard.matrix,
       cashbook: (state) => state.storeCashBook.dataCurrent,
+      totalUnread: (state) => state.storeNotification.totalUnread,
     }),
     shopId() {
       return this.$route.params.shopId
@@ -313,13 +344,25 @@ export default {
     metaTitle() {
       return this.$route.meta.title || 'Shop'
     },
-    sidebar() {
-      const totaLlOrder = this.matrix.newOrder + 
-        this.matrix.onProgress + 
-        this.matrix.ready + 
+    isThereCounterMenu() {
+      return (
+        this.totalOrder > 0 ||
+        this.totalCashbook > 0
+      )
+    },
+    totalOrder() {
+      if (!this.matrix) return 0
+      return (
+        this.matrix.newOrder +
+        this.matrix.onProgress +
+        this.matrix.ready +
         this.matrix.delivered
-      const totalCashbook = this.cashbook ? this.cashbook.opened_cashbook.length : 0
-
+      )
+    },
+    totalCashbook() {
+      return this.cashbook ? this.cashbook.opened_cashbook.length : 0
+    },
+    sidebar() {
       return [
         {
           icon: 'fa fa-lg fa-laptop',
@@ -331,7 +374,7 @@ export default {
         {
           icon: 'fa fa-lg fa-list-ul',
           label: 'Penjualan',
-          value: totaLlOrder || 0,
+          value: this.totalOrder || 0,
           link: 'shop-orders',
           permission: 'orders',
         },
@@ -352,7 +395,7 @@ export default {
         {
           icon: 'fa fa-lg fa-book-open',
           label: 'Buku Kas',
-          value: totalCashbook || 0,
+          value: this.totalCashbook || 0,
           link: 'shop-cash-book',
           permission: 'cashbooks',
         },
@@ -407,6 +450,13 @@ export default {
 
       this.getShopByIdData()
       this.addShopSocket()
+    },
+    deviceType: {
+      handler() {
+        this.isCollapseDesktop = false
+        this.isCollapseMobile = false
+      },
+      immediate: true,
     },
   },
   beforeMount() {

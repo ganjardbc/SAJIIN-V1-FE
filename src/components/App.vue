@@ -16,7 +16,10 @@ import ReloadApp from './ReloadApp'
 export default {
   name: 'app',
   data() {
-    return {}
+    return {
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
+    }
   },
   components: {
     ReloadApp,
@@ -28,9 +31,21 @@ export default {
   },
   methods: {
     ...mapActions({
+      setDeviceType: 'application/setDeviceType',
       setUpdateApplication: 'application/setUpdateApplication',
       setBluetoothSupported: 'application/setBluetoothSupported',
     }),
+    handleResize() {
+      this.windowWidth = window.innerWidth
+
+      if (this.windowWidth <= 768) {
+        this.setDeviceType('mobile')
+      } else if (this.windowWidth <= 1024) {
+        this.setDeviceType('tablet')
+      } else {
+        this.setDeviceType('desktop')
+      }
+    },
     reloadApplication() {
       this.setUpdateApplication(false)
       window.location.reload()
@@ -107,9 +122,14 @@ export default {
     },
   },
   mounted() {
+    window.addEventListener('resize', this.handleResize)
+
     this.setUpNotification()
     this.setUpNewUpdate()
     this.onCheckBluetooth()
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize)
   },
   sockets: {
     connect: function () {

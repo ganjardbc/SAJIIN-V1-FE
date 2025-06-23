@@ -20,7 +20,8 @@
           Hapus Produk
         </el-button>
         <el-button
-          class="border-none xl:hidden"
+          v-if="deviceType !== 'desktop'"
+          class="border-none"
           circle
           @click="onClose"
         >
@@ -43,10 +44,10 @@ export default {
   name: 'App',
   components: {
     CashierMain,
-    CartPopup,
   },
   computed: {
     ...mapState({
+      deviceType: (state) => state.application.deviceType,
       details: (state) => state.storeCashier.form.details,
       dataCurrent: (state) => state.storeCashBook.dataCurrent,
     }),

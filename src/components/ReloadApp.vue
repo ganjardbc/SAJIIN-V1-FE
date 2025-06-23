@@ -1,39 +1,34 @@
 <template>
   <div id="App" class="card-toast show">
-    <div class="card-toast-content" style="min-width: 300px">
-      <div class="padding padding-15px">
-        <div class="display-flex padding padding-bottom-15px">
+    <div class="card-toast-content m-4">
+      <div class="w-full flex flex-col gap-4">
+        <div class="flex items-center justify-between">
           <div style="width: 50px">
-            <div class="btn btn-icon" style="padding: 0; cursor: default">
-              <i class="fa fa-2x fa-bell fonts green" />
-            </div>
+            <i class="fa fa-2x fa-bell text-vermillion-500" />
           </div>
-          <div style="width: calc(100% - 50px)">
-            <div class="fonts fonts-11 semibold white">
+          <div class="flex-1 flex flex-col gap-1">
+            <div class="text-md text-black font-semibold">
               New update is available
             </div>
-            <div class="fonts fonts-9 normal white">
+            <div class="text-xs text-gray-500">
               Click "Update Now" to reload the app
             </div>
           </div>
         </div>
-        <div class="display-flex space-between">
-          <div style="width: calc(50% - 5px)">
-            <button
-              class="btn btn-sekunder btn-small btn-full"
-              @click="closeReload"
-            >
-              Later
-            </button>
-          </div>
-          <div style="width: calc(50% - 5px)">
-            <button
-              class="btn btn-main btn-small btn-full"
-              @click="reloadApplication"
-            >
-              Update Now
-            </button>
-          </div>
+        <div class="flex items-center justify-between">
+          <el-button
+            class="w-full"
+            @click="closeReload"
+          >
+            Later
+          </el-button>
+          <el-button
+            class="w-full"
+            type="primary"
+            @click="reloadApplication"
+          >
+            Update Now
+          </el-button>
         </div>
       </div>
     </div>
@@ -51,3 +46,4 @@ export default {
   },
 }
 </script>
+

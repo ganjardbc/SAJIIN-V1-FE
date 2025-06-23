@@ -101,7 +101,7 @@ html, body {
 
 .default-layout .sidebar {
   @apply sticky left-0 top-0 h-full bg-white border-r border-gray-200 overflow-y-auto;
-  width: 280px;
+  width: 84px;
   left: 0;
 }
 
@@ -115,23 +115,15 @@ html, body {
 
 .default-layout .sidebar .back-to-shop__label {
   @apply text-sm text-gray-700;
-}
-
-.default-layout.collapse .sidebar {
-  width: 84px;
-}
-
-.default-layout.collapse .sidebar .back-to-shop__label {
   display: none;
 }
 
-.default-layout.mobile-collapse .sidebar {
-  @apply absolute;
-  left: 0;
+.default-layout.collapse .sidebar {
+  width: 280px;
 }
 
-.default-layout.mobile-collapse.collapse .sidebar {
-  left: -280px;
+.default-layout.collapse .sidebar .back-to-shop__label {
+  display: block;
 }
 
 .default-layout .sidebar .header {
@@ -140,16 +132,15 @@ html, body {
 }
 
 @media (max-width: 768px) {
-  .default-layout .sidebar,
-  .default-layout.mobile-collapse .sidebar {
+  .default-layout .sidebar {
     @apply fixed top-0;
+    width: 280px;
     left: -280px;
     z-index: 999;
   }
 
   .default-layout.collapse .sidebar {
     left: 0;
-    width: 280px;
   }
 
   .default-layout.mobile-collapse .sidebar {
@@ -163,20 +154,11 @@ html, body {
 
 .default-layout .viewer {
   @apply h-full overflow-y-auto;
-  width: calc(100% - 280px);
-}
-
-.default-layout.collapse .viewer {
   width: calc(100% - 84px);
 }
 
-.default-layout.mobile-collapse .viewer {
-  @apply absolute right-0;
+.default-layout.collapse .viewer {
   width: calc(100% - 280px);
-}
-
-.default-layout.mobile-collapse.collapse .viewer {
-  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -263,7 +245,7 @@ html, body {
 }
 
 .default-menu .menu-item {
-  @apply px-2 rounded-lg flex gap-2 items-center w-full;
+  @apply relative px-2 rounded-lg flex gap-2 items-center w-full;
   height: 48px;
 }
 
@@ -298,35 +280,43 @@ html, body {
   @apply text-vermillion-500;
 }
 
+.default-layout .sidebar .default-menu .menu-item {
+  @apply justify-center;
+}
+
+.default-layout .sidebar .default-menu .menu-item .label {
+  display: none;
+}
+
+.default-layout .sidebar .default-menu .menu-item .counter {
+  @apply absolute;
+  right: -4px;
+  top: -4px;
+}
+
 .default-layout.collapse .sidebar .default-menu {
-  width: 52px;
+  @apply w-full;
 }
 
 .default-layout.collapse .sidebar .default-menu .menu-item {
-  @apply flex justify-center w-full;
+  @apply flex justify-start w-full;
 }
 
-.default-layout.collapse .sidebar .default-menu .icon {
+.default-layout.collapse .sidebar .default-menu .menu-item .icon {
   font-size: 22px;
 }
 
-.default-layout.collapse .sidebar .default-menu .label,
-.default-layout.collapse .sidebar .default-menu .counter {
-  display: none;
+.default-layout.collapse .sidebar .default-menu .menu-item .label {
+  display: block;
+}
+
+.default-layout.collapse .sidebar .default-menu .menu-item .counter,
+.default-layout.mobile-collapse .sidebar .default-menu .menu-item .counter {
+  @apply relative right-0 top-0;
 }
 
 .default-layout.mobile-collapse.collapse .sidebar .default-menu {
   @apply w-full;
-}
-
-.default-layout.mobile-collapse.collapse .sidebar .default-menu .label,
-.default-layout.mobile-collapse.collapse .sidebar .default-menu .counter {
-  display: block;
-}
-
-.default-layout.mobile-collapse.collapse .sidebar .default-menu .menu-item {
-  @apply flex justify-center w-full;
-  height: 48px;
 }
 
 @media (max-width: 768px) {
@@ -338,14 +328,17 @@ html, body {
     height: 48px;
   }
 
-  .default-layout.collapse .sidebar .default-menu .label,
-  .default-layout.collapse .sidebar .default-menu .counter {
+  .default-layout .sidebar .default-menu .menu-item .label,
+  .default-layout .sidebar .default-menu .menu-item .counter,
+  .default-layout.collapse .sidebar .default-menu .menu-item .label,
+  .default-layout.collapse .sidebar .default-menu .menu-item .counter,
+  .default-layout.mobile-collapse .sidebar .default-menu .menu-item .label,
+  .default-layout.mobile-collapse .sidebar .default-menu .menu-item .counter {
     display: block;
   }
 
-  .default-layout.mobile-collapse.collapse .sidebar .default-menu .label,
-  .default-layout.mobile-collapse.collapse .sidebar .default-menu .counter {
-    display: block;
+  .default-layout .sidebar .default-menu .menu-item .counter {
+    @apply relative right-0 top-0;
   }
 }
 
@@ -419,6 +412,17 @@ html, body {
   .cart-popup {
     display: block;
   }
+}
+
+.card-toast {
+  @apply fixed top-0 left-0 w-full;
+  z-index: 999;
+}
+
+.card-toast-content {
+  @apply mx-auto bg-white flex justify-center items-center p-4 rounded-lg transition duration-300 ease-in-out;
+  width: 320px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .default-dialog {
