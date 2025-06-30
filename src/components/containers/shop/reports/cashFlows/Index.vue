@@ -1,49 +1,41 @@
 <template>
-  <div class="width width-full">
-    <div class="display-flex space-between align-center display-mobile padding padding-bottom-10px margin margin-bottom-15px border-bottom">
-      <h1 class="fonts medium black bold margin margin-mobile-bottom-10px">Arus Kas</h1>
-      <div class="display-flex display-mobile" style="align-items: flex-end">
-        <div
-          class="width width-120px width-mobile margin margin-right-10px no-margin-padding margin-mobile-bottom-10px"
+  <div id="App" class="w-full flex flex-col gap-4">
+    <div class="w-full flex flex-col gap-4">
+      <el-select
+        v-model="filter.report_type"
+        :clearable="false"
+        placeholder="Pilih Tipe Laporan"
+        no-data-text="Data Tidak Ditemukan"
+        class="w-full"
+        @change="handleReportType"
+      >
+        <el-option
+          v-for="(item, i) in downloadList"
+          :key="i"
+          :label="item.label"
+          :value="item.value"
         >
-          <el-select
-            v-model="filter.report_type"
-            :clearable="false"
-            placeholder="Pilih Tipe Laporan"
-            no-data-text="Data Tidak Ditemukan"
-            @change="handleReportType"
-          >
-            <el-option
-              v-for="(item, i) in downloadList"
-              :key="i"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <div class="width width-300px width-mobile margin no-margin-padding">
-          <el-date-picker
-            v-model="filter.order_date"
-            :type="dateType"
-            align="left"
-            unlink-panels
-            range-separator="To"
-            start-placeholder="Start date"
-            end-placeholder="End date"
-            format="dd MMMM yyyy"
-            :picker-options="pickerOptions"
-            :disabled="filter.report_type === 'custom' ? false : true"
-            style="width: 100% !important"
-            @change="handleOrderDate"
-          />
-        </div>
-      </div>
+        </el-option>
+      </el-select>
+      <el-date-picker
+        v-model="filter.order_date"
+        :type="dateType"
+        align="left"
+        unlink-panels
+        range-separator="To"
+        start-placeholder="Start date"
+        end-placeholder="End date"
+        format="dd MMMM yyyy"
+        :picker-options="pickerOptions"
+        :disabled="filter.report_type === 'custom' ? false : true"
+        style="width: 100%"
+        @change="handleOrderDate"
+      />
     </div>
 
-    <div v-loading="loading" class="width width-full padding padding-15px border-full border-radius bg-white">
-      <h1 class="fonts small align-center black semibold">LAPORAN ARUS KAS</h1>
-      <h2 class="fonts fonts-14px align-center black semibold">
+    <div v-loading="loading" class="w-full p-4 border border-gray-200 rounded-lg bg-white">
+      <h1 class="text-xl font-semibold text-center">LAPORAN ARUS KAS</h1>
+      <h2 class="text-sm text-gray-500 text-center mt-2">
         PERIODE:
         <span v-if="rangeDate && rangeDate.length > 0">
           {{ rangeDate[0] | moment('DD MMMM YYYY') }} -
@@ -52,62 +44,62 @@
         <span v-else>-</span>
       </h2>
 
-      <div class="display-flex space-between align-center bg-white-grey margin margin-top-15px">
-        <div class="fonts fonts-14px black semibold">Keterangan</div>
-        <div class="fonts fonts-14px black semibold">Amount</div>
+      <div class="flex justify-between justify-center bg-gray-100 py-2 mt-4">
+        <div class="text-sm text-black font-semibold">Keterangan</div>
+        <div class="text-sm text-black font-semibold">Amount</div>
       </div>
 
-      <div class="display-flex space-between align-center margin margin-top-15px">
-        <div class="fonts fonts-14px black semibold">Saldo Awal</div>
-        <div class="fonts fonts-14px black semibold">{{ format(cashModal) }}</div>
+      <div class="flex justify-between justify-center mt-4">
+        <div class="text-sm text-black font-semibold">Saldo Awal</div>
+        <div class="text-sm text-black font-semibold">{{ format(cashModal) }}</div>
       </div>
 
-      <div class="display-flex column margin margin-top-15px">
-        <div class="fonts fonts-14px black semibold">Pendapatan</div>
-        <div class="display-flex space-between align-center padding padding-left-15px">
-          <div class="fonts fonts-14px black">Buku Kas</div>
-          <div class="fonts fonts-14px black">{{ format(grandTotal) }}</div>
+      <div class="flex flex-col mt-4">
+        <div class="text-sm text-black font-semibold">Pendapatan</div>
+        <div class="flex justify-between justify-center pl-4">
+          <div class="text-sm text-black">Buku Kas</div>
+          <div class="text-sm text-black">{{ format(grandTotal) }}</div>
         </div>
       </div>
 
-      <div class="display-flex space-between align-center bg-white-grey margin margin-top-15px">
-        <div class="fonts fonts-14px black semibold">Total Pendapatan</div>
-        <div class="fonts fonts-14px black semibold">{{ format(grandTotal) }}</div>
+      <div class="flex justify-between justify-center bg-gray-100 py-2 mt-4">
+        <div class="text-sm text-black font-semibold">Total Pendapatan</div>
+        <div class="text-sm text-black font-semibold">{{ format(grandTotal) }}</div>
       </div>
 
-      <div class="display-flex column margin margin-top-15px">
-        <div class="fonts fonts-14px black semibold">Pengeluaran</div>
-        <div class="display-flex space-between align-center padding padding-left-15px">
-          <div class="fonts fonts-14px black">Pengeluaran Outlet</div>
-          <div class="fonts fonts-14px black">{{ format(expenseGrandTotal) }}</div>
+      <div class="flex flex-col mt-4">
+        <div class="text-sm text-black font-semibold">Pengeluaran</div>
+        <div class="flex justify-between justify-center pl-4">
+          <div class="text-sm text-black">Pengeluaran Outlet</div>
+          <div class="text-sm text-black">{{ format(expenseGrandTotal) }}</div>
         </div>
       </div>
 
-      <div class="display-flex space-between align-center bg-white-grey margin margin-top-15px">
-        <div class="fonts fonts-14px black semibold">Total Pengeluaran</div>
-        <div class="fonts fonts-14px black semibold">{{ format(expenseGrandTotal) }}</div>
+      <div class="flex justify-between justify-center bg-gray-100 py-2 mt-4">
+        <div class="text-sm text-black font-semibold">Total Pengeluaran</div>
+        <div class="text-sm text-black font-semibold">{{ format(expenseGrandTotal) }}</div>
       </div>
 
-      <div class="display-flex space-between align-center bg-white-grey margin margin-top-15px">
-        <div class="fonts fonts-14px black semibold">Arus Kas</div>
-        <div class="fonts fonts-14px black semibold">{{ format(cashFlow) }}</div>
+      <div class="flex justify-between justify-center bg-gray-100 py-2 mt-4">
+        <div class="text-sm text-black font-semibold">Arus Kas</div>
+        <div class="text-sm text-black font-semibold">{{ format(cashFlow) }}</div>
       </div>
 
-      <div class="display-flex space-between align-center bg-white-grey margin margin-top-15px">
-        <div class="fonts fonts-14px black semibold">Saldo Akhir</div>
-        <div class="fonts fonts-14px black semibold">{{ format(cashEnding) }}</div>
+      <div class="flex justify-between justify-center bg-gray-100 py-2 mt-4">
+        <div class="text-sm text-black font-semibold">Saldo Akhir</div>
+        <div class="text-sm text-black font-semibold">{{ format(cashEnding) }}</div>
       </div>
     </div>
 
     <div class="main-content-footer">
-      <div class="main-content-footer-container display-flex space-between">
-        <button
-          class="btn btn-main btn-full"
+      <div class="main-content-footer-container flex justify-between">
+        <el-button
+          class="w-full"
           :disabled="!isButtonReportEnable"
           @click="downloadReport"
         >
-          <i class="icn icn-left fa fa-lw fa-download"></i> Download Report
-        </button>
+          <i class="fa fa-lw fa-download"></i> Download Report
+        </el-button>
       </div>
     </div>
 

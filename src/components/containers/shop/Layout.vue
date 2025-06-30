@@ -168,7 +168,7 @@ export default {
     return {
       logo: logo,
       icon: icon,
-      isCollapseDesktop: true,
+      isCollapseDesktop: false,
       isCollapseMobile: false,
     }
   },
@@ -452,9 +452,14 @@ export default {
       this.addShopSocket()
     },
     deviceType: {
-      handler() {
-        this.isCollapseDesktop = false
-        this.isCollapseMobile = false
+      handler(newValue) {
+        if (newValue === 'mobile') {
+          this.isCollapseDesktop = false
+          this.isCollapseMobile = false
+        } else {
+          this.isCollapseDesktop = true
+          this.isCollapseMobile = false
+        }
       },
       immediate: true,
     },

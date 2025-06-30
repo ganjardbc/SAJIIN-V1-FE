@@ -3,7 +3,7 @@
     <div class="w-full flex flex-col gap-4 p-4">
       <div class="w-full flex flex-col gap-4">
         <AppEmpty v-if="!isThereDetails" title="KERANJANG KOSONG" />
-        <CardProduct :data.sync="details" />
+        <CardProduct v-else :data.sync="details" />
       </div>
 
       <div

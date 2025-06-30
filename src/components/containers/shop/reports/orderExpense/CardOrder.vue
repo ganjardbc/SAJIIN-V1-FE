@@ -1,66 +1,42 @@
 <template>
-  <div id="AppCardOrder">
-    <div class="card bg-white-grey no-padding margin margin-bottom-15px">
-      <div class="width width-100 display-flex space-between align-center wrap">
-        <div
-          class="width width-30 padding padding-top-10px padding-bottom-10px"
-        >
-          <div class="padding padding-5px content-center">
-            <div class="display-flex center align-center">
-              <i
-                class="fonts fonts-8 main-color fa fa-lg fa-info-circle margin margin-right-5px"
-              ></i>
-              <span
-                class="fonts fonts-9 normal grey overflow-ellipsis align-center"
-                >Jumlah Produk</span
-              >
-            </div>
-            <div
-              class="fonts fonts-11 semibold black overflow-ellipsis align-center"
-            >
-              {{ grandItem }} produk
-            </div>
-          </div>
+  <div id="AppCardOrder" class="w-full flex flex-col gap-4">
+    <div class="w-full flex flex-col gap-2">
+      <div class="flex-1 flex items-center gap-4">
+        <div class="w-1/2 flex items-center">
+          <i class="fa fa-lg fa-check-circle mr-2 text-sm text-gray-500" />
+          <div
+            class="text-sm font-normal text-gray-900"
+            >Jumlah Produk</div
+          >
         </div>
-        <div
-          class="width width-30 padding padding-top-10px padding-bottom-10px"
-        >
-          <div class="padding padding-5px border-left content-center">
-            <div class="display-flex center align-center">
-              <i
-                class="fonts fonts-8 main-color fa fa-lg fa-info-circle margin margin-right-5px"
-              ></i>
-              <span
-                class="fonts fonts-9 normal grey overflow-ellipsis align-center"
-                >Total Kembalian</span
-              >
-            </div>
-            <div
-              class="fonts fonts-11 semibold black overflow-ellipsis align-center"
-            >
-              {{ format(changeTotal) }}
-            </div>
-          </div>
+        <div class="flex-1 text-sm font-semibold text-black">
+          : {{ grandItem }} produk
         </div>
-        <div
-          class="width width-30 padding padding-top-10px padding-bottom-10px"
-        >
-          <div class="padding padding-5px border-left content-center">
-            <div class="display-flex center align-center">
-              <i
-                class="fonts fonts-8 main-color fa fa-lg fa-info-circle margin margin-right-5px"
-              ></i>
-              <span
-                class="fonts fonts-9 normal grey overflow-ellipsis align-center"
-                >Total Penjualan</span
-              >
-            </div>
-            <div
-              class="fonts fonts-11 semibold black overflow-ellipsis align-center"
-            >
-              {{ format(grandTotal) }}
-            </div>
-          </div>
+      </div>
+
+      <div class="flex-1 flex items-center gap-4">
+        <div class="w-1/2 flex items-center">
+          <i class="fa fa-lg fa-check-circle mr-2 text-sm text-gray-500" />
+          <div
+            class="text-sm font-normal text-gray-900"
+            >Total Kembalian</div
+          >
+        </div>
+        <div class="flex-1 text-sm font-semibold text-black">
+          : {{ format(changeTotal) }}
+        </div>
+      </div>
+
+      <div class="flex-1 flex items-center gap-4">
+        <div class="w-1/2 flex items-center">
+          <i class="fa fa-lg fa-check-circle mr-2 text-sm text-gray-500" />
+          <div
+            class="text-sm font-normal text-gray-900"
+            >Total Penjualan</div
+          >
+        </div>
+        <div class="flex-1 text-sm font-semibold text-black">
+          : {{ format(grandTotal) }}
         </div>
       </div>
     </div>
@@ -159,10 +135,8 @@
       </el-table-column>
     </el-table>
 
-    <div
-      class="width width-100 display-flex flex-end align-center padding padding-top-15px"
-    >
-      <div class="fonts fonts-10 normal black">Total {{ data.length }}</div>
+    <div class="w-full flex justify-between items-center">
+      <div class="text-sm text-black font-semibold">Total {{ data.length }}</div>
       <el-pagination
         background
         :current-page="page"

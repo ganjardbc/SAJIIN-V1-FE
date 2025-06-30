@@ -1,15 +1,18 @@
 <template>
-  <div id="App">
-    <AppHeaderMobile title="Laporan" />
-    <AppTabLinks :data="tabs" @onChange="onChange" />
-    <ProfitAndLoss v-if="selectedIndex === 'profit-and-loss'" />
-    <CashFlows v-if="selectedIndex === 'cash-flows'" />
-    <OrderExpense v-if="selectedIndex === 'financial-reports'" />
+  <div id="App" class="w-full">
+    <div class="w-full flex flex-col gap-4 p-4">
+      <h1 class="text-3xl text-black font-semibold">
+        Laporan
+      </h1>
+      <AppTabLinks :data="tabs" @onChange="onChange" />
+      <ProfitAndLoss v-if="selectedIndex === 'profit-and-loss'" />
+      <CashFlows v-if="selectedIndex === 'cash-flows'" />
+      <OrderExpense v-if="selectedIndex === 'financial-reports'" />
+    </div>
   </div>
 </template>
 <script>
 import AppTabLinks from '../../../modules/AppTabLinks'
-import AppHeaderMobile from '../../../modules/AppHeaderMobile'
 import ProfitAndLoss from './profitAndLoss/Index'
 import CashFlows from './cashFlows/Index'
 import OrderExpense from './orderExpense/Index'
@@ -42,7 +45,6 @@ export default {
   },
   components: {
     AppTabLinks,
-    AppHeaderMobile,
     ProfitAndLoss,
     CashFlows,
     OrderExpense,
