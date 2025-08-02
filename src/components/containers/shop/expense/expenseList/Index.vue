@@ -193,8 +193,6 @@ export default {
       loading: (state) => state.storeExpenseList.loading,
       loadingForm: (state) => state.storeExpenseList.loadingForm,
       typeForm: (state) => state.storeExpenseList.typeForm,
-      // dataExpenseType: (state) => state.storeExpenseList.expenseType.data,
-      // loadingExpenseType: (state) => state.storeExpenseList.expenseType.loading,
     }),
     typeForm: {
       get() {
@@ -215,7 +213,6 @@ export default {
     shopId(prevProps, nextProps) {
       if (prevProps !== nextProps) {
         this.getPaymentData()
-        // this.getExpenseTypeData()
         this.getData()
       }
     },
@@ -223,7 +220,6 @@ export default {
   methods: {
     ...mapActions({
       getDataExpenseList: 'storeExpenseList/getData',
-      // getDataExpenseType: 'storeExpenseList/getDataExpenseType',
       getDataPayment: 'storeExpenseList/getDataPayment',
       setPagination: 'storeExpenseList/setPagination',
       resetFormData: 'storeExpenseList/resetFormData',
