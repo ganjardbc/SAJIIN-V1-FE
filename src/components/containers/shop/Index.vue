@@ -1,5 +1,5 @@
 <template>
-  <div id="App" class="flex flex-col gap-4 p-4">
+  <div id="App" class="w-full lg:w-lg-false m-auto flex flex-col gap-4 p-4">
     <div class="relative bg-gray-100 rounded-xl p-4 flex flex-col gap-4">
       <div class="flex flex-col xl:flex-row gap-4">
         <div v-if="dataShop" class="flex-1 flex flex-col lg:flex-row justify-center items-center lg:items-start gap-4">

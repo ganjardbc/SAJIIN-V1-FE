@@ -26,13 +26,6 @@
                 <span class="label text-left">Edit</span>
               </button>
               <button
-                class="menu-item small"
-                @click="onDetail(dt)"
-              >
-                <i class="icon fa fa-lw fa-align-left"></i>
-                <span class="label text-left">Detail</span>
-              </button>
-              <button
                 v-if="isRoleOwner"
                 class="menu-item small"
                 @click="onDelete(dt)"
@@ -74,17 +67,6 @@
               icon="fa fa-lg fa-calculator"
               :caption="format(dt.price)"
             />
-          </div>
-          <div class="w-full flex justify-between items-center">
-            <div class="text-sm text-black font-semibold">Status</div>
-            <el-switch
-              v-model="dt.status"
-              :active-value="'active'"
-              :inactive-value="'inactive'"
-              active-text="Aktif"
-              inactive-text="Non-Aktif"
-              @change="onChangeProductStatus(dt)"
-            ></el-switch>
           </div>
         </div>
       </div>
@@ -138,6 +120,25 @@
           </div>
         </div>
       </AppCardCollapse>
+
+      <div class="flex justify-between items-center gap-2">
+        <el-switch
+          v-model="dt.status"
+          active-text="Aktif"
+          inactive-text="Non-Aktif"
+          :active-value="'active'"
+          :inactive-value="'inactive'"
+          @change="onChangeProductStatus(dt)"
+        ></el-switch>
+        <div class="flex justify-end items-center">
+          <el-button
+            size="medium"
+            @click="onDetail(dt)"
+          >
+            Detail
+          </el-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

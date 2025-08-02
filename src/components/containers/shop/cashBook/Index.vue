@@ -1,5 +1,5 @@
 <template>
-  <div id="App" class="w-full">
+  <div id="App" class="w-full lg:w-lg-false m-auto">
     <div class="w-full flex flex-col gap-4 p-4">
       <div class="w-full flex items-center justify-between">
         <h1 class="text-3xl text-black font-semibold">

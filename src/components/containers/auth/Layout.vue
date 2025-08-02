@@ -14,6 +14,10 @@ export default {
       } else {
         this.$router.replace({ name: 'select-shop' })
       }
+    } else {
+      if (this.$route.name !== 'login') {
+        this.$router.replace({ name: 'login' })
+      }
     }
   },
 }

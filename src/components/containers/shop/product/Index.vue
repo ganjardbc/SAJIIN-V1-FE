@@ -1,5 +1,5 @@
 <template>
-  <div id="ProductHome" class="w-full flex flex-col p-4">
+  <div id="ProductHome" class="w-full lg:w-lg-false m-auto flex flex-col p-4">
     <AppTabLinks :data="tabs" @onChange="onChange" />
     <Products v-if="selectedIndex === 'products'" />
     <Categories v-if="selectedIndex === 'categories'" />

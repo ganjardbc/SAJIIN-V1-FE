@@ -168,8 +168,8 @@ export default {
     return {
       logo: logo,
       icon: icon,
-      isCollapseDesktop: false,
-      isCollapseMobile: false,
+      isCollapseDesktop: true,
+      isCollapseMobile: true,
     }
   },
   components: {
@@ -457,8 +457,8 @@ export default {
           this.isCollapseDesktop = false
           this.isCollapseMobile = false
         } else {
-          this.isCollapseDesktop = false
-          this.isCollapseMobile = false
+          this.isCollapseDesktop = true
+          this.isCollapseMobile = true
         }
       },
       immediate: true,
