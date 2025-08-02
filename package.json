@@ -45,6 +45,7 @@
     "vue-session": "^1.0.0",
     "vue-socket.io": "^3.0.10",
     "vue-websocket": "^0.2.3",
+    "vue2-teleport": "^1.1.4",
     "vuejs-smart-table": "^0.0.7",
     "vuex": "^3.6.2"
   },

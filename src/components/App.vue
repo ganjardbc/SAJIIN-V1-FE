@@ -6,6 +6,8 @@
       @reloadApplication="reloadApplication"
     />
     <router-view />
+    <div id="portal-modal"></div>
+    <div id="portal-slider"></div>
   </div>
 </template>
 

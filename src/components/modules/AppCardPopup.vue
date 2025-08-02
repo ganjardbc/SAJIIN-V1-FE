@@ -1,51 +1,58 @@
 <template>
-  <div class="default-dialog">
-    <div
-      class="dialog-container"
-      :class="`w-${sizeResp} md:w-${size}`"
-    >
+  <Teleport to="#portal-modal">
+    <div class="default-dialog">
       <div
-        v-if="$slots.header && !disableHeader"
-        class="dialog-header"
+        class="dialog-container"
+        :class="`w-${sizeResp} md:w-${size}`"
       >
-        <slot name="header" />
-      </div>
-      <div
-        v-if="!$slots.header && !disableHeader"
-        class="dialog-header"
-      >
-        <div class="text-sm font-semibold">
-          {{ title }}
+        <div
+          v-if="$slots.header && !disableHeader"
+          class="dialog-header"
+        >
+          <slot name="header" />
         </div>
-        <div class="display-flex flex-end align-center">
-          <slot name="toolbar" />
-          <el-button
-            class="border-none"
-            circle
-            @click="onClose"
-          >
-            <i class="fa fa-lg fa-times"></i>
-          </el-button>
+        <div
+          v-if="!$slots.header && !disableHeader"
+          class="dialog-header"
+        >
+          <div class="text-sm font-semibold">
+            {{ title }}
+          </div>
+          <div class="display-flex flex-end align-center">
+            <slot name="toolbar" />
+            <el-button
+              class="border-none"
+              circle
+              @click="onClose"
+            >
+              <i class="fa fa-lg fa-times"></i>
+            </el-button>
+          </div>
         </div>
-      </div>
 
-      <div class="dialog-content">
-        <slot />
-      </div>
+        <div class="dialog-content">
+          <slot />
+        </div>
 
-      <div
-        v-if="$slots.footer"
-        class="dialog-footer"
-      >
-        <slot name="footer" />
+        <div
+          v-if="$slots.footer"
+          class="dialog-footer"
+        >
+          <slot name="footer" />
+        </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <script>
+import Teleport from 'vue2-teleport';
+
 export default {
   name: 'AppCardPopup',
+  components: {
+    Teleport,
+  },
   props: {
     title: {
       type: String,

@@ -1,10 +1,13 @@
 <template>
   <div
     id="SelectShop"
-    class="px-sm w-full md:w-1/2 p-4"
+    class="w-full px-4"
     v-loading="loading"
   >
-    <div class="rounded-lg shadow-md bg-white">
+    <div
+      class="mx-auto rounded-lg shadow-md bg-white"
+      style="max-width: 500px;"
+    >
       <div class="p-4 border-b border-gray-200">
         <div class="text-lg md:text-2xl text-black font-semibold">
           Masuk ke Toko

@@ -18,12 +18,12 @@
                 class="icon fa-solid"
                 :class="deviceType === 'mobile' 
                   ? {
-                    'fa-bars': !isCollapseMobile,
-                    'fa-bars-staggered': isCollapseMobile,
+                    'fa-bars-staggered': !isCollapseMobile,
+                    'fa-bars': isCollapseMobile,
                   }
                   : {
-                    'fa-bars': !isCollapseDesktop,
-                    'fa-bars-staggered': isCollapseDesktop,
+                    'fa-bars-staggered': !isCollapseDesktop,
+                    'fa-bars': isCollapseDesktop,
                   }
                 "
               />
@@ -457,7 +457,7 @@ export default {
           this.isCollapseDesktop = false
           this.isCollapseMobile = false
         } else {
-          this.isCollapseDesktop = true
+          this.isCollapseDesktop = false
           this.isCollapseMobile = false
         }
       },

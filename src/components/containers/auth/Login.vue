@@ -1,11 +1,13 @@
 <template>
   <div
     id="Login"
-    class="px-sm w-1/3"
-    style="width: 420px"
+    class="w-full px-4"
     v-loading="loading"
   >
-    <div class="px-6 py-8 rounded-lg shadow-md bg-white">
+    <div
+      class="mx-auto px-6 py-8 rounded-lg shadow-md bg-white"
+      style="max-width: 400px;"
+    >
       <div class="w-full flex items-center justify-between">
         <div class="text-3xl text-black font-semibold">
           Login
