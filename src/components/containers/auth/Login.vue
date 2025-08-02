@@ -2,11 +2,11 @@
   <div
     id="Login"
     class="w-full px-4"
-    v-loading="loading"
   >
     <div
       class="mx-auto px-6 py-8 rounded-lg shadow-md bg-white"
       style="max-width: 400px;"
+      v-loading="loading"
     >
       <div class="w-full flex items-center justify-between">
         <div class="text-3xl text-black font-semibold">
