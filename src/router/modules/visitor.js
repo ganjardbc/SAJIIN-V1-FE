@@ -13,12 +13,18 @@ const routes = {
       name: 'visitor-home',
       path: '/',
       component: Home,
+      meta: {
+        title: 'Home',
+      },
     },
     {
       name: 'visitor-product-detail',
       path: 'product/:productId',
       components: {
         visitorLayoutReload: ProductDetail,
+      },
+      meta: {
+        title: 'Detail Produk',
       },
     },
     {
@@ -27,6 +33,9 @@ const routes = {
       components: {
         visitorLayoutReload: Order,
       },
+      meta: {
+        title: 'Detail Pesanan',
+      },
     },
     {
       name: 'visitor-carts',
@@ -34,12 +43,18 @@ const routes = {
       components: {
         visitorLayoutReload: Carts,
       },
+      meta: {
+        title: 'Keranjang',
+      },
     },
     {
       name: 'visitor-checkout',
       path: 'checkout',
       components: {
         visitorLayoutReload: CheckOut,
+      },
+      meta: {
+        title: 'Checkout',
       },
     },
   ],

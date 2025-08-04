@@ -16,61 +16,50 @@
             <div class="text-sm text-center lg:text-left text-gray-500">
               {{ dataShop && dataShop.location }}
             </div>
-            <div class="flex items-center justify-center lg:justify-start pt-2">
-              <el-button size="medium" circle>
-                <i class="fa fa-comment"></i>
-              </el-button>
-              <el-button size="medium" circle>
-                <i class="fa fa-phone"></i>
-              </el-button>
+            <div class="flex flex-col lg:flex-row gap-4 items-center justify-center lg:justify-start pt-2">
+              <div class="flex-1 flex items-center gap-2">
+                <router-link :to="{ name: 'shop-detail'}">
+                  <el-button size="medium" circle>
+                    <i class="fa fa-store"></i>
+                  </el-button>
+                </router-link>
+                <router-link :to="{ name: 'shop-operational'}">
+                  <el-button size="medium" circle>
+                    <i class="fa fa-clock"></i>
+                  </el-button>
+                </router-link>
+                <router-link :to="{ name: 'shop-contact'}">
+                  <el-button size="medium" circle>
+                    <i class="fa fa-phone"></i>
+                  </el-button>
+                </router-link>
+                <router-link :to="{ name: 'shop-configuration'}">
+                  <el-button size="medium" circle>
+                    <i class="fa fa-cog"></i>
+                  </el-button>
+                </router-link>
+              </div>
+              <div class="flex-1 flex items-center justify-end">
+                <el-button
+                  size="medium"
+                  :disabled="!dataShop || !dataShop.is_digital_menu_active"
+                  @click="onOpenQrCode"
+                >
+                  <i class="fa fa-qrcode mr-2"></i>
+                  QR Toko
+                </el-button>
+                <el-button
+                  size="medium"
+                  :disabled="!dataShop || !dataShop.is_digital_menu_active"
+                  @click="onOpenDigitalMenu(dataShop)"
+                >
+                  <i class="fa fa-globe mr-2"></i>
+                  Digital Menu
+                </el-button>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- <div class="flex-1 flex flex-col gap-4">
-          <div
-            v-if="dataEmployee"
-            class="bg-white rounded-lg shadow-md p-3 flex gap-3 items-center"
-          >
-            <el-badge
-              is-dot
-              type="success"
-            >
-              <el-avatar
-                size="large"
-                :src="`${employeeImageCoverUrl}${dataEmployee.image}`"
-                style="width: 38; height: 38"
-              />
-            </el-badge>
-            <div class="flex-1 flex flex-col">
-              <div class="flex-1 text-sm text-black capitalize font-semibold truncate">
-                {{ dataEmployee && dataEmployee.name }}
-                <AppCardCapsule :data="dataEmployee.status" class="ml-2" />
-              </div>
-              <div class="text-xs text-gray-500 capitalize truncate">
-                {{ dataUser && dataUser.role_name }} | Shift 1
-              </div>
-            </div>
-            <el-button size="medium" circle @click="$router.push({ name: 'shop-profile' })">
-              <i class="fa fa-edit"></i>
-            </el-button>
-          </div>
-
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
-            <div
-              v-for="(employee, i) in listOfEmployee"
-              :key="i"
-              class="p-2 bg-white rounded-lg border border-gray-200"
-            >
-              <div class="flex-1 text-sm text-black capitalize font-semibold truncate">
-                {{ employee.name }}
-              </div>
-              <div class="flex-1 text-xs text-gray-500 truncate">
-                {{ employee.role }} | {{ employee.shift }}
-              </div>
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
 
@@ -164,7 +153,13 @@
           </span>
         </div>
       </div>
-    </div>    
+    </div>
+
+    <AppPopupQrCode
+      :visibility.sync="visibleQrCode"
+      :data="dataShop"
+      @onClose="onCloseQrCode"
+    />
   </div>
 </template>
 <script>
@@ -173,6 +168,7 @@ import AppEmpty from '../../modules/AppEmpty'
 import AppCardAvatar from '../../modules/AppCardAvatar'
 import AppCardCircle from '../../modules/AppCardCircle'
 import AppCardCapsule from '../../modules/AppCardCapsule'
+import AppPopupQrCode from '../../modules/AppPopupQrCode'
 
 export default {
   name: 'App',
@@ -184,8 +180,16 @@ export default {
       amp: true,
     },
   },
+  components: {
+    AppEmpty,
+    AppCardAvatar,
+    AppCardCircle,
+    AppCardCapsule,
+    AppPopupQrCode,
+  },
   data() {
     return {
+      visibleQrCode: false,
       listOfEmployee: [
         {
           name: 'Employee 1',
@@ -207,7 +211,6 @@ export default {
   computed: {
     ...mapState({
       dataUser: (state) => state.storeAuth.user,
-      // dataEmployee: (state) => state.storeAuth.employee,
       dataShop: (state) => state.storeShop.form,
       matrix: (state) => state.storeDashboard.matrix,
       cashbook: (state) => state.storeCashBook.dataCurrent,
@@ -256,11 +259,21 @@ export default {
       ]
     },
   },
-  components: {
-    AppEmpty,
-    AppCardAvatar,
-    AppCardCircle,
-    AppCardCapsule,
-  },
+  methods: {
+    onOpenDigitalMenu(data) {
+      window.open(
+        `${this.initUrl}visitor/${data.shop_id}`,
+        '_blank'
+      )
+    },
+
+    // QR CODE
+    onOpenQrCode() {
+      this.visibleQrCode = true
+    },
+    onCloseQrCode() {
+      this.visibleQrCode = false
+    },
+  }
 }
 </script>

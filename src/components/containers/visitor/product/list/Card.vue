@@ -1,43 +1,39 @@
 <template>
-  <div id="App">
+  <div id="App" class="flex flex-col gap-4">
     <div
       v-for="(dt, i) in dataProduct"
       :key="i"
-      class="margin margin-top-15px margin-bottom-15px"
+      class="w-full bg-white border border-gray-200 rounded-lg overflow-hidden p-4 flex flex-col gap-4"
+      :class="{
+        'border-gray-400': dt.status !== 'active',
+        'bg-gray-100': dt.status !== 'active',
+      }"
     >
-      <div
-        :class="`card no-padding box-shadow ${dt.status === 'active' ? 'bg-white' : 'bg-white-grey'}`"
+      <router-link
+        :to="{
+          name: 'visitor-product-detail',
+          params: { productId: dt.product_id },
+        }"
       >
-        <router-link
-          :to="{
-            name: 'visitor-product-detail',
-            params: { productId: dt.product_id },
-          }"
-        >
-          <div class="display-flex margin margin-15px">
-            <div style="width: calc(100% - 75px)">
-              <div class="fonts fonts-11 semibold">{{ dt.name }}</div>
-              <div class="fonts fonts-9 normal grey overflow-ellipsis">
-                {{ dt.description }}
-              </div>
-            </div>
-            <div style="width: 60px; margin-left: 15px">
-              <div class="image image-padding border-full">
-                <img
-                  v-if="dt.image"
-                  :src="productImageThumbnailUrl + dt.image"
-                  alt=""
-                  class="post-center"
-                />
-                <i
-                  v-else
-                  class="post-middle-absolute icn fa fa-lg fa-image"
-                ></i>
-              </div>
+        <div class="flex gap-4 justify-between">
+          <div class="flex-1 flex flex-col gap-1 overflow-hidden">
+            <div class="text-sm text-black font-semibold">{{ dt.name }}</div>
+            <div class="text-xs text-gray-500 truncate">
+              {{ dt.description }}
             </div>
           </div>
-        </router-link>
-        <div class="display-flex space-between align-center margin margin-15px">
+          <AppCardAvatar
+            :src="`${productImageThumbnailUrl}${dt.image}`"
+            shape="square"
+            size="medium"
+            fit="contain"
+            custom-class="shadow-none border border-gray-200"
+          />
+        </div>
+      </router-link>
+
+      <div class="w-full flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div class="flex-1 flex items-center justify-between gap-2">
           <AppCardCaption
             icon="fa fa-lg fa-calculator"
             :caption="
@@ -48,26 +44,25 @@
                   : 0
             "
           />
-          <div class="display-flex flex-end align-center">
-            <div
-              v-if="dt.details.length > 0"
-              class="fonts fonts-10 grey normal"
-            >
-              {{ dt.details.length }} Varian
-            </div>
-            <button
-              class="btn btn-main-reverse with-border btn-small btn-small-radius"
-              style="margin-left: 15px"
-              :disabled="!isButtonEnable(dt)"
-              @click="addToCart(dt)"
-            >
-              <i
-                :class="`${dt.status === 'active' && 'icn fa fa-lg fa-plus'}`"
-              ></i>
-              {{ dt.status === 'active' ? 'Tambah' : 'Stok Kosong' }}
-            </button>
+          <div
+            v-if="dt.details.length > 0"
+            class="text-xs text-gray-600"
+          >
+            {{ dt.details.length }} Varian
           </div>
         </div>
+
+        <el-button
+          size="medium"
+          :disabled="!isButtonEnable(dt)"
+          @click="addToCart(dt)"
+        >
+          <i
+            v-if="dt.status === 'active'"
+            class="fa fa-lw fa-plus mr-2"
+          ></i>
+          {{ dt.status === 'active' ? 'Keranjang' : 'Stok Kosong' }}
+        </el-button>
       </div>
     </div>
 
@@ -81,8 +76,7 @@
 <script>
 import { mapState } from 'vuex'
 import AppCardCaption from '../../../../modules/AppCardCaption'
-import AppCardCapsule from '../../../../modules/AppCardCapsule'
-import AppCardCollapse from '../../../../modules/AppCardCollapse'
+import AppCardAvatar from '../../../../modules/AppCardAvatar'
 import AddCartPopup from '../../cart/AddCartPopup'
 
 export default {
@@ -95,8 +89,7 @@ export default {
   },
   components: {
     AppCardCaption,
-    AppCardCapsule,
-    AppCardCollapse,
+    AppCardAvatar,
     AddCartPopup,
   },
   props: {

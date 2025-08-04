@@ -1,6 +1,6 @@
 <template>
-  <div id="App" class="padding padding-15px">
-    <div class="fonts fonts-11 semibold">Kategori</div>
+  <div id="App" class="flex flex-col gap-2">
+    <div class="text-sm text-black font-semibold">Kategori</div>
     <AppButtonCapsuleSlider
       :index.sync="selectedIndex"
       customAllLabel="Semua Produk"

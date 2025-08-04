@@ -1,5 +1,5 @@
 <template>
-  <div id="App">
+  <div id="App" class="flex flex-col gap-4">
     <Category v-if="isThereOpenedCashbook" />
     <Product v-if="isThereOpenedCashbook" />
     <AppEmpty v-if="!isThereOpenedCashbook" title="Toko Sedang Tutup" />

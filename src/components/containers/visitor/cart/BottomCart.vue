@@ -1,31 +1,19 @@
 <template>
   <div
     id="App"
-    style="
-      position: fixed;
-      bottom: 10px;
-      right: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      z-index: 100;
-    "
+    class="fixed bottom-0 left-0 right-0 py-4 flex flex-col gap-4 items-center justify-center"
   >
     <router-link :to="{ name: 'visitor-carts' }">
-      <button
-        class="btn btn-main-reverse with-border btn-radius-rounded box-shadow"
-        style="
-          display: flex;
-          align-items: center;
-          padding-top: 15px;
-          padding-bottom: 15px;
-        "
+      <el-button
+        size="large"
+        type="primary"
+        class="rounded-full shadow-lg"
       >
-        <i class="icn icn-left fa fa-lg fa-shopping-cart"></i>
-        <div class="fonts fonts-11 main-color semibold" style="line-height: 0">
+        <i class="fa fa-lg fa-shopping-cart mr-2"></i>
+        <span class="text-sm text-white font-semibold">
           {{ orderQuantity }} produk | {{ format(orderSubtotal) }}
-        </div>
-      </button>
+        </span>
+      </el-button>
     </router-link>
   </div>
 </template>

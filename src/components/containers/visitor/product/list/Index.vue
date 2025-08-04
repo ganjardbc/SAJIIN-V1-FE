@@ -1,21 +1,27 @@
 <template>
-  <div id="App" class="padding padding-15px">
-    <div class="fonts fonts-11 semibold">Produk</div>
-    <AppTabs
-      :selectedIndex.sync="selectedIndex"
-      :isScrollable="false"
-      :isFull="true"
-      :data="tabs"
-      :onChange="(data) => onChangeTabs(data)"
-      class="margin margin-bottom-20px margin-top-20px"
-    />
-    <AppEmpty v-if="!loading && data.length === 0" />
-    <Card :data.sync="data" status="active" />
-    <AppLoader v-if="loading" />
-    <div v-if="loadMore" class="padding padding-15px display-flex center">
-      <button class="btn btn-sekunder btn-small-radius" @click="getProductData">
-        Load More
-      </button>
+  <div id="App" class="flex flex-col gap-2">
+    <div class="text-sm text-black font-semibold">Produk</div>
+
+    <div class="flex flex-col gap-4">
+      <AppTabs
+        :selectedIndex.sync="selectedIndex"
+        :isScrollable="false"
+        :isFull="true"
+        :data="tabs"
+        :onChange="(data) => onChangeTabs(data)"
+      />
+
+      <AppEmpty v-if="!loading && data.length === 0" />
+
+      <Card :data.sync="data" status="active" />
+
+      <AppLoader v-if="loading" />
+
+      <div v-if="loadMore" class="w-full flex justify-center">
+        <el-button size="medium" @click="getProductData">
+          Load More
+        </el-button>
+      </div>
     </div>
   </div>
 </template>

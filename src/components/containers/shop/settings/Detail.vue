@@ -6,7 +6,7 @@
           <AppCardAvatar
             :src="getImage"
             size="large"
-            custom-class="bg-contain"
+            fit="contain"
           />
           <div class="flex items-center">
             <el-button
