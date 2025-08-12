@@ -8,6 +8,7 @@
     :style="{
       width: iconSize.width,
       height: iconSize.height,
+      backgroundColor: bgColor,
     }"
   >
     <i
@@ -16,6 +17,10 @@
         icon,
         color,
       ]"
+      :style="{
+        color: iconColor,
+        fontSize: iconSize,
+      }"
     ></i>
   </div>
 </template>
@@ -38,6 +43,18 @@ export default {
     color: {
       type: String,
       default: 'text-black',
+    },
+    bgColor: {
+      type: String,
+      default: '',
+    },
+    iconColor: {
+      type: String,
+      default: '',
+    },
+    iconSize: {
+      type: String,
+      default: '',
     },
   },
   computed: {
