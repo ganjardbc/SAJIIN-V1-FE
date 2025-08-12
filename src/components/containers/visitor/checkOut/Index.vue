@@ -1,142 +1,130 @@
 <template>
-  <div id="App">
-    <AppMobileLayout title="Check Out">
-      <AppEmpty v-if="dataCart.length === 0" />
+  <div class="w-full flex flex-col gap-4 pt-4 px-4 lg:px-0">
+    <AppEmpty v-if="dataCart.length === 0" />
 
-      <div
-        v-if="dataCart.length > 0"
-        class="padding padding-10px"
-        style="padding-bottom: 50px"
-      >
-        <div class="card box-shadow bg-white margin margin-bottom-20px">
-          <div class="fonts fonts-11 semibold black">Pelanggan</div>
-          <div class="field-group">
-            <el-input
-              placeholder="Nama"
-              type="text"
-              v-model="formOrder.customer_name"
-            ></el-input>
-            <FieldTable
-              class="margin margin-top-15px"
-              :value="formOrder.table_id"
-              @onChange="onChangeTable"
-              @onClear="onClearTable"
-            />
-          </div>
+    <div
+      v-if="dataCart.length > 0"
+      class="flex flex-col gap-4"
+    >
+      <div class="text-lg text-black font-semibold">
+        Pelanggan
+      </div>
+
+      <div class="relative p-4 rounded-lg border border-gray-300 bg-white flex flex-col gap-2">
+        <div class="flex flex-col gap-4">
+          <el-input
+            placeholder="Nama"
+            type="text"
+            v-model="formOrder.customer_name"
+          />
+
+          <FieldTable
+            :value="formOrder.table_id"
+            @onChange="onChangeTable"
+            @onClear="onClearTable"
+          />
         </div>
+      </div>
 
-        <div class="card bg-white box-shadow margin margin-bottom-20px">
-          <div class="fonts fonts-11 semibold black">Produk</div>
-          <div class="display-flex space-between margin margin-bottom-10px">
-            <div class="width width-70">
-              <div class="fonts fonts-10 grey">Produk</div>
+      <div class="text-lg text-black font-semibold">
+        Produk
+      </div>
+
+      <div class="relative p-4 rounded-lg border border-gray-300 bg-white flex flex-col gap-2">
+        <div class="flex flex-col gap-4">
+          <div class="grid grid-cols-3">
+            <div class="col-span-2">
+              <div class="text-sm text-black font-semibold">
+                Produk
+              </div>
             </div>
-            <div class="width width-30">
-              <div class="fonts fonts-10 grey">Harga</div>
+            <div class="col-span-1">
+              <div class="text-sm text-black font-semibold">
+                Harga
+              </div>
             </div>
           </div>
+
           <div
             v-for="(dt, index) in dataCart"
             :key="index"
-            class="display-flex space-between margin margin-bottom-15px"
+            class="grid grid-cols-3"
           >
-            <div class="width width-70 display-flex">
-              <div style="width: 60px; margin-right: 15px">
-                <div class="image image-padding border-full">
-                  <img
-                    v-if="dt.product_image"
-                    :src="productImageThumbnailUrl + dt.product_image"
-                    alt=""
-                    class="post-center"
-                  />
-                  <i
-                    v-else
-                    class="post-middle-absolute icn fa fa-lg fa-image"
-                  ></i>
-                </div>
-              </div>
-              <div style="width: calc(100% - 75px)">
-                <div class="display-flex">
-                  <span class="fonts fonts-10 semibold black">{{
-                    dt.product_name
-                  }}</span>
+            <div class="col-span-2 flex gap-4">
+              <AppCardAvatar
+                :src="`${productImageThumbnailUrl}${dt.product_image}`"
+                shape="square"
+                size="small"
+                fit="contain"
+                custom-class="shadow-none border border-gray-200"
+              />
+
+              <div class="flex-1 flex flex-col gap-2">
+                <div class="flex flex-col">
+                  <span class="text-sm text-black font-semibold">
+                    {{ dt.product_name }}
+                  </span>
                   <span
                     v-if="dt.product_detail"
-                    class="fonts fonts-10 normal black margin margin-left-5px"
+                    class="text-sm text-gray-500 ml-2"
                   >
                     - {{ dt.product_detail }}</span
                   >
                 </div>
-                <div class="fonts fonts-9 grey">
+
+                <div class="text-sm text-gray-500">
                   {{ dt.quantity }} x {{ format(dt.price) }}
-                  <!-- <span v-if="dt.is_discount" class="fonts fonts-9 grey text-line">{{ format(dt.second_price) }}</span> -->
                 </div>
-                <div v-if="dt.product_toping" class="fonts fonts-9 grey">
+
+                <div v-if="dt.product_toping" class="text-sm text-gray-500">
                   {{ dt.quantity }} {{ dt.product_toping }} x
                   {{ format(dt.toping_price) }}
                 </div>
-                <div v-if="dt.note" class="fonts fonts-9 grey">
+
+                <div v-if="dt.note" class="text-sm text-gray-500">
                   {{ dt.note }}
                 </div>
               </div>
             </div>
-            <div class="width width-30">
-              <div class="fonts fonts-10 semibold black">
+            <div class="col-span-1">
+              <div class="text-sm text-black font-semibold">
                 {{ format(dt.subtotal) }}
               </div>
             </div>
           </div>
-          <div
-            class="padding padding-bottom-5px margin margin-bottom-15px border-bottom"
-          ></div>
-          <div class="display-flex space-between">
-            <div class="width width-70">
-              <div class="fonts fonts-10 semibold black">
+
+          <div class="grid grid-cols-3 pt-4 border-t border-gray-300">
+            <div class="col-span-2">
+              <div class="text-sm text-black font-semibold">
                 Total ({{ orderQuantity }} produk)
               </div>
             </div>
-            <div class="width width-30">
-              <div class="fonts fonts-10 semibold black">
+            <div class="col-span-1">
+              <div class="text-sm text-black font-semibold">
                 {{ format(orderSubtotal) }}
               </div>
             </div>
-          </div>
-          <div
-            class="padding padding-bottom-15px margin margin-bottom-15px border-bottom dashed"
-          ></div>
-          <div class="display-flex space-between">
-            <div class="width width-70">
-              <div class="fonts fonts-10 normal black">Diskon</div>
+            <div class="col-span-2">
+              <div class="text-sm text-gray-500">Diskon</div>
             </div>
-            <div class="width width-30">
-              <div class="fonts fonts-10 normal black">{{ format(0) }}</div>
+            <div class="col-span-1">
+              <div class="text-sm text-gray-500">{{ format(0) }}</div>
             </div>
           </div>
-          <!-- HIDDEN TEMPORARY -->
-          <!-- <div v-if="isThereDiscount" class="padding padding-bottom-15px margin margin-bottom-15px border-bottom"></div>
-                    <div v-if="isThereDiscount" class="display-flex space-between">
-                        <div class="width width-70">
-                            <div class="fonts fonts-10 normal black">Discount</div>
-                        </div>
-                        <div class="width width-30">
-                            <div class="fonts fonts-10 normal black">{{ format(totalDiscount) }}</div>
-                        </div>
-                    </div> -->
         </div>
       </div>
+    </div>
 
-      <div class="navbar-bottom">
-        <div class="navbar-bottom-content padding padding-10px">
-          <button
-            class="btn btn-full btn-main"
-            :disabled="!enableButtonCreateOrder"
-            @click="onCreateOrder"
-          >
-            Buat Pesanan
-          </button>
-        </div>
-      </div>
-    </AppMobileLayout>
+    <div class="sticky bottom-0 bg-white z-10 w-full border-t border-gray-300 py-4 px-4 lg:px-0">
+      <el-button
+        type="primary"
+        class="w-full"
+        :disabled="!enableButtonCreateOrder"
+        @click="onCreateOrder"
+      >
+        Buat Pesanan
+      </el-button>
+    </div>
 
     <AppPopupConfirmed
       v-if="visibleConfirmed"
@@ -157,12 +145,12 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import AppMobileLayout from '../../../modules/AppMobileLayout'
 import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
 import AppLoader from '../../../modules/AppLoader'
 import AppEmpty from '../../../modules/AppEmpty'
+import AppCardAvatar from '../../../modules/AppCardAvatar'
 import FieldTable from '../table/Index'
 
 export default {
@@ -186,12 +174,12 @@ export default {
     }
   },
   components: {
-    AppMobileLayout,
     AppPopupLoader,
     AppPopupConfirmed,
     AppPopupAlert,
     AppLoader,
     AppEmpty,
+    AppCardAvatar,
     FieldTable,
   },
   computed: {

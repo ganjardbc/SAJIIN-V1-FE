@@ -16,7 +16,7 @@
               custom-class="shadow-none border border-gray-200"
             />
             <div class="flex-1 flex flex-col gap-2">
-              <div class="flex-1 flex flex-row items-center gap-2 justify-between">
+              <div class="flex flex-row gap-2 justify-between">
                 <div class="text-lg text-black font-semibold">
                   {{ data.product.name }}
                 </div>
@@ -204,7 +204,11 @@ export default {
     },
     enableButtonAddProduct() {
       let status = false
-      if (this.data.product.status === 'inactive') {
+      if (
+        this.data &&
+        this.data.product &&
+        this.data.product.status === 'inactive'
+      ) {
         status = true
       }
       if (this.form.quantity === 0) {

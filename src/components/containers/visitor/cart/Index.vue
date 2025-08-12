@@ -1,63 +1,57 @@
 <template>
-  <div id="App">
-    <AppMobileLayout title="Keranjang">
-      <div slot="right-button">
-        <button
-          class="btn btn-main-reverse with-hover btn-small-radius"
-          @click="deleteAllProduct"
-        >
-          Hapus Semua
-        </button>
+  <div class="w-full flex flex-col gap-4">
+    <div class="w-full pt-4 flex items-center justify-between">
+      <div class="text-lg text-black font-semibold">
+        Keranjang ({{ orderQuantity }})
       </div>
-
-      <AppEmpty v-if="data.length === 0" />
-
-      <div
-        v-if="data"
-        class="padding padding-10px"
-        style="padding-top: 0; padding-bottom: 130px"
+      <el-button
+        size="small"
+        @click="deleteAllProduct"
       >
-        <Card :data.sync="data" />
-      </div>
+        Hapus Semua
+      </el-button>
+    </div>
 
-      <div class="navbar-bottom">
-        <div class="navbar-bottom-content padding padding-10px">
-          <div class="card bg-white box-shadow margin margin-bottom-20px">
-            <div class="display-flex space-between">
-              <div class="fonts fonts-10 semibold black">
-                Total ({{ orderQuantity }} produk)
-              </div>
-              <div class="fonts fonts-10 semibold main-color align-right">
-                {{ format(orderSubtotal) }}
-              </div>
-            </div>
-            <div class="display-flex space-between">
-              <div class="fonts fonts-10 normal black">Diskon</div>
-              <div class="fonts fonts-10 normal black align-right">
-                {{ format(0) }}
-              </div>
-            </div>
-            <!-- HIDDEN TEMPORARY -->
-            <!-- <div v-if="isThereDiscount" class="display-flex space-between">
-                            <div class="fonts fonts-10 normal black">Discount</div>
-                            <div class="fonts fonts-10 normal black align-right">{{ format(totalDiscount) }}</div>
-                        </div> -->
+    <AppEmpty v-if="data.length === 0" />
+
+    <Card
+      v-if="data.length > 0"
+      :data.sync="data"
+    />
+
+    <div class="sticky bottom-0 bg-white z-10 w-full border-t border-gray-300 py-4 px-4 lg:px-0 flex flex-col gap-4">
+      <div class="relative p-4 bg-gray-100 rounded-lg">
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-black font-semibold">
+            Total ({{ orderQuantity }} produk)
           </div>
-          <button
-            class="btn btn-full btn-main"
-            :disabled="!enableButtonCheckout"
-            @click="onCheckOut"
-          >
-            Lanjut Check Out
-          </button>
+          <div class="text-sm text-vermillion-500 font-semibold text-right">
+            {{ format(orderSubtotal) }}
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-gray-500 font-normal">
+            Diskon
+          </div>
+          <div class="text-sm text-gray-500 font-normal text-right">
+            {{ format(0) }}
+          </div>
         </div>
       </div>
-    </AppMobileLayout>
+
+      <el-button
+        type="primary"
+        class="w-full"
+        :disabled="!enableButtonCheckout"
+        @click="onCheckOut"
+      >
+        Lanjut Check Out
+      </el-button>
+    </div>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import AppMobileLayout from '../../../modules/AppMobileLayout'
 import AppLoader from '../../../modules/AppLoader'
 import AppEmpty from '../../../modules/AppEmpty'
 import Card from './Card'
@@ -73,7 +67,6 @@ export default {
     },
   },
   components: {
-    AppMobileLayout,
     AppLoader,
     AppEmpty,
     Card,
