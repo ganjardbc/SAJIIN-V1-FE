@@ -1,23 +1,25 @@
 <template>
   <div class="w-full flex flex-col gap-4">
-    <div class="w-full pt-4 flex items-center justify-between">
-      <div class="text-lg text-black font-semibold">
-        Keranjang ({{ orderQuantity }})
+    <div class="w-full pt-4 px-4 lg:px-0 flex flex-col gap-4">
+      <div class="w-full flex items-center justify-between">
+        <div class="text-lg text-black font-semibold">
+          Keranjang ({{ orderQuantity }})
+        </div>
+        <el-button
+          size="small"
+          @click="deleteAllProduct"
+        >
+          Hapus Semua
+        </el-button>
       </div>
-      <el-button
-        size="small"
-        @click="deleteAllProduct"
-      >
-        Hapus Semua
-      </el-button>
+
+      <AppEmpty v-if="data.length === 0" />
+
+      <Card
+        v-if="data.length > 0"
+        :data.sync="data"
+      />
     </div>
-
-    <AppEmpty v-if="data.length === 0" />
-
-    <Card
-      v-if="data.length > 0"
-      :data.sync="data"
-    />
 
     <div class="sticky bottom-0 bg-white z-10 w-full border-t border-gray-300 py-4 px-4 lg:px-0 flex flex-col gap-4">
       <div class="relative p-4 bg-gray-100 rounded-lg">

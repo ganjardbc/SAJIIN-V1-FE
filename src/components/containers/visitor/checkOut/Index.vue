@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full flex flex-col gap-4 pt-4 px-4 lg:px-0">
+  <div class="w-full flex flex-col gap-4 pt-4">
     <AppEmpty v-if="dataCart.length === 0" />
 
     <div
       v-if="dataCart.length > 0"
-      class="flex flex-col gap-4"
+      class="flex flex-col gap-4 px-4 lg:px-0"
     >
       <div class="text-lg text-black font-semibold">
         Pelanggan
