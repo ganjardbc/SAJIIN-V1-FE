@@ -401,7 +401,7 @@ export default {
         },
         {
           icon: 'fa fa-lg fa-box',
-          label: 'Product',
+          label: 'Produk',
           value: 0,
           link: 'shop-products',
           permission: 'products',
