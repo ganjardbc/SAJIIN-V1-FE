@@ -1,66 +1,80 @@
 <template>
-  <div id="admin">
-    <div :class="`sidebar ${visibleSidebar && 'show'}`">
+  <div
+    class="default-layout"
+    :class="{
+      'collapse': isCollapseDesktop,
+      'mobile-collapse': isCollapseMobile,
+    }"
+  >
+    <div class="w-full h-full">
       <div class="header">
-        <div class="header-content display-flex space-between align-center">
-          <div class="width width-90px" style="margin-left: -5px">
-            <div class="title">Admin</div>
+        <div class="flex-1 flex gap-2 items-center">
+          <div class="menu" @click="onOpenSidebar">
+            <i
+              class="icon fa-solid"
+              :class="deviceType === 'mobile'
+                ? {
+                  'fa-bars-staggered': !isCollapseMobile,
+                  'fa-bars': isCollapseMobile,
+                }
+                : {
+                  'fa-bars-staggered': !isCollapseDesktop,
+                  'fa-bars': isCollapseDesktop,
+                }
+              "
+            />
           </div>
-          <button
-            class="close-button btn btn-icon btn-white btn-circle"
-            @click="onCloseSidebar"
-          >
-            <i class="fa fa-lg fa-times"></i>
-          </button>
-        </div>
-      </div>
-      <div class="content">
-        <AppListMenu
-          :data.sync="sidebar"
-          :isSidebarSmall="true"
-          @onClick="onCloseSidebar"
-        />
-      </div>
-    </div>
-    <div class="main">
-      <div class="header">
-        <div class="header-content-fixed">
-          <div class="header-content-main">
-            <div class="header-content-main-left mobile-visible">
-              <button
-                class="btn btn-white btn-icon btn-circle margin margin-right-5px"
-                @click="onOpenSidebar"
-              >
-                <i class="icn fa fa-lw fa-bars"></i>
-              </button>
-            </div>
-            <div class="header-content-main-center">
-              <router-link
-                :to="{ name: 'admin-home' }"
-                class="width width-90px"
-              >
-                <img :src="logo" alt="" style="width: 100%" />
-              </router-link>
-            </div>
-            <div class="header-content-main-right">
-              <AppCardProfile :data.sync="dataUser" />
-            </div>
+          <div class="title">
+            {{ metaTitle }}
           </div>
         </div>
+
+        <router-link
+          :to="{ name: 'admin-home' }"
+          class="logo"
+        >
+          <img :src="logo" alt="" style="width: 100%; height: 100%" />
+        </router-link>
+
+        <div class="flex-1 flex items-center justify-end gap-2">
+          <router-link :to="{ name: 'admin-profile' }" class="menu">
+            <i class="icon fa-solid fa-user" />
+            <span class="label">
+              {{ dataUser ? dataUser.name : 'Profile' }}
+            </span>
+          </router-link>
+        </div>
       </div>
-      <div class="main-content">
-        <div class="main-content-smalls">
+
+      <div class="content--full transition-all duration-300">
+        <div class="sidebar transition-all duration-300">
+          <div class="header mobile-only z-10 bg-white">
+            <div class="flex-1 text-lg text-black font-semibold">
+              Menu
+            </div>
+            <el-button
+              size="large"
+              circle
+              class="border-none"
+              @click="onOpenSidebar"
+            >
+              <i class="fa fa-lg fa-times" />
+            </el-button>
+          </div>
+
+          <div class="flex flex-col gap-4 p-4">
+            <AppListMenu
+              :data.sync="sidebar"
+              @onClick="onMenuSidebar"
+            />
+          </div>
+        </div>
+
+        <div class="viewer transition-all duration-300">
           <router-view />
         </div>
-        <div class="display-flex center padding padding-20px">
-          <div class="fonts fonts-10 grey align-center">{{ appVersion }}</div>
-        </div>
       </div>
     </div>
-
-    <AppToast />
-
-    <AppToastMessage />
   </div>
 </template>
 
@@ -70,108 +84,8 @@ import VueLoadImage from 'vue-load-image'
 import logo from '@/assets/img/logo.png'
 import icon from '@/assets/img/icon.png'
 import AppListMenu from '../../modules/AppListMenu'
-import AppToast from '../../modules/AppToast'
-import AppToastMessage from '../../modules/AppToastMessage'
 import AppCardNotification from '../../modules/AppCardNotification'
 import AppCardProfile from '../../modules/AppCardProfile'
-
-const defaultSidebar = [
-  {
-    icon: 'fa fa-lg fa-database',
-    label: 'MASTERDATA',
-    value: 0,
-    disableMenu: false,
-    menu: [
-      {
-        icon: 'fa fa-lg fa-list',
-        label: 'Bizpar',
-        value: 0,
-        link: 'admin-bizpars',
-        permission: 'bizpars',
-      },
-      {
-        icon: 'fa fa-lg fa-calculator',
-        label: 'Pembayaran',
-        value: 0,
-        link: 'admin-payments',
-        permission: 'payments',
-      },
-    ],
-  },
-  {
-    icon: 'fa fa-lg fa-database',
-    label: 'USER',
-    value: 0,
-    disableMenu: false,
-    menu: [
-      {
-        icon: 'fa fa-lg fa-key',
-        label: 'Permission',
-        value: 0,
-        link: 'admin-permissions',
-        permission: 'permissions',
-      },
-      {
-        icon: 'fa fa-lg fa-flag',
-        label: 'Role',
-        value: 0,
-        link: 'admin-roles',
-        permission: 'roles',
-      },
-      {
-        icon: 'fa fa-lg fa-users',
-        label: 'User',
-        value: 0,
-        link: 'admin-users',
-        permission: 'users',
-      },
-    ],
-  },
-  {
-    icon: 'fa fa-lg fa-database',
-    label: 'TOKO',
-    value: 0,
-    disableMenu: false,
-    menu: [
-      {
-        icon: 'fa fa-lg fa-store',
-        label: 'Toko',
-        value: 0,
-        link: 'admin-shops',
-        permission: 'shops',
-      },
-      {
-        icon: 'fa fa-lg fa-clock',
-        label: 'Shift',
-        value: 0,
-        link: 'admin-shifts',
-        permission: 'employees',
-      },
-      {
-        icon: 'fa fa-lg fa-users',
-        label: 'Karyawan',
-        value: 0,
-        link: 'admin-employees',
-        permission: 'employees',
-      },
-    ],
-  },
-  {
-    icon: 'fa fa-lg fa-database',
-    label: 'PENGATURAN',
-    value: 0,
-    disableMenu: false,
-    menu: [
-      {
-        icon: 'fa fa-lg fa-cogs',
-        label: 'Profil',
-        value: 0,
-        link: 'admin-settings',
-        permission: 'settings',
-      },
-    ],
-  },
-]
 
 export default {
   name: 'admin',
@@ -179,9 +93,53 @@ export default {
     return {
       logo: logo,
       icon: icon,
-      visibleSidebar: false,
-      sidebar: defaultSidebar,
       countNotif: 0,
+      isCollapseDesktop: true,
+      isCollapseMobile: true,
+      sidebar: [
+        {
+          icon: 'fa fa-lg fa-list',
+          label: 'Bizpar',
+          value: 0,
+          link: 'admin-bizpars',
+          permission: 'bizpars',
+        },
+        {
+          icon: 'fa fa-lg fa-calculator',
+          label: 'Pembayaran',
+          value: 0,
+          link: 'admin-payments',
+          permission: 'payments',
+        },
+        {
+          icon: 'fa fa-lg fa-key',
+          label: 'Permission',
+          value: 0,
+          link: 'admin-permissions',
+          permission: 'permissions',
+        },
+        {
+          icon: 'fa fa-lg fa-flag',
+          label: 'Role',
+          value: 0,
+          link: 'admin-roles',
+          permission: 'roles',
+        },
+        {
+          icon: 'fa fa-lg fa-users',
+          label: 'User',
+          value: 0,
+          link: 'admin-users',
+          permission: 'users',
+        },
+        {
+          icon: 'fa fa-lg fa-store',
+          label: 'Toko',
+          value: 0,
+          link: 'admin-shops',
+          permission: 'shops',
+        },
+      ],
     }
   },
   beforeMount() {
@@ -197,8 +155,6 @@ export default {
   },
   components: {
     VueLoadImage,
-    AppToastMessage,
-    AppToast,
     AppListMenu,
     AppCardNotification,
     AppCardProfile,
@@ -214,10 +170,18 @@ export default {
       setMultipleToast: 'toastmessage/setMultipleToast',
     }),
     onOpenSidebar() {
-      this.visibleSidebar = true
+      if (this.deviceType === 'mobile') {
+        this.isCollapseDesktop = false
+        this.isCollapseMobile = !this.isCollapseMobile
+      } else {
+        this.isCollapseDesktop = !this.isCollapseDesktop
+        this.isCollapseMobile = false
+      }
     },
-    onCloseSidebar() {
-      this.visibleSidebar = false
+    onMenuSidebar() {
+      if (this.deviceType === 'mobile') {
+        this.isCollapseMobile = false
+      }
     },
     onChangeMenu(data) {
       this.selectedLabel = this.menuShops[data].label
@@ -275,9 +239,27 @@ export default {
   computed: {
     ...mapState({
       data: (state) => state.storeAuth.data,
+      deviceType: (state) => state.application.deviceType,
     }),
+    metaTitle() {
+      return this.$route.meta.title || 'Admin'
+    },
     dataUser() {
       return this.data && this.data.user
+    },
+  },
+  watch: {
+    deviceType: {
+      handler(newValue) {
+        if (newValue === 'mobile') {
+          this.isCollapseDesktop = false
+          this.isCollapseMobile = false
+        } else {
+          this.isCollapseDesktop = true
+          this.isCollapseMobile = true
+        }
+      },
+      immediate: true,
     },
   },
   sockets: {

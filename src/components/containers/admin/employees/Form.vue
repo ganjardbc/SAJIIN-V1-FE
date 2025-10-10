@@ -1,11 +1,12 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="!isDetailForm"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
+  <AppSideForm
+    :title="title"
+    :value="openForm"
+    :enableSaveButton="!isDetailForm"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
       <AppTabs
         :selectedIndex.sync="selectedIndex"
         :data="tabs"
@@ -13,25 +14,17 @@
         :onChange="(data) => onChangeTabs(data)"
         class="margin margin-bottom-20px"
       />
-      <div v-if="selectedIndex === 0">
-        <div class="margin margin-bottom-0">
-          <div class="fonts fonts-13 black semibold">Informasi</div>
+
+      <div v-if="selectedIndex === 0" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4">
+          <div class="text-md text-black font-semibold">Informasi</div>
           <div class="field-group">
             <div class="field-label">Cover</div>
-            <div class="width width-80px">
-              <div class="image image-padding border border-full">
-                <img
-                  v-if="form.image"
-                  :src="getCover"
-                  alt=""
-                  class="post-center"
-                />
-                <i
-                  v-else
-                  class="post-middle-absolute icn fa fa-lg fa-image"
-                ></i>
-              </div>
-            </div>
+            <AppCardAvatar
+              :src="getCover"
+              size="medium"
+              shape="square"
+            />
           </div>
           <div class="field-group">
             <div class="field-label">ID Karyawan</div>
@@ -96,9 +89,10 @@
           </div>
         </div>
       </div>
-      <div v-if="selectedIndex === 1">
-        <div class="margin margin-bottom-20px">
-          <div class="fonts fonts-13 black semibold">Posisi</div>
+
+      <div v-if="selectedIndex === 1" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4">
+          <div class="text-md text-black font-semibold">Posisi</div>
           <div class="field-group">
             <div class="field-label">Pilih Role & Posisi</div>
             <el-select
@@ -123,8 +117,9 @@
             </div>
           </div>
         </div>
-        <div class="margin margin-bottom-0">
-          <div class="fonts fonts-13 black semibold">Shift</div>
+
+        <div class="flex flex-col gap-4">
+          <div class="text-md text-black font-semibold">Shift</div>
           <div class="field-group">
             <div class="field-label">Pilih Toko</div>
             <el-select
@@ -170,9 +165,10 @@
           </div>
         </div>
       </div>
-      <div v-if="selectedIndex === 2">
-        <div class="margin margin-bottom-0">
-          <div class="fonts fonts-13 black semibold">Pengguna</div>
+
+      <div v-if="selectedIndex === 2" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4">
+          <div class="text-md text-black font-semibold">Pengguna</div>
           <div class="field-group">
             <div class="field-label">Username</div>
             <div class="field-caption">
@@ -210,9 +206,10 @@
           </div>
         </div>
       </div>
-      <div v-if="selectedIndex === 3">
-        <div class="margin margin-bottom-0">
-          <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+
+      <div v-if="selectedIndex === 3" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4">
+          <div class="text-md text-black font-semibold">Konfigurasi</div>
           <div class="field-group">
             <div class="display-flex space-between">
               <div class="field-label">Status</div>
@@ -231,8 +228,8 @@
           </div>
         </div>
       </div>
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
@@ -240,6 +237,7 @@ import { mapActions, mapState } from 'vuex'
 import AppSideForm from '../../../modules/AppSideForm'
 import AppImage from '../../../modules/AppImage'
 import AppTabs from '../../../modules/AppTabs'
+import AppCardAvatar from '../../../modules/AppCardAvatar'
 
 const tabs = [
   { id: 1, label: 'Karyawan', status: 'active' },
@@ -255,6 +253,13 @@ export default {
       selectedIndex: 0,
       tabs: tabs,
     }
+  },
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   mounted() {
     this.selectedIndex = 0
@@ -302,6 +307,7 @@ export default {
     AppSideForm,
     AppImage,
     AppTabs,
+    AppCardAvatar,
   },
   methods: {
     ...mapActions({

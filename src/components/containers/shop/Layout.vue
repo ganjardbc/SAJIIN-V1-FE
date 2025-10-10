@@ -14,9 +14,9 @@
               :hidden="!isThereCounterMenu"
               is-dot
             >
-              <i 
+              <i
                 class="icon fa-solid"
-                :class="deviceType === 'mobile' 
+                :class="deviceType === 'mobile'
                   ? {
                     'fa-bars-staggered': !isCollapseMobile,
                     'fa-bars': isCollapseMobile,

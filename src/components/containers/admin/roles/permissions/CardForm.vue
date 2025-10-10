@@ -1,18 +1,18 @@
 <template>
   <div id="App">
     <el-table :data="data" border empty-text="No Data" style="width: 100%">
-      <el-table-column type="index" width="60" :index="indexMethod">
-      </el-table-column>
-      <el-table-column prop="name" label="Permission"> </el-table-column>
-      <el-table-column width="60">
+      <el-table-column type="index" width="60" :index="indexMethod" />
+      <el-table-column prop="name" label="Permission" />
+      <el-table-column width="70">
         <template slot-scope="scope">
-          <button
+          <el-button
             @click="onSelect(scope.row)"
-            class="btn btn-icon btn-sekunder"
+            style="min-width: 40px;"
+            circle
             :disabled="roleTypeForm === 'detail'"
           >
             <i class="fa fa-lw fa-plus"></i>
-          </button>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
