@@ -1,35 +1,32 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="isButtonApplyEnable"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
-      <div
+  <AppSideForm
+    :value="openForm"
+    :title="title"
+    :enableSaveButton="isButtonApplyEnable"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
+      <el-alert
         v-if="errorMessage.details && errorMessage.details[0]"
-        class="padding padding-bottom-15px"
+        title="Masukan Varian"
+        description="Kamu harus menambahkan setidaknya satu varian."
+        type="error"
+        :closable="false"
+        show-icon
       >
-        <el-alert
-          title="Masukan Varian"
-          description="Kamu harus menambahkan setidaknya satu varian."
-          type="error"
-          :closable="false"
-          show-icon
-        >
-        </el-alert>
-      </div>
+      </el-alert>
+
       <AppTabs
         :selectedIndex.sync="selectedIndex"
         :data="tabs"
         :isFull="true"
         :onChange="(data) => onChangeTabs(data)"
-        class="margin margin-bottom-20px"
       />
       <FormData v-if="selectedIndex === 0" />
       <ProductVarian v-if="selectedIndex === 1" />
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
@@ -53,6 +50,13 @@ export default {
       selectedIndex: 1,
       tabs: tabs,
     }
+  },
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   mounted() {
     this.selectedIndex = 0
@@ -141,10 +145,10 @@ export default {
       this.$emit('removeImage', data)
     },
     onSave() {
-      this.$emit('onSave')
+      this.$emit('save')
     },
     onClose() {
-      this.$emit('onClose')
+      this.$emit('close')
     },
   },
 }

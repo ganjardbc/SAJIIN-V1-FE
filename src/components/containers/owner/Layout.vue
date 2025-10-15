@@ -1,49 +1,25 @@
 <template>
-  <div id="admin">
-    <div class="main single-container">
-      <div class="header">
-        <div class="header-content">
-          <div class="header-content-main">
-            <div class="width width-auto">
-              <router-link
-                :to="{ name: 'owner-home' }"
-                class="width width-90px display-flex align-center"
-              >
-                <img :src="logo" alt="" style="width: 100%" />
-              </router-link>
-            </div>
-            <div class="header-content-main-right">
-              <AppCardProfile
-                :data.sync="dataUser"
-                class="margin margin-left-10px"
-              >
-                <div
-                  slot="customMenu"
-                  class="padding margin margin-bottom-15px padding padding-bottom-15px border-bottom"
-                >
-                  <button
-                    class="btn btn-white btn-align-left btn-full"
-                    @click="goProfile"
-                  >
-                    <i class="icn icn-left fa fa-user"></i>
-                    Edit Profil
-                    <i
-                      class="icn icn-float-right fonts grey fa fa-lg fa-chevron-right"
-                    ></i>
-                  </button>
-                </div>
-              </AppCardProfile>
-            </div>
-          </div>
+  <div class="default-layout">
+    <div class="header">
+      <div class="w-full md:w-lg m-auto flex justify-center md:justify-between items-center px-2 md:px-4">
+        <router-link
+          :to="{ name: 'shop-home' }"
+        >
+          <img :src="logo" alt="" class="h-xs" />
+        </router-link>
+
+        <div class="navbar px-4 md:px-0 flex-1 flex items-center justify-end">
+          <el-button size="medium" type="primary" class="w-full md:w-auto">
+            <i class="fa fa-plus mr-2"></i>
+            Tambah Toko
+          </el-button>
         </div>
       </div>
-      <div class="main-content">
-        <div class="main-content-small">
-          <router-view />
-        </div>
-        <div class="display-flex center padding padding-20px">
-          <div class="fonts fonts-10 grey align-center">{{ appVersion }}</div>
-        </div>
+    </div>
+
+    <div class="content justify-center w-full overflow-y-auto">
+      <div class="w-full md:w-lg">
+        <router-view />
       </div>
     </div>
 
@@ -60,7 +36,6 @@ import logo from '@/assets/img/logo.png'
 import icon from '@/assets/img/icon.png'
 import AppToast from '../../modules/AppToast'
 import AppToastMessage from '../../modules/AppToastMessage'
-import AppCardProfile from '../../modules/AppCardProfile'
 
 export default {
   name: 'app',
@@ -86,7 +61,6 @@ export default {
     VueLoadImage,
     AppToastMessage,
     AppToast,
-    AppCardProfile,
   },
   methods: {
     ...mapActions({

@@ -1,103 +1,92 @@
 <template>
-  <div id="App">
-    <AppHeaderMobile title="Daftar Meja" />
-
-    <div :class="formClass ? 'content-form' : 'content-form hide'">
-      <div class="left">
-        <div
-          class="display-flex space-between display-mobile margin margin-bottom-15px"
+  <div id="App" class="w-full lg:w-lg-false m-auto">
+    <div class="w-full flex flex-col gap-4 p-4">
+      <div class="w-full flex items-center justify-between">
+        <h1 class="text-3xl text-black font-semibold">
+          Meja
+        </h1>
+        <el-button
+          v-if="isRoleOwner"
+          type="primary"
+          @click="onCreate"
         >
-          <div class="width width-75 width-mobile display-flex space-between">
-            <h1 class="fonts big black bold">Daftar Meja</h1>
-            <div class="display-flex">
-              <button class="btn btn-icon btn-white" @click="onRefresh">
-                <i class="fa fa-lw fa-retweet"></i>
-              </button>
-              <button
-                v-if="isRoleOwner"
-                class="btn btn-icon btn-white"
-                @click="onCreate"
-              >
-                <i class="fa fa-lw fa-plus" />
-              </button>
-            </div>
-          </div>
-          <div class="width width-25 width-mobile">
-            <SearchField
-              :placeholder="'Cari meja ..'"
-              :enableResponsive="true"
-              :onChange="(data) => onSearch(data)"
-            />
-          </div>
-        </div>
+          <i class="fa fa-lw fa-plus mr-2" /> Tambah Meja
+        </el-button>
+      </div>
 
-        <el-alert
-          v-if="!isRoleOwner"
-          title="Tambah Meja Baru ?"
-          description="Untuk menambahkan meja baru mohon hubungi Owner dari Toko ini."
-          type="warning"
-          :closable="true"
-          show-icon
-          style="margin: 10px 0 20px 0"
-        >
-        </el-alert>
+      <div class="w-full flex flex-col md:flex-row gap-2 items-center justify-between">
+        <SearchField
+          class="flex-1 w-full"
+          placeholder="Cari meja .."
+          :enableResponsive="true"
+          :onChange="(data) => onSearch(data)"
+        />
 
-        <div
-          class="display-flex space-between align-center display-mobile margin margin-bottom-15px"
+        <el-select
+          v-model="filter.status"
+          @change="handleFilterSearch"
+          clearable
+          placeholder="Select status"
+          no-data-text="Data Tidak Ditemukan"
+          class="w-full md:w-xxs"
         >
-          <AppTabs
-            class="width width-300px width-mobile"
-            :selectedIndex.sync="selectedIndex"
-            :isFull="true"
-            :isScrollable="false"
-            :data="tabs"
-            :onChange="(data) => onChangeTabs(data)"
+          <el-option
+            v-for="(item, i) in statusOptions"
+            :key="i"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </div>
+
+      <el-alert
+        v-if="!isRoleOwner"
+        title="Tambah Meja Baru ?"
+        description="Untuk menambahkan meja baru mohon hubungi Owner dari Toko ini."
+        type="warning"
+        :closable="true"
+        show-icon
+      />
+
+      <div class="w-full flex flex-col gap-4">
+        <div v-loading="loading" class="w-full">
+          <AppEmpty v-if="data.length === 0" />
+          <Card
+            :data.sync="data"
+            @onChangeCover="uploadImage"
+            @onDetail="onDetail"
+            @onEdit="onEdit"
+            @onDelete="onDelete"
+            @onChangeStatus="onChangeStatus"
+            @onQrCode="onOpenQrCode"
           />
         </div>
-
-        <div class="width width-100">
-          <div v-loading="loading">
-            <AppEmpty v-if="data.length === 0" />
-            <Card
-              :data.sync="data"
-              @onChangeCover="uploadImage"
-              @onDetail="onDetail"
-              @onEdit="onEdit"
-              @onDelete="onDelete"
-              @onChangeStatus="onChangeStatus"
-              @onQrCode="onOpenQrCode"
-            />
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="text-md text-black">
+            Total {{ totalRecord }}
           </div>
-          <div
-            class="width width-100 display-flex flex-end align-center padding padding-top-15px"
+          <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="limit"
+            :pager-count="5"
+            layout="prev, pager, next"
+            :total="totalRecord"
           >
-            <div class="fonts fonts-10 normal black">
-              Total {{ totalRecord }}
-            </div>
-            <el-pagination
-              background
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-size="limit"
-              :pager-count="5"
-              layout="prev, pager, next"
-              :total="totalRecord"
-            >
-            </el-pagination>
-          </div>
+          </el-pagination>
         </div>
       </div>
-
-      <div class="right">
-        <Form
-          @uploadImage="uploadImage"
-          @removeImage="removeImage"
-          @onSave="onOpenVisibleConfirmed"
-          @onClose="onClose"
-        >
-        </Form>
-      </div>
     </div>
+
+    <Form
+      :open-form="openForm"
+      @uploadImage="uploadImage"
+      @removeImage="removeImage"
+      @save="onOpenVisibleConfirmed"
+      @close="onClose"
+    />
 
     <AppFileUpload
       v-if="visibleUpdateCover"
@@ -139,21 +128,14 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import AppEmpty from '../../../modules/AppEmpty'
-import AppHeaderMobile from '../../../modules/AppHeaderMobile'
 import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../modules/AppFileUpload'
 import AppPopupQrCode from '../../../modules/AppPopupQrCode'
-import AppTabs from '../../../modules/AppTabs'
 import SearchField from '../../../modules/SearchField'
 import Form from './Form'
 import Card from './Card'
-
-const tabs = [
-  { id: 1, label: 'Aktif', status: 'active' },
-  { id: 2, label: 'Non-Aktif', status: '' },
-]
 
 export default {
   name: 'App',
@@ -167,8 +149,11 @@ export default {
   },
   data() {
     return {
-      tabs: tabs,
-      formClass: false,
+      statusOptions: [
+        { label: 'Status Aktif', value: 'active' },
+        { label: 'Status Non Aktif', value: 'inactive' },
+      ],
+      openForm: false,
       visibleUpdateCover: false,
       visibleAlert: false,
       visibleQrCode: false,
@@ -178,21 +163,18 @@ export default {
       visibleConfirmedDelete: false,
       titleConfirmed: 'Simpan data ?',
       currentPage: 0,
-      selectedIndex: 0,
     }
   },
   mounted() {
-    this.onChangeTabs(0)
+    this.getData()
   },
   components: {
     AppEmpty,
-    AppHeaderMobile,
     AppPopupLoader,
     AppPopupConfirmed,
     AppPopupAlert,
     AppFileUpload,
     AppPopupQrCode,
-    AppTabs,
     SearchField,
     Form,
     Card,
@@ -217,7 +199,7 @@ export default {
       },
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     paramShopId() {
       return this.$route.params.shopId
@@ -256,22 +238,10 @@ export default {
       this.getData()
     },
     onClose() {
-      this.formClass = false
+      this.openForm = false
     },
     onRefresh() {
       this.getData()
-    },
-    onChangeTabs(data) {
-      this.selectedIndex = data
-      switch (this.selectedIndex) {
-        case 0:
-          this.filter.status = 'active'
-          break
-        case 1:
-          this.filter.status = 'inactive'
-          break
-      }
-      this.handleFilterSearch()
     },
 
     // LIST DATA
@@ -311,7 +281,7 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.formClass = false
+              this.openForm = false
               this.getData()
             } else {
               this.$message({
@@ -328,7 +298,7 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.formClass = false
+              this.openForm = false
               this.getData()
             } else {
               this.$message({
@@ -356,7 +326,7 @@ export default {
 
     // CREATE
     onCreate() {
-      this.formClass = true
+      this.openForm = true
       this.typeForm = 'create'
       this.resetFormData()
       this.form.shop_id = this.shopId
@@ -364,7 +334,7 @@ export default {
 
     // DETAIL
     onDetail(data) {
-      this.formClass = true
+      this.openForm = true
       this.typeForm = 'detail'
       this.resetFormData()
       this.setFormData(data)
@@ -372,7 +342,7 @@ export default {
 
     // EDIT
     onEdit(data) {
-      this.formClass = true
+      this.openForm = true
       this.typeForm = 'edit'
       this.resetFormData()
       this.setFormData(data)

@@ -1,125 +1,117 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="'Pembayaran'"
-      :enableCustomFooter="true"
-      :onClose="onClose"
-    >
-      <div class="right-form-body">
-        <div
-          class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px"
-        >
-          <div
-            class="display-flex space-between align-center padding padding-bottom-10px"
+  <AppSideForm
+    :value="openForm"
+    title="Pembayaran"
+    :enableCustomFooter="true"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
+      <div class="w-full flex flex-col gap-2 p-4 bg-white rounded-lg border border-gray-200">
+        <div class="w-full flex justify-between items-center">
+          <div class="text-md text-black font-semibold">Pembayaran</div>
+          <AppCardCapsule :data="form.payment_status ? 'paid' : 'unpaid'" />
+        </div>
+
+        <FieldPayment
+          :value="form.payment_id"
+          :smallField="true"
+          @onChange="onChangePayment"
+          @onClear="onClearPayment"
+        />
+
+        <div class="w-full flex gap-2 justify-between border-b border-dashed border-gray-200 pb-2">
+          <div class="text-sm text-black font-semibold">Total</div>
+          <div class="text-sm text-vermillion-500 font-semibold text-right">
+            {{ format(form.total_price) }}
+          </div>
+        </div>
+
+        <div class="w-full flex gap-2 justify-between">
+          <div class="text-sm text-black">Diskon</div>
+          <div class="text-sm text-black text-right">
+            {{
+              totalDiscount > 0
+                ? `-${format(totalDiscount)}`
+                : `${format(totalDiscount)}`
+            }}
+          </div>
+        </div>
+
+        <FieldDiscount
+          :value="form.discount_id"
+          :smallField="true"
+          :disabledSelection="true"
+          label="Tambah Diskon Transaksi"
+          discountType="transaction"
+          @onChange="onChangeDiscount"
+          @onClear="onClearDiscount"
+        />
+      </div>
+
+      <div class="w-full flex flex-col gap-2 p-4 bg-white rounded-lg border border-gray-200">
+        <div class="text-md text-black font-semibold">Tagihan</div>
+
+        <div class="field-group">
+          <div class="field-label">Bayar</div>
+          <input-number
+            class="width width-100"
+            v-model="form.bills_price"
+            thousand-separated
+            :min="0"
+            placeholder="0"
+            @input="onChangeBills"
           >
-            <div class="fonts fonts-11 semibold black">Pembayaran</div>
-            <AppCardCapsule :data="form.payment_status ? 'paid' : 'unpaid'" />
-          </div>
-          <div class="margin margin-bottom-15px">
-            <FieldPayment
-              :value="form.payment_id"
-              :smallField="true"
-              @onChange="onChangePayment"
-              @onClear="onClearPayment"
-            />
-          </div>
-          <div class="display-flex space-between">
-            <div class="fonts fonts-10 semibold black">Total</div>
-            <div class="fonts fonts-10 semibold main-color">
-              {{ format(form.total_price) }}
-            </div>
-          </div>
-          <div
-            class="padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed"
-          ></div>
-          <div class="display-flex space-between margin margin-bottom-15px">
-            <div class="fonts fonts-10 normal grey">Diskon</div>
-            <div class="fonts fonts-10 normal black">
-              {{
-                totalDiscount > 0
-                  ? `-${format(totalDiscount)}`
-                  : `${format(totalDiscount)}`
-              }}
-            </div>
-          </div>
-          <FieldDiscount
-            :value="form.discount_id"
-            :smallField="true"
-            :disabledSelection="true"
-            label="Tambah Diskon Transaksi"
-            discountType="transaction"
-            @onChange="onChangeDiscount"
-            @onClear="onClearDiscount"
-          />
-        </div>
-        <div
-          class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px"
-        >
-          <div class="fonts fonts-11 semibold black">Tagihan</div>
-          <div class="field-group">
-            <div class="field-label">Bayar</div>
-            <input-number
-              class="width width-100"
-              v-model="form.bills_price"
-              thousand-separated
-              :min="0"
-              placeholder="0"
-              @input="onChangeBills"
-            >
-              <template>Rp</template>
-            </input-number>
-            <div v-if="errorMessage.bills_price" class="field-error">
-              {{ errorMessage.bills_price && errorMessage.bills_price[0] }}
-            </div>
-          </div>
-          <div class="padding padding-bottom-5px">
-            <AppCardPriceSuggestion @onChange="onChangeBiilsSuggestion" />
-          </div>
-          <div
-            class="padding padding-bottom-7px margin margin-bottom-15px border-bottom border-dashed"
-          ></div>
-          <div class="display-flex space-between">
-            <div class="fonts fonts-10 semibold black">Kembali</div>
-            <div class="fonts fonts-10 semibold main-color">
-              {{ format(form.change_price) }}
-            </div>
+            <template>Rp</template>
+          </input-number>
+          <div v-if="errorMessage.bills_price" class="field-error">
+            {{ errorMessage.bills_price && errorMessage.bills_price[0] }}
           </div>
         </div>
-        <div
-          v-if="isNonFnB"
-          class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px"
-        >
-          <div class="fonts fonts-11 semibold black">Status</div>
-          <div class="field-group">
-            <div class="display-flex space-between">
-              <div class="field-label">Selesaikan pesanan ini ?</div>
-              <el-switch
-                v-model="form.status"
-                :active-value="'done'"
-                :inactive-value="'new-order'"
-                active-text="Selesai"
-                inactive-text="Baru Masuk"
-              ></el-switch>
-            </div>
-            <div v-if="errorMessage.status" class="field-error">
-              {{ errorMessage.status && errorMessage.status[0] }}
-            </div>
+
+        <div class="w-full border-b border-dashed border-gray-200 pb-2">
+          <AppCardPriceSuggestion @onChange="onChangeBiilsSuggestion" />
+        </div>
+
+        <div class="w-full flex gap-2 justify-between">
+          <div class="text-sm text-black font-semibold">Kembali</div>
+          <div class="text-sm text-vermillion-500 font-semibold text-right">
+            {{ format(form.change_price) }}
           </div>
         </div>
       </div>
-      <div slot="footer">
-        <div class="right-form-footer">
-          <button
-            class="btn btn-main btn-full"
-            :disabled="isButtonEnable"
-            @click="onCreateOrder"
-          >
-            Buat Pesanan
-          </button>
+
+      <div class="w-full flex flex-col gap-2 p-4 bg-white rounded-lg border border-gray-200">
+        <div class="text-md text-black font-semibold">Status</div>
+
+        <div class="field-group">
+          <div class="flex justify-between items-center">
+            <div class="field-label">Selesaikan pesanan ini ?</div>
+            <el-switch
+              v-model="form.status"
+              :active-value="'done'"
+              :inactive-value="'new-order'"
+              active-text="Selesai"
+              inactive-text="Baru Masuk"
+            ></el-switch>
+          </div>
+          <div v-if="errorMessage.status" class="field-error">
+            {{ errorMessage.status && errorMessage.status[0] }}
+          </div>
         </div>
       </div>
-    </AppSideForm>
-  </div>
+    </div>
+    
+    <template #footer>
+      <el-button
+        class="w-full"
+        type="primary"
+        :disabled="isButtonEnable"
+        @click="onCreateOrder"
+      >
+        Buat Pesanan
+      </el-button>
+    </template>
+  </AppSideForm>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
@@ -133,6 +125,13 @@ import FieldDiscount from '../../discounts/Field'
 
 export default {
   name: 'App',
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   components: {
     AppEmpty,
     AppSideForm,

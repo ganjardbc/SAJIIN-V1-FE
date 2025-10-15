@@ -6,11 +6,11 @@
       :onSave="onSave"
       :onClose="onClose"
     >
-      <div v-if="isEditForm" slot="toolbar" class="margin margin-right-10px">
-        <button class="btn btn-sekunder btn-full" @click="onDelete(form)">
+      <template v-if="isEditForm" #toolbar>
+        <el-button size="small" @click="onDelete(form)">
           Hapus
-        </button>
-      </div>
+        </el-button>
+      </template>
       <div class="margin margin-bottom-20px">
         <div class="fonts fonts-13 black semibold">Informasi</div>
         <div class="field-group">

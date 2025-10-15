@@ -1,11 +1,13 @@
 <template>
-  <div id="App">
-    <AppCardPopup title="Tambah Ke Keranjang" @onClose="onClose">
-      <div class="width width-100">
-        <div class="field-group display-flex border-bottom">
-          <div style="width: calc(100% - 77px)">
-            <div class="fonts fonts-11 semibold">{{ data.name }}</div>
-            <div class="fonts fonts-10 normal grey">
+  <AppCardPopup title="Tambah Ke Keranjang" @onClose="onClose">
+    <div class="w-full flex flex-col gap-4">
+      <div class="field-group">
+        <div class="w-full flex justify-between gap-4">
+          <div class="flex-1 flex flex-col">
+            <div class="text-sm text-black font-semibold">
+              {{ data.name }}
+            </div>
+            <div class="text-sm text-gray-500">
               {{
                 detailSelected
                   ? format(varianPrice(detailSelected))
@@ -15,94 +17,117 @@
               }}
             </div>
           </div>
-          <div style="width: 60px; margin-left: 15px">
-            <div class="image image-padding border-full">
-              <img
-                v-if="data.image"
-                :src="productImageThumbnailUrl + data.image"
-                alt=""
-                class="post-center"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-            </div>
-          </div>
-        </div>
-
-        <div
-          v-if="data.details && data.details.length > 0 ? true : false"
-          class="field-group"
-          style="padding-bottom: 0"
-        >
-          <div class="field-label">Varian</div>
-          <ul class="menu-capsule">
-            <li
-              v-for="(dt, index) in data.details"
-              :key="index"
-              :class="
-                data.status === 'active'
-                  ? dt.is_available
-                    ? detailSelected === dt.id
-                      ? 'enable'
-                      : ''
-                    : 'disable'
-                  : 'disable'
-              "
-              @click="onChangeDetail(dt.id)"
-            >
-              <div class="row">
-                <div style="width: 25px">
-                  <i class="icn fa fa-1x fa-utensils" />
-                </div>
-                <div>
-                  <div class="ttl">{{ dt.name }}</div>
-                  <div class="val">
-                    <span class="fonts fonts-10 black semibold">{{
-                      format(dt.price)
-                    }}</span>
-                    <!-- HIDDEN TEMPORARY -->
-                    <!-- <span v-if="dt.is_discount" class="fonts fonts-9 grey normal text-line">{{ format(dt.second_price) }}</span> -->
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="field-group">
-          <div class="field-label">Jumlah</div>
-          <el-input-number
-            v-model="form.quantity"
-            :min="0"
-            :max="100"
-            style="width: 100%"
-            :disabled="data.status === 'inactive' || !form.price"
-          ></el-input-number>
-        </div>
-
-        <div class="field-group">
-          <div class="display-flex space-between margin margin-bottom-10px">
-            <div class="fonts fonts-10 semibold black">
-              Total ({{ orderQuantity }} produk)
-            </div>
-            <div class="fonts fonts-10 semibold main-color">
-              {{ format(orderPrice) }}
-            </div>
-          </div>
-          <button
-            class="btn btn-full btn-main"
-            :disabled="enableButtonAddProduct || !form.price"
-            @click="onAddProduct"
-          >
-            Tambah Ke Keranjang
-          </button>
+          <AppCardAvatar
+            :src="`${productImageThumbnailUrl}${data.image}`"
+            shape="square"
+            size="medium"
+            fit="contain"
+            custom-class="shadow-none border border-gray-200"
+          />
         </div>
       </div>
-    </AppCardPopup>
-  </div>
+
+      <div
+        v-if="data.details && data.details.length > 0 ? true : false"
+        class="field-group"
+        style="padding-bottom: 0"
+      >
+        <div class="field-label">Varian</div>
+        <div class="flex flex-wrap gap-4">
+          <div
+            v-for="(dt, index) in data.details"
+            :key="index"
+            class="flex justify-center gap-2 py-2 px-3 rounded-lg border border-gray-200 cursor-pointer"
+            :class="{
+              'bg-vermillion-100 border-vermillion-500': detailSelected === dt.id,
+              'bg-gray-100 border-gray-200 cursor-not-allowed': dt.status === 'active' && !dt.is_available
+            }"
+            @click="onChangeDetail(dt.id)"
+          >
+            <div
+              class="rounded-full bg-vermillion-100 flex items-center justify-center"
+              style="width: 30px; height: 30px"
+            >
+              <i class="text-sm text-vermillion-500 fa fa-1x fa-box" />
+            </div>
+            <div class="flex-1 flex flex-col gap-1">
+              <div class="text-md text-black">{{ dt.name }}</div>
+              <div class="flex items-center gap-1">
+                <span class="text-md text-vermillion-500 font-semibold">{{ format(dt.price) }}</span>
+                <span v-if="dt.is_discount" class="text-sm text-gray-500 line-through">{{ format(dt.second_price) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <ul class="menu-capsule">
+          <li
+            v-for="(dt, index) in data.details"
+            :key="index"
+            :class="
+              data.status === 'active'
+                ? dt.is_available
+                  ? detailSelected === dt.id
+                    ? 'enable'
+                    : ''
+                  : 'disable'
+                : 'disable'
+            "
+            @click="onChangeDetail(dt.id)"
+          >
+            <div class="row">
+              <div style="width: 25px">
+                <i class="icn fa fa-1x fa-utensils" />
+              </div>
+              <div>
+                <div class="ttl">{{ dt.name }}</div>
+                <div class="val">
+                  <span class="fonts fonts-10 black semibold">{{
+                    format(dt.price)
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul> -->
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Jumlah</div>
+        <el-input-number
+          v-model="form.quantity"
+          :min="0"
+          :max="100"
+          style="width: 100%"
+          :disabled="data.status === 'inactive' || !form.price"
+        ></el-input-number>
+      </div>
+
+      <div class="field-group">
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-black font-semibold">
+            Total ({{ orderQuantity }} produk)
+          </div>
+          <div class="text-sm text-vermillion-500 font-semibold">
+            {{ format(orderPrice) }}
+          </div>
+        </div>
+        <el-button
+          class="w-full"
+          type="primary"
+          :disabled="enableButtonAddProduct || !form.price"
+          @click="onAddProduct"
+        >
+          Tambah Ke Keranjang
+        </el-button>
+      </div>
+    </div>
+  </AppCardPopup>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
 import AppCardPopup from '../../../modules/AppCardPopup'
+import AppCardAvatar from '../../../modules/AppCardAvatar'
 
 export default {
   name: 'App',
@@ -116,6 +141,7 @@ export default {
   },
   components: {
     AppCardPopup,
+    AppCardAvatar,
   },
   props: {
     data: null,

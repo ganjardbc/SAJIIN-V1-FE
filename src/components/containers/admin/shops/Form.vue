@@ -1,28 +1,21 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="!isDetailForm"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
-      <div
-        class="margin margin-bottom-20px padding padding-bottom-20px border-bottom"
-      >
-        <div class="fonts fonts-13 black semibold">Informasi</div>
+  <AppSideForm
+    :title="title"
+    :value="openForm"
+    :enableSaveButton="!isDetailForm"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4">
+        <div class="text-md text-black font-semibold">Informasi</div>
         <div class="field-group">
           <div class="field-label">Cover</div>
-          <div class="width width-80px">
-            <div class="image image-padding border border-full">
-              <img
-                v-if="form.image"
-                :src="getCover"
-                alt=""
-                class="post-center"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-            </div>
-          </div>
+          <AppCardAvatar
+            :src="getCover"
+            size="medium"
+            shape="square"
+          />
         </div>
         <div class="field-group">
           <div class="field-label">ID Toko</div>
@@ -76,15 +69,10 @@
         </div>
       </div>
 
-      <div
-        class="margin margin-bottom-20px padding padding-bottom-20px border-bottom"
-      >
-        <div class="fonts fonts-13 black semibold">Operasional</div>
-        <div class="display-flex">
-          <div
-            class="field-group"
-            style="width: calc(100% - 10px); margin-right: 10px"
-          >
+      <div class="flex flex-col gap-4">
+        <div class="text-md text-black font-semibold">Operasional</div>
+        <div class="flex justify-between items-center gap-4">
+          <div class="field-group">
             <div class="field-label">Hari Buka</div>
             <el-select
               v-model="form.open_day"
@@ -104,10 +92,7 @@
               {{ errorMessage.open_day && errorMessage.open_day[0] }}
             </div>
           </div>
-          <div
-            class="field-group"
-            style="width: calc(100% - 10px); margin-left: 10px"
-          >
+          <div class="field-group">
             <div class="field-label">Hari Tutup</div>
             <el-select
               v-model="form.close_day"
@@ -128,13 +113,11 @@
             </div>
           </div>
         </div>
-        <div class="display-flex">
-          <div
-            class="field-group"
-            style="width: calc(100% - 10px); margin-right: 10px"
-          >
+        <div class="flex justify-between items-center gap-4">
+          <div class="field-group flex-1">
             <div class="field-label">Jam Buka</div>
             <el-input
+              class="w-full"
               placeholder=""
               v-model="form.open_time"
               :disabled="isDetailForm"
@@ -145,12 +128,10 @@
               {{ errorMessage.open_time && errorMessage.open_time[0] }}
             </div>
           </div>
-          <div
-            class="field-group"
-            style="width: calc(100% - 10px); margin-left: 10px"
-          >
+          <div class="field-group flex-1">
             <div class="field-label">Jam Tutup</div>
             <el-input
+              class="w-full"
               placeholder=""
               v-model="form.close_time"
               :disabled="isDetailForm"
@@ -167,7 +148,7 @@
       <div
         class="margin margin-bottom-20px padding padding-bottom-20px border-bottom"
       >
-        <div class="fonts fonts-13 black semibold">Kontak</div>
+        <div class="text-md text-black font-semibold">Kontak</div>
         <div class="field-group">
           <div class="field-label">Email</div>
           <el-input
@@ -194,8 +175,8 @@
         </div>
       </div>
 
-      <div class="margin margin-bottom-0px">
-        <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+      <div class="flex flex-col gap-4">
+        <div class="text-md text-black font-semibold">Konfigurasi</div>
         <div class="field-group">
           <div class="field-label">Owner</div>
           <el-select
@@ -218,7 +199,7 @@
           </div>
         </div>
         <div class="field-group">
-          <div class="display-flex space-between">
+          <div class="flex justify-between items-center">
             <div class="field-label">Status</div>
             <el-switch
               v-model="form.status"
@@ -234,7 +215,7 @@
           </div>
         </div>
         <div class="field-group">
-          <div class="display-flex space-between">
+          <div class="flex justify-between items-center">
             <div class="field-label">Is Non FnB</div>
             <el-switch
               v-model="form.is_non_fnb"
@@ -251,8 +232,8 @@
         </div>
         <div class="field-group">
           <div class="field-label">Visitor</div>
-          <div class="display-flex space-between">
-            <div class="fonts micro black">Digital Menu</div>
+          <div class="flex justify-between items-center">
+            <div class="text-xs text-black">Digital Menu</div>
             <el-switch
               v-model="form.is_digital_menu_active"
               :disabled="isDetailForm"
@@ -270,8 +251,8 @@
             }}
           </div>
 
-          <div class="display-flex space-between margin margin-top-10px">
-            <div class="fonts micro black">Digital Order</div>
+          <div class="flex justify-between items-center">
+            <div class="text-xs text-black">Digital Order</div>
             <el-switch
               v-model="form.is_digital_order_active"
               :disabled="isDetailForm"
@@ -293,8 +274,8 @@
           <AppShopLink :link="`${initUrl}visitor/${form.shop_id}`" />
         </div>
       </div>
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
@@ -302,13 +283,17 @@ import { mapState } from 'vuex'
 import AppSideForm from '../../../modules/AppSideForm'
 import AppImage from '../../../modules/AppImage'
 import AppShopLink from '../../../modules/AppShopLink'
+import AppCardAvatar from '../../../modules/AppCardAvatar'
 
 export default {
   name: 'App',
-  data() {
-    return {}
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
-  mounted() {},
   computed: {
     ...mapState({
       form: (state) => state.storeShopAdmin.form,
@@ -347,6 +332,7 @@ export default {
     AppSideForm,
     AppImage,
     AppShopLink,
+    AppCardAvatar,
   },
   methods: {
     onChangeDigitalMenu(data) {

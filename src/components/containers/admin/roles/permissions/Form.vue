@@ -1,16 +1,20 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="false"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
-      <Card :data.sync="data" @onSelect="onSelect" />
-      <div
-        class="width width-100 display-flex flex-end align-center padding padding-top-15px"
-      >
-        <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
+  <AppSideForm
+    :title="title"
+    :value="openForm"
+    :enableSaveButton="false"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="w-full flex flex-col gap-4">
+      <CardForm
+        :data.sync="data"
+        @onSelect="onSelect"
+      />
+      <div class="w-full flex justify-between items-center gap-2">
+        <div class="text-md text-black">
+          Total {{ totalRecord }}
+        </div>
         <el-pagination
           background
           @current-change="handleCurrentChange"
@@ -22,14 +26,14 @@
         >
         </el-pagination>
       </div>
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
 import AppSideForm from '../../../../modules/AppSideForm'
-import Card from './CardForm'
+import CardForm from './CardForm'
 
 export default {
   name: 'App',
@@ -37,6 +41,13 @@ export default {
     return {
       currentPage: 0,
     }
+  },
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   mounted() {
     this.getData()
@@ -66,7 +77,7 @@ export default {
   },
   components: {
     AppSideForm,
-    Card,
+    CardForm,
   },
   methods: {
     ...mapActions({

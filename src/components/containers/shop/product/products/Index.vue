@@ -1,107 +1,96 @@
 <template>
-  <div id="App">
-    <AppHeaderMobile title="Produk" />
-
-    <div
-      class="display-flex space-between display-mobile margin margin-bottom-15px"
-    >
-      <div class="width width-75 width-mobile display-flex space-between">
-        <h1 class="fonts big black bold">Produk</h1>
-        <div class="display-flex">
-          <button class="btn btn-icon btn-white" @click="onRefresh">
-            <i class="fa fa-lw fa-retweet"></i>
-          </button>
-          <button
-            v-if="isRoleOwner"
-            class="btn btn-icon btn-white"
-            @click="onCreate"
-          >
-            <i class="fa fa-lw fa-plus" />
-          </button>
-        </div>
+  <div id="App" class="w-full lg:w-lg-false m-auto">
+    <div class="w-full flex flex-col gap-4 p-4">
+      <div class="w-full flex items-center justify-between">
+        <h1 class="text-3xl text-black font-semibold">
+          Produk
+        </h1>
+        <el-button
+          v-if="isRoleOwner"
+          type="primary"
+          @click="onCreate"
+        >
+          <i class="fa fa-lw fa-plus mr-2" /> Tambah Produk
+        </el-button>
       </div>
-      <div class="width width-25 width-mobile">
+
+      <div class="w-full flex flex-col md:flex-row gap-2 items-center justify-between">
         <SearchField
-          :placeholder="'Cari produk ..'"
+          class="flex-1 w-full"
+          placeholder="Cari produk .."
           :enableResponsive="true"
           :onChange="(data) => onSearch(data)"
         />
-      </div>
-    </div>
 
-    <el-alert
-      v-if="!isRoleOwner"
-      title="Tambah produk baru ?"
-      description="Untuk menambah produk baru mohon hubungi Owner dari Toko ini."
-      type="warning"
-      :closable="true"
-      show-icon
-      style="margin: 10px 0 20px 0"
-    >
-    </el-alert>
-
-    <div
-      class="display-flex space-between align-center display-mobile margin margin-bottom-15px"
-    >
-      <AppTabs
-        class="width width-300px width-mobile"
-        :selectedIndex.sync="selectedIndex"
-        :isFull="true"
-        :isScrollable="false"
-        :data="tabs"
-        :onChange="(data) => onChangeTabs(data)"
-      />
-    </div>
-
-    <div class="width width-100">
-      <Category @onChange="onChangeCategory" />
-    </div>
-
-    <div :class="formClass ? 'content-form' : 'content-form hide'">
-      <div class="left">
-        <div class="width width-100">
-          <div v-loading="loading">
-            <AppEmpty v-if="data.length === 0" />
-            <Card
-              :data.sync="data"
-              @onChangeCover="uploadImage"
-              @onDetail="onDetail"
-              @onEdit="onEdit"
-              @onDelete="onDelete"
-              @onChangeProductStatus="onChangeProductStatus"
-              @onChangeVarianStatus="onChangeVarianStatus"
-            />
-          </div>
-          <div
-            class="width width-100 display-flex flex-end align-center padding padding-top-15px"
+        <el-select
+          v-model="filter.status"
+          @change="handleFilterSearch"
+          clearable
+          placeholder="Select status"
+          no-data-text="Data Tidak Ditemukan"
+          class="w-full md:w-xxs"
+        >
+          <el-option
+            v-for="(item, i) in statusOptions"
+            :key="i"
+            :label="item.label"
+            :value="item.value"
           >
-            <div class="fonts fonts-10 normal black">
-              Total {{ totalRecord }}
-            </div>
-            <el-pagination
-              background
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-size="limit"
-              :pager-count="5"
-              layout="prev, pager, next"
-              :total="totalRecord"
-            >
-            </el-pagination>
+          </el-option>
+        </el-select>
+      </div>
+
+      <el-alert
+        v-if="!isRoleOwner"
+        title="Tambah produk baru ?"
+        description="Untuk menambah produk baru mohon hubungi Owner dari Toko ini."
+        type="warning"
+        :closable="true"
+        show-icon
+      />
+
+      <div class="w-full">
+        <Category @onChange="onChangeCategory" />
+      </div>
+
+      <div class="w-full flex flex-col gap-4">
+        <div v-loading="loading" class="w-full">
+          <AppEmpty v-if="data.length === 0" />
+          <Card
+            :data.sync="data"
+            @onChangeCover="uploadImage"
+            @onDetail="onDetail"
+            @onEdit="onEdit"
+            @onDelete="onDelete"
+            @onChangeProductStatus="onChangeProductStatus"
+            @onChangeVarianStatus="onChangeVarianStatus"
+          />
+        </div>
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="text-md text-black">
+            Total {{ totalRecord }}
           </div>
+          <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="limit"
+            :pager-count="5"
+            layout="prev, pager, next"
+            :total="totalRecord"
+          >
+          </el-pagination>
         </div>
       </div>
-
-      <div class="right">
-        <Form
-          @uploadImage="uploadImage"
-          @removeImage="removeImage"
-          @onSave="onOpenVisibleConfirmed"
-          @onClose="onClose"
-        >
-        </Form>
-      </div>
     </div>
+
+    <Form
+      :open-form="openForm"
+      @uploadImage="uploadImage"
+      @removeImage="removeImage"
+      @save="onOpenVisibleConfirmed"
+      @close="onClose"
+    />
 
     <AppFileUpload
       v-if="visibleUpdateCover"
@@ -141,17 +130,11 @@ import AppPopupLoader from '../../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../../modules/AppFileUpload'
-import AppTabs from '../../../../modules/AppTabs'
 import AppHeaderMobile from '../../../../modules/AppHeaderMobile'
 import SearchField from '../../../../modules/SearchField'
 import Category from '../categories/Slider'
 import Form from './Form'
 import Card from './Card'
-
-const tabs = [
-  { id: 1, label: 'Aktif', status: 'active' },
-  { id: 2, label: 'Non-Aktif', status: '' },
-]
 
 export default {
   name: 'App',
@@ -165,8 +148,11 @@ export default {
   },
   data() {
     return {
-      tabs: tabs,
-      formClass: false,
+      statusOptions: [
+        { label: 'Status Aktif', value: 'active' },
+        { label: 'Status Non Aktif', value: 'inactive' },
+      ],
+      openForm: false,
       visibleUpdateCover: false,
       visibleAlert: false,
       titleAlert: 'Gagal memproses data',
@@ -175,12 +161,10 @@ export default {
       visibleConfirmedDelete: false,
       titleConfirmed: 'Simpan data ?',
       currentPage: 0,
-      selectedIndex: 0,
     }
   },
   mounted() {
-    // this.getCategoryData()
-    this.onChangeTabs(0)
+    this.getData()
   },
   components: {
     AppEmpty,
@@ -188,7 +172,6 @@ export default {
     AppPopupConfirmed,
     AppPopupAlert,
     AppFileUpload,
-    AppTabs,
     AppHeaderMobile,
     SearchField,
     Category,
@@ -216,7 +199,7 @@ export default {
       },
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     isRoleOwner() {
       let status = false
@@ -263,28 +246,11 @@ export default {
       this.resetFilter()
       this.getData()
     },
-    // onCreateCategory () {
-    //     console.log('onCreateCategory')
-    // },
     onClose() {
-      this.formClass = false
+      this.openForm = false
     },
     onRefresh() {
       this.getData()
-    },
-    onChangeTabs(data) {
-      this.selectedIndex = data
-      // this.selectedCategoryIndex = 'all'
-      // this.filter.category = ''
-      switch (this.selectedIndex) {
-        case 0:
-          this.filter.status = 'active'
-          break
-        case 1:
-          this.filter.status = 'inactive'
-          break
-      }
-      this.handleFilterSearch()
     },
 
     // LIST DATA
@@ -324,7 +290,7 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.formClass = false
+              this.openForm = false
               this.getData()
             } else {
               this.$message({
@@ -341,7 +307,7 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.formClass = false
+              this.openForm = false
               this.getData()
             } else {
               this.$message({
@@ -369,7 +335,7 @@ export default {
 
     // CREATE
     onCreate() {
-      this.formClass = true
+      this.openForm = true
       this.resetFormData()
       this.form.shop_id = this.shopId
       this.typeForm = 'create'
@@ -377,7 +343,7 @@ export default {
 
     // DETAIL
     onDetail(data) {
-      this.formClass = true
+      this.openForm = true
       this.resetFormData()
       this.setFormData(data)
       this.typeForm = 'detail'
@@ -385,7 +351,7 @@ export default {
 
     // EDIT
     onEdit(data) {
-      this.formClass = true
+      this.openForm = true
       this.resetFormData()
       this.setFormData(data)
       this.typeForm = 'edit'

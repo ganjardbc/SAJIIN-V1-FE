@@ -1,7 +1,7 @@
 <template>
-  <div id="App" class="display-flex align-center space-between">
-    <div class="fonts fonts-9 grey overflow-ellipsis">{{ label }}</div>
-    <div class="fonts fonts-9 grey overflow-ellipsis">{{ value }}</div>
+  <div id="App" class="w-full flex gap-2 items-center justify-between">
+    <div class="text-xs text-black truncate">{{ label }}</div>
+    <div class="text-xs text-black text-right font-semibold truncate">{{ value }}</div>
   </div>
 </template>
 <script>

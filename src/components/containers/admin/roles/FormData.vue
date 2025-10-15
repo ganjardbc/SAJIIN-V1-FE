@@ -1,7 +1,7 @@
 <template>
-  <div id="App">
-    <div class="margin margin-bottom-20px">
-      <div class="fonts fonts-13 black semibold">Informasi</div>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4">
+      <div class="text-md text-black font-semibold">Informasi</div>
       <div class="field-group">
         <div class="field-label">ID Role</div>
         <el-input
@@ -61,10 +61,11 @@
         </div>
       </div>
     </div>
-    <div class="margin margin-bottom-0px">
-      <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+
+    <div class="flex flex-col gap-4">
+      <div class="text-md text-black font-semibold">Konfigurasi</div>
       <div class="field-group">
-        <div class="display-flex space-between">
+        <div class="flex justify-between items-center">
           <div class="field-label">Status</div>
           <el-switch
             v-model="form.status"

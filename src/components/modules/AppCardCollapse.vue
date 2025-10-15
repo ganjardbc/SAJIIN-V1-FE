@@ -1,29 +1,25 @@
 <template>
-  <div id="App">
+  <div id="App" class="p-2 rounded-lg bg-gray-100">
     <div
-      class="card bg-white-grey"
-      style="width: calc(100% - 20px); padding: 10px"
+      class="flex justify-between items-center gap-2"
+      style="cursor: pointer"
+      @click="openCollapse"
     >
-      <div
-        class="display-flex space-between align-center"
-        style="cursor: pointer"
-        @click="openCollapse"
-      >
-        <div v-if="customTitle">
-          <slot name="title" />
-        </div>
-        <div v-else class="fonts fonts-10 semibold black">
-          {{ title ? title : 'Collapse' }}
-        </div>
-        <button class="btn btn-white-grey btn-small-icon">
-          <i
-            :class="`icn fa fa-lw ${visibleCollapse ? 'fa-chevron-up' : 'fa-chevron-down'}`"
-          ></i>
-        </button>
+      <slot
+        v-if="$slots.title"
+        name="title"
+      />
+      <div v-else class="text-sm text-black font-semibold">
+        {{ title ? title : 'Collapse' }}
       </div>
-      <div v-if="visibleCollapse">
-        <slot />
-      </div>
+      <el-button size="small" circle>
+        <i
+          :class="`icn fa fa-lw ${visibleCollapse ? 'fa-chevron-up' : 'fa-chevron-down'}`"
+        ></i>
+      </el-button>
+    </div>
+    <div v-if="visibleCollapse">
+      <slot />
     </div>
   </div>
 </template>

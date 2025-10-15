@@ -1,9 +1,8 @@
 <template>
-  <div id="ProductHome">
-    <AppHeaderMobile title="Produk" />
+  <div id="ProductHome" class="w-full lg:w-lg-false m-auto flex flex-col p-4">
     <AppTabLinks :data="tabs" @onChange="onChange" />
-    <Categories v-if="selectedIndex === 'categories'" />
     <Products v-if="selectedIndex === 'products'" />
+    <Categories v-if="selectedIndex === 'categories'" />
   </div>
 </template>
 <script>
@@ -16,10 +15,10 @@ export default {
   name: 'ProductHome',
   data() {
     return {
-      selectedIndex: 'categories',
+      selectedIndex: 'products',
       tabs: [
-        { id: 1, title: 'Kategori', path: 'categories' },
-        { id: 2, title: 'Produk', path: 'products' },
+        { id: 1, title: 'Produk', path: 'products' },
+        { id: 2, title: 'Kategori', path: 'categories' },
       ],
     }
   },

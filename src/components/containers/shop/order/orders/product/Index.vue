@@ -1,80 +1,82 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="'Edit Produk'"
-      :subtitle="form.order_id"
-      :enableCustomFooter="true"
-      :onClose="onClose"
-    >
-      <div slot="toolbar">
-        <button
-          class="btn btn-sekunder margin margin-right-10px"
-          @click="onOpenVisibleAddProduct"
-        >
-          Tambah
-        </button>
-      </div>
-      <div class="width width-100 padding padding-bottom-15px">
+  <AppSideForm
+    :value="openForm"
+    title="Edit Produk"
+    :subtitle="form.order_id"
+    :enableCustomFooter="true"
+    @close="onClose"
+  >
+    <template #toolbar>
+      <el-button
+        size="small"
+        @click="onOpenVisibleAddProduct"
+      >
+        Tambah
+      </el-button>
+    </template>
+
+    <div class="w-full flex flex-col gap-4">
+      <div class="w-full flex flex-col pb-4 border-b border-dashed border-gray-200">
         <AppEmpty v-if="form.details && form.details.length === 0" />
         <Card v-if="form.details" :data.sync="form.details" :form.sync="form" />
-        <div
-          class="padding padding-bottom-15px margin margin-bottom-30px border-bottom"
-        ></div>
-        <div class="card box-shadow bg-white">
-          <div class="field-group padding padding-top-0px padding-bottom-0px">
-            <div class="field-label">Platform</div>
-            <FieldPlatform
-              :value="form.platform_id"
-              :smallField="true"
-              @onChange="onChangePlatform"
-              @onClear="onClearPlatform"
-            />
-          </div>
-        </div>
       </div>
-      <div slot="footer">
-        <div class="right-form-footer">
-          <div class="card bg-white box-shadow margin margin-bottom-20px">
-            <div class="display-flex space-between">
-              <div class="fonts fonts-10 semibold black">
-                Total ({{ form.total_item }} produk)
-              </div>
-              <div class="fonts fonts-10 semibold black">
-                {{ format(form.total_price) }}
-              </div>
-            </div>
-            <div
-              v-if="isThereDiscount"
-              class="display-flex align-center space-between"
-            >
-              <div class="fonts fonts-9 normal grey">Diskon</div>
-              <div class="fonts fonts-9 normal grey align-right">
-                -{{ format(totalDiscount) }}
-              </div>
-            </div>
-            <div
-              v-if="isTherePlatform"
-              class="display-flex align-center space-between"
-            >
-              <div class="fonts fonts-9 normal grey">Platform</div>
-              <div class="fonts fonts-9 normal grey align-right">
-                +{{ format(totalPlatform) }}
-              </div>
-            </div>
-          </div>
-          <button
-            class="btn btn-main btn-full"
-            :disabled="form.details && form.details.length === 0"
-            @click="onSave"
-          >
-            Simpan Produk
-          </button>
-        </div>
-      </div>
-    </AppSideForm>
 
+      <div class="w-full p-4 bg-white border border-gray-200 rounded-lg">
+        <div class="field-group">
+          <div class="field-label">Platform</div>
+          <FieldPlatform
+            :value="form.platform_id"
+            :smallField="true"
+            @onChange="onChangePlatform"
+            @onClear="onClearPlatform"
+          />
+        </div>
+      </div>
+    </div>
+
+    <template #footer>
+      <div class="w-full flex flex-col gap-4">
+        <div class="p-4 bg-white border border-gray-200 rounded-lg">
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-black font-semibold">
+              Total ({{ form.total_item }} produk)
+            </div>
+            <div class="text-sm text-black font-semibold text-right">
+              {{ format(form.total_price) }}
+            </div>
+          </div>
+          <div
+            v-if="isThereDiscount"
+            class="flex items-center justify-between"
+          >
+            <div class="text-xs text-black">Diskon</div>
+            <div class="text-xs text-gray-500 font-semibold text-right">
+              -{{ format(totalDiscount) }}
+            </div>
+          </div>
+          <div
+            v-if="isTherePlatform"
+            class="flex items-center justify-between"
+          >
+            <div class="text-xs text-black">Platform</div>
+            <div class="text-xs text-gray-500 font-semibold text-right">
+              +{{ format(totalPlatform) }}
+            </div>
+          </div>
+        </div>
+
+        <el-button
+          class="w-full"
+          :disabled="form.details && form.details.length === 0"
+          @click="onSave"
+        >
+          Simpan Produk
+        </el-button>
+      </div>
+    </template>
+    
     <AddProduct v-if="visibleAddProduct" @onClose="onCloseVisibleAddProduct" />
-  </div>
+  </AppSideForm>
 </template>
 
 <script>
@@ -82,9 +84,9 @@ import { mapState, mapActions } from 'vuex'
 import AppSideForm from '../../../../../modules/AppSideForm'
 import AppCardCapsule from '../../../../../modules/AppCardCapsule'
 import AppEmpty from '../../../../../modules/AppEmpty'
+import FieldPlatform from '../../../platforms/Field'
 import AddProduct from './addProduct/Index'
 import Card from './Card'
-import FieldPlatform from '../../../platforms/Field'
 
 export default {
   name: 'App',
@@ -92,6 +94,13 @@ export default {
     return {
       visibleAddProduct: false,
     }
+  },
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   mounted() {
     this.selectedIndex = 0

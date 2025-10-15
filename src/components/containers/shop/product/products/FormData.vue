@@ -1,15 +1,12 @@
 <template>
-  <div id="App">
-    <div class="margin margin-bottom-20px">
-      <div class="fonts fonts-13 black semibold">Informasi</div>
+  <div id="App" class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <div class="text-md text-black font-semibold">Informasi</div>
       <div class="field-group">
         <div class="field-label">Cover</div>
-        <div class="width width-80px">
-          <div class="image image-padding border border-full">
-            <img v-if="form.image" :src="getCover" alt="" class="post-center" />
-            <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-          </div>
-        </div>
+        <AppCardAvatar
+          :src="getCover"
+        />
       </div>
       <div class="field-group">
         <div class="field-label">ID Produk</div>
@@ -84,26 +81,12 @@
           {{ errorMessage.price && errorMessage.price[0] }}
         </div>
       </div>
-      <!-- <div class="field-group">
-                <div class="field-label">Note (optional)</div>
-                <el-input 
-                    placeholder=""
-                    type="textarea"
-                    v-model="form.note"
-                    :disabled="isDetailForm"
-                    :autosize="{ minRows: 2, maxRows: 2}"></el-input>
-                <div 
-                    v-if="errorMessage.note" 
-                    class="field-error">
-                    {{ errorMessage.note && errorMessage.note[0] }}
-                </div>
-            </div> -->
     </div>
 
-    <div class="margin margin-bottom-0px">
-      <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+    <div class="flex flex-col gap-2">
+      <div class="text-md text-black font-semibold">Konfigurasi</div>
       <div class="field-group">
-        <div class="display-flex space-between">
+        <div class="flex items-center justify-between gap-2">
           <div class="field-label">Status</div>
           <el-switch
             v-model="form.status"
@@ -125,13 +108,13 @@
 <script>
 import { mapState } from 'vuex'
 import InputNumber from '../../../../modules/InputNumber'
+import AppCardAvatar from '../../../../modules/AppCardAvatar'
 
 export default {
   name: 'App',
   data() {
     return {}
   },
-  mounted() {},
   computed: {
     ...mapState({
       form: (state) => state.storeProduct.form,
@@ -166,6 +149,7 @@ export default {
     },
   },
   components: {
+    AppCardAvatar,
     InputNumber,
   },
   props: {},

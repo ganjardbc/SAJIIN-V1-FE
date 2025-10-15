@@ -175,7 +175,7 @@ export default {
     orderStatus: defaultOrderStatus(),
     orderType: defaultOrderType(),
     orderPaymentStatus: defaultOrderPaymentStatus(),
-    limit: 10,
+    limit: 12,
     offset: 0,
     totalRecord: 0,
     loading: false,
@@ -789,7 +789,7 @@ export default {
       commit('SET_MESSAGE_DATA', null)
     },
     resetFilter({ commit, state }) {
-      state.limit = 10
+      state.limit = 12
       state.offset = 0
     },
     getData({ commit, state }, data) {

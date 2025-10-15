@@ -1,47 +1,48 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="'Edit Transaksi'"
-      :subtitle="form.order_id"
-      :enableCustomFooter="true"
-      :onClose="onClose"
-    >
-      <div
-        class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px"
-      >
-        <div class="fonts fonts-10 semibold black">Transaksi</div>
-        <div class="field-group">
-          <div class="field-label">Kasir</div>
-          <el-input
-            placeholder="Nama Kasir"
-            type="text"
-            v-model="form.cashier_name"
-          ></el-input>
-        </div>
-        <div class="field-group">
-          <div class="field-label">Buku Kas</div>
-          <cashbook-field
-            :value.sync="form.cashbook_id"
-            :disabledAllLabel="true"
-            placeholder="Pilih buku kas"
-            @onChange="handleFilterCashbook"
-          ></cashbook-field>
+  <AppSideForm
+    :value="openForm"
+    title="Edit Transaksi"
+    :subtitle="form.order_id"
+    :enableCustomFooter="true"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
+      <div class="w-full flex flex-col gap-2 pb-4 border-b border-gray-200">
+        <div class="flex-1 text-sm text-black font-semibold">Transaksi</div>
+        <div class="flex flex-col gap-4">
+          <div class="field-group">
+            <div class="field-label">Kasir</div>
+            <el-input
+              placeholder="Nama Kasir"
+              type="text"
+              v-model="form.cashier_name"
+            ></el-input>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Buku Kas</div>
+            <cashbook-field
+              :value.sync="form.cashbook_id"
+              :disabledAllLabel="true"
+              placeholder="Pilih buku kas"
+              @onChange="handleFilterCashbook"
+            ></cashbook-field>
+          </div>
         </div>
       </div>
 
-      <div
-        class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px"
-      >
-        <div class="fonts fonts-10 semibold black">Pelanggan</div>
-        <div class="field-group">
-          <el-input
-            :placeholder="`Nama Pelanggan ${isNonFnB ? '(opsional)' : ''}`"
-            type="text"
-            v-model="form.customer_name"
-          ></el-input>
+      <div class="w-full flex flex-col gap-2">
+        <div class="flex-1 text-sm text-black font-semibold">Pelanggan</div>
+        <div class="flex flex-col gap-4">
+          <div class="field-group">
+            <el-input
+              :placeholder="`Nama Pelanggan ${isNonFnB ? '(opsional)' : ''}`"
+              type="text"
+              v-model="form.customer_name"
+            ></el-input>
+          </div>
+
           <table-field
             v-if="!isNonFnB"
-            class="margin margin-top-15px"
             :value="form.table_id"
             :smallField="true"
             @onChange="onChangeTable"
@@ -49,14 +50,18 @@
           ></table-field>
         </div>
       </div>
+    </div>
 
-      <div slot="footer">
-        <button class="btn btn-main btn-full" @click="onSave">
-          Simpan Transaksi
-        </button>
-      </div>
-    </AppSideForm>
-  </div>
+    <template #footer>
+      <el-button
+        type="primary"
+        class="w-full"
+        @click="onSave"
+      >
+        Simpan Transaksi
+      </el-button>
+    </template>
+  </AppSideForm>
 </template>
 
 <script>
@@ -69,10 +74,12 @@ import CashbookField from '../../../cashBook/Field'
 
 export default {
   name: 'App',
-  data() {
-    return {
-      visibleAddProduct: false,
-    }
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   mounted() {
     this.selectedIndex = 0

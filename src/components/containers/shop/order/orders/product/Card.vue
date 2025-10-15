@@ -1,117 +1,105 @@
 <template>
-  <div id="App">
+  <div id="App" class="w-full flex flex-col gap-4">
     <div
       v-for="(dt, index) in data"
       :key="index"
-      class="margin margin-top-15px margin-bottom-15px"
+      class="w-full p-4 bg-white border border-gray-200 rounded-lg"
     >
-      <div class="card bg-white box-shadow">
-        <div class="display-flex">
-          <div class="width width-50px">
-            <div class="image image-40px border-full">
-              <img
-                v-if="dt.product_image"
-                :src="productImageThumbnailUrl + dt.product_image"
-                alt=""
-                class="post-center"
-                style="width: 100%"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lw fa-image"></i>
-            </div>
-          </div>
-          <div style="width: calc(100% - 50px)">
-            <div class="width width-100">
-              <div class="fonts fonts-10 black semibold">
+      <div class="w-full flex flex-col gap-4">
+        <div class="w-full flex flex-col md:flex-row justify-between gap-4">
+          <AppCardAvatar
+            :src="productImageThumbnailUrl + dt.product_image"
+            size="small"
+          />
+          <div class="flex-1 flex justify-between gap-4">
+            <div class="flex-1 flex flex-col">
+              <div class="text-sm text-black font-semibold flex items-center gap-2">
                 {{ dt.product_name }}
+                <AppCardCapsule :data="dt.status" />
               </div>
               <div
                 v-if="dt.product_detail"
-                class="fonts fonts-9 black display-flex align-center padding padding-left-5px"
+                class="text-xs text-gray-500"
               >
-                <i
-                  class="fonts fonts-2 fa fa-lw fa-circle margin margin-right-5px"
-                ></i>
                 {{ dt.product_detail }}
               </div>
             </div>
-            <div class="post-top-right-absolute" style="top: 15px; right: 15px">
-              <AppCardCapsule :data="dt.status" />
-            </div>
-          </div>
-        </div>
-        <div class="display-flex space-between margin margin-top-10px">
-          <div class="display-flex align-center">
-            <div class="fonts fonts-10 semibold black">
-              {{ format(dt.price) }}
-            </div>
-            <div
-              v-if="dt.is_discount || dt.is_platform"
-              class="fonts fonts-9 grey text-line margin margin-left-5px"
-            >
-              {{ format(dt.second_price) }}
-            </div>
-          </div>
-          <div class="fonts fonts-10 semibold red align-right">
-            {{ format(dt.subtotal) }}
-          </div>
-        </div>
-        <div
-          v-if="dt.is_discount || dt.is_platform"
-          class="display-flex align-center margin margin-top-5px"
-        >
-          <AppCardFillSigner
-            v-if="dt.is_discount"
-            :label="`
-                            -${
-                              dt.discount_value_type === 'percentage'
-                                ? `${dt.discount_fee}%`
-                                : format(dt.discount_price)
-                            }`"
-            background="bg-orange"
-            color="white"
-          />
-          <AppCardFillSigner
-            v-if="dt.is_platform"
-            :label="`
-                            +${
-                              dt.platform_currency_type === 'percentage'
-                                ? `${dt.platform_fee}%`
-                                : format(dt.platform_price)
-                            }`"
-            background="bg-green"
-            color="white"
-          />
-        </div>
-        <div class="display-flex space-between display-mobile">
-          <div
-            class="width width-200px width-mobile display-flex margin margin-top-10px"
-          >
-            <button
-              :class="`btn btn-icon btn-sekunder`"
-              style="margin-right: 5px"
+            <el-button
+              size="small"
+              circle
+              style="width: 32px; height: 32px"
               @click="onDelete(index)"
             >
               <i class="far fa-lw fa-trash-alt"></i>
-            </button>
-            <div style="width: calc(100% - 45px)">
-              <el-input
-                placeholder="Tulis catatan"
-                type="text"
-                v-model="dt.note"
-              ></el-input>
-            </div>
-          </div>
-          <div class="width width-130px width-mobile margin margin-top-10px">
-            <el-input-number
-              v-model="dt.quantity"
-              @change="(data) => onTotal(data, index)"
-              :min="1"
-              :max="100"
-              style="width: 100%"
-            ></el-input-number>
+            </el-button>
           </div>
         </div>
-        <div class="width width-100 margin margin-top-10px">
+
+        <div class="flex-1 flex flex-col gap-1">
+          <div class="flex justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+              <div class="text-sm text-black font-semibold">
+                {{ format(dt.price) }}
+              </div>
+              <div
+                v-if="dt.is_discount || dt.is_platform"
+                class="text-xs text-gray-500 line-through"
+              >
+                {{ format(dt.second_price) }}
+              </div>
+            </div>
+            <div class="text-sm text-vermillion-500 font-semibold text-right">
+              {{ format(dt.subtotal) }}
+            </div>
+          </div>
+
+          <div
+            v-if="dt.is_discount || dt.is_platform"
+            class="flex gap-2"
+          >
+            <AppCardFillSigner
+              v-if="dt.is_discount"
+              :label="`
+                -${
+                  dt.discount_value_type === 'percentage'
+                    ? `${dt.discount_fee}%`
+                    : format(dt.discount_price)
+                }
+              `"
+              background="bg-orange-100"
+              color="text-orange-500"
+            />
+            <AppCardFillSigner
+              v-if="dt.is_platform"
+              :label="`
+                +${
+                  dt.platform_currency_type === 'percentage'
+                    ? `${dt.platform_fee}%`
+                    : format(dt.platform_price)
+                }
+              `"
+              background="bg-green-100"
+              color="text-green-500"
+            />
+          </div>
+        </div>
+
+        <div class="w-full flex flex-col gap-2">
+          <el-input
+            v-model="dt.note"
+            placeholder="Tulis catatan"
+            type="text"
+            class="w-full"
+          />
+
+          <el-input-number
+            v-model="dt.quantity"
+            :min="1"
+            :max="100"
+            class="w-full"
+            @change="(data) => onTotal(data, index)"
+          />
+
           <FieldDiscount
             :value="dt.discount_id"
             :smallField="true"
@@ -128,6 +116,7 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
+import AppCardAvatar from '../../../../../modules/AppCardAvatar'
 import AppCardCapsule from '../../../../../modules/AppCardCapsule'
 import AppCardFillSigner from '../../../../../modules/AppCardFillSigner'
 import FieldDiscount from '../../../discounts/Field'
@@ -139,6 +128,7 @@ export default {
     form: null,
   },
   components: {
+    AppCardAvatar,
     AppCardCapsule,
     AppCardFillSigner,
     FieldDiscount,

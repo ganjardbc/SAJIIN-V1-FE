@@ -30,7 +30,7 @@ export default {
   state: {
     form: defaultForm(),
     errorMessage: defaultMessage(),
-    limit: 30,
+    limit: 10,
     offset: 0,
     totalRecord: 0,
     totalRead: 0,

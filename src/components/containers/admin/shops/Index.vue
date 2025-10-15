@@ -1,5 +1,93 @@
 <template>
-  <div id="App" :class="formClass ? 'content-form' : 'content-form hide'">
+  <div id="App" class="w-full lg:w-lg-false m-auto">
+    <div class="w-full flex flex-col gap-4 p-4">
+      <div class="w-full flex items-center justify-between">
+        <h1 class="text-3xl text-black font-semibold">
+          Toko
+        </h1>
+        <el-button
+          type="primary"
+          @click="onCreate"
+        >
+          <i class="fa fa-lw fa-plus mr-2" /> Tambah Toko
+        </el-button>
+      </div>
+
+      <div class="w-full">
+        <SearchField
+          class="w-full"
+          placeholder="Cari toko .."
+          :enableResponsive="true"
+          :onChange="(data) => onSearch(data)"
+        />
+      </div>
+
+      <div class="w-full flex flex-col gap-4">
+        <div v-loading="loading" class="w-full">
+          <Card
+            :data.sync="data"
+            @onChangeCover="uploadImage"
+            @onDetail="onDetail"
+            @onEdit="onEdit"
+            @onDelete="onDelete"
+          />
+        </div>
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="text-md text-black">
+            Total {{ totalRecord }}
+          </div>
+          <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="limit"
+            :pager-count="5"
+            layout="prev, pager, next"
+            :total="totalRecord"
+          >
+          </el-pagination>
+        </div>
+      </div>
+    </div>
+
+    <Form
+      :open-form="openForm"
+      @uploadImage="uploadImage"
+      @removeImage="removeImage"
+      @onSave="onOpenVisibleConfirmed"
+      @onClose="onClose"
+    />
+
+    <AppFileUpload
+      v-if="visibleUpdateCover"
+      @onClose="onCloseCover"
+      @onUpload="onUpdateCover"
+    />
+
+    <AppPopupConfirmed
+      v-if="visibleConfirmed"
+      :title="titleConfirmed"
+      @onClickNo="onClickNo"
+      @onClickYes="onClickYes"
+    />
+
+    <AppPopupConfirmed
+      v-if="visibleConfirmedDelete"
+      :title="'Hapus Toko ?'"
+      @onClickNo="onClickNoDelete"
+      @onClickYes="onClickYesDelete"
+    />
+
+    <AppPopupAlert
+      v-if="visibleAlert"
+      :title="titleAlert"
+      :icon="iconAlert"
+      @onClickOk="onClickOk"
+    />
+
+    <AppPopupLoader v-if="loadingForm" />
+  </div>
+  <!-- <div id="App" :class="openForm ? 'content-form' : 'content-form hide'">
     <div class="left">
       <div
         class="display-flex space-between display-mobile margin margin-bottom-15px"
@@ -88,7 +176,7 @@
 
       <AppPopupLoader v-if="loadingForm" />
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -114,7 +202,7 @@ export default {
   },
   data() {
     return {
-      formClass: false,
+      openForm: false,
       visibleUpdateCover: false,
       visibleAlert: false,
       titleAlert: 'Gagal memproses data',
@@ -178,7 +266,7 @@ export default {
       this.getData()
     },
     onClose() {
-      this.formClass = false
+      this.openForm = false
     },
     onRefresh() {
       this.getData()
@@ -222,7 +310,7 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.formClass = false
+              this.openForm = false
               this.getData()
             } else {
               this.$message({
@@ -239,7 +327,7 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.formClass = false
+              this.openForm = false
               this.getData()
             } else {
               this.$message({
@@ -267,14 +355,14 @@ export default {
 
     // CREATE
     onCreate() {
-      this.formClass = true
+      this.openForm = true
       this.typeForm = 'create'
       this.resetFormData()
     },
 
     // DETAIL
     onDetail(data) {
-      this.formClass = true
+      this.openForm = true
       this.typeForm = 'detail'
       this.resetFormData()
       this.setFormData(data)
@@ -282,7 +370,7 @@ export default {
 
     // EDIT
     onEdit(data) {
-      this.formClass = true
+      this.openForm = true
       this.typeForm = 'edit'
       this.resetFormData()
       this.setFormData(data)

@@ -1,11 +1,9 @@
 <template>
-  <div id="App">
-    <div class="padding padding-top-100px padding-bottom-100px">
-      <AppEmpty
-        icon="fa fa-3x fa-shapes"
-        title="WELCOME TO SAJI-IN ADMIN PANEL"
-      />
-    </div>
+  <div id="App" class="h-full w-full flex items-center justify-center bg-gray-100">
+    <AppEmpty
+      icon="fa fa-3x fa-shapes"
+      title="WELCOME TO SAJI-IN ADMIN PANEL"
+    />
   </div>
 </template>
 <script>

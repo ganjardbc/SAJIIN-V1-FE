@@ -1,125 +1,105 @@
 <template>
-  <div id="App" :class="formClass ? 'content-form' : 'content-form hide'">
-    <div class="left">
-      <div
-        class="display-flex space-between display-mobile margin margin-bottom-15px"
+  <div id="App" class="w-full flex flex-col gap-4">
+    <div class="w-full flex items-center justify-between">
+      <h1 class="text-3xl text-black font-semibold">
+        Shift
+      </h1>
+      <el-button
+        v-if="isRoleOwner"
+        @click="onCreate"
       >
-        <div class="width width-75 width-mobile display-flex space-between">
-          <h1 class="fonts big black bold">Shift</h1>
-          <div class="display-flex">
-            <button class="btn btn-icon btn-white" @click="onRefresh">
-              <i class="fa fa-lw fa-retweet"></i>
-            </button>
-            <button
-              v-if="isRoleOwner"
-              class="btn btn-icon btn-white"
-              @click="onCreate"
-            >
-              <i class="fa fa-lw fa-plus" />
-            </button>
-          </div>
-        </div>
-        <div class="width width-25 width-mobile">
-          <SearchField
-            :placeholder="'Cari shift ..'"
-            :enableResponsive="true"
-            :onChange="(data) => onSearch(data)"
-          />
-        </div>
-      </div>
+        <i class="fa fa-lw fa-plus mr-2" /> Tambah Shift
+      </el-button>
+    </div>
 
-      <el-alert
-        v-if="!isRoleOwner"
-        title="Tambah shift baru ?"
-        description="Untuk menambah shift baru mohon hubungi Owner dari Toko ini."
-        type="warning"
-        :closable="true"
-        show-icon
-        style="margin: 10px 0 20px 0"
-      >
-      </el-alert>
+    <SearchField
+      :placeholder="'Cari shift ..'"
+      :enableResponsive="true"
+      :onChange="(data) => onSearch(data)"
+    />
 
-      <div
-        class="display-flex space-between align-center display-mobile margin margin-bottom-15px"
-      >
-        <AppTabs
-          class="width width-300px width-mobile"
-          :selectedIndex.sync="selectedIndex"
-          :isFull="true"
-          :isScrollable="false"
-          :data="tabs"
-          :onChange="(data) => onChangeTabs(data)"
+    <el-alert
+      v-if="!isRoleOwner"
+      title="Tambah shift baru ?"
+      description="Untuk menambah shift baru mohon hubungi Owner dari Toko ini."
+      type="warning"
+      :closable="true"
+      show-icon
+    />
+
+    <AppTabs
+      class="w-full"
+      :selectedIndex.sync="selectedIndex"
+      :isFull="true"
+      :isScrollable="false"
+      :data="tabs"
+      :onChange="(data) => onChangeTabs(data)"
+    />
+
+    <div class="w-full flex flex-col gap-4">
+      <div v-loading="loading" class="w-full">
+        <AppEmpty v-if="data.length === 0" />
+        <Card
+          :data.sync="data"
+          @onChangeCover="uploadImage"
+          @onDetail="onDetail"
+          @onEdit="onEdit"
+          @onDelete="onDelete"
+          @onChangeStatus="onChangeStatus"
         />
       </div>
-
-      <div class="width width-100">
-        <div v-loading="loading">
-          <AppEmpty v-if="data.length === 0" />
-          <Card
-            :data.sync="data"
-            @onChangeCover="uploadImage"
-            @onDetail="onDetail"
-            @onEdit="onEdit"
-            @onDelete="onDelete"
-            @onChangeStatus="onChangeStatus"
-          />
-        </div>
-        <div
-          class="width width-100 display-flex flex-end align-center padding padding-top-15px"
+      <div class="w-full flex justify-between items-center gap-2">
+        <div class="text-md text-black">Total {{ totalRecord }}</div>
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="limit"
+          :pager-count="5"
+          layout="prev, pager, next"
+          :total="totalRecord"
         >
-          <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
-          <el-pagination
-            background
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="limit"
-            :pager-count="5"
-            layout="prev, pager, next"
-            :total="totalRecord"
-          >
-          </el-pagination>
-        </div>
+        </el-pagination>
       </div>
     </div>
 
-    <div class="right">
-      <Form
-        @uploadImage="uploadImage"
-        @removeImage="removeImage"
-        @onSave="onOpenVisibleConfirmed"
-        @onClose="onClose"
-      >
-      </Form>
+    <Form
+      :open-form="openForm"
+      @uploadImage="uploadImage"
+      @removeImage="removeImage"
+      @save="onOpenVisibleConfirmed"
+      @close="onClose"
+    >
+    </Form>
 
-      <AppFileUpload
-        v-if="visibleUpdateCover"
-        @onClose="onCloseCover"
-        @onUpload="onUpdateCover"
-      />
+    <AppFileUpload
+      v-if="visibleUpdateCover"
+      @onClose="onCloseCover"
+      @onUpload="onUpdateCover"
+    />
 
-      <AppPopupConfirmed
-        v-if="visibleConfirmed"
-        :title="titleConfirmed"
-        @onClickNo="onClickNo"
-        @onClickYes="onClickYes"
-      />
+    <AppPopupConfirmed
+      v-if="visibleConfirmed"
+      :title="titleConfirmed"
+      @onClickNo="onClickNo"
+      @onClickYes="onClickYes"
+    />
 
-      <AppPopupConfirmed
-        v-if="visibleConfirmedDelete"
-        :title="'Delete this shift ?'"
-        @onClickNo="onClickNoDelete"
-        @onClickYes="onClickYesDelete"
-      />
+    <AppPopupConfirmed
+      v-if="visibleConfirmedDelete"
+      :title="'Delete this shift ?'"
+      @onClickNo="onClickNoDelete"
+      @onClickYes="onClickYesDelete"
+    />
 
-      <AppPopupAlert
-        v-if="visibleAlert"
-        :title="titleAlert"
-        :icon="iconAlert"
-        @onClickOk="onClickOk"
-      />
+    <AppPopupAlert
+      v-if="visibleAlert"
+      :title="titleAlert"
+      :icon="iconAlert"
+      @onClickOk="onClickOk"
+    />
 
-      <AppPopupLoader v-if="loadingForm" />
-    </div>
+    <AppPopupLoader v-if="loadingForm" />
   </div>
 </template>
 
@@ -153,7 +133,7 @@ export default {
   data() {
     return {
       tabs: tabs,
-      formClass: false,
+      openForm: false,
       visibleUpdateCover: false,
       visibleAlert: false,
       visibleQrCode: false,
@@ -200,7 +180,7 @@ export default {
       },
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     paramShopId() {
       return this.$route.params.shopId
@@ -239,7 +219,7 @@ export default {
       this.getData()
     },
     onClose() {
-      this.formClass = false
+      this.openForm = false
     },
     onRefresh() {
       this.getData()
@@ -292,7 +272,7 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.formClass = false
+              this.openForm = false
               this.getData()
             } else {
               this.$message({
@@ -309,7 +289,7 @@ export default {
           }).then((res) => {
             const status = res.data.status
             if (status === 'ok') {
-              this.formClass = false
+              this.openForm = false
               this.getData()
             } else {
               this.$message({
@@ -337,7 +317,7 @@ export default {
 
     // CREATE
     onCreate() {
-      this.formClass = true
+      this.openForm = true
       this.typeForm = 'create'
       this.resetFormData()
       this.form.shop_id = this.shopId
@@ -345,7 +325,7 @@ export default {
 
     // DETAIL
     onDetail(data) {
-      this.formClass = true
+      this.openForm = true
       this.typeForm = 'detail'
       this.resetFormData()
       this.setFormData(data)
@@ -353,7 +333,7 @@ export default {
 
     // EDIT
     onEdit(data) {
-      this.formClass = true
+      this.openForm = true
       this.typeForm = 'edit'
       this.resetFormData()
       this.setFormData(data)
