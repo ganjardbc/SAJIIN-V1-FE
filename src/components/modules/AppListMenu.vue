@@ -10,7 +10,7 @@
         :title="parent.label"
         class="menu-item"
       >
-        <div class="icon" style="width: 22px" exact>
+        <div class="icon" style="min-width: 36px;" exact>
           <i class="text-sm" :class="parent.icon" />
         </div>
         <div class="label">

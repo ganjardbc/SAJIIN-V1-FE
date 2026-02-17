@@ -6,13 +6,14 @@
       height: avatarSize.height,
     }"
   >
-    <el-avatar
+    <img
       :src="src"
-      class="relative w-full h-full bg-white shadow-lg flex justify-center items-center"
-      :class="customClass"
-      :shape="shape"
-      :fit="fit"
-    />
+      class="relative w-full h-full bg-white shadow-lg object-cover overflow-hidden"
+      :class="[
+        shape === 'circle' ? 'rounded-full' : 'rounded-md',
+        customClass,
+      ]"
+    >
 
     <el-button
       v-if="isUpload"

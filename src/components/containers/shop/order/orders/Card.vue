@@ -143,7 +143,7 @@
             v-if="dt.order.is_discount"
             class="flex items-center justify-between gap-2"
           >
-            <AppCardAvatar 
+            <AppCardAvatar
               v-if="dt.order.discount_image"
               :src="discountImageThumbnailUrl + dt.order.discount_image"
               :is-upload="false"
@@ -178,7 +178,7 @@
       <div class="flex justify-end items-center">
         <!-- DEFAULT -->
         <el-button
-          v-if="dt.order.status !== 'canceled' && dt.order.payment_status"
+          v-if="dt.order.status !== 'canceled'"
           size="medium"
           circle
           style="width: 36px; height: 36px;"
@@ -186,8 +186,9 @@
         >
           <i class="fa fa-print"></i>
         </el-button>
+
         <el-button
-          v-else
+          v-if="dt.order.status !== 'canceled' && !dt.order.payment_status"
           size="medium"
           circle
           style="width: 36px; height: 36px;"

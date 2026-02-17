@@ -38,7 +38,7 @@
           :to="{ name: 'shop-home', params: { shopId: shopId } }"
           class="logo"
         >
-          <img :src="logo" alt="" style="width: 100%; height: 100%" />
+          <img :src="logo" alt="" style="height: 100%" />
         </router-link>
 
         <div class="flex-1 flex items-center justify-end gap-2">
