@@ -68,24 +68,22 @@ module.exports = {
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]'),
         },
       },
-      {
-        test: /\.scss$/,
-        use: [
-          'vue-style-loader',
-          'css-loader',
-          'sass-loader',
-          // {
-          //   loader: 'sass-loader',
-          //   options: {
-          //     indentedSyntax: true,
-          //     // sass-loader version >= 8
-          //     sassOptions: {
-          //       indentedSyntax: true
-          //     }
-          //   }
-          // }
-        ],
-      },
+      // {
+      //   test: /\.scss$/,
+      //   use: [
+      //     'vue-style-loader',
+      //     'css-loader',
+      //     'sass-loader',
+      //   ],
+      // },
+      // {
+      //   test: /\.css$/,
+      //   use: [
+      //     'vue-style-loader',
+      //     'css-loader',
+      //     'postcss-loader',
+      //   ],
+      // },
     ],
   },
   node: {

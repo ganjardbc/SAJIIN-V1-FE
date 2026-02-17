@@ -1,36 +1,29 @@
 <template>
-  <div id="App" class="card-dashboard-container">
+  <div id="App" class="flex flex-col gap-4 p-4 w-full lg:w-sm m-auto">
     <div class="padding padding-bottom-15px">
-      <h1 class="fonts big black bold">Profil</h1>
+      <h1 class="text-3xl text-black font-semibold">
+        Profil
+      </h1>
     </div>
+
     <div
       v-loading="loading"
-      class="display-flex display-mobile space-between padding padding-top-10px padding-bottom-10px"
+      class="flex flex-col gap-4"
     >
-      <div class="width width-30 width-mobile" style="margin-bottom: 30px">
-        <div class="card no-padding-mobile box-shadow bg-white">
-          <div class="content-center margin margin-bottom-20px">
-            <div
-              class="image image-150px image-circle border-full"
-              style="margin: auto; text-align: center"
-            >
-              <i
-                v-if="!getImage"
-                class="post-middle-absolute fonts grey fa fa-2x fa-user-circle"
-              />
-              <img v-else :src="getImage" alt="" />
-            </div>
-          </div>
-          <button
-            class="btn btn-sekunder btn-full margin margin-top-20px"
-            @click="onButtonUpload"
-          >
-            Ubah Cover
-          </button>
-        </div>
+      <div class="flex flex-row gap-4 items-center">
+        <AppCardAvatar
+          :src="getImage"
+          size="large"
+          shape="circle"
+        />
+
+        <el-button @click="onButtonUpload">
+          Ubah Cover
+        </el-button>
       </div>
-      <div class="width width-70 width-mobile">
-        <div class="padding padding-left-30px no-margin-padding">
+
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4">
           <AppTabs
             :isFull="true"
             :selectedIndex.sync="selectedIndex"
@@ -39,11 +32,10 @@
             class="margin margin-bottom-20px"
           />
 
-          <div v-if="selectedIndex === 0">
-            <div
-              class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px"
-            >
-              <div class="fonts fonts-13 black semibold">Informasi</div>
+          <div v-if="selectedIndex === 0" class="flex flex-col gap-4">
+            <div class="w-full rounded-lg border border-gray-300 p-4 shadow-sm bg-white flex flex-col gap-4">
+              <div class="text-lg text-black font-semibold">Informasi</div>
+
               <div class="field-group">
                 <div class="field-label">ID</div>
                 <el-input
@@ -98,10 +90,8 @@
               </div>
             </div>
 
-            <div
-              class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px"
-            >
-              <div class="fonts fonts-13 black semibold">Privat</div>
+            <div class="w-full rounded-lg border border-gray-300 p-4 shadow-sm bg-white flex flex-col gap-4">
+              <div class="text-lg text-black font-semibold">Privat</div>
               <div class="field-group">
                 <div class="field-label">Role</div>
                 <el-input
@@ -117,17 +107,15 @@
             </div>
 
             <div class="display-flex flex-end">
-              <button class="btn btn-main btn-full" @click="onSaveSubmit">
+              <el-button type="primary" class="w-full" @click="onSaveSubmit">
                 Simpan Data
-              </button>
+              </el-button>
             </div>
           </div>
 
-          <div v-if="selectedIndex === 1">
-            <div
-              class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px"
-            >
-              <div class="fonts fonts-13 black semibold">Ubah Password</div>
+          <div v-if="selectedIndex === 1" class="flex flex-col gap-4">
+            <div class="w-full rounded-lg border border-gray-300 p-4 shadow-sm bg-white flex flex-col gap-4">
+              <div class="text-lg text-black font-semibold">Ubah Password</div>
               <div class="field-group">
                 <div class="field-label">Password Baru</div>
                 <div class="field-caption">
@@ -147,15 +135,25 @@
             </div>
 
             <div class="display-flex flex-end">
-              <button
+              <el-button
                 :disabled="form.password ? false : true"
-                class="btn btn-main btn-full"
+                type="primary"
+                class="w-full"
                 @click="onSaveSubmit"
               >
                 Ubah Password
-              </button>
+              </el-button>
             </div>
           </div>
+        </div>
+
+        <div class="pt-4 border-t border-gray-300">
+          <el-button
+            class="w-full"
+            @click="onLogout"
+          >
+            Logout
+          </el-button>
         </div>
       </div>
     </div>
@@ -171,6 +169,13 @@
       :title="'Update data profil ?'"
       @onClickNo="onClickNoUpdate"
       @onClickYes="onClickYesUpdate"
+    />
+
+    <AppPopupConfirmed
+      v-if="visibleConfirmedLogout"
+      :title="'Logout dari akun Kamu ?'"
+      @onClickNo="onClickNoLogout"
+      @onClickYes="onClickYesLogout"
     />
 
     <AppPopupAlert
@@ -190,6 +195,7 @@ import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../modules/AppFileUpload'
 import AppTabs from '../../../modules/AppTabs'
+import AppCardAvatar from '../../../modules/AppCardAvatar'
 
 const tabs = [
   { id: 1, label: 'Data', status: 'active' },
@@ -211,8 +217,8 @@ export default {
       tabs: tabs,
       selectedIndex: 0,
       visibleUpdateCover: false,
-      // visibleConfirmedLogout: false,
       visibleConfirmedUpdate: false,
+      visibleConfirmedLogout: false,
       visibleAlert: false,
       titleAlert: 'Gagal memproses data',
       iconAlert: 'fa fa-4x fa-info-circle',
@@ -227,6 +233,7 @@ export default {
     AppPopupConfirmed,
     AppPopupLoader,
     AppPopupAlert,
+    AppCardAvatar,
   },
   computed: {
     ...mapState({
@@ -317,6 +324,31 @@ export default {
         } else {
           this.visibleAlert = true
           this.titleAlert = 'Gagal upload cover'
+        }
+      })
+    },
+
+    // LOGOUT
+    onLogout() {
+      this.visibleConfirmedLogout = true
+    },
+    onClickNoLogout() {
+      this.visibleConfirmedLogout = false
+    },
+    onClickYesLogout() {
+      this.visibleConfirmedLogout = false
+      const token = this.$cookies.get('tokenBearer')
+      this.logout(token).then((res) => {
+        if (res.data.status === 'ok') {
+          this.$cookies.remove('token')
+          this.$cookies.remove('tokenBearer')
+          this.$cookies.remove('user')
+          this.$cookies.remove('role')
+          this.$cookies.remove('shop')
+          this.$cookies.remove('employee')
+          this.$cookies.remove('permissions')
+
+          this.$router.push({ name: 'login' })
         }
       })
     },

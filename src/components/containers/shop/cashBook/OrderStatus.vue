@@ -1,38 +1,37 @@
 <template>
-  <div id="OrderStatus">
-    <div v-if="data" class="display-flex space-between align-center">
-      <div class="fonts fonts-10 normal black">Status Pesanan</div>
-      <div class="display-flex flex-start align-center">
+  <div id="OrderStatus" class="w-full">
+    <div v-if="data" class="flex justify-between items-center">
+      <div class="text-xs tet-black">Status Pesanan</div>
+      <div class="flex items-center gap-2">
         <div
           v-if="!data.order_total"
-          class="display-flex flex-start align-center"
+          class="flex items-center gap-2"
         >
-          <span class="fonts fonts-10 semibold black">Tidak Ada Pesanan</span>
-          <i
-            class="fonts fonts-11 orange fa fa-1x fa-times-circle margin margin-left-5px"
-          ></i>
+          <span class="text-xs tet-black">Tidak Ada Pesanan</span>
+          <i class="text-md text-red-500 fa fa-times-circle" />
         </div>
-        <div v-else class="display-flex flex-start align-center">
-          <span class="fonts fonts-10 semibold black">
+        <div v-else class="flex items-center gap-2">
+          <span class="text-xs text-black font-semibold">
             {{ data.order_done }}/{{ data.order_total }}
             {{ data.order_total === data.order_done ? 'Selesai' : 'Diproses' }}
           </span>
           <i
             v-if="data.order_total === data.order_done"
-            class="fonts fonts-11 green fa fa-1x fa-check-circle margin margin-left-5px"
+            class="text-md text-green-500 fa fa-check-circle"
           ></i>
           <i
             v-else
-            class="fonts fonts-11 orange fa fa-1x fa-check-circle margin margin-left-5px"
+            class="text-md text-orange-500 fa fa-check-circle"
           ></i>
         </div>
-        <button
+        <el-button
           v-if="enableButton"
-          class="btn btn-small-icon btn-sekunder btn-circle margin margin-left-10px"
+          size="small"
+          circle
           @click="onClick"
         >
           <i class="fa fa-lw fa-list-ul"></i>
-        </button>
+        </el-button>
       </div>
     </div>
   </div>

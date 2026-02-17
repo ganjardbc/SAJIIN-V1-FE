@@ -1,26 +1,19 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="!isDetailForm"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
-      <div class="margin margin-bottom-20px">
-        <div class="fonts fonts-13 black semibold">Informasi</div>
+  <AppSideForm
+    :value="openForm"
+    :title="title"
+    :enableSaveButton="!isDetailForm"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <div class="text-md text-black font-semibold">Informasi</div>
         <div class="field-group">
           <div class="field-label">Cover</div>
-          <div class="width width-80px">
-            <div class="image image-padding border border-full">
-              <img
-                v-if="form.image"
-                :src="getCover"
-                alt=""
-                class="post-center"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-            </div>
-          </div>
+          <AppCardAvatar
+            :src="getCover"
+          />
         </div>
         <div class="field-group">
           <div class="field-label">ID Meja</div>
@@ -47,7 +40,7 @@
           </div>
         </div>
         <div class="field-group">
-          <div class="field-label">Kode</div>
+          <div class="field-label">Kode (optional)</div>
           <el-input
             placeholder=""
             type="text"
@@ -59,7 +52,7 @@
           </div>
         </div>
         <div class="field-group">
-          <div class="field-label">Keterangan</div>
+          <div class="field-label">Keterangan (optional)</div>
           <el-input
             placeholder=""
             type="textarea"
@@ -73,10 +66,10 @@
         </div>
       </div>
 
-      <div class="margin margin-bottom-0px">
-        <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+      <div class="flex flex-col gap-2">
+        <div class="text-md text-black font-semibold">Konfigurasi</div>
         <div class="field-group">
-          <div class="display-flex space-between">
+          <div class="flex items-center justify-between gap-2">
             <div class="field-label">Status</div>
             <el-switch
               v-model="form.status"
@@ -92,12 +85,13 @@
           </div>
         </div>
       </div>
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import AppCardAvatar from '../../../modules/AppCardAvatar'
 import AppSideForm from '../../../modules/AppSideForm'
 import AppImage from '../../../modules/AppImage'
 
@@ -106,7 +100,13 @@ export default {
   data() {
     return {}
   },
-  mounted() {},
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   computed: {
     ...mapState({
       form: (state) => state.storeTable.form,
@@ -143,6 +143,7 @@ export default {
     },
   },
   components: {
+    AppCardAvatar,
     AppSideForm,
     AppImage,
   },
@@ -154,10 +155,10 @@ export default {
       this.$emit('removeImage', data)
     },
     onSave() {
-      this.$emit('onSave')
+      this.$emit('save')
     },
     onClose() {
-      this.$emit('onClose')
+      this.$emit('close')
     },
   },
 }

@@ -1,23 +1,23 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="!isDetailForm"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
+  <AppSideForm
+    :title="title"
+    :value="openForm"
+    :enableSaveButton="!isDetailForm"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
       <AppTabs
         v-if="!isCreateForm"
         :selectedIndex.sync="selectedIndex"
         :data="tabs"
         :isFull="true"
         :onChange="(data) => onChangeTabs(data)"
-        class="margin margin-bottom-20px"
       />
       <FormData v-if="selectedIndex === 0" />
       <Permissions v-if="selectedIndex === 1" />
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
@@ -40,7 +40,13 @@ export default {
       tabs: tabs,
     }
   },
-  mounted() {},
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   watch: {
     form(props, prevProps) {
       if (props !== prevProps) {

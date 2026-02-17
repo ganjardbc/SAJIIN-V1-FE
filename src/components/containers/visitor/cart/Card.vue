@@ -1,71 +1,58 @@
 <template>
-  <div id="App">
+  <div class="w-full flex flex-col gap-4">
     <div
       v-for="(dt, index) in data"
       :key="index"
-      class="margin margin-top-15px margin-bottom-15px"
+      class="relative bg-white p-4 border border-gray-200 rounded-lg flex flex-col gap-4"
     >
-      <div class="card bg-white box-shadow">
-        <div class="display-flex">
-          <div class="width width-50px">
-            <div class="image image-40px">
-              <img
-                v-if="dt.product_image"
-                :src="productImageThumbnailUrl + dt.product_image"
-                alt=""
-                class="post-center"
-                style="width: 100%"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lw fa-image"></i>
-            </div>
+      <div class="flex flex-row justify-between gap-4">
+        <AppCardAvatar
+          :src="`${productImageThumbnailUrl}${dt.product_image}`"
+          shape="square"
+          size="medium"
+          fit="contain"
+          custom-class="shadow-none border border-gray-200"
+        />
+
+        <div class="flex-1 flex-col gap-1">
+          <div class="text-sm text-black font-semibold">{{ dt.product_name }}</div>
+          <div class="text-sm text-gray-500" style="margin-bottom: 3px">
+            {{ dt.product_detail }}
           </div>
-          <div style="width: calc(100% - 50px)">
-            <div class="width width-100">
-              <div class="fonts fonts-10 black">{{ dt.product_name }}</div>
-              <div class="fonts fonts-10 black" style="margin-bottom: 3px">
-                {{ dt.product_detail }}
-              </div>
-              <div class="display-flex space-between">
-                <div class="display-flex">
-                  <div class="fonts fonts-10 semibold black">
-                    {{ format(dt.price) }}
-                  </div>
-                  <!-- HIDDEN TEMPORARY -->
-                  <!-- <div v-if="dt.is_discount" class="fonts fonts-10 grey text-line margin margin-left-5px">{{ format(dt.second_price) }}</div> -->
-                </div>
-                <div class="fonts fonts-10 semibold red align-right">
-                  {{ format(dt.subtotal) }}
-                </div>
-              </div>
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-black font-semibold">
+              {{ format(dt.price) }}
+            </div>
+            <div class="text-sm text-vermillion-500 font-semibold text-right">
+              {{ format(dt.subtotal) }}
             </div>
           </div>
         </div>
-        <div class="display-flex space-between display-mobile">
-          <div class="display-flex margin margin-top-15px">
-            <button
-              :class="`btn btn-icon btn-white`"
-              style="margin-right: 5px"
-              @click="onDelete(index)"
-            >
-              <i class="far fa-lw fa-trash-alt"></i>
-            </button>
-            <div class="width width-150px width-mobile">
-              <el-input
-                placeholder="Tulis catatan"
-                type="text"
-                v-model="dt.note"
-              ></el-input>
-            </div>
-          </div>
-          <div class="width width-130px width-mobile margin margin-top-15px">
-            <el-input-number
-              v-model="dt.quantity"
-              @change="(data) => onTotal(data, index)"
-              :min="0"
-              :max="100"
-              style="width: 100%"
-            ></el-input-number>
-          </div>
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+        <div class="w-full lg:w-1/3 flex items-center gap-4">
+          <el-input
+            placeholder="Tulis catatan"
+            type="text"
+            v-model="dt.note"
+          />
+        </div>
+        <div class="w-full lg:w-1/3 flex items-center gap-4">
+          <el-button
+            class="px-4"
+            square
+            @click="onDelete(index)"
+          >
+            <i class="far fa-lw fa-trash-alt"></i>
+          </el-button>
+          <el-input-number
+            v-model="dt.quantity"
+            @change="(data) => onTotal(data, index)"
+            :min="0"
+            :max="100"
+            style="width: 100%"
+          ></el-input-number>
         </div>
       </div>
     </div>
@@ -73,9 +60,13 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
+import AppCardAvatar from '../../../modules/AppCardAvatar'
 
 export default {
   name: 'App',
+  components: {
+    AppCardAvatar,
+  },
   props: {
     data: null,
   },

@@ -37,6 +37,7 @@ export default {
     loadMore: false,
     loadingForm: false,
     typeForm: 'create',
+    selectedIndex: 'all',
     data: [],
     filter: {
       search: '',

@@ -1,40 +1,45 @@
 <template>
-  <div id="App">
-    <div class="left-form">
-      <CashBook @onOpenOrderList="onOpenOrderList" />
-      <Product v-if="isThereOpenedCashbook" />
-    </div>
-    <div class="right-form">
-      <CartForm @onCreateOrder="onCreateOrder" @onCheckOut="onOpenCheckOut" />
-    </div>
+  <div id="App" class="w-full">
+    <div class="default-layout-form">
+      <div class="default-layout-form__content">
+        <CashBook @onOpenOrderList="onOpenOrderList" />
+        <ProductList v-if="isThereOpenedCashbook" />
+        <CartPopup @onClick="onOpenCart" />
+      </div>
 
-    <div :class="`content-form ${!visibleCheckOut && 'hide'}`">
-      <div class="right">
-        <CheckOut @onCreateOrder="onCreateOrder" @onClose="onCloseCheckOut" />
+      <div
+        class="default-layout-form__sidebar"
+        :class="{
+          'default-layout-form__sidebar--show': visibleCart,
+        }"
+      >
+        <CartForm
+          @onCreateOrder="onCreateOrder"
+          @onCheckOut="onOpenCheckOut"
+          @onClose="onCloseCart"
+        />
       </div>
     </div>
 
-    <div :class="`content-form ${!visibleFormReceipt && 'hide'}`">
-      <div class="right">
-        <FormReceipt
-          @onSave="onOpenReceipt"
-          @onClose="onCloseReceipt"
-          @onPrint="onPrintReceipt"
-        >
-        </FormReceipt>
-      </div>
-    </div>
+    <CheckOut
+      :open-form="visibleCheckOut"
+      @onCreateOrder="onCreateOrder"
+      @onClose="onCloseCheckOut"
+    />
 
-    <div :class="`content-form ${!visibleCashBookDetail && 'hide'}`">
-      <div class="right">
-        <CashBookDetail
-          @onClosingCashBook="onOpenCashBook"
-          @onDownload="onDownloadReport"
-          @onClose="onCloseOrderList"
-        >
-        </CashBookDetail>
-      </div>
-    </div>
+    <OrderReceipt
+      :open-form="visibleOrderReceipt"
+      @onSave="onOpenReceipt"
+      @onClose="onCloseReceipt"
+      @onPrint="onPrintReceipt"
+    />
+
+    <CashBookDetail
+      :open-form="visibleCashBookDetail"
+      @onClosingCashBook="onOpenCashBook"
+      @onDownload="onDownloadReport"
+      @onClose="onCloseOrderList"
+    />
 
     <CloseCashbook
       v-if="visibleCashBookClosing"
@@ -74,11 +79,11 @@ import { mapState, mapActions } from 'vuex'
 import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
-import FormReceipt from '../order/orders/receipt/Index'
+import OrderReceipt from '../order/orders/receipt/Index'
 import CashBook from './cashBook/Index'
-import CashBookNotification from './cashBook/Notification'
-import Product from './product/Index'
+import ProductList from './product/Index'
 import CartForm from './cart/Form'
+import CartPopup from './cart/CartPopup'
 import CheckOut from './checkOut/Index'
 import CashBookDetail from '../cashBook/Detail'
 import CloseCashbook from '../cashBook/CloseCashbook'
@@ -99,7 +104,7 @@ export default {
       visibleForm: false,
       visibleCart: false,
       visibleCheckOut: false,
-      visibleFormReceipt: false,
+      visibleOrderReceipt: false,
       visibleCashBookDetail: false,
       visibleCashBookClosing: false,
       visibleAlert: false,
@@ -123,11 +128,11 @@ export default {
     AppPopupLoader,
     AppPopupConfirmed,
     AppPopupAlert,
-    FormReceipt,
+    OrderReceipt,
     CashBook,
-    CashBookNotification,
-    Product,
+    ProductList,
     CartForm,
+    CartPopup,
     CheckOut,
     CashBookDetail,
     CloseCashbook,
@@ -146,7 +151,7 @@ export default {
       return this.currentCashBook && this.currentCashBook.cash_status === 'open'
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     loading: {
       get() {
@@ -222,13 +227,13 @@ export default {
           table: response.table,
         }
         if (payload.payment_status) {
-          this.visibleFormReceipt = true
+          this.visibleOrderReceipt = true
           this.setFormData(payload)
         }
       })
     },
     onCloseReceipt() {
-      this.visibleFormReceipt = false
+      this.visibleOrderReceipt = false
     },
     onPrintReceipt() {
       alert('onPrintReceipt')

@@ -1,24 +1,30 @@
 <template>
-  <div id="App" class="display-popup">
-    <div class="post-middle-absolute width width-400px width-mobile">
-      <div class="padding padding-15px">
-        <div class="card box-shadow bg-white">
-          <div class="padding padding-30px">
-            <div class="display-flex column align-center">
-              <i class="fonts fonts-64 primary fa fa-4x fa-spin fa-spinner"></i>
-              <div class="fonts fonts-12 semibold black margin margin-top-30px">
-                {{ title ? title : 'Mohon Tunggu' }}
-              </div>
-            </div>
-          </div>
-        </div>
+  <AppCardPopup
+    size="xxs"
+    disable-header
+  >
+    <div class="flex flex-col justify-center items-center gap-4 py-4">
+      <div
+        class="flex justify-center items-center rounded-full bg-vermillion-100"
+        style="width: 96px; height: 96px;"
+      >
+        <i class="text-4xl text-vermillion-500 fa fa-4x fa-spin fa-spinner" />
+      </div>
+
+      <div class="text-lg text-black font-semibold text-center">
+        {{ title ? title : 'Mohon Tunggu...' }}
       </div>
     </div>
-  </div>
+  </AppCardPopup>
 </template>
 <script>
+import AppCardPopup from './AppCardPopup'
+
 export default {
   name: 'App',
+  components: {
+    AppCardPopup,
+  },
   props: {
     title: null,
   },

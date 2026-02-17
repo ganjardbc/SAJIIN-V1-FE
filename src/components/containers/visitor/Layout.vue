@@ -1,15 +1,47 @@
 <template>
-  <div id="App">
-    <!-- <div v-if="isDigitalMenuActive"> -->
-    <keep-alive>
-      <router-view />
-    </keep-alive>
-    <router-view name="visitorLayoutReload" />
-    <!-- </div> -->
+  <div class="default-layout w-full h-full">
+    <div class="header">
+      <div
+        v-if="isHomePage"
+        class="w-full lg:w-sm mx-auto flex items-center justify-center gap-4"
+      >
+        <router-link :to="{ name: 'visitor-home' }" class="logo">
+          <img :src="logo" alt="SAJI-IN" style="height: 35px" />
+        </router-link>
+      </div>
+      <div
+        v-else
+        class="w-full lg:w-sm mx-auto flex items-center justify-start gap-4"
+      >
+        <el-button
+          size="large"
+          circle
+          class="border-none"
+          @click="onClickBack"
+        >
+          <i class="fa fa-lg fa-arrow-left" />
+        </el-button>
+        <div class="text-md text-black font-semibold">
+          {{ metaTitle }}
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="w-full overflow-y-auto"
+      style="height: calc(100vh - 60px)"
+    >
+      <div class="w-full lg:w-sm mx-auto">
+        <keep-alive>
+          <router-view />
+        </keep-alive>
+        <router-view name="visitorLayoutReload" />
+      </div>
+    </div>
 
     <!-- <div v-else>
-            <InactiveShop />
-        </div> -->
+      <InactiveShop />
+    </div> -->
   </div>
 </template>
 <script>
@@ -48,6 +80,12 @@ export default {
     selectedShop() {
       return this.data.shop
     },
+    metaTitle() {
+      return this.$route.meta.title || 'Kembali';
+    },
+    isHomePage() {
+      return this.$route.name === 'visitor-home';
+    },
     // isDigitalMenuActive () {
     //     return this.selectedShop && this.selectedShop.is_digital_menu_active
     // },
@@ -71,6 +109,9 @@ export default {
         }
         this.setOrder(payload)
       })
+    },
+    onClickBack() {
+      this.$router.back()
     },
   },
 }

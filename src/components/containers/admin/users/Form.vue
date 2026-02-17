@@ -1,26 +1,21 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="!isDetailForm"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
-      <div class="margin margin-bottom-20px">
-        <div class="fonts fonts-13 black semibold">Informasi</div>
+  <AppSideForm
+    :title="title"
+    :value="openForm"
+    :enableSaveButton="!isDetailForm"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4">
+        <div class="text-md text-black font-semibold">Informasi</div>
         <div class="field-group">
           <div class="field-label">Cover</div>
-          <div class="width width-80px">
-            <div class="image image-padding border border-full">
-              <img
-                v-if="form.image"
-                :src="getCover"
-                alt=""
-                class="post-center"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-            </div>
-          </div>
+          <AppCardAvatar
+            :src="getCover"
+            size="medium"
+            shape="square"
+          />
         </div>
         <div class="field-group">
           <div class="field-label">ID User</div>
@@ -77,7 +72,7 @@
               >
                 {{ item.employee.name }}
               </div>
-              <div class="display-flex space-between">
+              <div class="flex justify-between items-center">
                 <span class="fonts fonts-10 grey custom-field-select-caption">{{
                   item.role.description
                 }}</span>
@@ -145,10 +140,11 @@
           </div>
         </div>
       </div>
-      <div class="margin margin-bottom-0px">
-        <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+
+      <div class="flex flex-col gap-4">
+        <div class="text-md text-black font-semibold">Konfigurasi</div>
         <div class="field-group">
-          <div class="display-flex space-between">
+          <div class="flex justify-between items-center">
             <div class="field-label">Status</div>
             <el-switch
               v-model="form.status"
@@ -164,7 +160,7 @@
           </div>
         </div>
         <div class="field-group">
-          <div class="display-flex space-between">
+          <div class="flex justify-between items-center">
             <div class="field-label">Available</div>
             <el-switch
               v-model="form.is_available"
@@ -180,21 +176,28 @@
           </div>
         </div>
       </div>
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import AppSideForm from '../../../modules/AppSideForm'
 import AppImage from '../../../modules/AppImage'
+import AppCardAvatar from '../../../modules/AppCardAvatar'
 
 export default {
   name: 'App',
   data() {
     return {}
   },
-  mounted() {},
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   computed: {
     ...mapState({
       form: (state) => state.storeUsers.form,
@@ -244,6 +247,7 @@ export default {
   components: {
     AppSideForm,
     AppImage,
+    AppCardAvatar,
   },
   methods: {
     onChangeUsername(value) {

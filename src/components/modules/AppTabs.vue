@@ -1,20 +1,13 @@
 <template>
-  <div
-    id="AppTabs"
-    style="white-space: nowrap; overflow-y: hidden; overflow-x: auto"
+  <el-radio-group
+    v-model="tabPosition"
+    class="custom-tabs"
+    @change="onClick"
   >
-    <el-radio-group
-      v-model="tabPosition"
-      fill="#FB3640"
-      class="custom-tabs"
-      @change="onClick"
-    >
-      <el-radio-button v-for="(item, i) in datas" :key="i" :label="i">
-        {{ item.label }} {{ item.value ? `(${item.value})` : '' }}
-      </el-radio-button>
-      <!-- :style="`width: calc(100% / ${datas.length})`" -->
-    </el-radio-group>
-  </div>
+    <el-radio-button v-for="(item, i) in datas" :key="i" :label="i">
+      {{ item.label }} {{ item.value ? `(${item.value})` : '' }}
+    </el-radio-button>
+  </el-radio-group>
 </template>
 
 <script>
@@ -100,6 +93,7 @@ export default {
   width: 100% !important;
   display: flex !important;
   flex-direction: row !important;
+  overflow-y: auto !important;
 }
 .custom-tabs .el-radio-button {
   width: 100% !important;

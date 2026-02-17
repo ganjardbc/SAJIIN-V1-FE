@@ -209,7 +209,7 @@ export default {
         })
     },
     setShopData() {
-      const shop = this.$cookies.get('shop')
+      const shop = this.$store.state.storeShop.form
       this.setShop(shop && shop.id)
     },
     getShopData() {
@@ -266,7 +266,7 @@ export default {
       dataCurrent: (state) => state.storeCashBook.dataCurrent,
     }),
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     dataUser() {
       return this.data && this.data.user

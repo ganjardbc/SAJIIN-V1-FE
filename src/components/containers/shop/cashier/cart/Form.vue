@@ -1,63 +1,53 @@
 <template>
-  <div id="App" class="right-form-container">
-    <CartPopup
-      v-if="isThereOpenedCashbook"
-      class="mobile-visible"
-      @onClick="onOpenCart"
-    />
-    <div
-      :class="`right-form-card ${visibleCart && 'show'} bg-white box-shadow`"
-    >
-      <div
-        class="right-form-header display-flex space-between align-center bg-white"
-      >
-        <h1 class="fonts fonts-12 black semibold">
-          Keranjang
-          <span v-if="orderQuantity" class="fonts fonts-9"
-            >({{ orderQuantity }})</span
-          >
-        </h1>
-        <div class="display-flex align-center">
-          <button
-            class="btn btn-small btn-main-reverse with-border with-hover"
-            :disabled="!isThereDetails"
-            @click="deleteAllProduct"
-          >
-            Hapus Produk
-          </button>
-          <button
-            class="btn btn-white btn-icon btn-circle margin margin-left-10px mobile-visible"
-            @click="onCloseCart"
-          >
-            <i class="fa fa-lg fa-times"></i>
-          </button>
-        </div>
+  <div id="App" class="w-full flex flex-col">
+    <div class="sticky top-0 w-full bg-white p-4 flex justify-between items-center z-10 border-b border-dashed-200">
+      <h1 class="text-sm text-black font-semibold">
+        Keranjang
+        <span
+          v-if="orderQuantity"
+          class="text-sm text-gray-500"
+        >
+          ({{ orderQuantity }})
+        </span>
+      </h1>
+
+      <div class="flex items-center justify-end">
+        <el-button
+          size="mini"
+          :disabled="!isThereDetails"
+          @click="deleteAllProduct"
+        >
+          Hapus Produk
+        </el-button>
+        <el-button
+          v-if="deviceType !== 'desktop'"
+          class="border-none"
+          circle
+          @click="onClose"
+        >
+          <i class="fa fa-lg fa-times"></i>
+        </el-button>
       </div>
-      <CashierMain
-        @onCreateOrder="onCreateOrder"
-        @onCheckOut="onCheckOut"
-      ></CashierMain>
     </div>
+
+    <CashierMain
+      @onCreateOrder="onCreateOrder"
+      @onCheckOut="onCheckOut"
+    />
   </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
 import CashierMain from './Main'
-import CartPopup from './CartPopup'
 
 export default {
   name: 'App',
-  data() {
-    return {
-      visibleCart: false,
-    }
-  },
   components: {
     CashierMain,
-    CartPopup,
   },
   computed: {
     ...mapState({
+      deviceType: (state) => state.application.deviceType,
       details: (state) => state.storeCashier.form.details,
       dataCurrent: (state) => state.storeCashBook.dataCurrent,
     }),
@@ -89,11 +79,8 @@ export default {
     onCheckOut() {
       this.$emit('onCheckOut')
     },
-    onOpenCart() {
-      this.visibleCart = true
-    },
-    onCloseCart() {
-      this.visibleCart = false
+    onClose() {
+      this.$emit('onClose')
     },
   },
 }

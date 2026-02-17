@@ -1,14 +1,16 @@
 <template>
   <div id="AddCartPopup">
-    <AppCardPopup title="Tambah ke Keranjang" @onClose="onClose">
-      <div class="width width-100">
-        <div
-          class="field-group display-flex border-bottom"
-          style="padding-top: 0"
-        >
-          <div style="width: calc(100% - 77px)">
-            <div class="fonts fonts-11 semibold">{{ data.name }}</div>
-            <div class="fonts fonts-9 normal grey">
+    <AppCardPopup
+      title="Tambah ke Keranjang"
+      @onClose="onClose"
+    >
+      <div class="w-full flex flex-col gap-4">
+        <div class="w-full flex gap-2 justify-between border-b border-gray-200 pb-4">
+          <div class="flex-1">
+            <div class="text-sm text-black font-semibold">
+              {{ data.name }}
+            </div>
+            <div class="text-sm text-gray-500">
               {{
                 detailSelected
                   ? format(varianPrice(detailSelected))
@@ -18,60 +20,52 @@
               }}
             </div>
           </div>
-          <div style="width: 60px; margin-left: 15px">
-            <div class="image image-padding border-full">
-              <img
-                v-if="data.image"
-                :src="productImageThumbnailUrl + data.image"
-                alt=""
-                class="post-center"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-            </div>
-          </div>
+          <AppCardAvatar
+            :src="productImageThumbnailUrl + data.image"
+            size="small"
+          />
         </div>
 
         <div
           v-if="data.details && data.details.length > 0 ? true : false"
-          class="field-group"
-          style="padding-bottom: 0"
+          class="w-full flex flex-col gap-2"
         >
-          <div class="display-flex align-center space-between">
-            <div class="field-label">Varian</div>
-            <div class="fonts fonts-10 black margin margin-bottom-8px">
+          <div class="w-full flex gap-2 justify-between">
+            <div class="text-sm text-gray-700">Varian</div>
+            <div class="text-sm text-black text-right">
               {{ data.details.length }} Item
             </div>
           </div>
-          <ul class="menu-capsule">
-            <li
+
+          <div class="flex gap-2 flex-wrap">
+            <div
               v-for="(dt, index) in data.details"
               :key="index"
+              class="flex gap-2 py-2 px-3 rounded-lg bg-white border border-gray-200 cursor-pointer"
               :class="
                 data.status === 'active'
                   ? dt.is_available
                     ? detailSelected === dt.id
-                      ? 'enable'
+                      ? 'bg-green-100 border-green-500'
                       : ''
-                    : 'disable'
-                  : 'disable'
+                    : 'bg-gray-100'
+                  : 'bg-gray-100'
               "
               @click="onChangeDetail(dt.id)"
             >
-              <div class="row">
-                <div style="width: 25px">
-                  <i class="icn fa fa-1x fa-box" />
+              <div style="width: 18px">
+                <i class="fa fa-box text-gray-700" />
+              </div>
+              <div class="flex-1">
+                <div class="text-xs text-gray-700">
+                  {{ dt.name }}
                 </div>
-                <div>
-                  <div class="ttl">{{ dt.name }}</div>
-                  <div class="val">
-                    <div class="fonts fonts-10 black semibold">
-                      {{ format(dt.price) }}
-                    </div>
-                  </div>
+                <div class="text-sm text-black font-semibold">
+                  {{ format(dt.price) }}
                 </div>
               </div>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
 
         <div class="field-group">
@@ -84,30 +78,35 @@
             :disabled="data.status === 'inactive' || !form.price"
           ></el-input-number>
         </div>
+      </div>
 
-        <div class="field-group">
-          <div class="display-flex space-between margin margin-bottom-10px">
-            <div class="fonts fonts-10 semibold black">
+      <template #footer>
+        <div class="w-full flex flex-col gap-2">
+          <div class="w-full flex gap-2 justify-between">
+            <div class="text-sm font-semibold text-black">
               Total ({{ orderQuantity }} produk)
             </div>
-            <div class="fonts fonts-10 semibold main-color">
+            <div class="text-sm font-semibold text-vermillion-500">
               {{ format(orderPrice) }}
             </div>
           </div>
-          <button
-            class="btn btn-full btn-main"
+
+          <el-button
+            class="w-full"
+            type="primary"
             :disabled="enableButtonAddProduct || !form.price"
             @click="onAddProduct"
           >
             Tambah ke Keranjang
-          </button>
+          </el-button>
         </div>
-      </div>
+      </template>
     </AppCardPopup>
   </div>
 </template>
 <script>
 import AppCardPopup from '../../../../modules/AppCardPopup'
+import AppCardAvatar from '../../../../modules/AppCardAvatar'
 
 export default {
   name: 'AddCartPopup',
@@ -134,6 +133,7 @@ export default {
   },
   components: {
     AppCardPopup,
+    AppCardAvatar,
   },
   computed: {
     enableButtonAddProduct() {

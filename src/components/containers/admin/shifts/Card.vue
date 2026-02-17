@@ -17,38 +17,32 @@
       </el-table-column>
       <el-table-column label="Status" width="120">
         <template slot-scope="scope">
-          <div class="display-flex flex-start">
-            <AppCardCapsule :data="scope.row.shift.status" />
-          </div>
+          <AppCardCapsule :data="scope.row.shift.status" />
         </template>
       </el-table-column>
-      <el-table-column width="60">
+      <el-table-column width="180">
         <template slot-scope="scope">
-          <el-popover placement="bottom-end" width="180" trigger="click">
-            <div class="width width-100">
-              <button
-                class="btn btn-white btn-full btn-align-left"
-                @click="onDetail(scope.row)"
-              >
-                <i class="icn icn-left fa fa-lw fa-align-left"></i> Detail
-              </button>
-              <button
-                class="btn btn-white btn-full btn-align-left"
-                @click="onEdit(scope.row)"
-              >
-                <i class="icn icn-left fa fa-lw fa-edit"></i> Edit
-              </button>
-              <button
-                class="btn btn-white btn-full btn-align-left"
-                @click="onDelete(scope.row)"
-              >
-                <i class="icn icn-left fa fa-lw fa-trash-alt"></i> Hapus
-              </button>
-            </div>
-            <button slot="reference" class="btn btn-icon btn-sekunder">
-              <i class="fa fa-lw fa-ellipsis-h"></i>
-            </button>
-          </el-popover>
+          <el-button
+            style="min-width: 40px;"
+            circle
+            @click="onDetail(scope.row)"
+          >
+            <i class="fa fa-lw fa-align-left"></i>
+          </el-button>
+          <el-button
+            style="min-width: 40px;"
+            circle
+            @click="onEdit(scope.row)"
+          >
+            <i class="fa fa-lw fa-edit"></i>
+          </el-button>
+          <el-button
+            style="min-width: 40px;"
+            circle
+            @click="onDelete(scope.row)"
+          >
+            <i class="fa fa-lw fa-trash-alt"></i>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>

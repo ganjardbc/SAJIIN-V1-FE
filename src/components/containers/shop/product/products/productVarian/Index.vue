@@ -1,32 +1,29 @@
 <template>
-  <div id="App" :class="formClass ? 'content-form' : 'content-form hide'">
-    <div class="left">
-      <div class="display-flex space-between margin margin-bottom-5px">
-        <h1 class="fonts big black bold">Varian</h1>
-        <div v-if="isRoleOwner" class="display-flex">
-          <button
-            v-if="typeForm !== 'detail'"
-            class="btn btn-white"
-            @click="onCreate"
-          >
-            <i class="icn icn-left fa fa-lw fa-plus" /> Tambah
-          </button>
-        </div>
-      </div>
-
-      <el-alert
-        v-if="!isRoleOwner"
-        title="Tambah Varian Baru ?"
-        description="Untuk menambahkan varian baru mohon hubungi Owner dari Toko ini."
-        type="warning"
-        :closable="true"
-        show-icon
-        style="margin: 10px 0 20px 0"
+  <div id="App" class="flex flex-col gap-4">
+    <div class="flex justify-between items-center">
+      <h1 class="flex-1 text-3xl text-black font-semibold">Varian</h1>
+      <el-button
+        v-if="isRoleOwner && isCanEdit"
+        circle
+        style="width: 40px; height: 40px;"
+        @click="onCreate"
       >
-      </el-alert>
+        <i class="fa fa-lw fa-plus" />
+      </el-button>
+    </div>
 
+    <el-alert
+      v-if="!isRoleOwner"
+      title="Tambah Varian Baru ?"
+      description="Untuk menambahkan varian baru mohon hubungi Owner dari Toko ini."
+      type="warning"
+      :closable="true"
+      show-icon
+    >
+    </el-alert>
+
+    <div class="w-full flex flex-col gap-4">
       <AppEmpty v-if="productDetails.length === 0" />
-
       <Card
         v-if="productDetails.length > 0"
         :data.sync="productDetails"
@@ -36,38 +33,37 @@
         @onDelete="onDelete"
       />
     </div>
-    <div class="right">
-      <Form
-        @uploadImage="uploadImage"
-        @removeImage="removeImage"
-        @onSave="onOpenVisibleConfirmed"
-        @onClose="onClose"
-      >
-      </Form>
 
-      <AppPopupConfirmed
-        v-if="visibleConfirmed"
-        :title="titleConfirmed"
-        @onClickNo="onClickNo"
-        @onClickYes="onClickYes"
-      />
+    <Form
+      :open-form="openForm"
+      @uploadImage="uploadImage"
+      @removeImage="removeImage"
+      @save="onOpenVisibleConfirmed"
+      @close="onClose"
+    />
 
-      <AppPopupConfirmed
-        v-if="visibleConfirmedDelete"
-        :title="'Hapus varian ?'"
-        @onClickNo="onClickNoDelete"
-        @onClickYes="onClickYesDelete"
-      />
+    <AppPopupConfirmed
+      v-if="visibleConfirmed"
+      :title="titleConfirmed"
+      @onClickNo="onClickNo"
+      @onClickYes="onClickYes"
+    />
 
-      <AppPopupAlert
-        v-if="visibleAlert"
-        :title="titleAlert"
-        :icon="iconAlert"
-        @onClickOk="onClickOk"
-      />
+    <AppPopupConfirmed
+      v-if="visibleConfirmedDelete"
+      :title="'Hapus varian ?'"
+      @onClickNo="onClickNoDelete"
+      @onClickYes="onClickYesDelete"
+    />
 
-      <AppPopupLoader v-if="loadingForm" />
-    </div>
+    <AppPopupAlert
+      v-if="visibleAlert"
+      :title="titleAlert"
+      :icon="iconAlert"
+      @onClickOk="onClickOk"
+    />
+
+    <AppPopupLoader v-if="loadingForm" />
   </div>
 </template>
 <script>
@@ -83,7 +79,7 @@ export default {
   name: 'App',
   data() {
     return {
-      formClass: false,
+      openForm: false,
       visibleConfirmed: false,
       visibleAlert: false,
       titleAlert: 'Gagal memproses data',
@@ -120,6 +116,13 @@ export default {
         this.$store.state.storeProduct.typeFormDetail = value
       },
     },
+    isCanEdit() {
+      let status = false
+      if (this.typeFormDetail === 'edit') {
+        status = true
+      }
+      return status
+    },
     isRoleOwner() {
       let status = false
       const user = this.$cookies.get('user')
@@ -149,7 +152,7 @@ export default {
 
     // CLOSE
     onClose() {
-      this.formClass = false
+      this.openForm = false
     },
 
     // CONFIRMED
@@ -157,7 +160,7 @@ export default {
       this.visibleConfirmed = false
     },
     onClickYes() {
-      this.formClass = false
+      this.openForm = false
       this.visibleConfirmed = false
       switch (this.typeFormDetail) {
         case 'create':
@@ -187,14 +190,14 @@ export default {
 
     // CREATE
     onCreate() {
-      this.formClass = true
+      this.openForm = true
       this.typeFormDetail = 'create'
       this.resetFormDetail()
     },
 
     // DETAIL
     onDetail(data) {
-      this.formClass = true
+      this.openForm = true
       this.typeFormDetail = 'detail'
       this.resetFormDetail()
       this.setFormDetail(data)
@@ -202,7 +205,7 @@ export default {
 
     // EDIT
     onEdit(data) {
-      this.formClass = true
+      this.openForm = true
       this.typeFormDetail = 'edit'
       this.resetFormDetail()
       this.setFormDetail(data)

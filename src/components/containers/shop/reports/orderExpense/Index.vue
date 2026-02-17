@@ -1,151 +1,45 @@
 <template>
-  <div id="App">
-    <div class="width width-100">
-      <div class="display-flex space-between align-center display-mobile padding padding-bottom-10px margin margin-bottom-15px border-bottom">
-        <h1 class="fonts medium black bold margin margin-mobile-bottom-10px">Penjualan & Pembelian</h1>
-        <div class="display-flex display-mobile" style="align-items: flex-end">
-          <div class="width width-120px margin margin-right-15px no-margin-padding margin-mobile-bottom-10px width-mobile">
-            <el-select
-              v-model="filter.report_type"
-              :clearable="false"
-              placeholder="Pilih Tipe Laporan"
-              no-data-text="Data Tidak Ditemukan"
-              @change="handleReportType"
-            >
-              <el-option
-                v-for="(item, i) in downloadList"
-                :key="i"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </div>
-          <div class="width width-300px width-mobile margin no-margin-padding">
-            <el-date-picker
-              v-model="filter.order_date"
-              :type="dateType"
-              align="left"
-              unlink-panels
-              range-separator="To"
-              start-placeholder="Start date"
-              end-placeholder="End date"
-              format="dd MMMM yyyy"
-              :picker-options="pickerOptions"
-              :disabled="filter.report_type === 'custom' ? false : true"
-              style="width: 100% !important"
-              @change="handleOrderDate"
-            />
-          </div>
-        </div>
-      </div>
-      <!-- <div class="display-flex space-between align-center">
-        <h1 class="fonts medium black bold">Produk</h1>
-      </div>
-      <div
-        class="display-flex space-between display-mobile padding padding-bottom-10px margin margin-bottom-15px border-bottom"
-        style="align-items: flex-end"
-      >
-        <div class="display-flex display-mobile" style="align-items: flex-end">
-          <div
-            class="width width-120px width-mobile margin margin-right-10px no-margin-padding"
-          >
-            <div class="field-group padding padding-bottom-5px">
-              <div class="field-label">Tipe Laporan</div>
-              <el-select
-                v-model="filter.report_type"
-                :clearable="false"
-                placeholder="Pilih"
-                no-data-text="Data Tidak Ditemukan"
-                @change="handleReportType"
-              >
-                <el-option
-                  v-for="(item, i) in downloadList"
-                  :key="i"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </div>
-          <div
-            v-if="filter.report_type === 'custom'"
-            class="width width-300px width-mobile margin margin-right-10px no-margin-padding"
-          >
-            <div class="field-group padding padding-bottom-5px">
-              <div class="field-label">Range Tanggal</div>
-              <el-date-picker
-                v-model="filter.order_date"
-                :type="dateType"
-                align="left"
-                unlink-panels
-                range-separator="To"
-                start-placeholder="Start date"
-                end-placeholder="End date"
-                format="dd MMMM yyyy"
-                :picker-options="pickerOptions"
-                @change="handleOrderDate"
-                style="width: 100% !important"
-              >
-              </el-date-picker>
-            </div>
-          </div>
-        </div>
-        <div class="display-flex flex-end">
-          <div class="width width-120px width-mobile margin margin-right-10px">
-            <div class="field-group padding padding-bottom-5px">
-              <div class="field-label">Status</div>
-              <el-select
-                v-model="filter.order_status"
-                :clearable="false"
-                placeholder="Pilih"
-                no-data-text="Data Tidak Ditemukan"
-                :disabled="!filter.order_status"
-                @change="handleFilterSearch"
-              >
-                <el-option
-                  v-for="(item, i) in customOrderStatus"
-                  :key="i"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </div>
-          <div class="width width-120px width-mobile margin margin-left-10px">
-            <div class="field-group padding padding-bottom-5px">
-              <div class="field-label">Pembayaran</div>
-              <el-select
-                v-model="filter.payment_status"
-                :clearable="false"
-                placeholder="Pilih"
-                no-data-text="Data Tidak Ditemukan"
-                :disabled="!filter.payment_status"
-                @change="handleFilterSearch"
-              >
-                <el-option
-                  v-for="(item, i) in orderPaymentStatus"
-                  :key="i"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-      <div v-loading="loading" class="width width-100">
-        <div
-          class="width width-100 display-flex align-center margin margin-bottom-10px"
+  <div id="App" class="w-full flex flex-col gap-4">
+    <div class="w-full flex flex-col gap-4">
+      <div class="w-full flex flex-col gap-4">
+        <el-select
+          v-model="filter.report_type"
+          :clearable="false"
+          placeholder="Pilih Tipe Laporan"
+          no-data-text="Data Tidak Ditemukan"
+          class="w-[200px]"
+          @change="handleReportType"
         >
-          <div class="fonts fonts-11 semibold black overflow-ellipsis margin margin-right-5px">
+          <el-option
+            v-for="(item, i) in downloadList"
+            :key="i"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <el-date-picker
+          v-model="filter.order_date"
+          :type="dateType"
+          align="left"
+          unlink-panels
+          range-separator="To"
+          start-placeholder="Start date"
+          end-placeholder="End date"
+          format="dd MMMM yyyy"
+          :picker-options="pickerOptions"
+          :disabled="filter.report_type === 'custom' ? false : true"
+          style="width: 100%"
+          @change="handleOrderDate"
+        />
+      </div>
+
+      <div v-loading="loading" class="w-full p-4 border border-gray-200 rounded-lg bg-white flex flex-col gap-4">
+        <div class="w-full flex items-center">
+          <div class="text-sm text-black font-semibold mr-2">
             PERIODE:
           </div>
-          <div class="fonts fonts-10 normal black overflow-ellipsis align-right">
+          <div class="text-sm text-black font-normal overflow-ellipsis text-right">
             <span v-if="rangeDate && rangeDate.length > 0">
               {{ rangeDate[0] | moment('DD MMMM YYYY') }} -
               {{ rangeDate[1] | moment('DD MMMM YYYY') }}
@@ -153,161 +47,78 @@
             <span v-else>-</span>
           </div>
         </div>
-        <div class="card bg-white-grey no-padding margin margin-bottom-15px">
-          <div
-            class="width width-100 display-flex space-between align-center wrap"
-          >
-            <div
-              class="width width-row-4 width-mobile-row-2 padding padding-top-10px padding-bottom-10px"
-            >
-              <div class="padding padding-5px content-center">
-                <div class="display-flex center align-center">
-                  <i
-                    class="fonts fonts-8 main-color fa fa-lg fa-info-circle margin margin-right-5px"
-                  ></i>
-                  <span
-                    class="fonts fonts-9 normal grey overflow-ellipsis align-center"
-                    >Modal</span
-                  >
-                </div>
-                <div
-                  class="fonts fonts-11 semibold black overflow-ellipsis align-center"
-                >
-                  {{ format(cashModal) }}
-                </div>
-              </div>
-            </div>
-            <div
-              class="width width-row-4 width-mobile-row-2 padding padding-top-10px padding-bottom-10px"
-            >
-              <div class="padding padding-5px border-left content-center">
-                <div class="display-flex center align-center">
-                  <i
-                    class="fonts fonts-8 main-color fa fa-lg fa-check-circle margin margin-right-5px"
-                  ></i>
-                  <span
-                    class="fonts fonts-9 normal grey overflow-ellipsis align-center"
-                    >Keuntungan</span
-                  >
-                </div>
-                <div
-                  class="fonts fonts-11 semibold black overflow-ellipsis align-center"
-                >
-                  {{ format(cashProfit) }}
-                </div>
-              </div>
-            </div>
-            <div
-              class="width width-row-4 width-mobile-row-2 padding padding-top-10px padding-bottom-10px"
-            >
-              <div
-                class="padding padding-5px border-left border-mobile-none content-center"
+
+        <div class="bg-gray-100 rounded-md p-4 grid grid-cols-2 gap-4">
+          <div class="flex-1 p-1 text-center border-r border-gray-300">
+            <div class="flex justify-center items-center">
+              <i class="fa fa-lw fa-info-circle mr-2 text-sm text-vermillion-500" />
+              <span
+                class="text-xs font-normal text-gray-500"
+                >Modal</span
               >
-                <div class="display-flex center align-center">
-                  <i
-                    class="fonts fonts-8 green fa fa-lg fa-arrow-up margin margin-right-5px"
-                  ></i>
-                  <span
-                    class="fonts fonts-9 normal grey overflow-ellipsis align-center"
-                    >Kas Masuk</span
-                  >
-                </div>
-                <div
-                  class="fonts fonts-11 semibold black overflow-ellipsis align-center"
-                >
-                  {{ format(cashIn) }}
-                </div>
-              </div>
             </div>
             <div
-              class="width width-row-4 width-mobile-row-2 padding padding-top-10px padding-bottom-10px"
+              class="text-md font-semibold text-black"
             >
-              <div class="padding padding-5px border-left content-center">
-                <div class="display-flex center align-center">
-                  <i
-                    class="fonts fonts-8 orange fa fa-lg fa-arrow-down margin margin-right-5px"
-                  ></i>
-                  <span
-                    class="fonts fonts-9 normal grey overflow-ellipsis align-center"
-                    >Kas Keluar</span
-                  >
-                </div>
-                <div
-                  class="fonts fonts-11 semibold black overflow-ellipsis align-center"
-                >
-                  {{ format(cashOut) }}
-                </div>
-              </div>
+              {{ format(cashModal) }}
+            </div>
+          </div>
+
+          <div class="flex-1 p-1 text-center">
+            <div class="flex justify-center items-center">
+              <i class="fa fa-lw fa-info-circle mr-2 text-sm text-vermillion-500" />
+              <span
+                class="text-xs font-normal text-gray-500"
+                >Keuntungan</span
+              >
+            </div>
+            <div
+              class="text-md font-semibold text-black"
+            >
+              {{ format(cashProfit) }}
+            </div>
+          </div>
+
+          <div class="flex-1 p-1 text-center border-r border-gray-300">
+            <div class="flex justify-center items-center">
+              <i class="fa fa-lw fa-arrow-up mr-2 text-sm text-green-500" />
+              <span
+                class="text-xs font-normal text-gray-500"
+                >Kas Masuk</span
+              >
+            </div>
+            <div
+              class="text-md font-semibold text-black"
+            >
+              {{ format(cashIn) }}
+            </div>
+          </div>
+
+          <div class="flex-1 p-1 text-center">
+            <div class="flex justify-center items-center">
+              <i class="fa fa-lw fa-arrow-down mr-2 text-sm text-orange-500" />
+              <span
+                class="text-xs font-normal text-gray-500"
+                >Kas Keluar</span
+              >
+            </div>
+            <div
+              class="text-md font-semibold text-black"
+            >
+              {{ format(cashOut) }}
             </div>
           </div>
         </div>
-        <div
+
+        <AppButtonCapsuleSlider
           v-if="cashBookList && cashBookList.length > 0"
-          class="display-flex space-between align-center wrap margin margin-bottom-10px"
-        >
-          <div class="horizontal-scroll" style="overflow-x: auto">
-            <div
-              style="margin: 0 5px 5px 0; flex-grow: 1; display: inline-block"
-            >
-              <div
-                :class="`card card-status ${selectedCashBook === 'all' ? 'active' : 'normal'} no-padding border-big-radius`"
-                style="margin: 0 0"
-                @click="onSelectCashBook('all')"
-              >
-                <div
-                  class="display-flex nowrap align-center"
-                  style="padding: 5px 10px 5px 5px"
-                >
-                  <div class="width width-40px">
-                    <div
-                      class="image image-30px image-circle bg-white border-full"
-                    >
-                      <i
-                        class="post-middle-absolute icn fa fa-lw fa-book-open"
-                      ></i>
-                    </div>
-                  </div>
-                  <div style="width: calc(100% - 40px)">
-                    <div class="fonts fonts-10 black semibold">
-                      Semua Buku Kas
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              v-for="(dt, i) in cashBookList"
-              :key="i"
-              style="margin: 0 8px 5px 0; flex-grow: 1; display: inline-block"
-            >
-              <div
-                :class="`card card-status ${selectedCashBook === dt.id ? 'active' : 'normal'} no-padding border-big-radius`"
-                style="margin: 0 0"
-                @click="onSelectCashBook(dt.id)"
-              >
-                <div
-                  class="display-flex nowrap align-center"
-                  style="padding: 5px 10px 5px 5px"
-                >
-                  <div class="width width-40px">
-                    <div
-                      class="image image-30px image-circle bg-white border-full"
-                    >
-                      <i
-                        class="post-middle-absolute icn fa fa-lw fa-book-open"
-                      ></i>
-                    </div>
-                  </div>
-                  <div style="width: calc(100% - 40px)">
-                    <div class="fonts fonts-10 black semibold">
-                      {{ dt.cash_date | moment('DD MMMM YYYY') }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          :index.sync="selectedCashBook"
+          :disableAll="true"
+          :returnIndex="true"
+          :data="mappedTabs"
+          @onChange="onSelectCashBook"
+        />
+
         <AppTabs
           :selectedIndex.sync="selectedIndex"
           :isFull="true"
@@ -326,14 +137,14 @@
     </div>
 
     <div class="main-content-footer">
-      <div class="main-content-footer-container display-flex space-between">
-        <button
-          class="btn btn-main btn-full"
+      <div class="main-content-footer-container">
+        <el-button
+          class="w-full"
           :disabled="!isButtonReportEnable"
           @click="downloadReport"
         >
           <i class="icn icn-left fa fa-lw fa-download"></i> Download
-        </button>
+        </el-button>
       </div>
     </div>
 
@@ -347,7 +158,7 @@ import CardOrder from './CardOrder'
 import CardExpense from './CardExpense'
 import AppTabs from '../../../../modules/AppTabs'
 import AppPopupLoader from '../../../../modules/AppPopupLoader'
-import AppHeaderMobile from '../../../../modules/AppHeaderMobile'
+import AppButtonCapsuleSlider from '../../../../modules/AppButtonCapsuleSlider'
 
 const tabs = [
   { id: 1, label: 'Penjualan', status: 'active' },
@@ -375,7 +186,7 @@ export default {
       },
       tabs: tabs,
       selectedIndex: 0,
-      selectedCashBook: 'all',
+      selectedCashBook: 0,
     }
   },
   mounted() {
@@ -405,6 +216,23 @@ export default {
       expenseList: (state) => state.storeReports.expense.data,
       dataShop: (state) => state.storeSelectedShop.form,
     }),
+    mappedTabs() {
+      const allTab = {
+        id: 'all',
+        icon: 'fa fa-lw fa-list-ul',
+        label: 'Semua Buku Kas',
+        status: this.selectedCashBook === 'all' ? 'active' : '',
+      }
+      return [
+        allTab, 
+        ...this.cashBookList.map((tab) => ({
+          id: tab.id,
+          icon: 'fa fa-lw fa-book-open',
+          label: moment(tab.cash_date).format('DD MMMM YYYY'),
+          status: '',
+        })),
+      ]
+    },
     customOrderStatus() {
       if (this.isNonFnB) {
         return this.orderStatus.filter(
@@ -431,7 +259,7 @@ export default {
       return this.orderList.length > 0
     },
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     getOrderList() {
       let payload = this.orderList
@@ -457,7 +285,7 @@ export default {
     CardExpense,
     AppTabs,
     AppPopupLoader,
-    AppHeaderMobile,
+    AppButtonCapsuleSlider,
   },
   methods: {
     ...mapActions({
@@ -470,6 +298,7 @@ export default {
       this.selectedIndex = value
     },
     onSelectCashBook(value) {
+      console.log('onSelectCashBook', value)
       this.selectedCashBook = value
     },
     getReport() {

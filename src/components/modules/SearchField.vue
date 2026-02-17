@@ -40,6 +40,11 @@ export default {
       type: Function,
       required: false,
     },
+    searchValue: {
+      type: [String, Number],
+      required: false,
+      default: '',
+    },
   },
   methods: {
     onTotal() {
@@ -50,10 +55,11 @@ export default {
     },
   },
   watch: {
-    maximumValue: function (props) {
-      if (props) {
-        this.search = parseInt(props)
-      }
+    searchValue: {
+      handler(newValue) {
+        this.search = newValue
+      },
+      immediate: true,
     },
   },
 }

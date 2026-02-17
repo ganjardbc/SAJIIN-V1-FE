@@ -1,9 +1,10 @@
 <template>
-  <div id="CashbookField" class="width width-100">
+  <section>
     <el-select
       v-model="selectedLabel"
       :placeholder="placeholder"
-      popper-class="cashbook-custom-filter"
+      popper-class="w-full"
+      class="w-full"
       :clearable="true"
       :disabled="disabled"
       @clear="onClear"
@@ -16,65 +17,51 @@
       title="Pilih Buku Kas"
       @onClose="onClosePopup"
     >
-      <div class="width width-100">
-        <div class="width width-100 display-flex space-between">
-          <div style="width: calc(100% - 50px)">
-            <SearchField
-              :placeholder="'Cari buku kas ..'"
-              :enableResponsive="true"
-              :onChange="(data) => onSearch(data)"
-            />
-          </div>
-          <button class="btn btn-icon btn-white" @click="onRefresh">
-            <i class="fa fa-lw fa-retweet"></i>
-          </button>
-        </div>
-        <div v-loading="loading" class="width width-100">
+      <div class="w-full flex flex-col gap-4">
+        <SearchField
+          :placeholder="'Cari buku kas ..'"
+          :enableResponsive="true"
+          :onChange="(data) => onSearch(data)"
+        />
+
+        <div v-loading="loading" class="w-full flex flex-col gap-4">
           <AppEmpty v-if="data.length === 0" />
           <div
             v-for="(item, i) in data"
             :key="i"
-            class="margin margin-top-15px margin-bottom-15px"
+            class="w-full p-4 bg-white rounded-md border border-gray-200"
           >
-            <div class="card no-padding border-full">
-              <div
-                class="padding padding-15px display-flex space-between align-center"
-              >
-                <div class="width width-60px">
-                  <div class="image image-45px bg-white-grey">
-                    <i
-                      class="post-middle-absolute icn fa fa-lw fa-book-open"
-                    ></i>
-                  </div>
+            <div class="flex justify-between items-center gap-4">
+              <AppCardIcon
+                icon="fa-book-open"
+                color="text-vermillion-500"
+                size="xsmall"
+              />
+              <div class="flex-1 flex flex-col">
+                <div class="text-sm text-black font-semibold">
+                  {{ item.cash_date | moment('DD MMMM YYYY') }}
                 </div>
-                <div style="width: calc(100% - 100px)">
-                  <div v-if="item.cash_date !== item.cash_end_date">
-                    <div class="fonts fonts-10 semibold">
-                      {{ item.cash_date | moment('DD MMMM YYYY') }}
-                    </div>
-                    <div v-if="item.cash_end_date" class="fonts grey fonts-8">
-                      Tutup pada
-                      {{ item.cash_end_date | moment('DD MMMM YYYY') }}
-                    </div>
-                  </div>
-                  <div v-else class="fonts fonts-10 semibold">
-                    {{ item.cash_date | moment('DD MMMM YYYY') }}
-                  </div>
-                </div>
-                <div class="width width-40px">
-                  <button
-                    :class="`btn btn-icon ${selectedID === item.id ? 'btn-main' : 'btn-sekunder'}`"
-                    @click="onChange(item.id)"
-                  >
-                    <i class="fa fa-lw fa-check"></i>
-                  </button>
+                <div v-if="item.cash_end_date" class="text-xs text-gray-500">
+                  Tutup pada {{ item.cash_end_date | moment('DD MMMM YYYY') }}
                 </div>
               </div>
+              <el-button
+                size="small"
+                :type="selectedID === item.id ? 'primary' : 'default'"
+                :disabled="item.status === 'inactive'"
+                circle
+                @click="onChange(item)"
+              >
+                <i class="fa fa-lw fa-check"></i>
+              </el-button>
             </div>
           </div>
         </div>
-        <div class="width width-100 display-flex flex-end align-center">
-          <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
+
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="text-md text-black">
+            Total {{ totalRecord }}
+          </div>
           <el-pagination
             background
             @current-change="handleCurrentChange"
@@ -88,12 +75,13 @@
         </div>
       </div>
     </AppCardPopup>
-  </div>
+  </section>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
 import SearchField from '../../../modules/SearchField'
 import AppCardPopup from '../../../modules/AppCardPopup'
+import AppCardIcon from '../../../modules/AppCardIcon'
 import AppEmpty from '../../../modules/AppEmpty'
 import moment from 'moment'
 
@@ -115,6 +103,7 @@ export default {
   components: {
     SearchField,
     AppCardPopup,
+    AppCardIcon,
     AppEmpty,
   },
   computed: {
@@ -126,7 +115,7 @@ export default {
       loading: (state) => state.storeCashBook.customFilter.loading,
     }),
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
   },
   props: {

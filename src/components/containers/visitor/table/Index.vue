@@ -1,120 +1,124 @@
 <template>
   <div id="App">
-    <div class="card no-padding bg-white border-full">
-      <div
-        class="display-flex space-between align-center"
-        style="padding: 10px 15px"
-      >
+    <div
+      v-loading="loading"
+      class="w-full border border-gray-300 rounded-md bg-white p-2"
+    >
+      <div class="flex justify-between items-center">
         <div
           v-if="selectedData"
-          class="display-flex align-center"
-          style="width: calc(100% - 40px)"
+          class="flex-1 flex justify-between items-center gap-4"
         >
-          <div style="width: 45px; margin-right: 15px">
-            <div class="image image-padding border-full">
-              <img
-                v-if="selectedData.image"
-                :src="
-                  selectedData
-                    ? tableImageThumbnailUrl + selectedData.image
-                    : ''
-                "
-                alt=""
-                class="post-center"
-              />
-              <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
+          <AppCardAvatar
+            v-if="selectedData.discount_image"
+            :src="tableImageThumbnailUrl + selectedData.image"
+            size="xsmall"
+          />
+          <AppCardIcon
+            v-else
+            icon="fa-th-large"
+            color="text-vermillion-500"
+            size="xsmall"
+          />
+          <div class="flex-1 flex flex-col">
+            <div class="text-sm text-black font-semibold">
+              {{ selectedData && selectedData.name }}
             </div>
-          </div>
-          <div style="width: calc(100% - 60px)">
-            <div style="width: 100%">
-              <div class="fonts fonts-10 semibold black">
-                {{ selectedData && selectedData.name }} ({{
-                  selectedData && selectedData.code
-                }})
-              </div>
-              <div class="fonts fonts-10 grey">1 Meja dipilih</div>
+            <div class="text-xs text-gray-500">
+              {{ selectedData && selectedData.code }}
             </div>
           </div>
         </div>
-        <div v-else class="fonts fonts-10 semibold black">
-          Pilih Meja <span class="fonts fonts-10 normal grey">(opsional)</span>
+        <div
+          v-else
+          class="pl-2 flex-1 text-black font-semibold text-sm"
+        >
+          Pilih Meja
+          <span
+            class="text-sm text-gray-500"
+          >(opsional)</span>
         </div>
-        <div class="display-flex">
-          <button
-            v-if="selectedData"
-            class="btn btn-white btn-icon"
-            @click="onRemove"
-          >
-            <i class="fa fa-lg fa-times"></i>
-          </button>
-          <button v-else class="btn btn-white btn-icon" @click="onOpen">
-            <i class="fa fa-lg fa-chevron-right"></i>
-          </button>
-        </div>
+        <el-button
+          v-if="selectedData"
+          :size="'small'"
+          circle
+          :style="{
+            width: '32px',
+            height: '32px',
+          }"
+          @click="onRemove"
+        >
+          <i class="fa fa-lw fa-times"></i>
+        </el-button>
+        <el-button
+          v-else
+          :size="'small'"
+          circle
+          :style="{
+            width: '32px',
+            height: '32px',
+          }"
+          @click="onOpen"
+        >
+          <i class="fa fa-lw fa-chevron-right"></i>
+        </el-button>
       </div>
     </div>
 
     <AppCardPopup v-if="visiblePopup" title="Pilih Meja" @onClose="onClose">
-      <div class="width width-100">
-        <div class="width width-100 display-flex space-between">
-          <div style="width: calc(100% - 50px)">
-            <SearchField
-              :placeholder="'Cari meja ..'"
-              :enableResponsive="true"
-              :onChange="(data) => onSearch(data)"
-            />
-          </div>
-          <button class="btn btn-icon btn-white" @click="onRefresh">
-            <i class="fa fa-lw fa-retweet"></i>
-          </button>
-        </div>
-        <div v-loading="loading" class="width width-100">
+      <div class="w-full flex flex-col gap-4">
+        <SearchField
+          :placeholder="'Cari meja ..'"
+          :enableResponsive="true"
+          :onChange="(data) => onSearch(data)"
+        />
+
+        <div v-loading="loading" class="w-full flex flex-col gap-4">
           <AppEmpty v-if="data.length === 0" />
           <div
             v-for="(dt, i) in data"
             :key="i"
-            class="margin margin-top-15px margin-bottom-15px"
+            class="w-full p-4 bg-white rounded-md border border-gray-200"
           >
-            <div class="card no-padding border-full">
-              <div
-                class="padding padding-15px display-flex space-between align-center"
-              >
-                <div class="width width-60px">
-                  <div class="image image-45px">
-                    <img
-                      v-if="dt.image"
-                      :src="tableImageThumbnailUrl + dt.image"
-                      alt=""
-                      class="post-center"
-                    />
-                    <i
-                      v-else
-                      class="post-middle-absolute icn fa fa-lg fa-image"
-                    ></i>
-                  </div>
+            <div class="flex justify-between items-center gap-4">
+              <AppCardAvatar
+                v-if="dt.image"
+                :src="tableImageThumbnailUrl + dt.image"
+                size="xsmall"
+              />
+              <AppCardIcon
+                v-else
+                icon="fa-th-large"
+                color="text-vermillion-500"
+                size="xsmall"
+              />
+              <div class="flex-1 flex flex-col">
+                <div class="text-sm text-black font-semibold">
+                  {{ dt.name }} ({{ dt.code }})
                 </div>
-                <div style="width: calc(100% - 100px)">
-                  <div class="fonts fonts-10 semibold">
-                    {{ dt.name }} ({{ dt.code }})
-                  </div>
-                  <div class="fonts fonts-9 grey">{{ dt.description }}</div>
-                </div>
-                <div class="width width-40px">
-                  <button
-                    v-if="dt.status === 'active'"
-                    :class="`btn btn-icon ${selectedID === dt.id ? 'btn-main' : 'btn-sekunder'}`"
-                    :disabled="dt.status === 'inactive'"
-                    @click="onChange(dt)"
-                  >
-                    <i class="fa fa-lw fa-check"></i>
-                  </button>
-                </div>
+                <div class="text-xs text-gray-500">{{ dt.description }}</div>
               </div>
+              <el-button
+                size="small"
+                :type="selectedID === dt.id ? 'primary' : 'default'"
+                :disabled="dt.status === 'inactive'"
+                circle
+                :style="{
+                  width: '32px',
+                  height: '32px',
+                }"
+                @click="onChange(dt)"
+              >
+                <i class="fa fa-lw fa-check"></i>
+              </el-button>
             </div>
           </div>
         </div>
-        <div class="width width-100 display-flex flex-end align-center">
-          <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
+
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="text-md text-black">
+            Total {{ totalRecord }}
+          </div>
           <el-pagination
             background
             @current-change="handleCurrentChange"
@@ -135,6 +139,8 @@ import { mapActions, mapState } from 'vuex'
 import SearchField from '../../../modules/SearchField'
 import AppEmpty from '../../../modules/AppEmpty'
 import AppCardPopup from '../../../modules/AppCardPopup'
+import AppCardAvatar from '../../../modules/AppCardAvatar'
+import AppCardIcon from '../../../modules/AppCardIcon'
 
 export default {
   name: 'App',
@@ -155,6 +161,8 @@ export default {
     SearchField,
     AppEmpty,
     AppCardPopup,
+    AppCardAvatar,
+    AppCardIcon,
   },
   computed: {
     ...mapState({

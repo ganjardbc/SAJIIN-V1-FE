@@ -1,30 +1,39 @@
 <template>
-  <div id="App" :class="formClass ? 'content-form' : 'content-form hide'">
-    <div class="left">
-      <div class="margin margin-bottom-15px">
-        <div class="width width-100 display-flex space-between">
-          <h1 class="fonts medium black bold">Permission</h1>
-          <div class="display-flex">
-            <button class="btn btn-icon btn-white" @click="onRefresh">
-              <i class="fa fa-lw fa-retweet"></i>
-            </button>
-            <button
-              v-if="roleTypeForm !== 'detail'"
-              class="btn btn-icon btn-white"
-              @click="onCreate"
-            >
-              <i class="fa fa-lw fa-plus" />
-            </button>
-          </div>
-        </div>
+  <div id="App" class="w-full lg:w-lg-false m-auto">
+    <div class="w-full flex flex-col gap-4">
+      <div class="w-full flex items-center justify-between">
+        <h1 class="text-3xl text-black font-semibold">
+          Permission
+        </h1>
+        <el-button
+          v-if="roleTypeForm !== 'detail'"
+          type="primary"
+          @click="onCreate"
+        >
+          <i class="fa fa-lw fa-plus" />
+        </el-button>
       </div>
 
-      <div v-loading="loading" class="margin margin-bottom-15px">
-        <Card :data.sync="data" @onDelete="onDelete" />
-        <div
-          class="width width-100 display-flex flex-end align-center padding padding-top-15px"
-        >
-          <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
+      <div class="w-full">
+        <SearchField
+          class="w-full"
+          placeholder="Cari permission .."
+          :enableResponsive="true"
+          :onChange="(data) => onSearch(data)"
+        />
+      </div>
+
+      <div class="w-full flex flex-col gap-4">
+        <div v-loading="loading" class="w-full">
+          <Card
+            :data.sync="data"
+            @onDelete="onDelete"
+          />
+        </div>
+        <div class="w-full flex justify-between items-center gap-2">
+          <div class="text-md text-black">
+            Total {{ totalRecord }}
+          </div>
           <el-pagination
             background
             @current-change="handleCurrentChange"
@@ -39,32 +48,35 @@
       </div>
     </div>
 
-    <div class="right">
-      <Form @onSelect="onSelect" @onSave="onSelect" @onClose="onClose"> </Form>
+    <Form
+      :open-form="openForm"
+      @onSelect="onSelect"
+      @onSave="onSelect"
+      @onClose="onClose"
+    />
 
-      <AppPopupConfirmed
-        v-if="visibleConfirmed"
-        :title="titleConfirmed"
-        @onClickNo="onClickNo"
-        @onClickYes="onClickYes"
-      />
+    <AppPopupConfirmed
+      v-if="visibleConfirmed"
+      :title="titleConfirmed"
+      @onClickNo="onClickNo"
+      @onClickYes="onClickYes"
+    />
 
-      <AppPopupConfirmed
-        v-if="visibleConfirmedDelete"
-        :title="'Delete this permission ?'"
-        @onClickNo="onClickNoDelete"
-        @onClickYes="onClickYesDelete"
-      />
+    <AppPopupConfirmed
+      v-if="visibleConfirmedDelete"
+      :title="'Delete this permission ?'"
+      @onClickNo="onClickNoDelete"
+      @onClickYes="onClickYesDelete"
+    />
 
-      <AppPopupAlert
-        v-if="visibleAlert"
-        :title="titleAlert"
-        :icon="iconAlert"
-        @onClickOk="onClickOk"
-      />
+    <AppPopupAlert
+      v-if="visibleAlert"
+      :title="titleAlert"
+      :icon="iconAlert"
+      @onClickOk="onClickOk"
+    />
 
-      <AppPopupLoader v-if="loadingForm" />
-    </div>
+    <AppPopupLoader v-if="loadingForm" />
   </div>
 </template>
 
@@ -82,7 +94,7 @@ export default {
   name: 'App',
   data() {
     return {
-      formClass: false,
+      openForm: false,
       visibleAlert: false,
       titleAlert: 'Gagal memproses data',
       iconAlert: 'fa fa-4x fa-info-circle',
@@ -142,7 +154,7 @@ export default {
       this.getData()
     },
     onClose() {
-      this.formClass = false
+      this.openForm = false
     },
     onRefresh() {
       this.getData()
@@ -170,7 +182,7 @@ export default {
 
     // CREATE
     onCreate() {
-      this.formClass = true
+      this.openForm = true
       this.typeForm = 'create'
       this.resetFormData()
     },
@@ -211,7 +223,7 @@ export default {
       this.createData(payload).then((res) => {
         const status = res.data.status
         if (status === 'ok') {
-          this.formClass = false
+          this.openForm = false
           this.getData()
         } else {
           this.$message({

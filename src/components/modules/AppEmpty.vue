@@ -1,23 +1,15 @@
 <template>
   <div
     id="AppEmpty"
-    class="content-center"
-    style="padding-top: 20px; padding-bottom: 20px"
+    class="flex flex-col gap-4 justify-center items-center py-8"
   >
     <div
-      style="
-        width: 120px;
-        height: 120px;
-        border-radius: 100%;
-        margin: auto;
-        text-align: center;
-      "
+      class="flex items-center justify-center bg-vermillion-100 rounded-full"
+      style="width: 118px; height: 118px"
     >
-      <i
-        :class="`post-center fonts fonts-50 red ${icon ? icon : 'fa fa-3x fa-info-circle'}`"
-      ></i>
+      <i :class="`text-4xl text-vermillion-500 ${icon ? icon : 'fa fa-3x fa-info-circle'}`"></i>
     </div>
-    <div class="fonts fonts-11 semibold align-center" style="margin-top: 20px">
+    <div class="text-md text-black font-semibold text-center">
       {{ title ? title : 'DATA TIDAK DITEMUKAN' }}
     </div>
   </div>

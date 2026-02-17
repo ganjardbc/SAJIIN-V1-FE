@@ -1,58 +1,40 @@
 <template>
-  <div id="App">
-    <div class="width width-100">
-      <div
-        class="display-flex space-between display-mobile margin margin-bottom-15px"
-      >
-        <div class="width width-60 width-mobile display-flex space-between">
-          <h1 class="fonts big black bold">Produksi</h1>
-          <div class="display-flex">
-            <button class="btn btn-icon btn-white" @click="onRefresh">
-              <i class="fa fa-lw fa-retweet"></i>
-            </button>
-          </div>
-        </div>
-        <div class="width width-22 width-mobile display-flex space-between">
-          <SearchField
-            :placeholder="'Cari transaksi ..'"
-            :enableResponsive="true"
-            :onChange="(data) => onSearch(data)"
-            class="width width-100 margin margin-mobile-bottom-15px"
-          />
-        </div>
-        <div class="width width-18 width-mobile display-flex space-between">
-          <cashbook-field
-            :value.sync="filter.cashbook_id"
-            @onChange="handleFilterCashbook"
-            class="width width-100 margin margin-left-10px margin-mobile-left-none"
-          ></cashbook-field>
-        </div>
-      </div>
+  <div id="App" class="w-full lg:w-lg-false m-auto flex flex-col gap-4 p-4">
+    <div class="w-full flex items-center justify-between">
+      <h1 class="text-3xl text-black font-semibold">
+        Produksi
+      </h1>
+    </div>
 
-      <div class="width width-100">
-        <div v-loading="loading">
-          <AppEmpty v-if="data.length === 0" />
-          <Card
-            :data.sync="data"
-            @onChangeStatus="onChangeStatus"
-            @onChangeOrderStatus="onChangeOrderStatus"
-          />
+    <SearchField
+      :placeholder="'Cari transaksi ..'"
+      :enableResponsive="true"
+      :onChange="(data) => onSearch(data)"
+    />
+
+    <div class="w-full flex flex-col gap-4">
+      <div v-loading="loading" class="w-full">
+        <AppEmpty v-if="data.length === 0" />
+        <Card
+          :data.sync="data"
+          @onChangeStatus="onChangeStatus"
+          @onChangeOrderStatus="onChangeOrderStatus"
+        />
+      </div>
+      <div class="w-full flex justify-between items-center gap-2">
+        <div class="text-md text-black">
+          Total {{ totalRecord }}
         </div>
-        <div
-          class="width width-100 display-flex flex-end align-center padding padding-top-15px"
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="limit"
+          :pager-count="5"
+          layout="prev, pager, next"
+          :total="totalRecord"
         >
-          <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
-          <el-pagination
-            background
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="limit"
-            :pager-count="5"
-            layout="prev, pager, next"
-            :total="totalRecord"
-          >
-          </el-pagination>
-        </div>
+        </el-pagination>
       </div>
     </div>
 
@@ -117,10 +99,10 @@ export default {
       filter: (state) => state.storeTaskLists.filter,
     }),
     shopId() {
-      return this.$store.state.storeSelectedShop.selectedData
+      return this.$store.state.storeShop.form.id
     },
     paramShopId() {
-      const shop = this.$cookies.get('shop')
+      const shop = this.$store.state.storeShop.form
       return shop.shop_id
     },
   },

@@ -1,42 +1,37 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :subtitle="form.order_id"
-      :enableCustomFooter="true"
-      :onClose="onClose"
-    >
-      <div
-        class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px"
-      >
-        <div
-          class="display-flex space-between align-center padding padding-bottom-10px"
-        >
-          <div class="fonts fonts-11 semibold black">Pembayaran</div>
+  <AppSideForm
+    :value="openForm"
+    title="Detail Transaksi"
+    :subtitle="form.order_id"
+    :enableCustomFooter="true"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
+      <div class="w-full flex flex-col gap-2 pb-4 border-b border-dashed border-gray-200">
+        <div class="flex items-center justify-between">
+          <div class="flex-1 text-sm text-black font-semibold">Pembayaran</div>
           <AppCardCapsule :data="form.payment_status ? 'paid' : 'unpaid'" />
         </div>
-        <div class="margin margin-bottom-15px">
-          <FieldPayment
-            :value="form.payment_id"
-            :smallField="true"
-            @onChange="onChangePayment"
-            @onClear="onClearPayment"
-          />
-        </div>
-        <div class="display-flex space-between">
-          <div class="fonts fonts-10 semibold black">
+        <FieldPayment
+          :value="form.payment_id"
+          :smallField="true"
+          @onChange="onChangePayment"
+          @onClear="onClearPayment"
+        />
+        <div class="flex items-center justify-between gap-2">
+          <div class="text-sm text-black">
             Total ({{ form.total_item }} produk)
           </div>
-          <div class="fonts fonts-10 semibold main-color">
+          <div class="text-sm text-vermillion-500 font-semibold text-right">
             {{ format(form.total_price) }}
           </div>
         </div>
-        <div
-          class="padding padding-bottom-15px margin margin-bottom-15px border-bottom border-dashed"
-        ></div>
-        <div class="display-flex space-between margin margin-bottom-15px">
-          <div class="fonts fonts-10 normal grey">Diskon</div>
-          <div class="fonts fonts-10 normal black">
+      </div>
+
+      <div class="w-full flex flex-col gap-2 pb-4 border-b border-gray-200">
+        <div class="flex items-center justify-between gap-2">
+          <div class="text-sm text-black">Diskon</div>
+          <div class="text-sm text-vermillion-500 font-semibold text-right">
             {{ format(totalDiscount) }}
           </div>
         </div>
@@ -51,10 +46,8 @@
         />
       </div>
 
-      <div
-        class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px"
-      >
-        <div class="fonts fonts-11 semibold black">Tagihan</div>
+      <div class="w-full flex flex-col gap-2 pb-4 border-b border-dashed border-gray-200">
+        <div class="flex-1 text-sm text-black font-semibold">Tagihan</div>
         <div class="field-group">
           <div class="field-label">Bayar</div>
           <input-number
@@ -71,47 +64,49 @@
             {{ errorMessage.bills_price && errorMessage.bills_price[0] }}
           </div>
         </div>
-        <div class="padding padding-bottom-5px">
-          <AppCardPriceSuggestion @onChange="onChangeBiilsSuggestion" />
-        </div>
-        <div
-          class="padding padding-bottom-7px margin margin-bottom-15px border-bottom border-dashed"
-        ></div>
-        <div class="display-flex space-between">
-          <div class="fonts fonts-10 semibold black">Kembali</div>
-          <div class="fonts fonts-10 semibold main-color">
+        <AppCardPriceSuggestion
+          @onChange="onChangeBiilsSuggestion"
+        />
+      </div>
+
+      <div class="w-full flex flex-col gap-2">
+        <div class="flex items-center justify-between gap-2">
+          <div class="text-sm text-black">Kembali</div>
+          <div class="text-sm text-vermillion-500 font-semibold text-right">
             {{ format(form.change_price) }}
           </div>
         </div>
       </div>
+    </div>
 
-      <div slot="footer">
-        <div class="right-form-footer">
-          <div class="field-group" style="padding-top: 0">
-            <div class="field-label">Status Transaksi</div>
-            <div class="display-flex space-between">
-              <div class="fonts micro black">
-                Apakah transaksi ini sudah "Selesai" ?
-              </div>
-              <el-switch
-                v-model="form.status"
-                :disabled="isButtonEnable"
-                :active-value="'done'"
-                :inactive-value="isNonFnB ? 'new-order' : 'on-progress'"
-              ></el-switch>
+    <template #footer>
+      <div class="w-full flex flex-col gap-4">
+        <div class="field-group">
+          <div class="field-label">Status Transaksi</div>
+          <div class="flex justify-between items-center gap-2">
+            <div class="field-caption">
+              Apakah transaksi ini sudah "Selesai" ?
             </div>
+            <el-switch
+              v-model="form.status"
+              :disabled="isButtonEnable"
+              :active-value="'done'"
+              :inactive-value="isNonFnB ? 'new-order' : 'on-progress'"
+            ></el-switch>
           </div>
-          <button
-            class="btn btn-main btn-full"
-            :disabled="isButtonEnable"
-            @click="onCreateOrder"
-          >
-            Simpan Transaksi
-          </button>
         </div>
+
+        <el-button
+          class="w-full"
+          type="primary"
+          :disabled="isButtonEnable"
+          @click="onCreateOrder"
+        >
+          Simpan Transaksi
+        </el-button>
       </div>
-    </AppSideForm>
-  </div>
+    </template>
+  </AppSideForm>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
@@ -128,6 +123,13 @@ export default {
     return {
       title: 'Pembayaran',
     }
+  },
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   components: {
     AppSideForm,

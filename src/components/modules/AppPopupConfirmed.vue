@@ -1,38 +1,62 @@
 <template>
-  <div id="App" class="display-popup">
-    <div class="post-middle-absolute width width-400px width-mobile">
-      <div class="padding padding-15px">
-        <div class="card box-shadow bg-white">
-          <div class="padding padding-30px">
-            <div class="display-flex column align-center">
-              <i
-                class="fonts fonts-64 primary far fa-4x fa-question-circle"
-              ></i>
-              <div
-                class="fonts fonts-12 semibold black align-center margin margin-top-30px margin-bottom-30px"
-              >
-                {{ title }}
-              </div>
-              <div class="display-flex space-between width width-100">
-                <button class="btn btn-grey width width-48" @click="onClickNo">
-                  Tutup
-                </button>
-                <button class="btn btn-main width width-48" @click="onClickYes">
-                  Iya, Lanjutkan
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+  <AppCardPopup
+    title="Konfirmasi"
+    size="xxs"
+    disable-header
+    @onClose="onClickNo"
+  >
+    <div class="flex flex-col gap-4 justify-center items-center">
+      <div
+        class="flex justify-center items-center rounded-full bg-vermillion-100"
+        style="width: 96px; height: 96px;"
+      >
+        <i class="text-4xl text-vermillion-500 far fa-4x fa-question-circle" />
+      </div>
+
+      <div
+        class="text-lg text-black font-semibold text-center"
+      >
+        {{ title }}
+      </div>
+
+      <div class="w-full flex justify-between items-center">
+        <el-button
+          class="w-full"
+          type="info"
+          plain
+          @click="onClickNo"
+        >
+          Tutup
+        </el-button>
+        <el-button
+          class="w-full"
+          type="primary"
+          @click="onClickYes"
+        >
+          Iya, Lanjutkan
+        </el-button>
       </div>
     </div>
-  </div>
+  </AppCardPopup>
 </template>
 <script>
+import AppCardPopup from './AppCardPopup'
+
 export default {
   name: 'App',
+  data() {
+    return {
+      dialogVisible: true,
+    }
+  },
+  components: {
+    AppCardPopup,
+  },
   props: {
-    title: null,
+    title: {
+      type: String,
+      required: true,
+    },
   },
   methods: {
     onClickNo() {

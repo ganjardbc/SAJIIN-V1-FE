@@ -1,80 +1,34 @@
 <template>
-  <div id="AppListMenu">
-    <ul
-      :class="
-        isSidebarSmall
-          ? 'content-scroll menu-list hover with-icon'
-          : 'content-scroll menu-list hover with-big-icon' +
-            ` ${enableResponsive ? 'mobile-menu-list' : ''}`
-      "
+  <ul class="default-menu">
+    <li
+      v-for="(parent, index) in dataSideBar"
+      :key="index"
+      @click="onClick"
     >
-      <li
-        v-for="(parent, index) in dataSideBar"
-        :key="index"
-        :class="'ml-list'"
+      <router-link
+        :to="{ name: parent.link }"
+        :title="parent.label"
+        class="menu-item"
       >
-        <router-link
-          v-if="!parent.menu"
-          :to="{ name: parent.link }"
-          class="ml-link"
-          :title="parent.label"
-          exact
-        >
-          <div class="ml-icon">
-            <i :class="parent.icon" />
-          </div>
-          <div class="ml-label">
-            {{ parent.label }}
-          </div>
-          <div class="val-container">
-            <div v-if="parent.value" class="ml-value">
-              {{ parent.value }}
-            </div>
-          </div>
-        </router-link>
-        <div v-if="parent.menu" class="submenu">
-          <div v-if="!parent.disableMenu" class="sublist">
-            <div class="sublabel">
-              {{ parent.label }}
-            </div>
-          </div>
-          <ul v-if="parent.menu.length > 0" class="subcontent">
-            <li
-              v-for="(child, index) in parent.menu"
-              :key="index"
-              class="ml-list"
-            >
-              <div v-if="!child.menu" @click="onClick">
-                <router-link
-                  :to="{ name: child.link }"
-                  :title="child.label"
-                  class="ml-link"
-                >
-                  <div class="ml-icon" exact>
-                    <i :class="child.icon" />
-                  </div>
-                  <div class="ml-label mobile-micro-hidden">
-                    {{ child.label }}
-                  </div>
-                  <div class="val-container">
-                    <div v-if="child.value" class="ml-value">
-                      {{ child.value }}
-                    </div>
-                  </div>
-                </router-link>
-              </div>
-              <div v-else>
-                <AppListSubMenu :data="child" @onClick="onClick" />
-              </div>
-            </li>
-          </ul>
+        <div class="icon" style="min-width: 36px;" exact>
+          <i class="text-sm" :class="parent.icon" />
         </div>
-      </li>
-    </ul>
-  </div>
+        <div class="label">
+          {{ parent.label }}
+        </div>
+        <AppCardCapsule
+          v-if="parent.value"
+          :label="parent.value"
+          size="small"
+          class="counter"
+        />
+      </router-link>
+    </li>
+  </ul>
 </template>
 <script>
 import AppListSubMenu from './AppListSubMenu'
+import AppCardCapsule from './AppCardCapsule'
 
 export default {
   name: 'AppListMenu',
@@ -83,25 +37,19 @@ export default {
       sidebar: [],
     }
   },
+  props: {
+    data: {
+      type: [Array, String],
+      required: true,
+    },
+  },
   components: {
     AppListSubMenu,
+    AppCardCapsule,
   },
   methods: {
     onClick() {
       this.$emit('onClick')
-    },
-    onCheckSubmenus(data) {
-      let menu = []
-      data &&
-        data.map((dt) => {
-          const stt = this.onCheckPermission(dt.permission)
-          if (stt) {
-            menu.push({
-              ...dt,
-            })
-          }
-        })
-      return menu
     },
     onCheckPermission(value) {
       let stt = false
@@ -130,38 +78,14 @@ export default {
       let menu = []
       this.data &&
         this.data.map((dt) => {
-          if (dt.menu) {
-            let submenu = this.onCheckSubmenus(dt.menu)
-            if (submenu.length > 0) {
-              let submenuPayload = []
-              submenu &&
-                submenu.map((sb) => {
-                  submenuPayload.push({ ...sb })
-                })
-              if (submenuPayload.length > 0) {
-                menu.push({
-                  ...dt,
-                  menu: submenuPayload,
-                })
-              }
-            }
+          const stt = this.onCheckPermission(dt.permission)
+          if (stt) {
+            menu.push({
+              ...dt,
+            })
           }
         })
       return menu
-    },
-  },
-  props: {
-    enableResponsive: {
-      type: Boolean,
-      required: false,
-    },
-    isSidebarSmall: {
-      type: Boolean,
-      required: false,
-    },
-    data: {
-      type: [Array, String],
-      required: true,
     },
   },
 }

@@ -1,18 +1,14 @@
 <template>
-  <div id="App" class="display-flex wrap">
-    <div
+  <div id="App" class="w-full flex flex-wrap gap-2">
+    <el-tag
       v-for="(dt, i) in data"
       :key="i"
-      class="margin margin-right-3px margin-bottom-5px"
+      size="small"
+      class="cursor-pointer"
+      @click="onChange(dt.value)"
     >
-      <div
-        class="card-capsule active"
-        style="cursor: pointer"
-        @click="onChange(dt.value)"
-      >
-        {{ format(dt.value) }}
-      </div>
-    </div>
+      {{ format(dt.value) }}
+    </el-tag>
   </div>
 </template>
 <script>

@@ -1,13 +1,14 @@
 <template>
-  <div id="App">
-    <AppSideForm
-      :title="title"
-      :enableSaveButton="!isDetailForm"
-      :onSave="onSave"
-      :onClose="onClose"
-    >
-      <div class="margin margin-bottom-20px">
-        <div class="fonts fonts-13 black semibold">Informasi</div>
+  <AppSideForm
+    :title="title"
+    :value="openForm"
+    :enableSaveButton="!isDetailForm"
+    @save="onSave"
+    @close="onClose"
+  >
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4">
+        <div class="text-md text-black font-semibold">Informasi</div>
         <div class="field-group">
           <div class="field-label">ID Shift</div>
           <el-input
@@ -91,10 +92,11 @@
           </div>
         </div>
       </div>
-      <div class="margin margin-bottom-0px">
-        <div class="fonts fonts-13 black semibold">Konfigurasi</div>
+
+      <div class="flex flex-col gap-4">
+        <div class="text-md text-black font-semibold">Konfigurasi</div>
         <div class="field-group">
-          <div class="display-flex space-between">
+          <div class="flex justify-between items-center">
             <div class="field-label">Status</div>
             <el-switch
               v-model="form.status"
@@ -110,8 +112,8 @@
           </div>
         </div>
       </div>
-    </AppSideForm>
-  </div>
+    </div>
+  </AppSideForm>
 </template>
 
 <script>
@@ -121,10 +123,13 @@ import AppImage from '../../../modules/AppImage'
 
 export default {
   name: 'App',
-  data() {
-    return {}
+  props: {
+    openForm: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
-  mounted() {},
   computed: {
     ...mapState({
       form: (state) => state.storeShiftAdmin.form,
