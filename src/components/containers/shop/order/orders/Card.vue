@@ -313,7 +313,7 @@
       </AppCardCollapse>
 
       <div class="display-flex flex-end align-center">
-        <div v-if="dt.order.status !== 'canceled' && dt.order.payment_status">
+        <div v-if="dt.order.status !== 'canceled'">
           <button
             class="btn btn-main-reverse with-hover margin margin-left-5px"
             @click="onReceipt(dt)"

@@ -35,6 +35,7 @@ export default {
     loading: false,
     loadMore: false,
     loadingForm: false,
+    loadingReceipt: false,
     typeForm: 'create',
     data: [],
     selected: null,

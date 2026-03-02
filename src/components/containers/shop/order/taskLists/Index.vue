@@ -36,6 +36,7 @@
             :data.sync="data"
             @onChangeStatus="onChangeStatus"
             @onChangeOrderStatus="onChangeOrderStatus"
+            @onReceipt="onOpenReceipt"
           />
         </div>
         <div
@@ -53,6 +54,17 @@
           >
           </el-pagination>
         </div>
+      </div>
+    </div>
+
+    <div :class="`content-form ${!visibleFormReceipt && 'hide'}`">
+      <div class="right">
+        <FormReceipt
+          @onSave="onOpenReceipt"
+          @onClose="onCloseReceipt"
+          @onPrint="onPrintReceipt"
+        >
+        </FormReceipt>
       </div>
     </div>
 
@@ -75,6 +87,7 @@ import AppPopupConfirmed from '../../../../modules/AppPopupConfirmed'
 import AppPopupLoader from '../../../../modules/AppPopupLoader'
 import CashbookField from '../../cashBook/Field'
 import Card from './Card'
+import FormReceipt from './receipt/Index'
 
 export default {
   name: 'App',
@@ -88,8 +101,11 @@ export default {
   },
   data() {
     return {
+      typeForm: '',
+      selectedData: null,
       selectedOrderData: null,
       currentPage: 0,
+      visibleFormReceipt: false,
       visibleConfirmedStatus: false,
       titleConfirmedStatus: 'Update status transaksi ?',
     }
@@ -105,6 +121,7 @@ export default {
     AppPopupLoader,
     CashbookField,
     Card,
+    FormReceipt,
   },
   computed: {
     ...mapState({
@@ -150,6 +167,19 @@ export default {
     },
     onRefresh() {
       this.getData()
+    },
+
+    // RECEIPT
+    onOpenReceipt(data) {
+      this.visibleFormReceipt = true
+      this.typeForm = 'receipt'
+      this.setSelected(data)
+    },
+    onCloseReceipt() {
+      this.visibleFormReceipt = false
+    },
+    onPrintReceipt() {
+      alert('onPrintReceipt')
     },
 
     // LIST DATA
@@ -241,8 +271,8 @@ export default {
         customerName: data.customer_name,
         type: 'order-status',
         message: `
-                    Status transaksi 
-                    ${data.customer_name ? ' atas nama ' + data.customer_name : ''} 
+                    Status transaksi
+                    ${data.customer_name ? ' atas nama ' + data.customer_name : ''}
                     berhasil diubah
                 `,
       }

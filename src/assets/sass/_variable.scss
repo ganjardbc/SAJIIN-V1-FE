@@ -255,7 +255,7 @@ $border: 1px solid $tiny-grey;
 }
 
 @mixin transparantScrollBarHover() {
-    
+
     &::scrollbar {
         width: 6px;
         height: 6px;

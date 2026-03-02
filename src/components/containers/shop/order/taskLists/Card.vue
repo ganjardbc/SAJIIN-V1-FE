@@ -142,6 +142,14 @@
           </div>
         </div>
         <div class="display-flex flex-end width width-100">
+          <div v-if="dt.order.status !== 'canceled'">
+            <button
+              class="btn btn-main-reverse with-hover margin margin-right-5px"
+              @click="onReceipt(dt)"
+            >
+              <i class="fa fa-lw fa-print"></i>
+            </button>
+          </div>
           <button
             class="btn btn-sekunder btn-full"
             @click="onChangeOrderStatus(dt.order, 'ready')"
@@ -189,6 +197,16 @@ export default {
         status: status,
       }
       this.$emit('onChangeOrderStatus', payload)
+    },
+
+    // RECEIPT
+    onReceipt(data) {
+      const user_id = this.dataUser.id
+      let payload = {
+        ...data,
+        assigned_id: user_id,
+      }
+      this.$emit('onReceipt', payload)
     },
   },
 }

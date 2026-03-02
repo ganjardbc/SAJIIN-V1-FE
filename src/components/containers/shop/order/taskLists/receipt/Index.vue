@@ -1,21 +1,16 @@
 <template>
   <div id="App">
-    <AppSideForm :title="title" :enableCustomFooter="true" :onClose="() => onClose()">
-      <div slot="toolbar">
-        <button
-          class="btn btn-icon btn-white btn-circle"
-          @click="onDownloadReceipt"
-        >
-          <i class="fa fa-lw fa-download"></i>
-        </button>
-      </div>
-
+    <AppSideForm
+      title="Nota Produksi"
+      :enableCustomFooter="true"
+      :onClose="onClose"
+    >
       <div class="display-flex align-center">
         <button
           v-for="(dt, i) in thermalSizing"
           :key="i"
           :class="`card card-status ${selectedIndex === dt.id ? 'active' : 'normal'} border-big-radius margin margin-5px`"
-          @click="onChangeSize(dt)"
+          @click.stop="onChangeSize(dt)"
         >
           {{ dt.sizeThermal.x }}{{ dt.sizeThermal.x !== '100%' ? 'mm' : '' }}
         </button>
@@ -37,33 +32,33 @@
         "
       >
         <div
-          id="component-to-print"
+          id="tasklist-to-print"
           :style="`width: ${selectedData.sizeReceipt.x}; margin: auto;`"
         >
           <div class="padding padding-10px">
-            <div class="width width-100 margin margin-bottom-5px">
+            <div v-if="selected && selected.shop" class="width width-100 margin margin-bottom-5px">
               <div
                 class="fonts fonts-11 semibold align-center margin margin-top-7px margin-bottom-2px"
               >
-                {{ form.shop && form.shop.name }}
+                {{ selected.shop && selected.shop.name }}
               </div>
               <div class="fonts fonts-9 normal align-center">
-                {{ form.shop && form.shop.location }}
+                {{ selected.shop && selected.shop.location }}
               </div>
               <div
-                v-if="form.shop && form.shop.phone"
+                v-if="selected.shop && selected.shop.phone"
                 class="fonts fonts-9 normal align-center"
               >
-                {{ form.shop && form.shop.phone }}
+                {{ selected.shop && selected.shop.phone }}
               </div>
             </div>
-            <div class="margin margin-top-7px margin-bottom-7px">
+            <div v-if="selected && selected.order" class="margin margin-top-7px margin-bottom-7px">
               <div class="display-flex space-between">
                 <div style="width: 75px">
                   <div class="fonts fonts-9">ID Transaksi</div>
                 </div>
                 <div style="width: calc(100% - 75px)">
-                  <div class="fonts fonts-9">: {{ form.order_id }}</div>
+                  <div class="fonts fonts-9">: {{ selected.order.order_id }}</div>
                 </div>
               </div>
               <div class="display-flex space-between">
@@ -72,53 +67,53 @@
                 </div>
                 <div style="width: calc(100% - 75px)">
                   <div class="fonts fonts-9">
-                    : {{ form.created_at | moment('DD/MM/YYYY') }}
+                    : {{ selected.order.created_at | moment('DD/MM/YYYY') }}
                   </div>
                 </div>
               </div>
-              <div v-if="form.cashier_name" class="display-flex space-between">
+              <div v-if="selected.order.cashier_name" class="display-flex space-between">
                 <div style="width: 75px">
                   <div class="fonts fonts-9">Kasir</div>
                 </div>
                 <div style="width: calc(100% - 75px)">
                   <div class="fonts fonts-9">
-                    : {{ form.cashier_name || '-' }}
+                    : {{ selected.order.cashier_name || '-' }}
                   </div>
                 </div>
               </div>
-              <div v-if="form.customer_name" class="display-flex space-between">
+              <div v-if="selected.order.customer_name" class="display-flex space-between">
                 <div style="width: 75px">
                   <div class="fonts fonts-9">Pelanggan</div>
                 </div>
                 <div style="width: calc(100% - 75px)">
                   <div class="fonts fonts-9">
-                    : {{ form.customer_name || '-' }}
+                    : {{ selected.order.customer_name || '-' }}
                   </div>
                 </div>
               </div>
-              <div v-if="form.table_name" class="display-flex space-between">
+              <div v-if="selected.order.table_name" class="display-flex space-between">
                 <div style="width: 75px">
                   <div class="fonts fonts-9">Meja</div>
                 </div>
                 <div style="width: calc(100% - 75px)">
                   <div class="fonts fonts-9">
-                    : {{ form.table_name || '-' }}
+                    : {{ selected.order.table_name || '-' }}
                   </div>
                 </div>
               </div>
-              <div v-if="form.platform_name" class="display-flex space-between">
+              <div v-if="selected.order.platform_name" class="display-flex space-between">
                 <div style="width: 75px">
                   <div class="fonts fonts-9">Platform</div>
                 </div>
                 <div style="width: calc(100% - 75px)">
                   <div class="fonts fonts-9">
-                    : {{ form.platform_name || '-' }}
+                    : {{ selected.order.platform_name || '-' }}
                   </div>
                 </div>
               </div>
             </div>
-            <div class="width width-100 border-bottom"></div>
-            <div class="margin margin-top-7px margin-bottom-7px">
+            <div v-if="selected && selected.details" class="width width-100 border-bottom"></div>
+            <div v-if="selected && selected.details" class="margin margin-top-7px margin-bottom-7px">
               <div class="display-flex space-between">
                 <div style="width: calc(100% - 110px)">
                   <span class="fonts fonts-9 black semibold">Produk</span>
@@ -126,115 +121,51 @@
                 <div style="width: 30px">
                   <span class="fonts fonts-9 black semibold">Qty</span>
                 </div>
-                <div style="width: 80px">
-                  <span class="fonts fonts-9 black semibold">Total</span>
-                </div>
               </div>
 
               <div
-                v-for="(dt, index) in form.details"
+                v-for="(dt, index) in selected.details"
                 :key="index"
                 class="width width-100"
               >
                 <div :class="`display-flex space-between`">
-                  <div style="width: calc(100% - 110px)">
+                  <div style="width: calc(100% - 30px)">
                     <div class="fonts fonts-9 black">
                       {{ dt.product_name }}
                       {{ dt.product_detail ? `- ${dt.product_detail}` : '' }}
-                    </div>
-                    <div class="fonts fonts-8 black">
-                      {{ format(dt.price) }}
                     </div>
                   </div>
                   <div style="width: 30px">
                     <span class="fonts fonts-9 black">{{ dt.quantity }}</span>
                   </div>
-                  <div style="width: 80px">
-                    <span class="fonts fonts-9 black">{{
-                      format(dt.subtotal)
-                    }}</span>
-                  </div>
                 </div>
               </div>
             </div>
-            <div class="width width-100 border-bottom"></div>
-            <div class="margin margin-top-7px margin-bottom-7px">
+            <div v-if="selected && selected.order" class="width width-100 border-bottom"></div>
+            <div v-if="selected && selected.order" class="margin margin-top-7px margin-bottom-7px">
               <div class="display-flex flex-end">
-                <div style="width: calc(100% - 80px)">
+                <div style="width: calc(100% - 30px)">
                   <div class="fonts fonts-9 black">Total</div>
                 </div>
-                <div style="width: 80px">
+                <div style="width: 30px">
                   <div class="fonts fonts-9 black">
-                    {{ format(form.total_price) }}
+                    {{ selected.order.total_item }}
                   </div>
                 </div>
-              </div>
-            </div>
-            <div
-              v-if="isThereDiscountProduct || isThereDiscountTransaction"
-              class="width width-100 border-bottom"
-            ></div>
-            <div
-              v-if="isThereDiscountProduct || isThereDiscountTransaction"
-              class="display-flex flex-end padding padding-top-5px padding-bottom-5px"
-            >
-              <div style="width: calc(100% - 80px)">
-                <div class="fonts fonts-9 black">Diskon</div>
-              </div>
-              <div style="width: 80px">
-                <div class="fonts fonts-9 black">
-                  {{ format(totalDiscount) }}
-                </div>
-              </div>
-            </div>
-            <div class="width width-100 border-bottom"></div>
-            <div class="margin margin-top-7px margin-bottom-7px">
-              <div class="display-flex flex-end">
-                <div style="width: calc(100% - 80px)">
-                  <div class="fonts fonts-9 black">Bayar</div>
-                </div>
-                <div style="width: 80px">
-                  <div class="fonts fonts-9 black">
-                    {{ format(form.bills_price) }}
-                  </div>
-                </div>
-              </div>
-              <div class="display-flex flex-end">
-                <div style="width: calc(100% - 80px)">
-                  <div class="fonts fonts-9 black">Kembali</div>
-                </div>
-                <div style="width: 80px">
-                  <div class="fonts fonts-9 black">
-                    {{ format(form.change_price) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="margin margin-top-10px">
-              <div class="fonts fonts-8 normal align-center">
-                Scan Untuk Cek Transaksi
-              </div>
-              <div class="width width-150px width-center">
-                <VueQrcode
-                  :value="`${initUrl}visitor/${form.shop && form.shop.shop_id}/order/${form.order_id}`"
-                  errorCorrectionLevel="L"
-                  :width="150"
-                />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="width width-100 content-center" id="component-to-place"></div>
+      <div class="width width-100 content-center" id="tasklist-to-place"></div>
 
       <div slot="footer">
         <div class="right-form-footer">
           <button
             class="btn btn-main btn-full"
             :disabled="loadingReceipt"
-            @click="onDownloadCanvas('component-to-place')"
+            @click="onDownloadCanvas('tasklist-to-place')"
           >
             Save As Image
           </button>
@@ -248,30 +179,21 @@
         </div>
       </div>
     </AppSideForm>
-
-    <PrintReceipt
-      v-if="visiblePrintReceipt"
-      @onPrint="onPrintThermal"
-      @onClose="visiblePrintReceipt = false"
-    />
   </div>
 </template>
 <script>
 import m from 'moment'
 import ViewPdf from 'vue-pdf'
-import { Printd } from 'printd'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import html2canvas from 'html2canvas'
-import VueQrcode from 'vue-qrcode'
 import AppSideForm from '../../../../../modules/AppSideForm'
 import AppCardCapsule from '../../../../../modules/AppCardCapsule'
 import AppCardPriceSuggestion from '../../../../../modules/AppCardPriceSuggestion'
 import AppLoader from '../../../../../modules/AppLoader'
 import AppEmpty from '../../../../../modules/AppEmpty'
 import PrintReceipt from './PrintReceipt'
-import printStyles from './styles'
 import CMD from './thermalPrinterCommands'
-import { replaceString, formatCurrency } from '@/services/utils'
+import { replaceString } from '@/services/utils'
 
 const thermalSizing = [
   {
@@ -295,7 +217,7 @@ export default {
   name: 'App',
   data() {
     return {
-      title: 'Nota Transaksi',
+      title: 'Nota Produksi',
       visiblePrintReceipt: false,
       selectedIndex: 1,
       selectedData: thermalSizing[0],
@@ -313,26 +235,22 @@ export default {
     }
   },
   components: {
-    VueQrcode,
     AppSideForm,
     AppCardCapsule,
     AppCardPriceSuggestion,
     AppLoader,
     AppEmpty,
-    PrintReceipt,
     ViewPdf,
+    PrintReceipt,
   },
   methods: {
-    ...mapActions({
-      download: 'storeOrders/download',
-      downloadOnly: 'storeOrders/downloadOnly',
-    }),
-
-    onPrintPreview() {
-      const printer = new Printd()
-      printer.print(document.getElementById('component-to-print'), printStyles)
+    // CLOSE
+    onClose() {
+      console.log('close')
+      this.$emit('onClose')
     },
 
+    // THERMAL PRINT
     async onPrintToThermal() {
       try {
         const device = await navigator.bluetooth.requestDevice({
@@ -352,7 +270,7 @@ export default {
         const printer = await service.getCharacteristic(
           '00002af1-0000-1000-8000-00805f9b34fb'
         )
-        const data = this.form
+        const data = this.selected
         const encoder = new TextEncoder('utf-8')
 
         // Styling
@@ -363,85 +281,80 @@ export default {
         const alignLeft = CMD.TEXT_FORMAT.TXT_ALIGN_LT
         const alignCenter = CMD.TEXT_FORMAT.TXT_ALIGN_CT
         const alignRight = CMD.TEXT_FORMAT.TXT_ALIGN_RT
-        const tabSpacing = CMD.FEED_CONTROL_SEQUENCES.CTL_HT
+        // const tabSpacing = CMD.FEED_CONTROL_SEQUENCES.CTL_HT
 
         // Header
-        await printer.writeValue(
-          encoder.encode(
-            alignCenter +
-              fontBold +
-              fontNormal +
-              data.shop.name +
-              fontBoldOff +
-              CMD.EOL
-          )
-        )
-        if (data.shop.location) {
+        if (data.shop) {
           await printer.writeValue(
-            encoder.encode(replaceString(data.shop.location) + CMD.EOL)
+            encoder.encode(
+              alignCenter +
+                fontBold +
+                fontNormal +
+                data.shop.name +
+                fontBoldOff +
+                CMD.EOL
+            )
           )
-        }
-        if (data.shop.phone) {
-          await printer.writeValue(
-            encoder.encode(replaceString(data.shop.phone) + CMD.EOL)
-          )
+          if (data.shop.location) {
+            await printer.writeValue(
+              encoder.encode(replaceString(data.shop.location) + CMD.EOL)
+            )
+          }
+          if (data.shop.phone) {
+            await printer.writeValue(
+              encoder.encode(replaceString(data.shop.phone) + CMD.EOL)
+            )
+          }
         }
         await this.sendPrintLine(printer)
 
         // order
         await printer.writeValue(
-          encoder.encode(alignLeft + 'ID Transaksi : ' + data.order_id + CMD.EOL)
+          encoder.encode(alignLeft + 'ID Transaksi : ' + data.order.order_id + CMD.EOL)
         )
         await printer.writeValue(
           encoder.encode(
-            'Tanggal    : ' + m(data.created_at).format('DD/MM/YYYY') + CMD.EOL
+            'Tanggal    : ' + m(data.order.created_at).format('DD/MM/YYYY') + CMD.EOL
           )
         )
-        if (data.customer_name) {
+        if (data.order.customer_name) {
           await printer.writeValue(
             encoder.encode(
-              'Pelanggan  : ' + replaceString(data.customer_name) + CMD.EOL
+              'Pelanggan  : ' + replaceString(data.order.customer_name) + CMD.EOL
             )
           )
         }
-        if (data.cashier_name) {
+        if (data.order.cashier_name) {
           await printer.writeValue(
             encoder.encode(
-              'Kasir      : ' + replaceString(data.cashier_name) + CMD.EOL
+              'Kasir      : ' + replaceString(data.order.cashier_name) + CMD.EOL
             )
           )
         }
-        if (data.table_name) {
+        if (data.order.table_name) {
           await printer.writeValue(
             encoder.encode(
-              'Meja       : ' + replaceString(data.table_name) + CMD.EOL
+              'Meja       : ' + replaceString(data.order.table_name) + CMD.EOL
             )
           )
         }
-        if (data.platform_name) {
+        if (data.order.platform_name) {
           await printer.writeValue(
             encoder.encode(
-              'Platform   : ' + replaceString(data.platform_name) + CMD.EOL
+              'Platform   : ' + replaceString(data.order.platform_name) + CMD.EOL
             )
           )
         }
         await this.sendPrintLine(printer)
 
         // Products
-        let totalDiscount = 0
         if (data.details && data.details.length > 0) {
-          // await printer.writeValue(encoder.encode(fontBold + fontSmall + alignLeft + 'Products                          Subtotal' + fontBoldOff + fontNormal + CMD.EOL))
-
           for (let i = 0; i < data.details.length; i++) {
             const element = data.details[i]
             let productName = element.product_name
             if (element.product_detail) {
               productName += `, ${element.product_detail}`
             }
-            if (element.is_discount) {
-              totalDiscount += element.discount_price
-            }
-
             await printer.writeValue(
               encoder.encode(alignLeft + productName + CMD.EOL)
             )
@@ -450,7 +363,6 @@ export default {
                 alignRight +
                   element.quantity +
                   ' x ' +
-                  formatCurrency(element.price) +
                   CMD.EOL
               )
             )
@@ -464,44 +376,11 @@ export default {
           encoder.encode(
             alignLeft +
               'Total      : ' +
-              formatCurrency(data.total_price) +
+              data.order.total_item +
               CMD.EOL
           )
         )
 
-        // Discount
-        if (data.discount_price || totalDiscount) {
-          await printer.writeValue(
-            encoder.encode(
-              alignLeft +
-                'Diskon     : ' +
-                formatCurrency(data.discount_price + totalDiscount) +
-                CMD.EOL
-            )
-          )
-        }
-
-        // Bills
-        await printer.writeValue(
-          encoder.encode(
-            alignLeft +
-              'Bayar      : ' +
-              formatCurrency(data.bills_price) +
-              CMD.EOL
-          )
-        )
-        await printer.writeValue(
-          encoder.encode(
-            alignLeft +
-              'Kembali    : ' +
-              formatCurrency(data.change_price) +
-              CMD.EOL
-          )
-        )
-
-        await printer.writeValue(
-          encoder.encode(CMD.EOL + alignCenter + 'THANK YOU FOR YOUR ORDER !')
-        )
         await printer.writeValue(
           encoder.encode(
             CMD.EOL + alignCenter + fontSmall + 'Powered by Saji-In' + CMD.EOL
@@ -521,7 +400,6 @@ export default {
           '--------------------------------' +
           CMD.EOL
       )
-      // let line = encoder.encode(CMD.LINE_SPACING.LS_DEFAULT + CMD.EOL)
 
       await printer.writeValue(line)
     },
@@ -534,11 +412,12 @@ export default {
       await printer.writeValue(line)
     },
 
+    // CANVAS
     onSetCanvas() {
       this.loadingReceipt = true
-      this.onClearCanvas('#component-to-place')
+      this.onClearCanvas('#tasklist-to-place')
       this.$nextTick(() => {
-        this.onOpenCanvas('#component-to-print', '#component-to-place')
+        this.onOpenCanvas('#tasklist-to-print', '#tasklist-to-place')
       })
     },
     onClearCanvas(toPlace) {
@@ -559,7 +438,7 @@ export default {
         })
     },
     onDownloadCanvas(toPlace) {
-      const fileName = `order-receipt-${this.form.order_id}.png`
+      const fileName = `order-receipt-${this.selected.order.order_id}.png`
       const canvasElement = document.getElementById(toPlace).children[0]
       const canvasUrl = canvasElement
         .toDataURL('image/png')
@@ -573,112 +452,34 @@ export default {
       downloadLink.click()
       document.body.removeChild(downloadLink)
     },
-    onDownloadReceipt() {
-      const token = this.$cookies.get('tokenBearer')
-      const order_id = this.form.order_id
-      const size_x = this.selectedData.sizeThermal.x
-      const size_y = this.selectedData.sizeThermal.y
-      this.download({ token, order_id, size_x, size_y }).then((res) => {
-        if (res.status === 200) {
-          this.$message('Downloaded order receipt')
-        } else {
-          this.$message({
-            message: 'Failed to download order receipt',
-            type: 'error',
-          })
-        }
-      })
-    },
-    // HIDDEN TEMPORARY
-    // onViewDownloadReceipt () {
-    //     this.fileUrl = ''
-    //     const token = this.$cookies.get('tokenBearer')
-    //     const order_id = this.form.order_id
-    //     const size_x = this.selectedData.sizeThermal.x
-    //     const size_y = this.selectedData.sizeThermal.y
-    //     this.downloadOnly({ token, order_id, size_x, size_y }).then((res) => {
-    //         if (res.status === 200) {
-    //             var file = new Blob([res.data], {
-    //                 type: 'application/pdf'
-    //             })
-    //             var fileUrl = URL.createObjectURL(file)
-    //             this.fileUrl = fileUrl
-    //         } else {
-    //             this.$message({
-    //                 message: 'Failed to download order receipt',
-    //                 type: 'error'
-    //             })
-    //         }
-    //     })
-    // },
-    onClose() {
-      this.$emit('onClose')
-    },
+
+    // TABS THERMAL
     onChangeSize(value) {
       this.selectedIndex = value.id
       this.selectedData = value
-      // HIDDEN TEMPORARY
-      // this.onViewDownloadReceipt()
       this.onSetCanvas()
     },
   },
   computed: {
     ...mapState({
-      form: (state) => state.storeOrders.form,
-      errorMessage: (state) => state.storeOrders.errorMessage,
-      details: (state) => state.storeOrders.form.details,
+      selected: (state) => state.storeTaskLists.selected,
+      errorMessage: (state) => state.storeTaskLists.errorMessage,
       isBluetoothSupported: (state) => state.application.isBluetoothSupported,
     }),
     loadingReceipt: {
       set(value) {
-        this.$store.state.storeOrders.loadingReceipt = value
+        this.$store.state.storeTaskLists.loadingReceipt = value
       },
       get() {
-        return this.$store.state.storeOrders.loadingReceipt
+        return this.$store.state.storeTaskLists.loadingReceipt
       },
     },
     orderId() {
-      return this.form.order_id
-    },
-    totalDiscountProduct() {
-      let price = 0
-      this.form.details &&
-        this.form.details.map((item) => {
-          let quantity = item.quantity
-          if (item.is_discount) {
-            price += quantity * item.discount_price
-          }
-        })
-      return price
-    },
-    isThereDiscountProduct() {
-      let status = false
-      this.form.details &&
-        this.form.details.map((item) => {
-          if (item.is_discount) {
-            status = true
-          }
-        })
-      return status
-    },
-    totalDiscountTransaction() {
-      return this.form.discount_price
-    },
-    isThereDiscountTransaction() {
-      let status = false
-      if (this.form.discount_price) {
-        status = true
-      }
-      return status
-    },
-    totalDiscount() {
-      return this.totalDiscountProduct + this.totalDiscountTransaction
+      return this.selected && this.selected.order ? this.selected.order.order_id : null
     },
   },
   watch: {
     orderId() {
-      // HIDDEN TEMPORARY
-      // this.onViewDownloadReceipt()
       this.onSetCanvas()
     },
   },
