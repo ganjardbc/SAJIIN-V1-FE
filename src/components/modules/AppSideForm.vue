@@ -22,7 +22,7 @@
           zIndex: 99,
         }"
       >
-        <div class="bg-white md:rounded-lg md:shadow-xl flex flex-col h-full w-full border border-gray-200 overflow-y-auto">
+        <div class="bg-white md:rounded-lg md:shadow-xl flex flex-col h-full w-full overflow-y-auto">
           <div class="sticky top-0 bg-white z-10 px-4 py-2 flex justify-between items-center border-b border-gray-200">
             <div class="flex-1">
               <div class="text-md text-black font-semibold">
