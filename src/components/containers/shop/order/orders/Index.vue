@@ -5,11 +5,6 @@
         <h1 class="text-3xl text-black font-semibold">
           Penjualan
         </h1>
-
-        <el-button type="primary">
-          <i class="fa fa-lw fa-plus"></i>
-          Tambah Transaksi
-        </el-button>
       </div>
 
       <div class="w-full flex flex-col md:flex-row gap-2 items-center justify-between">
