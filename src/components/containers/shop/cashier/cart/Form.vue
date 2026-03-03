@@ -41,7 +41,7 @@ import { mapState, mapActions } from 'vuex'
 import CashierMain from './Main'
 
 export default {
-  name: 'App',
+  name: 'CartForm',
   components: {
     CashierMain,
   },
@@ -55,12 +55,7 @@ export default {
       return this.dataCurrent && this.dataCurrent.current_cashbook
     },
     orderQuantity() {
-      let quantity = 0
-      this.details &&
-        this.details.map((item) => {
-          quantity += item.quantity
-        })
-      return quantity
+      return (this.details || []).reduce((sum, item) => sum + item.quantity, 0)
     },
     isThereDetails() {
       return this.details.length > 0

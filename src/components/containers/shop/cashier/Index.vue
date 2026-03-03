@@ -68,9 +68,7 @@
       @onClickOk="onClickOk"
     />
 
-    <AppPopupLoader v-if="loading" />
-
-    <AppPopupLoader v-if="loadingDownload" />
+    <AppPopupLoader v-if="loading || loadingDownload" />
   </div>
 </template>
 <script>
@@ -158,7 +156,7 @@ export default {
         return this.$store.state.storeCashier.loading
       },
       set(value) {
-        this.$store.state.storeCashier.loading = value
+        this.$store.commit('storeCashier/SET_LOADING', value)
       },
     },
     typeFormCashBook: {
@@ -236,7 +234,8 @@ export default {
       this.visibleOrderReceipt = false
     },
     onPrintReceipt() {
-      alert('onPrintReceipt')
+      // TODO: implement receipt printing
+      console.warn('[onPrintReceipt] printing not yet implemented')
     },
 
     // ALERT

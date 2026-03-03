@@ -118,7 +118,7 @@ const defaultProduct = () => {
     subtotal: 0,
     note: '',
     product_id: 0,
-    proddetail_id: 0,
+    proddetail_id: null, // must be null so ADD_PRODUCT duplicate-check works correctly
     product_image: '',
     product_name: '',
     product_detail: '',
@@ -378,13 +378,10 @@ export default {
         let platformPrice = item.platform_price
         let platformFee = item.platform_fee
 
-        // product n varian validations
-        let isProduct = item.product_id === data.product_id ? true : false
-        if (item.proddetail_id === data.proddetail_id) {
-          isProduct = true
-        } else {
-          isProduct = false
-        }
+        // match both product id AND variant id so products without a varian (proddetail_id=null) are handled correctly
+        const isProduct =
+          item.product_id === data.product_id &&
+          item.proddetail_id === data.proddetail_id
         if (isProduct) {
           const getDiscount = getDiscountProduct(item, data)
 
@@ -552,7 +549,8 @@ export default {
           return res
         })
         .catch((e) => {
-          console.log('error', e)
+          console.error('[storeCashier/createOrder]', e)
+          throw e // re-throw so callers (.then chains in components) can handle the failure
         })
         .finally(() => {
           commit('SET_LOADING', false)

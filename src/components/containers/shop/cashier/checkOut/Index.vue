@@ -156,43 +156,32 @@ export default {
         return this.$store.state.storeCashier.form.payment
       },
     },
+    formDiscount: {
+      // this computed was missing — without it, `this.formDiscount = data` in
+      // onChangeDiscount/onClearDiscount was writing to an undeclared variable (no-op).
+      set(value) {
+        this.$store.state.storeCashier.form.discount = value
+      },
+      get() {
+        return this.$store.state.storeCashier.form.discount
+      },
+    },
     orderQuantity() {
-      let quantity = 0
-      this.details &&
-        this.details.map((item) => {
-          quantity += item.quantity
-        })
-      return quantity
+      return (this.details || []).reduce((sum, item) => sum + item.quantity, 0)
     },
     orderPrice() {
-      let price = 0
-      this.details &&
-        this.details.map((item) => {
-          let quantity = item.quantity
-          price += quantity * item.price
-        })
-      return price
+      return (this.details || []).reduce(
+        (sum, item) => sum + item.quantity * item.price,
+        0
+      )
     },
     totalDiscountProduct() {
-      let discount = 0
-      this.details &&
-        this.details.map((item) => {
-          let quantity = item.quantity
-          if (item.is_discount) {
-            discount += quantity * item.discount
-          }
-        })
-      return discount
+      return (this.details || []).reduce((sum, item) => {
+        return item.is_discount ? sum + item.quantity * item.discount : sum
+      }, 0)
     },
     isThereDiscountProduct() {
-      let status = false
-      this.details &&
-        this.details.map((item) => {
-          if (item.is_discount) {
-            status = true
-          }
-        })
-      return status
+      return (this.details || []).some((item) => item.is_discount)
     },
     totalDiscountTransaction() {
       return this.form.discount_price

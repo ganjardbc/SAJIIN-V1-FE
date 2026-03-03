@@ -49,21 +49,13 @@ export default {
       details: (state) => state.storeCashier.form.details,
     }),
     orderQuantity() {
-      let quantity = 0
-      this.details &&
-        this.details.map((item) => {
-          quantity += item.quantity
-        })
-      return quantity
+      return (this.details || []).reduce((sum, item) => sum + item.quantity, 0)
     },
     orderPrice() {
-      let price = 0
-      this.details &&
-        this.details.map((item) => {
-          let quantity = item.quantity
-          price += quantity * item.price
-        })
-      return price
+      return (this.details || []).reduce(
+        (sum, item) => sum + item.quantity * item.price,
+        0
+      )
     },
     isThereDetails() {
       return this.details.length > 0

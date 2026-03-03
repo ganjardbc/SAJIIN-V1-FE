@@ -92,7 +92,7 @@ import FieldTable from '../../tables/Field'
 import CardProduct from './CardProduct'
 
 export default {
-  name: 'App',
+  name: 'CartMain',
   components: {
     AppEmpty,
     AppCardCollapse,
@@ -133,63 +133,29 @@ export default {
       },
     },
     orderQuantity() {
-      let quantity = 0
-      this.details &&
-        this.details.map((item) => {
-          quantity += item.quantity
-        })
-      return quantity
+      return (this.details || []).reduce((sum, item) => sum + item.quantity, 0)
     },
     orderPrice() {
-      let price = 0
-      this.details &&
-        this.details.map((item) => {
-          let quantity = item.quantity
-          price += quantity * item.price
-        })
-      return price
+      return (this.details || []).reduce(
+        (sum, item) => sum + item.quantity * item.price,
+        0
+      )
     },
     totalDiscount() {
-      let discount = 0
-      this.details &&
-        this.details.map((item) => {
-          let quantity = item.quantity
-          if (item.is_discount) {
-            discount += quantity * item.discount
-          }
-        })
-      return discount
+      return (this.details || []).reduce((sum, item) => {
+        return item.is_discount ? sum + item.quantity * item.discount : sum
+      }, 0)
     },
     isThereDiscount() {
-      let status = false
-      this.details &&
-        this.details.map((item) => {
-          if (item.is_discount) {
-            status = true
-          }
-        })
-      return status
+      return (this.details || []).some((item) => item.is_discount)
     },
     totalPlatform() {
-      let platform = 0
-      this.details &&
-        this.details.map((item) => {
-          let quantity = item.quantity
-          if (item.is_platform) {
-            platform += quantity * item.platform
-          }
-        })
-      return platform
+      return (this.details || []).reduce((sum, item) => {
+        return item.is_platform ? sum + item.quantity * item.platform : sum
+      }, 0)
     },
     isTherePlatform() {
-      let status = false
-      this.details &&
-        this.details.map((item) => {
-          if (item.is_platform) {
-            status = true
-          }
-        })
-      return status
+      return (this.details || []).some((item) => item.is_platform)
     },
     isThereDetails() {
       return this.details.length > 0
@@ -278,7 +244,9 @@ export default {
       this.changePlatformProduct(payload)
     },
     onClearPlatform() {
+      // capture values BEFORE clearing, otherwise payload receives empty strings
       const currentValue = this.form.platform_fee
+      const currentType = this.form.platform_currency_type
       this.form.platform_id = ''
       this.form.platform_name = ''
       this.form.platform_fee = ''
@@ -291,13 +259,13 @@ export default {
         current_calculation: 'platform',
         current_status: 'clear',
         current_value: currentValue,
-        current_type: this.form.platform_currency_type,
-        platform_id: this.form.platform_id,
-        platform_name: this.form.platform_name,
-        platform_fee: this.form.platform_fee,
-        platform_type: this.form.platform_type,
-        platform_currency_type: this.form.platform_currency_type,
-        platform_image: this.form.platform_image,
+        current_type: currentType,
+        platform_id: '',
+        platform_name: '',
+        platform_fee: '',
+        platform_type: '',
+        platform_currency_type: '',
+        platform_image: '',
       }
       this.changePlatformProduct(payload)
     },

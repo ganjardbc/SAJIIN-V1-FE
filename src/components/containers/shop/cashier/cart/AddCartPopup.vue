@@ -153,8 +153,8 @@ export default {
       return this.form.quantity
     },
     orderPrice() {
-      this.form.subtotal = this.form.quantity * this.form.price
-      return this.form.subtotal
+      // pure computed — no side effects
+      return this.form.quantity * (this.form.price || 0)
     },
   },
   methods: {
@@ -201,11 +201,12 @@ export default {
       this.$emit('onClose')
     },
     onAddProduct() {
+      const subtotal = this.form.quantity * (this.form.price || 0)
       const payload = {
         ...this.data,
         quantity: this.form.quantity,
         price: this.form.price,
-        subtotal: this.form.subtotal,
+        subtotal: subtotal,
         proddetail_id: this.form.proddetail_id,
         product_id: this.form.product_id,
         product_image: this.form.product_image,
