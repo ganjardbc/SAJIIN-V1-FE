@@ -1,13 +1,9 @@
 <template>
-  <div id="App" class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+  <div id="App" class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
     <div
       v-for="(dt, i) in data"
       :key="i"
       class="bg-white shadow-lg rounded-lg p-4 flex flex-col justify-between gap-4"
-      :class="{
-        'border-2 border-orange-300': isOnProgress(dt),
-        'border-2 border-blue-300': isNewOrder(dt),
-      }"
     >
       <div class="flex flex-col gap-4">
         <div class="flex justify-between items-center pb-4 border-b border-gray-200">
