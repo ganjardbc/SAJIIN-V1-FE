@@ -27,7 +27,7 @@
   "start_url": "/",
   "scope": "/",
   "display": "fullscreen",
-  "orientation": "landscape",
+  "orientation": "any",
   "background_color": "#FFFFFF",
   "theme_color": "#FFFFFF"
 }
