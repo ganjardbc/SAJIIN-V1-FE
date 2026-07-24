@@ -42,6 +42,9 @@ module.exports = {
           resolve('src'),
           resolve('test'),
           resolve('node_modules/webpack-dev-server/client'),
+          resolve('node_modules/engine.io-client'),
+          resolve('node_modules/socket.io-client'),
+          resolve('node_modules/engine.io-parser'),
         ],
       },
       {
