@@ -50,8 +50,8 @@
         </div>
       </div>
 
-      <div class="display-flex space-between">
-        <div class="width width-80px margin marign-right-15px">
+      <div class="display-flex display-mobile space-between">
+        <div class="shop-product-card__avatar">
           <div class="image image-padding border-full">
             <img
               v-if="dt.image"
@@ -71,7 +71,7 @@
             </button>
           </div>
         </div>
-        <div style="width: calc(100% - 95px)">
+        <div class="shop-product-card__information">
           <div class="width width-100">
             <div class="fonts fonts-11 semibold">{{ dt.name }}</div>
             <AppCardCaption
@@ -209,3 +209,24 @@ export default {
   },
 }
 </script>
+<style scoped>
+.shop-product-card__avatar {
+  width: 80px;
+  height: 80px;
+}
+.shop-product-card__information {
+  width: calc(100% - 95px);
+  padding-left: 15px;
+}
+@media screen and (max-width: 768px) {
+  .shop-product-card__avatar {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 15px;
+  }
+  .shop-product-card__information {
+    width: 100%;
+    padding-left: 0;
+  }
+}
+</style>
